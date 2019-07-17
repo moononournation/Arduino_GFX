@@ -25,6 +25,7 @@
 #define TFT_HEIGHT 320
 #define TFT_COL_OFFSET 0
 #define TFT_ROW_OFFSET 0
+#define TFT_IPS true
 
 uint32_t w = TFT_WIDTH;
 uint32_t h = TFT_HEIGHT;
@@ -44,7 +45,7 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 #endif
 Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, TFT_ROTATION);
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, TFT_ROTATION, TFT_WIDTH, TFT_HEIGHT, TFT_COL_OFFSET, TFT_ROW_OFFSET);
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, TFT_ROTATION, TFT_WIDTH, TFT_HEIGHT, TFT_COL_OFFSET, TFT_ROW_OFFSET, TFT_IPS);
 
 unsigned long total = 0;
 unsigned long tn = 0;

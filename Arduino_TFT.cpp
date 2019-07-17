@@ -40,10 +40,10 @@ void Arduino_TFT::begin(uint32_t speed)
 
   tftInit();
   setRotation(rotation);
-  setAddrWindow(_xstart, _ystart, _width, _height);
+  setAddrWindow(_xStart, _yStart, _width, _height);
 }
 
-void Arduino_TFT::startWrite()
+inline void Arduino_TFT::startWrite()
 {
   _bus->beginWrite();
 }
@@ -53,7 +53,7 @@ void Arduino_TFT::writeColor(uint16_t color)
   _bus->write16(color);
 }
 
-void Arduino_TFT::writePixel(int16_t x, int16_t y, uint16_t color)
+inline void Arduino_TFT::writePixel(int16_t x, int16_t y, uint16_t color)
 {
   if (_ordered_in_range(x, 0, _max_x) && _ordered_in_range(y, 0, _max_y))
   {
@@ -340,12 +340,34 @@ void Arduino_TFT::writeFillRectPreclipped(int16_t x, int16_t y,
 
 void Arduino_TFT::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-  writeAddrColumn(x, w);
-  writeAddrRow(y, h);
+  if (w == 1)
+  {
+    if (x != _currentX)
+    {
+      writeAddrColumn(x, w);
+      _currentX = x;
+    }
+  }
+  else
+  {
+    writeAddrColumn(x, w);
+  }
+  if (h == 1)
+  {
+    if (y != _currentY)
+    {
+      writeAddrRow(y, h);
+      _currentY = y;
+    }
+  }
+  else
+  {
+    writeAddrRow(y, h);
+  }
   writeAddrMemWrite();
 }
 
-void Arduino_TFT::endWrite()
+inline void Arduino_TFT::endWrite()
 {
   _bus->endWrite();
 }

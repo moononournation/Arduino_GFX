@@ -77,12 +77,12 @@ void Arduino_ILI9341::tftInit()
 void Arduino_ILI9341::writeAddrColumn(uint16_t x, uint16_t w)
 {
 #ifdef ESP32
-  uint32_t x_range = ((uint32_t)(x + _xstart) << 16) | (x + w - 1 + _xstart);
+  uint32_t x_range = ((uint32_t)(x + _xStart) << 16) | (x + w - 1 + _xStart);
 
   _bus->writeCommandCore(ILI9341_CASET); // Column addr set
   _bus->write32(x_range);
 #else
-  uint16_t x_start = x + _xstart, x_end = x + w - 1 + _xstart;
+  uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
   _bus->writeCommandCore(ILI9341_CASET); // Column addr set
   _bus->write(x_start >> 8);
@@ -95,12 +95,12 @@ void Arduino_ILI9341::writeAddrColumn(uint16_t x, uint16_t w)
 void Arduino_ILI9341::writeAddrRow(uint16_t y, uint16_t h)
 {
 #ifdef ESP32
-  uint32_t y_range = ((uint32_t)(y + _xstart) << 16) | (y + h - 1 + _ystart);
+  uint32_t y_range = ((uint32_t)(y + _xStart) << 16) | (y + h - 1 + _yStart);
 
   _bus->writeCommandCore(ILI9341_PASET); // Row addr set
   _bus->write32(y_range);
 #else
-  uint16_t y_start = y + _ystart, y_end = y + h - 1 + _ystart;
+  uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
   _bus->writeCommandCore(ILI9341_PASET); // Row addr set
   _bus->write(y_start >> 8);
@@ -133,8 +133,8 @@ void Arduino_ILI9341::setRotation(uint8_t m)
     _height = HEIGHT;
     _max_x = _width - 1;  ///< x zero base bound
     _max_y = _height - 1; ///< y zero base bound
-    _xstart = COL_OFFSET;
-    _ystart = ROW_OFFSET;
+    _xStart = COL_OFFSET;
+    _yStart = ROW_OFFSET;
     break;
   case 1:
     m = (ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
@@ -143,8 +143,8 @@ void Arduino_ILI9341::setRotation(uint8_t m)
     _height = WIDTH;
     _max_x = _width - 1;  ///< x zero base bound
     _max_y = _height - 1; ///< y zero base bound
-    _xstart = ROW_OFFSET;
-    _ystart = COL_OFFSET;
+    _xStart = ROW_OFFSET;
+    _yStart = COL_OFFSET;
     break;
   case 2:
     m = (ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
@@ -153,8 +153,8 @@ void Arduino_ILI9341::setRotation(uint8_t m)
     _height = HEIGHT;
     _max_x = _width - 1;  ///< x zero base bound
     _max_y = _height - 1; ///< y zero base bound
-    _xstart = ILI9341_TFTWIDTH - WIDTH - COL_OFFSET;
-    _ystart = ILI9341_TFTHEIGHT - HEIGHT - ROW_OFFSET;
+    _xStart = ILI9341_TFTWIDTH - WIDTH - COL_OFFSET;
+    _yStart = ILI9341_TFTHEIGHT - HEIGHT - ROW_OFFSET;
     break;
   case 3:
     m = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
@@ -163,8 +163,8 @@ void Arduino_ILI9341::setRotation(uint8_t m)
     _height = WIDTH;
     _max_x = _width - 1;  ///< x zero base bound
     _max_y = _height - 1; ///< y zero base bound
-    _xstart = ILI9341_TFTHEIGHT - HEIGHT - ROW_OFFSET;
-    _ystart = ILI9341_TFTWIDTH - WIDTH - COL_OFFSET;
+    _xStart = ILI9341_TFTHEIGHT - HEIGHT - ROW_OFFSET;
+    _yStart = ILI9341_TFTWIDTH - WIDTH - COL_OFFSET;
     break;
   }
 

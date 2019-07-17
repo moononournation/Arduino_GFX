@@ -59,18 +59,20 @@ class Arduino_ST7789 : public Arduino_TFT
 public:
   Arduino_ST7789(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0,
     int16_t w = ST7789_TFTWIDTH, int16_t h = ST7789_TFTHEIGHT,
-    uint8_t col_offset = 0, uint8_t row_offset = 0);
+    uint8_t col_offset = 0, uint8_t row_offset = 0,
+    bool ips = false);
 
   virtual void writeAddrColumn(uint16_t x, uint16_t w);
   virtual void writeAddrRow(uint16_t y, uint16_t h);
   virtual void writeAddrMemWrite();
   virtual void setRotation(uint8_t);
-  virtual void invertDisplay(boolean);
+  virtual void invertDisplay(bool);
   virtual void displayOn();
   virtual void displayOff();
 
 protected:
   virtual void tftInit();
+  bool _ips;
 
 private:
 };

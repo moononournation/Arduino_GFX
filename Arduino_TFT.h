@@ -15,9 +15,9 @@ public:
   Arduino_TFT(Arduino_DataBus *bus, int8_t rst, uint8_t r, int16_t w, int16_t h, uint8_t col_offset, uint8_t row_offset);
 
   virtual void begin(uint32_t speed = 0);
-  virtual void startWrite(void);
+  virtual inline void startWrite(void);
   virtual void writeColor(uint16_t color);
-  virtual void writePixel(int16_t x, int16_t y, uint16_t color);
+  virtual inline void writePixel(int16_t x, int16_t y, uint16_t color);
   virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
   virtual void writePixels(uint16_t color, uint32_t len);
   virtual void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
@@ -26,7 +26,7 @@ public:
   virtual void writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
   virtual void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
   virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
-  virtual void endWrite(void);
+  virtual inline void endWrite(void);
 
   virtual void pushColor(uint16_t color);
   virtual void drawPixel(int16_t x, int16_t y, uint16_t color);
@@ -41,10 +41,11 @@ public:
   virtual void displayOff() = 0;
 
 protected:
-  int8_t _rst;
   Arduino_DataBus *_bus;
+  int8_t _rst;
   uint8_t COL_OFFSET, ROW_OFFSET;
-  uint8_t _xstart, _ystart;
+  uint8_t _xStart, _yStart;
+  uint16_t _currentX = 0xFFFF, _currentY = 0xFFFF;
   virtual void tftInit() = 0;
 
 private:
