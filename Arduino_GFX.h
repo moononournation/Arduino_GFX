@@ -113,7 +113,7 @@ public:
   // These MAY be overridden by the subclass to provide device-specific
   // optimized code.  Otherwise 'generic' versions are used.
   virtual void setRotation(uint8_t r);
-  virtual void invertDisplay(boolean i);
+  virtual void invertDisplay(bool i);
 
   // BASIC DRAW API
   // These MAY be overridden by the subclass to provide device-specific
@@ -202,7 +202,7 @@ public:
   @param  w  true for wrapping, false for clipping
   */
   /**********************************************************************/
-  void setTextWrap(boolean w) { wrap = w; }
+  void setTextWrap(bool w) { wrap = w; }
 
   /**********************************************************************/
   /*!
@@ -218,7 +218,7 @@ public:
     @param  x  true = enable (new behavior), false = disable (old behavior)
   */
   /**********************************************************************/
-  void cp437(boolean x = true) { _cp437 = x; }
+  void cp437(bool x = true) { _cp437 = x; }
 
 #if ARDUINO >= 100
   virtual size_t write(uint8_t);
@@ -311,7 +311,7 @@ protected:
       textsize_x, ///< Desired magnification in X-axis of text to print()
       textsize_y, ///< Desired magnification in Y-axis of text to print()
       rotation;   ///< Display rotation (0 thru 3)
-  boolean
+  bool
       wrap,   ///< If set, 'wrap' text at right edge of display
       _cp437; ///< If set, use correct CP437 charset (default is off)
   GFXfont

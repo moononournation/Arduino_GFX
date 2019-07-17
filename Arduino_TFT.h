@@ -36,7 +36,7 @@ public:
   virtual void writeAddrRow(uint16_t y, uint16_t h) = 0;
   virtual void writeAddrMemWrite() = 0;
   virtual void setRotation(uint8_t) = 0;
-  virtual void invertDisplay(boolean) = 0;
+  virtual void invertDisplay(bool) = 0;
   virtual void displayOn() = 0;
   virtual void displayOff() = 0;
 

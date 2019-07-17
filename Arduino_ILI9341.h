@@ -90,7 +90,7 @@ public:
   virtual void writeAddrRow(uint16_t y, uint16_t h);
   virtual void writeAddrMemWrite();
   virtual void setRotation(uint8_t);
-  virtual void invertDisplay(boolean);
+  virtual void invertDisplay(bool);
   virtual void displayOn();
   virtual void displayOff();
 

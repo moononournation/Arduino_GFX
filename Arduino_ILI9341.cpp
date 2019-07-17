@@ -174,7 +174,7 @@ void Arduino_ILI9341::setRotation(uint8_t m)
   _bus->endWrite();
 }
 
-void Arduino_ILI9341::invertDisplay(boolean i)
+void Arduino_ILI9341::invertDisplay(bool i)
 {
   _bus->writeCommand(i ? ILI9341_INVON : ILI9341_INVOFF);
 }
