@@ -10,6 +10,9 @@ Arduino_ST7789::Arduino_ST7789(Arduino_DataBus *bus, int8_t rst,
     : Arduino_TFT(bus, rst, r, w, h, col_offset, row_offset)
 {
   _ips = ips;
+  if (_ips) {
+    invertDisplay(false); // apply invert status
+  }
 }
 
 // Companion code to the above tables.  Reads and issues
