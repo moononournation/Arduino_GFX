@@ -340,21 +340,13 @@ void Arduino_TFT::writeFillRectPreclipped(int16_t x, int16_t y,
 
 void Arduino_TFT::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-  if (w == 1)
+  if ((w == 1) && (h == 1))
   {
     if (x != _currentX)
     {
       writeAddrColumn(x, w);
       _currentX = x;
     }
-  }
-  else
-  {
-    writeAddrColumn(x, w);
-    _currentX = 0xFFFF;
-  }
-  if (h == 1)
-  {
     if (y != _currentY)
     {
       writeAddrRow(y, h);
@@ -363,6 +355,8 @@ void Arduino_TFT::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h
   }
   else
   {
+    writeAddrColumn(x, w);
+    _currentX = 0xFFFF;
     writeAddrRow(y, h);
     _currentY = 0xFFFF;
   }
