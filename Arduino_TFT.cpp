@@ -351,6 +351,7 @@ void Arduino_TFT::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h
   else
   {
     writeAddrColumn(x, w);
+    _currentX = 0xFFFF;
   }
   if (h == 1)
   {
@@ -363,6 +364,7 @@ void Arduino_TFT::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h
   else
   {
     writeAddrRow(y, h);
+    _currentY = 0xFFFF;
   }
   writeAddrMemWrite();
 }
