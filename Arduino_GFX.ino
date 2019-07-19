@@ -20,12 +20,10 @@
 #define TFT_RST 18
 #define TFT_BL 10
 #endif
-#define TFT_ROTATION 0
 #define TFT_WIDTH 240
 #define TFT_HEIGHT 320
 #define TFT_COL_OFFSET 0
 #define TFT_ROW_OFFSET 0
-#define TFT_IPS true
 
 uint32_t w = TFT_WIDTH;
 uint32_t h = TFT_HEIGHT;
@@ -44,8 +42,9 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 #else
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 #endif
-Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, TFT_ROTATION);
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, TFT_ROTATION, TFT_WIDTH, TFT_HEIGHT, TFT_COL_OFFSET, TFT_ROW_OFFSET, TFT_IPS);
+Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, 240, 240, 0, 80, true /* IPS */); // 1.3"/1.5" square IPS LCD
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 1 /* rotation */, 240, 320); // 2.4" LCD
 
 unsigned long total = 0;
 unsigned long tn = 0;
@@ -57,7 +56,6 @@ void setup() {
 
   tft->begin();
   // tft->begin(80000000);
-  // tft->invertDisplay(true);
 
 #ifdef TFT_BL
   pinMode(TFT_BL, OUTPUT);
