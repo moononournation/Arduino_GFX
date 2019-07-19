@@ -95,7 +95,7 @@ void Arduino_ILI9341::writeAddrColumn(uint16_t x, uint16_t w)
 void Arduino_ILI9341::writeAddrRow(uint16_t y, uint16_t h)
 {
 #ifdef ESP32
-  uint32_t y_range = ((uint32_t)(y + _xStart) << 16) | (y + h - 1 + _yStart);
+  uint32_t y_range = ((uint32_t)(y + _yStart) << 16) | (y + h - 1 + _yStart);
 
   _bus->writeCommandCore(ILI9341_PASET); // Row addr set
   _bus->write32(y_range);
