@@ -22,8 +22,16 @@ static uint8_t SPCRbackup;
 static uint8_t mySPCR;
 #endif
 
+#if defined(ESP32)
+Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs  /* = -1 */, int8_t sck  /* = -1 */, int8_t mosi  /* = -1 */, int8_t miso  /* = -1 */)
+{
+  _sck = sck;
+  _mosi = mosi;
+  _miso = miso;
+#else
 Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */)
 {
+#endif
   _dc = dc;
   _cs = cs;
 }
@@ -51,7 +59,7 @@ void Arduino_HWSPI::begin(uint32_t speed)
 #endif
 
 #if defined(ESP32)
-  SPI.begin();
+  SPI.begin(_sck, _miso, _mosi);
   mySPISettings = SPISettings(speed, MSBFIRST, SPI_MODE0);
 #elif defined(SPI_HAS_TRANSACTION)
   SPI.begin();

@@ -56,7 +56,11 @@ typedef unsigned char prog_uchar;
 class Arduino_HWSPI : public Arduino_DataBus
 {
 public:
+#if defined(ESP32)
+  Arduino_HWSPI(int8_t dc, int8_t cs = -1, int8_t _sck = -1, int8_t _mosi = -1, int8_t _miso = -1); // Constructor
+#else
   Arduino_HWSPI(int8_t dc, int8_t cs = -1); // Constructor
+#endif
 
   virtual void begin(uint32_t speed = 0);
   virtual void beginWrite();
@@ -76,6 +80,10 @@ private:
   inline void DC_LOW(void);
 
   int8_t _dc, _cs;
+#if defined(ESP32)
+  int8_t _sck, _mosi, _miso;
+#endif
+
 #if defined(USE_FAST_IO)
   volatile RwReg *csport, *dcport;
 
@@ -84,7 +92,7 @@ private:
 #else // 32 bit!
   uint32_t cspinmask, dcpinmask;
 #endif
-#endif
+#endif // #if defined(USE_FAST_IO)
 };
 
 #endif

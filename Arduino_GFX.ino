@@ -38,6 +38,8 @@ uint32_t cn1 = min(cx1, cy1) - 1;
 
 //You can use different type of hardware initialization
 #ifdef TFT_CS
+// ESP32 also can customize SPI pins
+// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 19 /* MOSI */, 23 /* MISO */);
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 #else
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
