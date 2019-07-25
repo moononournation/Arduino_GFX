@@ -4,7 +4,7 @@ This library is developing for various displays and various data bus interfaces
 This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 
 ## Currently Supported Display
-- ILI9341
+- ILI9341 240x320
 - ST7789 240x320
 - ST7789 240x240
 
