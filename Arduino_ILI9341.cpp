@@ -59,6 +59,7 @@ void Arduino_ILI9341::tftInit()
   _bus->writeData(0x86);
   _bus->writeCommand(ILI9341_VSCRSADD); // Vertical scroll zero
   _bus->writeData(0x00);
+
   _bus->writeCommand(ILI9341_PIXFMT);
   _bus->writeData(0x55);
   _bus->writeCommand(ILI9341_FRMCTR1);
@@ -182,10 +183,11 @@ void Arduino_ILI9341::invertDisplay(bool i)
 void Arduino_ILI9341::displayOn(void)
 {
   _bus->writeCommand(ILI9341_SLPOUT);
-  delay(5);
+  delay(ILI9341_SLPOUT_DELAY);
 }
 
 void Arduino_ILI9341::displayOff(void)
 {
   _bus->writeCommand(ILI9341_SLPIN);
+  delay(ILI9341_SLPIN_DELAY);
 }

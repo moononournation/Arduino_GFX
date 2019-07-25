@@ -5,8 +5,8 @@
  */
 #include "Arduino_ST7789.h"
 
-Arduino_ST7789::Arduino_ST7789(Arduino_DataBus *bus, int8_t rst,
-                               uint8_t r, int16_t w, int16_t h, uint8_t col_offset, uint8_t row_offset, bool ips)
+Arduino_ST7789::Arduino_ST7789(Arduino_DataBus *bus, int8_t rst, uint8_t r,
+                               int16_t w, int16_t h, uint8_t col_offset, uint8_t row_offset, bool ips)
     : Arduino_TFT(bus, rst, r, w, h, col_offset, row_offset)
 {
   _ips = ips;
@@ -26,10 +26,11 @@ void Arduino_ST7789::tftInit()
   delay(ST7789_SLPOUT_DELAY);
   _bus->writeCommand(ST7789_COLMOD); // 3: Set color mode, 1 arg + delay:
   _bus->writeData(0x55);             // 16-bit color
-  if (_ips) {
+  if (_ips)
+  {
     _bus->writeCommand(ST7789_INVON);
   }
-  _bus->writeCommand(ST7789_NORON);  // 4: Normal display on, no args, w/delay
+  _bus->writeCommand(ST7789_NORON); // 4: Normal display on, no args, w/delay
   delay(10);
   _bus->writeCommand(ST7789_DISPON); // 5: Main screen turn on, no args, w/delay
   delay(500);
@@ -144,10 +145,11 @@ void Arduino_ST7789::invertDisplay(bool i)
 void Arduino_ST7789::displayOn(void)
 {
   _bus->writeCommand(ST7789_SLPOUT);
-  delay(5);
+  delay(ST7789_SLPOUT_DELAY);
 }
 
 void Arduino_ST7789::displayOff(void)
 {
   _bus->writeCommand(ST7789_SLPIN);
+  delay(ST7789_SLPIN_DELAY);
 }
