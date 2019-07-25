@@ -85,36 +85,25 @@ void Arduino_ST7789::writeAddrMemWrite()
 /**************************************************************************/
 void Arduino_ST7789::setRotation(uint8_t m)
 {
-  rotation = m % 4; // can't be higher than 3
+  Arduino_GFX::setRotation(m);
+  rotation = (m & 3);
   switch (rotation)
   {
   case 0:
     m = ST7789_MADCTL_MX | ST7789_MADCTL_MY | ST7789_MADCTL_RGB;
 
-    _width = WIDTH;
-    _height = HEIGHT;
-    _max_x = _width - 1;  ///< x zero base bound
-    _max_y = _height - 1; ///< y zero base bound
     _xStart = COL_OFFSET;
     _yStart = ROW_OFFSET;
     break;
   case 1:
     m = ST7789_MADCTL_MY | ST7789_MADCTL_MV | ST7789_MADCTL_RGB;
 
-    _width = HEIGHT;
-    _height = WIDTH;
-    _max_x = _width - 1;  ///< x zero base bound
-    _max_y = _height - 1; ///< y zero base bound
     _xStart = ROW_OFFSET;
     _yStart = COL_OFFSET;
     break;
   case 2:
     m = ST7789_MADCTL_RGB;
 
-    _width = WIDTH;
-    _height = HEIGHT;
-    _max_x = _width - 1;  ///< x zero base bound
-    _max_y = _height - 1; ///< y zero base bound
     _xStart = ST7789_TFTWIDTH - WIDTH - COL_OFFSET;
     _yStart = ST7789_TFTHEIGHT - HEIGHT - ROW_OFFSET;
     break;
@@ -122,10 +111,6 @@ void Arduino_ST7789::setRotation(uint8_t m)
   case 3:
     m = ST7789_MADCTL_MX | ST7789_MADCTL_MV | ST7789_MADCTL_RGB;
 
-    _width = HEIGHT;
-    _height = WIDTH;
-    _max_x = _width - 1;  ///< x zero base bound
-    _max_y = _height - 1; ///< y zero base bound
     _xStart = ST7789_TFTHEIGHT - HEIGHT - ROW_OFFSET;
     _yStart = ST7789_TFTWIDTH - WIDTH - COL_OFFSET;
     break;

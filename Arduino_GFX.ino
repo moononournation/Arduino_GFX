@@ -26,26 +26,11 @@
 #define TFT_RST 18
 #define TFT_BL 10
 #endif
-#define TFT_WIDTH 240
-#define TFT_HEIGHT 320
-#define TFT_COL_OFFSET 0
-#define TFT_ROW_OFFSET 0
-
-uint32_t w = TFT_WIDTH;
-uint32_t h = TFT_HEIGHT;
-uint32_t n = min(w, h);
-uint32_t n1 = min(w, h) - 1;
-uint32_t cx = w / 2;
-uint32_t cy = h / 2;
-uint32_t cx1 = cx - 1;
-uint32_t cy1 = cy - 1;
-uint32_t cn = min(cx1, cy1);
-uint32_t cn1 = min(cx1, cy1) - 1;
 
 //You can use different type of hardware initialization
 #if defined(ARDUINO_M5Stack_Core_ESP32) or defined(ARDUINO_M5STACK_FIRE)
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
-Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, TFT_RST, 0 /* rotation */);
+Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, TFT_RST, 1 /* rotation */);
 #else
 #if defined(TFT_CS)
 // ESP32 also can customize SPI pins
@@ -55,20 +40,35 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 #endif
 Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, 240, 240, 0, 80, true /* IPS */); // 1.3"/1.5" square IPS LCD
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 1 /* rotation */, 240, 320); // 2.4" LCD
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, 240 /* width */, 240 /* height */, 0 /* col offset */, 80 /* row offset */, true /* IPS */); // 1.3"/1.5" square IPS LCD
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 1 /* rotation */, 240 /* width */, 320 /* height */); // 2.4" LCD
 #endif
+
+uint32_t w, h, n, n1, cx, cy, cx1, cy1, cn, cn1;
 
 unsigned long total = 0;
 unsigned long tn = 0;
 void setup() {
   Serial.begin(115200);
   while (!Serial);
-  Serial.println(""); Serial.println("");
   Serial.println("Arduino_GFX library Test!");
 
   tft->begin();
   // tft->begin(80000000);
+
+  w = tft->width();
+  h = tft->height();
+  n = min(w, h);
+  n1 = min(w, h) - 1;
+  cx = w / 2;
+  cy = h / 2;
+  cx1 = cx - 1;
+  cy1 = cy - 1;
+  cn = min(cx1, cy1);
+  cn1 = min(cx1, cy1) - 1;
+
+  Serial.println(w);
+  Serial.println(h);
 
 #ifdef TFT_BL
   pinMode(TFT_BL, OUTPUT);
@@ -333,13 +333,13 @@ uint32_t testText()
   tft->println(1234.56);
   tft->setTextColor(WHITE);
   tft->println(0xDEADBEEF, HEX);
+  tft->setTextColor(ORANGE);
+  tft->setTextSize(4);
+  tft->println(F("Size 4"));
+  tft->setTextColor(GREENYELLOW);
+  tft->setTextSize(5);
+  tft->println(F("Size 5"));
   if (h > 240) {
-    tft->setTextColor(ORANGE);
-    tft->setTextSize(4);
-    tft->println(F("Size 4"));
-    tft->setTextColor(GREENYELLOW);
-    tft->setTextSize(5);
-    tft->println(F("Size 5"));
     tft->setTextColor(PINK);
     tft->setTextSize(6);
     tft->println(F("Size 6"));

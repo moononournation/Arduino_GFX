@@ -124,46 +124,31 @@ void Arduino_ILI9341::writeAddrMemWrite()
 /**************************************************************************/
 void Arduino_ILI9341::setRotation(uint8_t m)
 {
-  rotation = m % 4; // can't be higher than 3
+  Arduino_GFX::setRotation(m);
+  rotation = (m & 3);
   switch (rotation)
   {
   case 0:
     m = (ILI9341_MADCTL_MX | ILI9341_MADCTL_BGR);
 
-    _width = WIDTH;
-    _height = HEIGHT;
-    _max_x = _width - 1;  ///< x zero base bound
-    _max_y = _height - 1; ///< y zero base bound
     _xStart = COL_OFFSET;
     _yStart = ROW_OFFSET;
     break;
   case 1:
     m = (ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
 
-    _width = HEIGHT;
-    _height = WIDTH;
-    _max_x = _width - 1;  ///< x zero base bound
-    _max_y = _height - 1; ///< y zero base bound
     _xStart = ROW_OFFSET;
     _yStart = COL_OFFSET;
     break;
   case 2:
     m = (ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
 
-    _width = WIDTH;
-    _height = HEIGHT;
-    _max_x = _width - 1;  ///< x zero base bound
-    _max_y = _height - 1; ///< y zero base bound
     _xStart = ILI9341_TFTWIDTH - WIDTH - COL_OFFSET;
     _yStart = ILI9341_TFTHEIGHT - HEIGHT - ROW_OFFSET;
     break;
   case 3:
     m = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
 
-    _width = HEIGHT;
-    _height = WIDTH;
-    _max_x = _width - 1;  ///< x zero base bound
-    _max_y = _height - 1; ///< y zero base bound
     _xStart = ILI9341_TFTHEIGHT - HEIGHT - ROW_OFFSET;
     _yStart = ILI9341_TFTWIDTH - WIDTH - COL_OFFSET;
     break;

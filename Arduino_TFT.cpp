@@ -40,7 +40,7 @@ void Arduino_TFT::begin(uint32_t speed)
 
   tftInit();
   setRotation(rotation);
-  setAddrWindow(_xStart, _yStart, _width, _height);
+  setAddrWindow(0, 0, _width, _height);
 }
 
 inline void Arduino_TFT::startWrite()
