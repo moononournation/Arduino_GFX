@@ -33,7 +33,6 @@ void Arduino_ST7789::tftInit()
   _bus->writeCommand(ST7789_NORON); // 4: Normal display on, no args, w/delay
   delay(10);
   _bus->writeCommand(ST7789_DISPON); // 5: Main screen turn on, no args, w/delay
-  delay(500);
 }
 
 void Arduino_ST7789::writeAddrColumn(uint16_t x, uint16_t w)

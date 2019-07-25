@@ -8,7 +8,6 @@
 #include "Arduino_HWSPI.h"
 #include "Arduino_GFX.h"    // Core graphics library by Adafruit
 #include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341 (with or without CS pin)
-#include "Arduino_ILI9341_M5STACK.h" // Hardware-specific library for ILI9341 (with or without CS pin)
 // #include "Arduino_ST7789.h" // Hardware-specific library for ST7789 (with or without CS pin)
 
 #if defined(ARDUINO_M5Stack_Core_ESP32) or defined(ARDUINO_M5STACK_FIRE)
@@ -29,13 +28,14 @@
 
 //You can use different type of hardware initialization
 #if defined(ARDUINO_M5Stack_Core_ESP32) or defined(ARDUINO_M5STACK_FIRE)
+// #include "Arduino_ILI9341_M5STACK.h"
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
 Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, TFT_RST, 1 /* rotation */);
 #else
 #if defined(TFT_CS)
 // ESP32 also can customize SPI pins
-// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
-Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
+Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
+// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 #else
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 #endif

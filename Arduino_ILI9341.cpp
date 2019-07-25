@@ -20,34 +20,6 @@ void Arduino_ILI9341::tftInit()
     delay(ILI9341_RST_DELAY);
   }
 
-  _bus->writeCommand(0xEF);
-  _bus->writeData(0x03);
-  _bus->writeData(0x80);
-  _bus->writeData(0x02);
-  _bus->writeCommand(0xCF);
-  _bus->writeData(0x00);
-  _bus->writeData(0xC1);
-  _bus->writeData(0x30);
-  _bus->writeCommand(0xED);
-  _bus->writeData(0x64);
-  _bus->writeData(0x03);
-  _bus->writeData(0x12);
-  _bus->writeData(0x81);
-  _bus->writeCommand(0xE8);
-  _bus->writeData(0x85);
-  _bus->writeData(0x00);
-  _bus->writeData(0x78);
-  _bus->writeCommand(0xCB);
-  _bus->writeData(0x39);
-  _bus->writeData(0x2C);
-  _bus->writeData(0x00);
-  _bus->writeData(0x34);
-  _bus->writeData(0x02);
-  _bus->writeCommand(0xF7);
-  _bus->writeData(0x20);
-  _bus->writeCommand(0xEA);
-  _bus->writeData(0x00);
-  _bus->writeData(0x00);
   _bus->writeCommand(ILI9341_PWCTR1); // Power control VRH[5:0]
   _bus->writeData(0x23);
   _bus->writeCommand(ILI9341_PWCTR2); // Power control SAP[2:0];BT[3:0]
@@ -72,7 +44,6 @@ void Arduino_ILI9341::tftInit()
   _bus->writeCommand(ILI9341_SLPOUT); // Exit Sleep
   delay(ILI9341_SLPOUT_DELAY);
   _bus->writeCommand(ILI9341_DISPON); // Display on
-  delay(150);
 }
 
 void Arduino_ILI9341::writeAddrColumn(uint16_t x, uint16_t w)
