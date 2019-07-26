@@ -6,16 +6,24 @@
 
 #include "SPI.h"
 #include "Arduino_HWSPI.h"
-#include "Arduino_GFX.h"    // Core graphics library by Adafruit
+#include "Arduino_GFX.h"     // Core graphics library by Adafruit
 #include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341 (with or without CS pin)
-// #include "Arduino_ST7789.h" // Hardware-specific library for ST7789 (with or without CS pin)
+#include "Arduino_ST7789.h"  // Hardware-specific library for ST7789 (with or without CS pin)
 
 #if defined(ARDUINO_M5Stack_Core_ESP32) or defined(ARDUINO_M5STACK_FIRE)
-#define TFT_CS 14
-#define TFT_DC 27
-#define TFT_RST 33
 #define TFT_BL 32
-#elif defined(ESP32)
+#include "Arduino_ILI9341_M5STACK.h"
+Arduino_HWSPI *bus = new Arduino_HWSPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
+Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 /* rotation */);
+#elif defined(ARDUINO_ODROID_ESP32)
+#define TFT_BL 14
+#include "Arduino_ILI9341_M5STACK.h"
+Arduino_HWSPI *bus = new Arduino_HWSPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
+Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 0 /* rotation */, 240 /* width */, 320 /* height */, 0 /* col offset */, 0 /* row offset */, true /* IPS */); // 2.4" IPS LCD
+#else /* not a specific hardware */
+
+#if defined(ESP32)
 #define TFT_CS 5
 #define TFT_DC 16
 #define TFT_RST 17
@@ -27,34 +35,34 @@
 #endif
 
 //You can use different type of hardware initialization
-#if defined(ARDUINO_M5Stack_Core_ESP32) or defined(ARDUINO_M5STACK_FIRE)
-// #include "Arduino_ILI9341_M5STACK.h"
-Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
-Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, TFT_RST, 1 /* rotation */);
-#else
 #if defined(TFT_CS)
 // ESP32 also can customize SPI pins
-Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
-// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
+// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
+Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 #else
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 #endif
 Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, 240 /* width */, 240 /* height */, 0 /* col offset */, 80 /* row offset */, true /* IPS */); // 1.3"/1.5" square IPS LCD
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 1 /* rotation */, 240 /* width */, 320 /* height */); // 2.4" LCD
-#endif
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, 240 /* width */, 320 /* height */, 0 /* col offset */, 0 /* row offset */, true /* IPS */); // 2.4" IPS LCD
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST); // 2.4" LCD
+
+#endif /* not a specific hardware */
 
 uint32_t w, h, n, n1, cx, cy, cx1, cy1, cn, cn1;
+uint8_t tsa, tsb, tsc, ds;
 
 unsigned long total = 0;
 unsigned long tn = 0;
-void setup() {
+void setup()
+{
   Serial.begin(115200);
-  while (!Serial);
+  while (!Serial)
+    ;
   Serial.println("Arduino_GFX library Test!");
 
   tft->begin();
-  // tft->begin(80000000);
+  // tft->begin(80000000); /* specify data bus speed */
 
   w = tft->width();
   h = tft->height();
@@ -66,9 +74,10 @@ void setup() {
   cy1 = cy - 1;
   cn = min(cx1, cy1);
   cn1 = min(cx1, cy1) - 1;
-
-  Serial.println(w);
-  Serial.println(h);
+  tsa = (w <= 160) ? 1 : ((w <= 240) ? 2 : 3); // text size A
+  tsb = (w <= 240) ? 1 : 2;                    // text size B
+  tsc = (w <= 176) ? 1 : 2;                    // text size C
+  ds = (w <= 160) ? 9 : 12;                    // digit size
 
 #ifdef TFT_BL
   pinMode(TFT_BL, OUTPUT);
@@ -168,106 +177,135 @@ void loop(void)
 
   tft->setCursor(0, 0);
   tft->setTextColor(MAGENTA);
-  tft->setTextSize(2);
-
+  tft->setTextSize(tsa);
   tft->println(F("Arduino GFX"));
-
-  tft->setTextSize(1);
-  tft->setTextColor(WHITE);
-  tft->println(F(""));
   tft->setTextSize(1);
   tft->println(F(""));
-  tft->setTextColor(tft->color565(0x80, 0x80, 0x80));
 
-  tft->setTextColor(GREEN);
-  tft->println(F(" Benchmark               microseconds"));
-  tft->println(F(""));
+  if (h > w)
+  {
+    tft->setTextColor(GREEN);
+    tft->setTextSize(tsb);
+    tft->print(F("Benchmark "));
+    tft->setTextSize(tsc);
+    tft->println(F("micro-secs"));
+    tft->println(F(""));
+    tft->setTextColor(YELLOW);
+  }
+
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("Screen fill "));
   tft->setTextColor(YELLOW);
-
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Screen fill        "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextSize(tsc);
   printnice(usecFillScreen);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Text               "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("Text        "));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecText);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Pixels             "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("Pixels      "));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecPixels);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Lines              "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("Lines       "));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecLines);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Horiz/Vert Lines   "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("H/V Lines   "));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecFastLines);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Rectangles-filled  "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("Rectangles F"));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecFilledRects);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Rectangles         "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("Rectangles  "));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecRects);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Circles-filled     "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("Circles F   "));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecFilledCircles);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Circles            "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("Circles     "));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecCircles);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Triangles-filled   "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("Triangles F "));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecFilledTrangles);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Triangles          "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("Triangles   "));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecTriangles);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Rounded rects-fill "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("RoundRects F"));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecFilledRoundRects);
 
-  tft->setTextColor(CYAN); tft->setTextSize(1);
-  tft->print(F("Rounded rects      "));
-  tft->setTextColor(YELLOW); tft->setTextSize(2);
+  tft->setTextColor(CYAN);
+  tft->setTextSize(tsb);
+  tft->print(F("RoundRects  "));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(tsc);
   printnice(usecRoundRects);
 
-  tft->setTextSize(1);
-  tft->println(F(""));
-  tft->setTextColor(GREEN); tft->setTextSize(2);
-  tft->print(F("Benchmark Complete!"));
+  if (h > w)
+  {
+    tft->setTextSize(1);
+    tft->println(F(""));
+    tft->setTextColor(GREEN);
+    tft->setTextSize(tsc);
+    tft->print(F("Benchmark Complete!"));
+  }
 
   delay(60 * 1000L);
 }
 
 void printnice(int32_t v)
 {
-  char	str[32] = { 0 };
+  char str[32] = {0};
   sprintf(str, "%lu", v);
   for (char *p = (str + strlen(str)) - 3; p > str; p -= 3)
   {
     memmove(p + 1, p, strlen(p) + 1);
     *p = ',';
-
   }
-  while (strlen(str) < 10)
+  while (strlen(str) < ds)
   {
     memmove(str + 1, str, strlen(str) + 1);
     *str = ' ';
@@ -275,7 +313,7 @@ void printnice(int32_t v)
   tft->println(str);
 }
 
-static inline uint32_t micros_start() __attribute__ ((always_inline));
+static inline uint32_t micros_start() __attribute__((always_inline));
 static inline uint32_t micros_start()
 {
   uint8_t oms = millis();
@@ -311,35 +349,46 @@ uint32_t testText()
   tft->print(F("GREEN "));
   tft->setTextColor(tft->color565(0x00, 0x00, 0xff));
   tft->println(F("BLUE"));
-  tft->setTextColor(CYAN);
-  tft->println(F("I implore thee,"));
-  tft->setTextSize(1);
-  tft->setTextColor(MAGENTA, WHITE);
-  tft->println(F("my foonting turlingdromes."));
-  tft->setTextColor(NAVY, WHITE);
-  tft->println(F("And hooptiously drangle me"));
-  tft->setTextColor(DARKGREEN, WHITE);
-  tft->println(F("with crinkly bindlewurdles,"));
-  tft->setTextColor(DARKCYAN, WHITE);
-  tft->println(F("Or I will rend thee"));
-  tft->setTextColor(MAROON, WHITE);
-  tft->println(F("in the gobberwarts"));
-  tft->setTextColor(PURPLE, WHITE);
-  tft->println(F("with my blurglecruncheon,"));
-  tft->setTextColor(OLIVE, WHITE);
-  tft->println(F("see if I don't!"));
+  tft->setTextSize(tsa);
   tft->setTextSize(3);
   tft->setTextColor(YELLOW);
   tft->println(1234.56);
   tft->setTextColor(WHITE);
-  tft->println(0xDEADBEEF, HEX);
-  tft->setTextColor(ORANGE);
-  tft->setTextSize(4);
-  tft->println(F("Size 4"));
-  tft->setTextColor(GREENYELLOW);
-  tft->setTextSize(5);
-  tft->println(F("Size 5"));
-  if (h > 240) {
+  tft->println((w > 128) ? 0xDEADBEEF : 0xDEADBEE, HEX);
+  tft->setTextColor(CYAN, WHITE);
+  tft->println(F("Groop,"));
+  tft->setTextSize(tsc);
+  tft->setTextColor(MAGENTA, WHITE);
+  tft->println(F("I implore thee,"));
+  tft->setTextSize(1);
+  tft->setTextColor(NAVY, WHITE);
+  tft->println(F("my foonting turlingdromes."));
+  tft->setTextColor(DARKGREEN, WHITE);
+  tft->println(F("And hooptiously drangle me"));
+  tft->setTextColor(DARKCYAN, WHITE);
+  tft->println(F("with crinkly bindlewurdles,"));
+  tft->setTextColor(MAROON, WHITE);
+  tft->println(F("Or I will rend thee"));
+  tft->setTextColor(PURPLE, WHITE);
+  tft->println(F("in the gobberwartsb"));
+  tft->setTextColor(OLIVE, WHITE);
+  tft->println(F("with my blurglecruncheon,"));
+  tft->setTextColor(DARKGREY, WHITE);
+  tft->println(F("see if I don't!"));
+  if (h > 160)
+  {
+    tft->setTextColor(ORANGE);
+    tft->setTextSize(4);
+    tft->println(F("Size 4"));
+  }
+  if (h > 220)
+  {
+    tft->setTextColor(GREENYELLOW);
+    tft->setTextSize(5);
+    tft->println(F("Size 5"));
+  }
+  if (h > 240)
+  {
     tft->setTextColor(PINK);
     tft->setTextSize(6);
     tft->println(F("Size 6"));
@@ -364,11 +413,10 @@ uint32_t testPixels()
   return micros() - start;
 }
 
-
 uint32_t testLines(uint16_t color)
 {
   uint32_t start, t;
-  int32_t	x1, y1, x2, y2;
+  int32_t x1, y1, x2, y2;
 
   x1 = y1 = 0;
   y2 = h - 1;
@@ -477,7 +525,7 @@ uint32_t testFilledRects(uint16_t color1, uint16_t color2)
 
     t += micros() - start;
 
-    // Outlines are not included in timing results
+    // Outlines are not included in timing resultsb
     tft->drawRect(cx - i2, cy - i2, i, i, color2);
   }
 
@@ -546,13 +594,14 @@ uint32_t testFilledTriangles()
 
   start = micros_start();
 
-  for (i = cn1; i > 10; i -= 5) {
+  for (i = cn1; i > 10; i -= 5)
+  {
     start = micros_start();
     tft->fillTriangle(cx1, cy1 - i, cx1 - i, cy1 + i, cx1 + i, cy1 + i,
-                     tft->color565(0, i, i));
+                      tft->color565(0, i, i));
     t += micros() - start;
     tft->drawTriangle(cx1, cy1 - i, cx1 - i, cy1 + i, cx1 + i, cy1 + i,
-                     tft->color565(i, i, 0));
+                      tft->color565(i, i, 0));
   }
 
   return t;
@@ -568,10 +617,10 @@ uint32_t testTriangles()
   for (i = 0; i < cn; i += 5)
   {
     tft->drawTriangle(
-      cx1, cy1 - i, // peak
-      cx1 - i, cy1 + i, // bottom left
-      cx1 + i, cy1 + i, // bottom right
-      tft->color565(0, 0, i));
+        cx1, cy1 - i,     // peak
+        cx1 - i, cy1 + i, // bottom left
+        cx1 + i, cy1 + i, // bottom right
+        tft->color565(0, 0, i));
   }
 
   return micros() - start;
@@ -614,14 +663,14 @@ uint32_t testRoundRects()
 
   This is an example sketch for the Adafruit 2.2" SPI display.
   This library works with the Adafruit 2.2" TFT Breakout w/SD card
-  ----> http://www.adafruit.com/products/1480
+  ----> http://www.adafruit.com/productsb/1480
 
   Check out the links above for our tutorials and wiring diagrams
   These displays use SPI to communicate, 4 or 5 pins are required to
   interface (RST is optional)
-  Adafruit invests time and resources providing this open source code,
+  Adafruit investsb time and resources providing this open source code,
   please support Adafruit and open-source hardware by purchasing
-  products from Adafruit!
+  productsb from Adafruit!
 
   Written by Limor Fried/Ladyada for Adafruit Industries.
   MIT license, all text above must be included in any redistribution
