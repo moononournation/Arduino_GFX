@@ -11,16 +11,22 @@ inline uint16_t swapcolor(uint16_t x)
   return (x << 11) | (x & 0x07E0) | (x >> 11);
 }
 
-Arduino_TFT::Arduino_TFT(Arduino_DataBus *bus, int8_t rst, uint8_t r, int16_t w, int16_t h, uint8_t col_offset, uint8_t row_offset)
+Arduino_TFT::Arduino_TFT(
+    Arduino_DataBus *bus, int8_t rst, uint8_t r,
+    bool ips, int16_t w, int16_t h,
+    uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2)
     : Arduino_GFX(w, h)
 {
   _bus = bus;
   _rst = rst;
-  rotation = r;
+  _rotation = r;
+  _ips = ips;
   WIDTH = w;
   HEIGHT = h;
-  COL_OFFSET = col_offset;
-  ROW_OFFSET = row_offset;
+  COL_OFFSET1 = col_offset1;
+  ROW_OFFSET1 = row_offset1;
+  COL_OFFSET2 = col_offset2;
+  ROW_OFFSET2 = row_offset2;
 }
 
 void Arduino_TFT::begin(uint32_t speed)
@@ -39,7 +45,7 @@ void Arduino_TFT::begin(uint32_t speed)
   }
 
   tftInit();
-  setRotation(rotation);
+  setRotation(_rotation); // apply the setting rotation to the display
   setAddrWindow(0, 0, _width, _height);
 }
 
@@ -407,4 +413,37 @@ void Arduino_TFT::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t w,
   writeAddrWindow(x0, y0, w, h);
 
   endWrite();
+}
+
+/**************************************************************************/
+/*!
+    @brief      Set rotation setting for display
+    @param  x   0 thru 3 corresponding to 4 cardinal rotations
+*/
+/**************************************************************************/
+void Arduino_TFT::setRotation(uint8_t r)
+{
+  Arduino_GFX::setRotation(r);
+  switch (_rotation)
+  {
+  case 0:
+    _xStart = COL_OFFSET1;
+    _yStart = ROW_OFFSET1;
+    break;
+
+  case 1:
+    _xStart = ROW_OFFSET1;
+    _yStart = COL_OFFSET1;
+    break;
+
+  case 2:
+    _xStart = COL_OFFSET2;
+    _yStart = ROW_OFFSET2;
+    break;
+
+  case 3:
+    _xStart = ROW_OFFSET2;
+    _yStart = COL_OFFSET2;
+    break;
+  }
 }

@@ -14,9 +14,9 @@
 #define ST7789_TFTWIDTH 240
 #define ST7789_TFTHEIGHT 320
 
-#define ST7789_RST_DELAY  120      ///< delay ms wait for reset finish
-#define ST7789_SLPIN_DELAY 120      ///< delay ms wait for sleep in finish
-#define ST7789_SLPOUT_DELAY 120      ///< delay ms wait for sleep out finish
+#define ST7789_RST_DELAY 120    ///< delay ms wait for reset finish
+#define ST7789_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
+#define ST7789_SLPOUT_DELAY 120 ///< delay ms wait for sleep out finish
 
 #define ST7789_NOP 0x00
 #define ST7789_SWRESET 0x01
@@ -53,27 +53,25 @@
 #define ST7789_RDID3 0xDC
 #define ST7789_RDID4 0xDD
 
-
 class Arduino_ST7789 : public Arduino_TFT
 {
 
 public:
-  Arduino_ST7789(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0,
-    int16_t w = ST7789_TFTWIDTH, int16_t h = ST7789_TFTHEIGHT,
-    uint8_t col_offset = 0, uint8_t row_offset = 0,
-    bool ips = false);
+  Arduino_ST7789(
+      Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0,
+      bool ips = false, int16_t w = ST7789_TFTWIDTH, int16_t h = ST7789_TFTHEIGHT,
+      uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
   virtual void writeAddrColumn(uint16_t x, uint16_t w);
   virtual void writeAddrRow(uint16_t y, uint16_t h);
   virtual void writeAddrMemWrite();
-  virtual void setRotation(uint8_t);
+  virtual void setRotation(uint8_t r);
   virtual void invertDisplay(bool);
   virtual void displayOn();
   virtual void displayOff();
 
 protected:
   virtual void tftInit();
-  bool _ips;
 
 private:
 };

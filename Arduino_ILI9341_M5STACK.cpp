@@ -54,36 +54,36 @@ void Arduino_ILI9341_M5STACK::tftInit()
   _bus->writeCommand(0xEA);
   _bus->writeData(0x00);
   _bus->writeData(0x00);
-  _bus->writeCommand(ILI9341_PWCTR1);    //Power control
-  _bus->writeData(0x23);   //VRH[5:0]
-  _bus->writeCommand(ILI9341_PWCTR2);    //Power control
-  _bus->writeData(0x10);   //SAP[2:0];BT[3:0]
-  _bus->writeCommand(ILI9341_VMCTR1);    //VCM control
+  _bus->writeCommand(ILI9341_PWCTR1); //Power control
+  _bus->writeData(0x23);              //VRH[5:0]
+  _bus->writeCommand(ILI9341_PWCTR2); //Power control
+  _bus->writeData(0x10);              //SAP[2:0];BT[3:0]
+  _bus->writeCommand(ILI9341_VMCTR1); //VCM control
   _bus->writeData(0x3e);
   _bus->writeData(0x28);
-  _bus->writeCommand(ILI9341_VMCTR2);    //VCM control2
-  _bus->writeData(0x86);  //--
+  _bus->writeCommand(ILI9341_VMCTR2); //VCM control2
+  _bus->writeData(0x86);              //--
 
-  _bus->writeCommand(ILI9341_MADCTL);    // Memory Access Control
-  _bus->writeData(0xA8); // Rotation 0 (portrait mode)
+  _bus->writeCommand(ILI9341_MADCTL); // Memory Access Control
+  _bus->writeData(0xA8);              // Rotation 0 (portrait mode)
   //_bus->writeData(0x48); // Rotation 0 (portrait mode)
 
   _bus->writeCommand(ILI9341_PIXFMT);
   _bus->writeData(0x55);
   _bus->writeCommand(ILI9341_FRMCTR1);
   _bus->writeData(0x00);
-  _bus->writeData(0x13); // 0x18 79Hz, 0x1B default 70Hz, 0x13 100Hz
-  _bus->writeCommand(ILI9341_DFUNCTR);    // Display Function Control
+  _bus->writeData(0x13);               // 0x18 79Hz, 0x1B default 70Hz, 0x13 100Hz
+  _bus->writeCommand(ILI9341_DFUNCTR); // Display Function Control
   _bus->writeData(0x08);
   _bus->writeData(0x82);
   _bus->writeData(0x27);
-  _bus->writeCommand(0xF2);    // 3Gamma Function Disable
+  _bus->writeCommand(0xF2); // 3Gamma Function Disable
   _bus->writeData(0x00);
 
-  _bus->writeCommand(ILI9341_GAMMASET);    //Gamma curve selected
+  _bus->writeCommand(ILI9341_GAMMASET); //Gamma curve selected
   _bus->writeData(0x01);
 
-  _bus->writeCommand(ILI9341_GMCTRP1);    //Set Gamma
+  _bus->writeCommand(ILI9341_GMCTRP1); //Set Gamma
   _bus->writeData(0x0F);
   _bus->writeData(0x31);
   _bus->writeData(0x2B);
@@ -100,7 +100,7 @@ void Arduino_ILI9341_M5STACK::tftInit()
   _bus->writeData(0x09);
   _bus->writeData(0x00);
 
-  _bus->writeCommand(ILI9341_GMCTRN1);    //Set Gamma
+  _bus->writeCommand(ILI9341_GMCTRN1); //Set Gamma
   _bus->writeData(0x00);
   _bus->writeData(0x0E);
   _bus->writeData(0x14);
@@ -129,40 +129,27 @@ void Arduino_ILI9341_M5STACK::tftInit()
     @param   m  The index for rotation, from 0-3 inclusive
 */
 /**************************************************************************/
-void Arduino_ILI9341_M5STACK::setRotation(uint8_t m)
+void Arduino_ILI9341_M5STACK::setRotation(uint8_t r)
 {
-  Arduino_GFX::setRotation(m);
-  rotation = (m & 3);
-  switch (rotation)
+  Arduino_TFT::setRotation(r);
+  switch (_rotation)
   {
   case 0:
-    m = (ILI9341_MADCTL_MV | ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
-
-    _xStart = COL_OFFSET;
-    _yStart = ROW_OFFSET;
+    r = (ILI9341_MADCTL_MV | ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
     break;
   case 1:
-    m = (ILI9341_MADCTL_BGR);
-
-    _xStart = ROW_OFFSET;
-    _yStart = COL_OFFSET;
+    r = (ILI9341_MADCTL_BGR);
     break;
   case 2:
-    m = (ILI9341_MADCTL_MV | ILI9341_MADCTL_MX | ILI9341_MADCTL_BGR);
-
-    _xStart = ILI9341_TFTWIDTH - WIDTH - COL_OFFSET;
-    _yStart = ILI9341_TFTHEIGHT - HEIGHT - ROW_OFFSET;
+    r = (ILI9341_MADCTL_MV | ILI9341_MADCTL_MX | ILI9341_MADCTL_BGR);
     break;
   case 3:
-    m = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
-
-    _xStart = ILI9341_TFTHEIGHT - HEIGHT - ROW_OFFSET;
-    _yStart = ILI9341_TFTWIDTH - WIDTH - COL_OFFSET;
+    r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
     break;
   }
 
   _bus->beginWrite();
   _bus->writeCommandCore(ILI9341_MADCTL);
-  _bus->write(m);
+  _bus->write(r);
   _bus->endWrite();
 }

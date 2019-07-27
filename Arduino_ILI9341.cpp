@@ -6,7 +6,7 @@
 #include "Arduino_ILI9341.h"
 
 Arduino_ILI9341::Arduino_ILI9341(Arduino_DataBus *bus, int8_t rst, uint8_t r)
-    : Arduino_TFT(bus, rst, r, ILI9341_TFTWIDTH, ILI9341_TFTHEIGHT, 0, 0)
+    : Arduino_TFT(bus, rst, r, false, ILI9341_TFTWIDTH, ILI9341_TFTHEIGHT, 0, 0, 0, 0)
 {
 }
 
@@ -93,41 +93,28 @@ void Arduino_ILI9341::writeAddrMemWrite()
     @param   m  The index for rotation, from 0-3 inclusive
 */
 /**************************************************************************/
-void Arduino_ILI9341::setRotation(uint8_t m)
+void Arduino_ILI9341::setRotation(uint8_t r)
 {
-  Arduino_GFX::setRotation(m);
-  rotation = (m & 3);
-  switch (rotation)
+  Arduino_TFT::setRotation(r);
+  switch (_rotation)
   {
   case 0:
-    m = (ILI9341_MADCTL_MX | ILI9341_MADCTL_BGR);
-
-    _xStart = COL_OFFSET;
-    _yStart = ROW_OFFSET;
+    r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_BGR);
     break;
   case 1:
-    m = (ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
-
-    _xStart = ROW_OFFSET;
-    _yStart = COL_OFFSET;
+    r = (ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
     break;
   case 2:
-    m = (ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
-
-    _xStart = ILI9341_TFTWIDTH - WIDTH - COL_OFFSET;
-    _yStart = ILI9341_TFTHEIGHT - HEIGHT - ROW_OFFSET;
+    r = (ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
     break;
   case 3:
-    m = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
-
-    _xStart = ILI9341_TFTHEIGHT - HEIGHT - ROW_OFFSET;
-    _yStart = ILI9341_TFTWIDTH - WIDTH - COL_OFFSET;
+    r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
     break;
   }
 
   _bus->beginWrite();
   _bus->writeCommandCore(ILI9341_MADCTL);
-  _bus->write(m);
+  _bus->write(r);
   _bus->endWrite();
 }
 

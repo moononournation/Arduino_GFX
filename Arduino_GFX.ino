@@ -8,6 +8,7 @@
 #include "Arduino_HWSPI.h"
 #include "Arduino_GFX.h"     // Core graphics library by Adafruit
 #include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341 (with or without CS pin)
+#include "Arduino_ST7735.h"  // Hardware-specific library for ST7735 (with or without CS pin)
 #include "Arduino_ST7789.h"  // Hardware-specific library for ST7789 (with or without CS pin)
 
 #if defined(ARDUINO_M5Stack_Core_ESP32) or defined(ARDUINO_M5STACK_FIRE)
@@ -17,7 +18,6 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO
 Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 /* rotation */);
 #elif defined(ARDUINO_ODROID_ESP32)
 #define TFT_BL 14
-#include "Arduino_ILI9341_M5STACK.h"
 Arduino_HWSPI *bus = new Arduino_HWSPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
 Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 0 /* rotation */, 240 /* width */, 320 /* height */, 0 /* col offset */, 0 /* row offset */, true /* IPS */); // 2.4" IPS LCD
@@ -42,10 +42,33 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 #else
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 #endif
-Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, 240 /* width */, 240 /* height */, 0 /* col offset */, 80 /* row offset */, true /* IPS */); // 1.3"/1.5" square IPS LCD
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, 240 /* width */, 320 /* height */, 0 /* col offset */, 0 /* row offset */, true /* IPS */); // 2.4" IPS LCD
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST); // 2.4" LCD
+
+// ILI9341 display 240x320
+//Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
+
+// ST7735 display
+// 1.8" REDTAB 128x160
+// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST);
+// 1.8" BLACKTAB 128x160
+// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 1 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */, false /* BGR */);
+// 1.8" GREENTAB A 128x160
+// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 1 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
+// 1.8" GREENTAB B 128x160
+// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 3 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
+// 1.5" GREENTAB B 128x128
+Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 2 /* col offset 1 */, 3 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
+// 1.5" GREENTAB C 128x128
+// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 0 /* col offset 1 */, 32 /* row offset 1 */);
+// 0.96" IPS LCD 80x160
+// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */);
+
+// ST7789 display
+// 2.4" LCD 240x320
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
+// 2.4" IPS LCD 240x320
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// 1.3"/1.5" square IPS LCD 240x240
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 
 #endif /* not a specific hardware */
 
@@ -54,6 +77,7 @@ uint8_t tsa, tsb, tsc, ds;
 
 unsigned long total = 0;
 unsigned long tn = 0;
+
 void setup()
 {
   Serial.begin(115200);

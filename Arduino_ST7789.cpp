@@ -5,11 +5,12 @@
  */
 #include "Arduino_ST7789.h"
 
-Arduino_ST7789::Arduino_ST7789(Arduino_DataBus *bus, int8_t rst, uint8_t r,
-                               int16_t w, int16_t h, uint8_t col_offset, uint8_t row_offset, bool ips)
-    : Arduino_TFT(bus, rst, r, w, h, col_offset, row_offset)
+Arduino_ST7789::Arduino_ST7789(
+    Arduino_DataBus *bus, int8_t rst, uint8_t r,
+    bool ips, int16_t w, int16_t h,
+    uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2)
+    : Arduino_TFT(bus, rst, r, ips, w, h, col_offset1, row_offset1, col_offset2, row_offset2)
 {
-  _ips = ips;
 }
 
 // Companion code to the above tables.  Reads and issues
@@ -82,42 +83,31 @@ void Arduino_ST7789::writeAddrMemWrite()
     @param   m  The index for rotation, from 0-3 inclusive
 */
 /**************************************************************************/
-void Arduino_ST7789::setRotation(uint8_t m)
+void Arduino_ST7789::setRotation(uint8_t r)
 {
-  Arduino_GFX::setRotation(m);
-  rotation = (m & 3);
-  switch (rotation)
+  Arduino_TFT::setRotation(r);
+  switch (_rotation)
   {
   case 0:
-    m = ST7789_MADCTL_MX | ST7789_MADCTL_MY | ST7789_MADCTL_RGB;
-
-    _xStart = COL_OFFSET;
-    _yStart = ROW_OFFSET;
+    r = ST7789_MADCTL_MX | ST7789_MADCTL_MY | ST7789_MADCTL_RGB;
     break;
+
   case 1:
-    m = ST7789_MADCTL_MY | ST7789_MADCTL_MV | ST7789_MADCTL_RGB;
-
-    _xStart = ROW_OFFSET;
-    _yStart = COL_OFFSET;
+    r = ST7789_MADCTL_MY | ST7789_MADCTL_MV | ST7789_MADCTL_RGB;
     break;
-  case 2:
-    m = ST7789_MADCTL_RGB;
 
-    _xStart = ST7789_TFTWIDTH - WIDTH - COL_OFFSET;
-    _yStart = ST7789_TFTHEIGHT - HEIGHT - ROW_OFFSET;
+  case 2:
+    r = ST7789_MADCTL_RGB;
     break;
 
   case 3:
-    m = ST7789_MADCTL_MX | ST7789_MADCTL_MV | ST7789_MADCTL_RGB;
-
-    _xStart = ST7789_TFTHEIGHT - HEIGHT - ROW_OFFSET;
-    _yStart = ST7789_TFTWIDTH - WIDTH - COL_OFFSET;
+    r = ST7789_MADCTL_MX | ST7789_MADCTL_MV | ST7789_MADCTL_RGB;
     break;
   }
 
   _bus->beginWrite();
   _bus->writeCommandCore(ST7789_MADCTL);
-  _bus->write(m);
+  _bus->write(r);
   _bus->endWrite();
 }
 
