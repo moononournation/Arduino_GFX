@@ -16,7 +16,7 @@ Arduino_ST7735::Arduino_ST7735(
 
 void Arduino_ST7735::begin(uint32_t speed)
 {
-#if defined(ESP8266) or defined(ESP32)
+#if defined(ESP8266) || defined(ESP32)
   if (speed == 0) {
     speed = 27000000; // ST7735 Maximum supported speed
   }

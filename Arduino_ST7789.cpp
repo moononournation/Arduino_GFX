@@ -17,6 +17,10 @@ Arduino_ST7789::Arduino_ST7789(
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ST7789::tftInit()
 {
+#ifdef ESP32
+  _bus->setDataMode(SPI_MODE3);
+#endif
+
   //  if (_rst < 0)
   //  {
   _bus->writeCommand(ST7789_SWRESET); // 1: Software reset

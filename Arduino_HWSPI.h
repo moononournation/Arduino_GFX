@@ -72,6 +72,7 @@ public:
   virtual void writeCommand(uint8_t);
   virtual void writeData(uint8_t);
   virtual void writePixels(uint16_t, uint32_t);
+  virtual void setDataMode(uint8_t dataMode);
 
 private:
   inline void CS_HIGH(void);
@@ -80,6 +81,7 @@ private:
   inline void DC_LOW(void);
 
   int8_t _dc, _cs;
+  uint32_t _speed;
 #if defined(ESP32)
   int8_t _sck, _mosi, _miso;
 #endif

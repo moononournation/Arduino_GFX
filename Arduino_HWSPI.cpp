@@ -11,8 +11,12 @@
 #define SPI_BEGIN_TRANSACTION() SPI.beginTransaction(mySPISettings)
 #define SPI_END_TRANSACTION() SPI.endTransaction()
 #else
-#define SPI_BEGIN_TRANSACTION() {}
-#define SPI_END_TRANSACTION() {}
+#define SPI_BEGIN_TRANSACTION() \
+  {                             \
+  }
+#define SPI_END_TRANSACTION() \
+  {                           \
+  }
 #endif
 
 #if defined(SPI_HAS_TRANSACTION)
@@ -23,7 +27,7 @@ static uint8_t mySPCR;
 #endif
 
 #if defined(ESP32)
-Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs  /* = -1 */, int8_t sck  /* = -1 */, int8_t mosi  /* = -1 */, int8_t miso  /* = -1 */)
+Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */)
 {
   _sck = sck;
   _mosi = mosi;
@@ -38,9 +42,7 @@ Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */)
 
 void Arduino_HWSPI::begin(uint32_t speed)
 {
-  if(!speed) {
-    speed = SPI_DEFAULT_FREQ;
-  }
+  _speed = speed ? speed : SPI_DEFAULT_FREQ;
 
   pinMode(_dc, OUTPUT);
   if (_cs >= 0)
@@ -72,8 +74,8 @@ void Arduino_HWSPI::begin(uint32_t speed)
   SPI.begin();
   SPI.setClockDivider(SPI_CLOCK_DIV2);
   SPI.setDataMode(SPI_MODE2);
-  mySPCR = SPCR;           // save our preferred state
-  SPCR = SPCRbackup;       // then restore
+  mySPCR = SPCR;     // save our preferred state
+  SPCR = SPCRbackup; // then restore
 #elif defined(__SAM3X8E__)
   SPI.begin();
   SPI.setClockDivider(21); //4MHz
@@ -197,6 +199,15 @@ void Arduino_HWSPI::writePixels(uint16_t p, uint32_t len)
     write(hi);
     write(lo);
   }
+#endif
+}
+
+void Arduino_HWSPI::setDataMode(uint8_t dataMode)
+{
+#if defined(SPI_HAS_TRANSACTION)
+  mySPISettings = SPISettings(_speed, MSBFIRST, dataMode);
+#else
+  SPI.setDataMode(dataMode);
 #endif
 }
 

@@ -26,6 +26,7 @@ public:
     virtual void writeCommand(uint8_t c) = 0;
     virtual void writeData(uint8_t d) = 0;
     virtual void writePixels(uint16_t p, uint32_t len) = 0;
+    virtual void setDataMode(uint8_t dataMode) = 0;
 };
 
 #endif
