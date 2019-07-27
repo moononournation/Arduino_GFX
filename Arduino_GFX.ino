@@ -28,7 +28,13 @@ Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
 #define TFT_DC 16
 #define TFT_RST 17
 #define TFT_BL 22
+#elif defined(ESP8266)
+#define TFT_CS 15
+#define TFT_DC 2
+#define TFT_RST 5
+#define TFT_BL 4
 #else
+// #define TFT_CS 20
 #define TFT_DC 19
 #define TFT_RST 18
 #define TFT_BL 10
@@ -44,7 +50,7 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 #endif
 
 // ILI9341 display 240x320
-//Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
+Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 
 // ST7735 display
 // 1.8" REDTAB 128x160
@@ -60,7 +66,7 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 // 1.5" GREENTAB C 128x128
 // Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 0 /* col offset 1 */, 32 /* row offset 1 */);
 // 0.96" IPS LCD 80x160
-Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 3 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
+// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 3 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
 
 // ST7789 display
 // 2.4" LCD 240x320
@@ -212,7 +218,12 @@ void loop(void)
     tft->setTextSize(tsb);
     tft->print(F("Benchmark "));
     tft->setTextSize(tsc);
+    if (ds == 12)
+    {
+      tft->print(F("   "));
+    }
     tft->println(F("micro-secs"));
+    tft->setTextSize(1);
     tft->println(F(""));
     tft->setTextColor(YELLOW);
   }

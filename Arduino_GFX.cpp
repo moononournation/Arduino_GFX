@@ -70,9 +70,6 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h)
 void Arduino_GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
                             uint16_t color)
 {
-#if defined(ESP8266)
-    yield();
-#endif
     bool steep = _diff(y1, y0) > _diff(x1, x0);
     if (steep)
     {
@@ -320,9 +317,6 @@ void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 void Arduino_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
                              uint16_t color)
 {
-#if defined(ESP8266)
-    yield();
-#endif
     int16_t f = 1 - r;
     int16_t ddF_x = 1;
     int16_t ddF_y = -2 * r;

@@ -61,6 +61,9 @@ void Arduino_HWSPI::begin(uint32_t speed)
 #if defined(ESP32)
   SPI.begin(_sck, _miso, _mosi);
   mySPISettings = SPISettings(speed, MSBFIRST, SPI_MODE0);
+#elif defined(ESP8266)
+  SPI.begin();
+  mySPISettings = SPISettings(speed, MSBFIRST, SPI_MODE0);
 #elif defined(SPI_HAS_TRANSACTION)
   SPI.begin();
   mySPISettings = SPISettings(speed, MSBFIRST, SPI_MODE2);
@@ -75,10 +78,6 @@ void Arduino_HWSPI::begin(uint32_t speed)
   SPI.begin();
   SPI.setClockDivider(21); //4MHz
   SPI.setDataMode(SPI_MODE2);
-#elif defined(ESP8266)
-  SPI.begin();
-  SPI.setFrequency(speed);
-  SPI.setDataMode(SPI_MODE0);
 #endif
 }
 

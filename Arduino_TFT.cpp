@@ -177,9 +177,6 @@ void Arduino_TFT::writeFastHLine(int16_t x, int16_t y, int16_t w,
 void Arduino_TFT::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
                             uint16_t color)
 {
-#if defined(ESP8266)
-  yield();
-#endif
   bool steep = _diff(y1, y0) > _diff(x1, x0);
   if (steep)
   {
@@ -340,6 +337,9 @@ void Arduino_TFT::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h,
 void Arduino_TFT::writeFillRectPreclipped(int16_t x, int16_t y,
                                           int16_t w, int16_t h, uint16_t color)
 {
+#ifdef ESP8266
+  yield();
+#endif
   writeAddrWindow(x, y, w, h);
   writePixels(color, (uint32_t)w * h);
 }
