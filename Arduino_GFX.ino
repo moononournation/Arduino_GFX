@@ -11,7 +11,7 @@
 #include "Arduino_ST7735.h"  // Hardware-specific library for ST7735 (with or without CS pin)
 #include "Arduino_ST7789.h"  // Hardware-specific library for ST7789 (with or without CS pin)
 
-#if defined(ARDUINO_M5Stack_Core_ESP32) or defined(ARDUINO_M5STACK_FIRE)
+#if defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define TFT_BL 32
 #include "Arduino_ILI9341_M5STACK.h"
 Arduino_HWSPI *bus = new Arduino_HWSPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);

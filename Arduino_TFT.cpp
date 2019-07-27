@@ -206,7 +206,7 @@ void Arduino_TFT::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
     ystep = -1;
   }
 
-#ifdef ESP32
+#if defined(ESP8266) || defined(ESP32)
 #else
   uint8_t hi = color >> 8;
   uint8_t lo = color;
@@ -221,7 +221,7 @@ void Arduino_TFT::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
   }
   for (; x0 <= x1; x0++)
   {
-#ifdef ESP32
+#if defined(ESP8266) || defined(ESP32)
     _bus->write16(color);
 #else
     _bus->write(hi);

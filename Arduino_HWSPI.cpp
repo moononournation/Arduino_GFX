@@ -141,7 +141,7 @@ void Arduino_HWSPI::writeData(uint8_t d)
 
 void Arduino_HWSPI::write16(uint16_t d)
 {
-#ifdef ESP32
+#if defined(ESP8266) || defined(ESP32)
   SPI.write16(d);
 #else
   write(d >> 8);
@@ -151,7 +151,7 @@ void Arduino_HWSPI::write16(uint16_t d)
 
 void Arduino_HWSPI::write32(uint32_t d)
 {
-#ifdef ESP32
+#if defined(ESP8266) || defined(ESP32)
   SPI.write32(d);
 #else
   write(d >> 24);
