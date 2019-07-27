@@ -20,7 +20,7 @@ Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 
 #define TFT_BL 14
 Arduino_HWSPI *bus = new Arduino_HWSPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
 Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 0 /* rotation */, 240 /* width */, 320 /* height */, 0 /* col offset */, 0 /* row offset */, true /* IPS */); // 2.4" IPS LCD
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus,  -1 /* RST */, 0 /* rotation */, true /* IPS */);
 #else /* not a specific hardware */
 
 #if defined(ESP32)
