@@ -5,6 +5,7 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 
 ## Currently Supported Display
 - ILI9341 240x320 [[test video](https://youtu.be/NtlEEL7MkQY)]
+- SSD1351 128x128
 - ST7735 128x160 (various tabs) [[test video](https://youtu.be/eRBSSD_N9II)]
 - ST7735 128x128 (various tabs) [[test video](https://youtu.be/6rueSV2Ee6c)]
 - ST7735 80x160 [[test video](https://youtu.be/qESHDuYo_Mk)]
@@ -17,5 +18,4 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 - ILI9486 320x480
 - ST7789 240x135
 - SSD1331 96x64
-- SSD1351 128x128
 - SEPS525 160x128

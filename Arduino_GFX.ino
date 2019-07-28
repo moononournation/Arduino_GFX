@@ -8,6 +8,7 @@
 #include "Arduino_HWSPI.h"
 #include "Arduino_GFX.h"     // Core graphics library by Adafruit
 #include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341 (with or without CS pin)
+#include "Arduino_SSD1351.h"  // Hardware-specific library for SSD1351
 #include "Arduino_ST7735.h"  // Hardware-specific library for ST7735 (with or without CS pin)
 #include "Arduino_ST7789.h"  // Hardware-specific library for ST7789 (with or without CS pin)
 
@@ -24,7 +25,7 @@ Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
 #else /* not a specific hardware */
 
 #if defined(ESP32)
-#define TFT_CS -1
+#define TFT_CS 5
 #define TFT_DC 16
 #define TFT_RST 17
 #define TFT_BL 22
@@ -49,10 +50,13 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 #endif
 
-// ILI9341 display 240x320
+// ILI9341 LCD 240x320
 //Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 
-// ST7735 display
+// SSD1351 OLED 128x128
+Arduino_SSD1351 *tft = new Arduino_SSD1351(bus, TFT_RST);
+
+// ST7735 LCD
 // 1.8" REDTAB 128x160
 // Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST);
 // 1.8" BLACKTAB 128x160
@@ -68,13 +72,13 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 // 0.96" IPS LCD 80x160
 // Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 3 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
 
-// ST7789 display
+// ST7789 LCD
 // 2.4" LCD 240x320
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
 // 2.4" IPS LCD 240x320
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
- Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 
 #endif /* not a specific hardware */
 
