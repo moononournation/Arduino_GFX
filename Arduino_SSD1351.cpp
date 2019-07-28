@@ -5,8 +5,10 @@
  */
 #include "Arduino_SSD1351.h"
 
-Arduino_SSD1351::Arduino_SSD1351(Arduino_DataBus *bus, int8_t rst, uint8_t r)
-    : Arduino_TFT(bus, rst, r, false, SSD1351_TFTWIDTH, SSD1351_TFTHEIGHT, 0, 0, 0, 0)
+Arduino_SSD1351::Arduino_SSD1351(
+    Arduino_DataBus *bus, int8_t rst, uint8_t r, int16_t w, int16_t h,
+    uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2)
+    : Arduino_TFT(bus, rst, r, false, w, h, col_offset1, row_offset1, col_offset2, row_offset2)
 {
 }
 

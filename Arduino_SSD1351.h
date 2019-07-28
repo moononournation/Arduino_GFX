@@ -49,7 +49,10 @@
 class Arduino_SSD1351 : public Arduino_TFT
 {
 public:
-  Arduino_SSD1351(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0);
+  Arduino_SSD1351(
+      Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0,
+      int16_t w = SSD1351_TFTWIDTH, int16_t h = SSD1351_TFTHEIGHT,
+      uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
   virtual void begin(uint32_t speed = 0);
   virtual void writeAddrColumn(uint16_t x, uint16_t w);
