@@ -7,6 +7,7 @@
 #include "SPI.h"
 #include "Arduino_HWSPI.h"
 #include "Arduino_GFX.h"     // Core graphics library by Adafruit
+#include "Arduino_ILI9225.h" // Hardware-specific library for ILI9225
 #include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341 (with or without CS pin)
 #include "Arduino_SSD1351.h"  // Hardware-specific library for SSD1351
 #include "Arduino_ST7735.h"  // Hardware-specific library for ST7735 (with or without CS pin)
@@ -50,11 +51,14 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 #endif
 
+// ILI9225 LCD 176x220
+Arduino_ILI9225 *tft = new Arduino_ILI9225(bus, TFT_RST);
+
 // ILI9341 LCD 240x320
-//Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
+// Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
 
 // SSD1351 OLED 128x128
-Arduino_SSD1351 *tft = new Arduino_SSD1351(bus, TFT_RST);
+// Arduino_SSD1351 *tft = new Arduino_SSD1351(bus, TFT_RST);
 
 // ST7735 LCD
 // 1.8" REDTAB 128x160
@@ -110,7 +114,7 @@ void setup()
   cn1 = min(cx1, cy1) - 1;
   tsa = (w <= 160) ? 1 : ((w <= 240) ? 2 : 3); // text size A
   tsb = (w <= 240) ? 1 : 2;                    // text size B
-  tsc = (w <= 176) ? 1 : 2;                    // text size C
+  tsc = (w <= 220) ? 1 : 2;                    // text size C
   ds = (w <= 160) ? 9 : 12;                    // digit size
 
 #ifdef TFT_BL

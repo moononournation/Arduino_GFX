@@ -58,7 +58,6 @@ public:
   virtual void writeAddrColumn(uint16_t x, uint16_t w);
   virtual void writeAddrRow(uint16_t y, uint16_t h);
   virtual void writeAddrMemWrite();
-
   virtual void setRotation(uint8_t r);
   virtual void invertDisplay(bool);
   virtual void displayOn();
