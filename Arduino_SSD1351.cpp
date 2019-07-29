@@ -4,6 +4,7 @@
  * https://github.com/adafruit/Adafruit-SSD1351-library.git
  */
 #include "Arduino_SSD1351.h"
+#include "SPI.h"
 
 Arduino_SSD1351::Arduino_SSD1351(
     Arduino_DataBus *bus, int8_t rst, uint8_t r, int16_t w, int16_t h,
