@@ -14,21 +14,21 @@
 
 #include "Arduino_DataBus.h"
 
-#if defined (ARDUINO_ARCH_ARC32) || defined (ARDUINO_MAXIM)
-  #define SPI_DEFAULT_FREQ  16000000
+#if defined(ARDUINO_ARCH_ARC32) || defined(ARDUINO_MAXIM)
+#define SPI_DEFAULT_FREQ 16000000
 // Teensy 3.0, 3.1/3.2, 3.5, 3.6
 #elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__)
-  #define SPI_DEFAULT_FREQ  40000000
-#elif defined (__AVR__) || defined(TEENSYDUINO)
-  #define SPI_DEFAULT_FREQ  8000000
+#define SPI_DEFAULT_FREQ 40000000
+#elif defined(__AVR__) || defined(TEENSYDUINO)
+#define SPI_DEFAULT_FREQ 8000000
 #elif defined(ESP8266) || defined(ESP32)
-  #define SPI_DEFAULT_FREQ  40000000
+#define SPI_DEFAULT_FREQ 40000000
 #elif defined(RASPI)
-  #define SPI_DEFAULT_FREQ  80000000
+#define SPI_DEFAULT_FREQ 80000000
 #elif defined(ARDUINO_ARCH_STM32F1)
-  #define SPI_DEFAULT_FREQ  36000000
+#define SPI_DEFAULT_FREQ 36000000
 #else
-  #define SPI_DEFAULT_FREQ  24000000  ///< Default SPI data clock frequency
+#define SPI_DEFAULT_FREQ 24000000 ///< Default SPI data clock frequency
 #endif
 
 #if defined(__AVR__) || defined(CORE_TEENSY)
@@ -70,6 +70,7 @@ public:
   virtual void write16(uint16_t);
   virtual void write32(uint32_t);
   virtual void writePixels(uint16_t, uint32_t);
+  virtual void writePattern(uint8_t *data, uint8_t size, uint32_t repeat);
   virtual void endWrite();
 
   virtual void sendCommand(uint8_t);

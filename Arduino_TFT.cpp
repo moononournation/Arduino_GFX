@@ -191,6 +191,7 @@ void Arduino_TFT::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 
   int16_t err = dx / 2;
   int16_t ystep;
+  int16_t len = 0;
 
   if (y0 < y1)
   {
@@ -201,40 +202,34 @@ void Arduino_TFT::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
     ystep = -1;
   }
 
-#if defined(ESP8266) || defined(ESP32)
-#else
-  uint8_t hi = color >> 8;
-  uint8_t lo = color;
-#endif
-  if (steep)
-  {
-    writeAddrWindow(y0, x0, 1, x1 - x0 + 1);
-  }
-  else
-  {
-    writeAddrWindow(x0, y0, x1 - x0 + 1, 1);
-  }
   for (; x0 <= x1; x0++)
   {
-#if defined(ESP8266) || defined(ESP32)
-    _bus->write16(color);
-#else
-    _bus->write(hi);
-    _bus->write(lo);
-#endif
     err -= dy;
     if (err < 0)
     {
-      y0 += ystep;
-      err += dx;
+      len++;
       if (steep)
       {
-        writeAddrWindow(y0, x0 + 1, 1, x1 - x0 + 1);
+        writeFillRectPreclipped(y0, x0, 1, len, color);
       }
       else
       {
-        writeAddrWindow(x0 + 1, y0, x1 - x0 + 1, 1);
+        writeFillRectPreclipped(x0, y0, len, 1, color);
       }
+      y0 += ystep;
+      err += dx;
+      len = 0;
+    }
+  }
+  if (len)
+  {
+    if (steep)
+    {
+      writeFillRectPreclipped(y0, x0, 1, len, color);
+    }
+    else
+    {
+      writeFillRectPreclipped(x0, y0, len, 1, color);
     }
   }
 }
