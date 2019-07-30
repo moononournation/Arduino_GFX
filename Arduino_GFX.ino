@@ -32,9 +32,9 @@ Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
 #define TFT_BL 22
 #elif defined(ESP8266)
 #define TFT_CS 15
-#define TFT_DC 2
-#define TFT_RST 5
-#define TFT_BL 4
+#define TFT_DC 5
+#define TFT_RST -1
+// #define TFT_BL 4
 #else
 // #define TFT_CS 20
 #define TFT_DC 19

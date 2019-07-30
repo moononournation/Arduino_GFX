@@ -30,15 +30,15 @@ void Arduino_SSD1351::tftInit()
 {
   _bus->setDataMode(SPI_MODE0);
 
-  _bus->writeCommand(SSD1351_COMMANDLOCK); // set command lock
-  _bus->writeData(0x12);
-  _bus->writeCommand(SSD1351_COMMANDLOCK); // set command lock
-  _bus->writeData(0xB1);
-  _bus->writeCommand(SSD1351_DISPLAYOFF);    // Display off
-  _bus->writeCommand(SSD1351_DISPLAYOFFSET); // 0xA2
-  _bus->writeData(0x0);
-  _bus->writeCommand(SSD1351_NORMALDISPLAY); // 0xA6
-  _bus->writeCommand(SSD1351_DISPLAYON);     // Main screen turn on
+  _bus->sendCommand(SSD1351_COMMANDLOCK); // set command lock
+  _bus->sendData(0x12);
+  _bus->sendCommand(SSD1351_COMMANDLOCK); // set command lock
+  _bus->sendData(0xB1);
+  _bus->sendCommand(SSD1351_DISPLAYOFF);    // Display off
+  _bus->sendCommand(SSD1351_DISPLAYOFFSET); // 0xA2
+  _bus->sendData(0x0);
+  _bus->sendCommand(SSD1351_NORMALDISPLAY); // 0xA6
+  _bus->sendCommand(SSD1351_DISPLAYON);     // Main screen turn on
 }
 
 void Arduino_SSD1351::writeAddrColumn(uint16_t x, uint16_t w)
@@ -48,12 +48,12 @@ void Arduino_SSD1351::writeAddrColumn(uint16_t x, uint16_t w)
 #if defined(ESP8266) || defined(ESP32)
   uint16_t x_range = ((x + _xStart) << 8) | (x + w - 1 + _xStart);
 
-  _bus->writeCommandCore(cmd); // Column addr set
+  _bus->writeCommand(cmd); // Column addr set
   _bus->write16(x_range);
 #else
   uint8_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
-  _bus->writeCommandCore(cmd); // Column addr set
+  _bus->writeCommand(cmd); // Column addr set
   _bus->write(x_start);        // XSTART
   _bus->write(x_end);          // XEND
 #endif
@@ -66,12 +66,12 @@ void Arduino_SSD1351::writeAddrRow(uint16_t y, uint16_t h)
 #if defined(ESP8266) || defined(ESP32)
   uint16_t y_range = ((y + _yStart) << 8) | (y + h - 1 + _yStart);
 
-  _bus->writeCommandCore(cmd); // Row addr set
+  _bus->writeCommand(cmd); // Row addr set
   _bus->write16(y_range);
 #else
   uint8_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
-  _bus->writeCommandCore(cmd); // Row addr set
+  _bus->writeCommand(cmd); // Row addr set
   _bus->write(y_start);        // YSTART
   _bus->write(y_end);          // YEND
 #endif
@@ -79,7 +79,7 @@ void Arduino_SSD1351::writeAddrRow(uint16_t y, uint16_t h)
 
 void Arduino_SSD1351::writeAddrMemWrite()
 {
-  _bus->writeCommandCore(SSD1351_WRITERAM); // write to RAM
+  _bus->writeCommand(SSD1351_WRITERAM); // write to RAM
 }
 
 /**************************************************************************/
@@ -109,24 +109,24 @@ void Arduino_SSD1351::setRotation(uint8_t r)
   }
 
   _bus->beginWrite();
-  _bus->writeCommandCore(SSD1351_SETREMAP);
+  _bus->writeCommand(SSD1351_SETREMAP);
   _bus->write(r);
-  _bus->writeCommandCore(SSD1351_STARTLINE);
+  _bus->writeCommand(SSD1351_STARTLINE);
   _bus->write(startline);
   _bus->endWrite();
 }
 
 void Arduino_SSD1351::invertDisplay(bool i)
 {
-  _bus->writeCommand(i ? SSD1351_INVERTDISPLAY : SSD1351_NORMALDISPLAY);
+  _bus->sendCommand(i ? SSD1351_INVERTDISPLAY : SSD1351_NORMALDISPLAY);
 }
 
 void Arduino_SSD1351::displayOn(void)
 {
-  _bus->writeCommand(SSD1351_DISPLAYALLON);
+  _bus->sendCommand(SSD1351_DISPLAYALLON);
 }
 
 void Arduino_SSD1351::displayOff(void)
 {
-  _bus->writeCommand(SSD1351_DISPLAYALLOFF);
+  _bus->sendCommand(SSD1351_DISPLAYALLOFF);
 }

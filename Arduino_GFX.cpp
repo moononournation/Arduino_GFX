@@ -137,12 +137,9 @@ void Arduino_GFX::startWrite()
 /**************************************************************************/
 void Arduino_GFX::drawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    if (_ordered_in_range(x, 0, _max_x) && _ordered_in_range(y, 0, _max_y))
-    {
-        startWrite();
-        writePixel(x, y, color);
-        endWrite();
-    }
+    startWrite();
+    writePixel(x, y, color);
+    endWrite();
 }
 
 /**************************************************************************/

@@ -16,7 +16,7 @@ public:
 
   virtual void begin(uint32_t speed = 0);
   virtual inline void startWrite(void);
-  virtual void writeColor(uint16_t color);
+  virtual inline void writeColor(uint16_t color);
   virtual inline void writePixel(int16_t x, int16_t y, uint16_t color);
   virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
   virtual void writePixels(uint16_t color, uint32_t len);
@@ -29,7 +29,6 @@ public:
   virtual inline void endWrite(void);
 
   virtual void pushColor(uint16_t color);
-  virtual void drawPixel(int16_t x, int16_t y, uint16_t color);
   virtual void setAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
   virtual void setRotation(uint8_t r);
 

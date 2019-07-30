@@ -6,11 +6,6 @@
 #include "Arduino_GFX.h"
 #include "Arduino_TFT.h"
 
-inline uint16_t swapcolor(uint16_t x)
-{
-  return (x << 11) | (x & 0x07E0) | (x >> 11);
-}
-
 Arduino_TFT::Arduino_TFT(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
     bool ips, int16_t w, int16_t h,
@@ -54,7 +49,7 @@ inline void Arduino_TFT::startWrite()
   _bus->beginWrite();
 }
 
-void Arduino_TFT::writeColor(uint16_t color)
+inline void Arduino_TFT::writeColor(uint16_t color)
 {
   _bus->write16(color);
 }
@@ -70,7 +65,7 @@ inline void Arduino_TFT::writePixel(int16_t x, int16_t y, uint16_t color)
 void Arduino_TFT::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
   writeAddrWindow(x, y, 1, 1);
-  _bus->write16(color);
+  writeColor(color);
 }
 
 void Arduino_TFT::writePixels(uint16_t color, uint32_t len)
@@ -383,26 +378,8 @@ inline void Arduino_TFT::endWrite()
 void Arduino_TFT::pushColor(uint16_t color)
 {
   _bus->beginWrite();
-  _bus->write16(color);
+  writeColor(color);
   _bus->endWrite();
-}
-
-/**************************************************************************/
-/*!
-   @brief    Write a pixel, overwrite in subclasses if startWrite is defined!
-    @param   x   x coordinate
-    @param   y   y coordinate
-   @param    color 16-bit 5-6-5 Color to fill with
-*/
-/**************************************************************************/
-void Arduino_TFT::drawPixel(int16_t x, int16_t y, uint16_t color)
-{
-  if (_ordered_in_range(x, 0, _max_x) && _ordered_in_range(y, 0, _max_y))
-  {
-    _bus->beginWrite();
-    _bus->write16(color);
-    _bus->endWrite();
-  }
 }
 
 void Arduino_TFT::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t w,

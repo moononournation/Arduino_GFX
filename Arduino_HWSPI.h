@@ -64,14 +64,19 @@ public:
 
   virtual void begin(uint32_t speed = 0);
   virtual void beginWrite();
-  virtual void writeCommandCore(uint8_t);
+  virtual void writeCommand(uint8_t);
+  virtual void writeCommand16(uint16_t);
   virtual void write(uint8_t);
   virtual void write16(uint16_t);
   virtual void write32(uint32_t);
-  virtual void endWrite();
-  virtual void writeCommand(uint8_t);
-  virtual void writeData(uint8_t);
   virtual void writePixels(uint16_t, uint32_t);
+  virtual void endWrite();
+
+  virtual void sendCommand(uint8_t);
+  virtual void sendCommand16(uint16_t);
+  virtual void sendData(uint8_t);
+  virtual void sendData16(uint16_t);
+  virtual void sendData32(uint32_t);
   virtual void setDataMode(uint8_t dataMode);
 
 private:

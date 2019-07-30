@@ -90,6 +90,20 @@ void Arduino_HWSPI::beginWrite()
   CS_LOW();
 }
 
+void Arduino_HWSPI::writeCommand(uint8_t c)
+{
+  DC_LOW();
+  write(c);
+  DC_HIGH();
+}
+
+void Arduino_HWSPI::writeCommand16(uint16_t c)
+{
+  DC_LOW();
+  write16(c);
+  DC_HIGH();
+}
+
 void Arduino_HWSPI::write(uint8_t c)
 {
 #if defined(SPI_HAS_TRANSACTION)
@@ -112,30 +126,56 @@ void Arduino_HWSPI::endWrite()
   SPI_END_TRANSACTION();
 }
 
-void Arduino_HWSPI::writeCommand(uint8_t c)
+void Arduino_HWSPI::sendCommand(uint8_t c)
 {
   SPI_BEGIN_TRANSACTION();
   CS_LOW();
 
-  writeCommandCore(c);
+  writeCommand(c);
 
   CS_HIGH();
   SPI_END_TRANSACTION();
 }
 
-void Arduino_HWSPI::writeCommandCore(uint8_t c)
+void Arduino_HWSPI::sendCommand16(uint16_t c)
 {
-  DC_LOW();
-  write(c);
-  DC_HIGH();
+  SPI_BEGIN_TRANSACTION();
+  CS_LOW();
+
+  writeCommand16(c);
+
+  CS_HIGH();
+  SPI_END_TRANSACTION();
 }
 
-void Arduino_HWSPI::writeData(uint8_t d)
+void Arduino_HWSPI::sendData(uint8_t d)
 {
   SPI_BEGIN_TRANSACTION();
   CS_LOW();
 
   write(d);
+
+  CS_HIGH();
+  SPI_END_TRANSACTION();
+}
+
+void Arduino_HWSPI::sendData16(uint16_t d)
+{
+  SPI_BEGIN_TRANSACTION();
+  CS_LOW();
+
+  write16(d);
+
+  CS_HIGH();
+  SPI_END_TRANSACTION();
+}
+
+void Arduino_HWSPI::sendData32(uint32_t d)
+{
+  SPI_BEGIN_TRANSACTION();
+  CS_LOW();
+
+  write32(d);
 
   CS_HIGH();
   SPI_END_TRANSACTION();
@@ -165,9 +205,10 @@ void Arduino_HWSPI::write32(uint32_t d)
 
 void Arduino_HWSPI::writePixels(uint16_t p, uint32_t len)
 {
+// #if defined(ESP32) || defined(ESP8266)
 #ifdef ESP32
 #define SPI_MAX_PIXELS_AT_ONCE 32
-#define TMPBUF_LONGWORDS (SPI_MAX_PIXELS_AT_ONCE + 1) / 2
+#define TMPBUF_LONGWORDS ((SPI_MAX_PIXELS_AT_ONCE + 1) / 2)
 #define TMPBUF_PIXELS (TMPBUF_LONGWORDS * 2)
   static uint32_t temp[TMPBUF_LONGWORDS];
   uint32_t c32 = p * 0x00010001;
