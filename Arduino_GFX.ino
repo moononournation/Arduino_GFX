@@ -37,7 +37,7 @@ Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
 #define TFT_RST -1
 // #define TFT_BL 4
 #else
-// #define TFT_CS 20
+#define TFT_CS 20
 #define TFT_DC 19
 #define TFT_RST 18
 #define TFT_BL 10
@@ -58,7 +58,7 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 // ILI9341 LCD 240x320
 // Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
 
-// ILI9341 LCD 320x480
+// ILI9486 LCD 320x480
 Arduino_ILI9486 *tft = new Arduino_ILI9486(bus, TFT_RST);
 
 // SSD1351 OLED 128x128
@@ -86,7 +86,7 @@ Arduino_ILI9486 *tft = new Arduino_ILI9486(bus, TFT_RST);
 // 2.4" IPS LCD 240x320
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
+//Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 
 #endif /* not a specific hardware */
 
