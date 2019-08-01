@@ -62,13 +62,13 @@ void Arduino_HWSPI::begin(uint32_t speed)
 
 #if defined(ESP32)
   SPI.begin(_sck, _miso, _mosi);
-  mySPISettings = SPISettings(speed, MSBFIRST, SPI_MODE0);
+  mySPISettings = SPISettings(_speed, MSBFIRST, SPI_MODE0);
 #elif defined(ESP8266)
   SPI.begin();
-  mySPISettings = SPISettings(speed, MSBFIRST, SPI_MODE0);
+  mySPISettings = SPISettings(_speed, MSBFIRST, SPI_MODE0);
 #elif defined(SPI_HAS_TRANSACTION)
   SPI.begin();
-  mySPISettings = SPISettings(speed, MSBFIRST, SPI_MODE2);
+  mySPISettings = SPISettings(_speed, MSBFIRST, SPI_MODE2);
 #elif defined(__AVR__) || defined(CORE_TEENSY)
   SPCRbackup = SPCR;
   SPI.begin();
