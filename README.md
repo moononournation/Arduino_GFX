@@ -16,6 +16,7 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 - ST7735 80x160 [[test video](https://youtu.be/qESHDuYo_Mk)]
 - ST7789 240x135
 - ST7789 240x240 [[test video](https://youtu.be/Z27zYg5uAsk)]
+- ST7789 TTGO T-Watch 240x240 [[test video](https://youtu.be/9AqsXMB8Qbk)]
 - ST7789 240x320 [[test video](https://youtu.be/ZEvc1LkuVuQ)]
 
 ## Tobe Support Display (Display in hand)

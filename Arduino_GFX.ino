@@ -25,6 +25,10 @@ Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 
 Arduino_HWSPI *bus = new Arduino_HWSPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
 Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus,  -1 /* RST */, 0 /* rotation */, true /* IPS */);
+#elif defined(ARDUINO_T) // TTGO T-Watch
+#define TFT_BL 12
+Arduino_HWSPI *bus = new Arduino_HWSPI(27 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
+Arduino_ST7789 *tft = new Arduino_ST7789(bus,  -1 /* RST */, 2 /* rotation */, true /* IPS */, 240, 240, 0, 80);
 #else /* not a specific hardware */
 
 #if defined(ESP32)
