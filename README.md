@@ -6,7 +6,9 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 ## Currently Supported Display
 - ILI9225 176x220 [[test video](https://youtu.be/jm2UrCG27F4)]
 - ILI9341 240x320 [[test video](https://youtu.be/NtlEEL7MkQY)]
+- ILI9341 M5Stack 320x240 [[test video](https://youtu.be/UoPpIjVSO5Q)]
 - ILI9486 320x480 [[test video](https://youtu.be/pZ6izDqmVds)]
+- SEPS525 160x128 [[test video](https://youtu.be/tlmvFBHYv-k)]
 - SSD1351 128x128 [[test video](https://youtu.be/5TIM-qMVBNQ)]
 - SSD1351 128x96
 - ST7735 128x160 (various tabs) [[test video](https://youtu.be/eRBSSD_N9II)]
@@ -19,4 +21,3 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 ## Tobe Support Display (Display in hand)
 - HX8352C 240x400
 - SSD1331 96x64
-- SEPS525 160x128

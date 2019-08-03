@@ -10,7 +10,8 @@
 #include "Arduino_ILI9225.h" // Hardware-specific library for ILI9225
 #include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341 (with or without CS pin)
 #include "Arduino_ILI9486.h" // Hardware-specific library for ILI9486 (with or without CS pin)
-#include "Arduino_SSD1351.h"  // Hardware-specific library for SSD1351
+#include "Arduino_SEPS525.h" // Hardware-specific library for SEPS525
+#include "Arduino_SSD1351.h" // Hardware-specific library for SSD1351
 #include "Arduino_ST7735.h"  // Hardware-specific library for ST7735 (with or without CS pin)
 #include "Arduino_ST7789.h"  // Hardware-specific library for ST7789 (with or without CS pin)
 
@@ -59,7 +60,10 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 // Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
 
 // ILI9486 LCD 320x480
-Arduino_ILI9486 *tft = new Arduino_ILI9486(bus, TFT_RST);
+// Arduino_ILI9486 *tft = new Arduino_ILI9486(bus, TFT_RST);
+
+// SEPS525 OLED 160x128
+Arduino_SEPS525 *tft = new Arduino_SEPS525(bus, TFT_RST);
 
 // SSD1351 OLED 128x128
 // Arduino_SSD1351 *tft = new Arduino_SSD1351(bus, TFT_RST);
