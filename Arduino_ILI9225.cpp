@@ -15,36 +15,28 @@ void Arduino_ILI9225::tftInit()
 {
   // Power-on sequence
   _bus->sendCommand(ILI9225_POWER_CTRL2);
-  _bus->sendData(0x00);
-  _bus->sendData(0x18); // Set APON,PON,AON,VCI1EN,VC
+  _bus->sendData16(0x0018); // Set APON,PON,AON,VCI1EN,VC
   _bus->sendCommand(ILI9225_POWER_CTRL3);
-  _bus->sendData(0x61);
-  _bus->sendData(0x21); // Set BT,DC1,DC2,DC3
+  _bus->sendData16(0x6121); // Set BT,DC1,DC2,DC3
   _bus->sendCommand(ILI9225_POWER_CTRL4);
-  _bus->sendData(0x00);
-  _bus->sendData(0x6F); // Set GVDD   /*007F 0088 */
+  _bus->sendData16(0x006F); // Set GVDD   /*007F 0088 */
   _bus->sendCommand(ILI9225_POWER_CTRL5);
-  _bus->sendData(0x49);
-  _bus->sendData(0x5F); // Set VCOMH/VCOML voltage
+  _bus->sendData16(0x495F); // Set VCOMH/VCOML voltage
   _bus->sendCommand(ILI9225_POWER_CTRL1);
-  _bus->sendData(0x08);
-  _bus->sendData(0x00); // Set SAP,DSTB,STB
+  _bus->sendData16(0x0800); // Set SAP,DSTB,STB
 
   delay(10);
 
   _bus->sendCommand(ILI9225_POWER_CTRL2);
-  _bus->sendData(0x10);
-  _bus->sendData(0x3B); // Set APON,PON,AON,VCI1EN,VC
+  _bus->sendData16(0x103B); // Set APON,PON,AON,VCI1EN,VC
 
   _bus->sendCommand(ILI9225_DISP_CTRL1);
-  _bus->sendData(0x00);
-  _bus->sendData(0x12);
+  _bus->sendData16(0x0012);
 
   delay(50);
 
   _bus->sendCommand(ILI9225_DISP_CTRL1);
-  _bus->sendData(0x10);
-  _bus->sendData(0x17);
+  _bus->sendData16(0x1017);
 }
 
 void Arduino_ILI9225::writeAddrColumn(uint16_t x, uint16_t w)
@@ -113,35 +105,27 @@ void Arduino_ILI9225::setRotation(uint8_t r)
   {
   case 0:
     _bus->sendCommand(ILI9225_DRIVER_OUTPUT_CTRL);
-    _bus->sendData(0x02);
-    _bus->sendData(0x1C);
+    _bus->sendData16(0x021C);
     _bus->sendCommand(ILI9225_ENTRY_MODE);
-    _bus->sendData(0x10);
-    _bus->sendData(0x30);
+    _bus->sendData16(0x1030);
     break;
   case 1:
     _bus->sendCommand(ILI9225_DRIVER_OUTPUT_CTRL);
-    _bus->sendData(0x03);
-    _bus->sendData(0x1C);
+    _bus->sendData16(0x031C);
     _bus->sendCommand(ILI9225_ENTRY_MODE);
-    _bus->sendData(0x10);
-    _bus->sendData(0x38);
+    _bus->sendData16(0x1038);
     break;
   case 2:
     _bus->sendCommand(ILI9225_DRIVER_OUTPUT_CTRL);
-    _bus->sendData(0x01);
-    _bus->sendData(0x1C);
+    _bus->sendData16(0x011C);
     _bus->sendCommand(ILI9225_ENTRY_MODE);
-    _bus->sendData(0x10);
-    _bus->sendData(0x30);
+    _bus->sendData16(0x1030);
     break;
   case 3:
     _bus->sendCommand(ILI9225_DRIVER_OUTPUT_CTRL);
-    _bus->sendData(0x00);
-    _bus->sendData(0x1C);
+    _bus->sendData16(0x001C);
     _bus->sendCommand(ILI9225_ENTRY_MODE);
-    _bus->sendData(0x10);
-    _bus->sendData(0x38);
+    _bus->sendData16(0x1038);
     break;
   }
 }
@@ -153,10 +137,12 @@ void Arduino_ILI9225::invertDisplay(bool i)
 
 void Arduino_ILI9225::displayOn(void)
 {
-  // Not Implemented
+  _bus->sendCommand(ILI9225_POWER_CTRL1);
+  _bus->sendData16(0x0800); // Set SAP,DSTB,STB
 }
 
 void Arduino_ILI9225::displayOff(void)
 {
-  // Not Implemented
+  _bus->sendCommand(ILI9225_POWER_CTRL1);
+  _bus->sendData16(0x0801); // Set SAP,DSTB,STB
 }
