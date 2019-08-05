@@ -4,6 +4,7 @@ This library is developing for various displays and various data bus interfaces
 This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 
 ## Currently Supported Display
+- HX8352C 240x400 [[test video](https://youtu.be/m2xWYbS3t7s)]
 - ILI9225 176x220 [[test video](https://youtu.be/jm2UrCG27F4)]
 - ILI9341 240x320 [[test video](https://youtu.be/NtlEEL7MkQY)]
 - ILI9341 M5Stack 320x240 [[test video](https://youtu.be/UoPpIjVSO5Q)]
@@ -20,6 +21,6 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 - ST7789 240x320 [[test video](https://youtu.be/ZEvc1LkuVuQ)]
 
 ## Tobe Support Display (Display in hand)
-- HX8352C 240x400
+- HX8357 320x480
 - ILI9481 320x480
 - SSD1331 96x64
