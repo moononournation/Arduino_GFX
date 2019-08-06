@@ -10,6 +10,7 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 - ILI9341 M5Stack 320x240 [[test video](https://youtu.be/UoPpIjVSO5Q)]
 - ILI9486 320x480 (18 bit color) [[test video](https://youtu.be/pZ6izDqmVds)]
 - SEPS525 160x128 [[test video](https://youtu.be/tlmvFBHYv-k)]
+- SSD1331 96x64 [[test video](https://youtu.be/v20b1A_KDcQ)]
 - SSD1351 128x128 [[test video](https://youtu.be/5TIM-qMVBNQ)]
 - SSD1351 128x96
 - ST7735 128x160 (various tabs) [[test video](https://youtu.be/eRBSSD_N9II)]
@@ -23,4 +24,3 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 ## Tobe Support Display (Display in hand)
 - HX8357 320x480
 - ILI9481 320x480
-- SSD1331 96x64
