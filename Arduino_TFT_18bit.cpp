@@ -21,7 +21,7 @@ inline void Arduino_TFT_18bit::writeColor(uint16_t color)
   _bus->write((color & 0x001F) << 3);
 }
 
-void Arduino_TFT_18bit::writePixels(uint16_t color, uint32_t len)
+void Arduino_TFT_18bit::writeRepeat(uint16_t color, uint32_t len)
 {
 #if defined(ESP8266) || defined(ESP32)
   uint8_t c[3] = {(color & 0xF800) >> 8, (color & 0x07E0) >> 3, (color & 0x001F) << 3};
@@ -36,4 +36,9 @@ void Arduino_TFT_18bit::writePixels(uint16_t color, uint32_t len)
     _bus->write(c3);
   }
 #endif
+}
+
+void Arduino_TFT_18bit::writePixels(uint16_t *data, uint32_t size)
+{
+  // Not Implemented
 }

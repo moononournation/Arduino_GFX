@@ -203,10 +203,9 @@ void Arduino_HWSPI::write32(uint32_t d)
 #endif
 }
 
-void Arduino_HWSPI::writePixels(uint16_t p, uint32_t len)
+void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
 {
-// #if defined(ESP32) || defined(ESP8266)
-#ifdef ESP32
+#if defined(ESP32)
 #define SPI_MAX_PIXELS_AT_ONCE 32
 #define TMPBUF_LONGWORDS ((SPI_MAX_PIXELS_AT_ONCE + 1) / 2)
 #define TMPBUF_PIXELS (TMPBUF_LONGWORDS * 2)
@@ -239,6 +238,22 @@ void Arduino_HWSPI::writePixels(uint16_t p, uint32_t len)
   {
     write(hi);
     write(lo);
+  }
+#endif
+}
+
+void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
+{
+#ifdef ESP32
+  SPI.writePixels(data, len);
+#elif defined(ESP8266)
+  SPI.writePattern((uint8_t *)data, len * 2, 1);
+#else
+  uint8_t *d = (int16_t*)data;
+  while (len--)
+  {
+    write(d++);
+    write(d++);
   }
 #endif
 }

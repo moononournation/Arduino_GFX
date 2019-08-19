@@ -68,9 +68,14 @@ void Arduino_TFT::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
   writeColor(color);
 }
 
-void Arduino_TFT::writePixels(uint16_t color, uint32_t len)
+void Arduino_TFT::writeRepeat(uint16_t color, uint32_t len)
 {
-  _bus->writePixels(color, len);
+  _bus->writeRepeat(color, len);
+}
+
+void Arduino_TFT::writePixels(uint16_t *data, uint32_t size)
+{
+  _bus->writePixels(data, size);
 }
 
 /*!
@@ -331,7 +336,7 @@ void Arduino_TFT::writeFillRectPreclipped(int16_t x, int16_t y,
   yield();
 #endif
   writeAddrWindow(x, y, w, h);
-  writePixels(color, (uint32_t)w * h);
+  writeRepeat(color, (uint32_t)w * h);
 }
 
 void Arduino_TFT::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)

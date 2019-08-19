@@ -290,7 +290,16 @@ public:
                 cnt    number of push repeat
   */
   /************************************************************************/
-  virtual void writePixels(uint16_t color, uint32_t len) = 0;
+  virtual void writeRepeat(uint16_t color, uint32_t len) = 0;
+
+  /************************************************************************/
+  /*!
+    @brief      bulk push pixels data operation
+    @param      pixels 16-bit 5-6-5 Color pixels data
+                cnt    number of push repeat
+  */
+  /************************************************************************/
+  virtual void writePixels(uint16_t *data, uint32_t size) = 0;
 
 protected:
   void charBounds(char c, int16_t *x, int16_t *y, int16_t *minx, int16_t *miny, int16_t *maxx, int16_t *maxy);

@@ -69,7 +69,8 @@ public:
   virtual void write(uint8_t);
   virtual void write16(uint16_t);
   virtual void write32(uint32_t);
-  virtual void writePixels(uint16_t, uint32_t);
+  virtual void writeRepeat(uint16_t p, uint32_t len);
+  virtual void writePixels(uint16_t *data, uint32_t size);
   virtual void writePattern(uint8_t *data, uint8_t size, uint32_t repeat);
   virtual void endWrite();
 
