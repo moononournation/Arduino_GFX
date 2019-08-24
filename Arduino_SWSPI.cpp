@@ -36,23 +36,23 @@ void Arduino_SWSPI::begin(uint32_t speed)
 #if defined(HAS_PORT_SET_CLR)
 #if defined(CORE_TEENSY)
 #if !defined(KINETISK)
-  dcPinMask = digitalPinToBitMask(dc);
-  sckPinMask = digitalPinToBitMask(sck);
-  mosiPinMask = digitalPinToBitMask(mosi);
+  dcPinMask = digitalPinToBitMask(_dc);
+  sckPinMask = digitalPinToBitMask(_sck);
+  mosiPinMask = digitalPinToBitMask(_mosi);
 #endif
-  dcPortSet = portSetRegister(dc);
-  dcPortClr = portClearRegister(dc);
-  sckPortSet = portSetRegister(sck);
-  sckPortClr = portClearRegister(sck);
-  mosiPortSet = portSetRegister(mosi);
-  mosiPortClr = portClearRegister(mosi);
-  if (cs >= 0)
+  dcPortSet = portSetRegister(_dc);
+  dcPortClr = portClearRegister(_dc);
+  sckPortSet = portSetRegister(_sck);
+  sckPortClr = portClearRegister(_sck);
+  mosiPortSet = portSetRegister(_mosi);
+  mosiPortClr = portClearRegister(_mosi);
+  if (_cs >= 0)
   {
 #if !defined(KINETISK)
-    csPinMask = digitalPinToBitMask(cs);
+    csPinMask = digitalPinToBitMask(_cs);
 #endif
-    csPortSet = portSetRegister(cs);
-    csPortClr = portClearRegister(cs);
+    csPortSet = portSetRegister(_cs);
+    csPortClr = portClearRegister(_cs);
   }
   else
   {
@@ -62,32 +62,98 @@ void Arduino_SWSPI::begin(uint32_t speed)
     csPortSet = dcPortSet;
     csPortClr = dcPortClr;
   }
-  if (miso >= 0)
+  if (_miso >= 0)
   {
-    misoPort = portInputRegister(miso);
+    misoPort = portInputRegister(_miso);
 #if !defined(KINETISK)
-    misoPinMask = digitalPinToBitMask(miso);
+    misoPinMask = digitalPinToBitMask(_miso);
 #endif
   }
   else
   {
-    misoPort = portInputRegister(dc);
+    misoPort = portInputRegister(_miso);
   }
-#else  // !CORE_TEENSY
-  dcPinMask = digitalPinToBitMask(dc);
-  sckPinMask = digitalPinToBitMask(sck);
-  mosiPinMask = digitalPinToBitMask(mosi);
-  dcPortSet = &(PORT->Group[g_APinDescription[dc].ulPort].OUTSET.reg);
-  dcPortClr = &(PORT->Group[g_APinDescription[dc].ulPort].OUTCLR.reg);
-  sckPortSet = &(PORT->Group[g_APinDescription[sck].ulPort].OUTSET.reg);
-  sckPortClr = &(PORT->Group[g_APinDescription[sck].ulPort].OUTCLR.reg);
-  mosiPortSet = &(PORT->Group[g_APinDescription[mosi].ulPort].OUTSET.reg);
-  mosiPortClr = &(PORT->Group[g_APinDescription[mosi].ulPort].OUTCLR.reg);
-  if (cs >= 0)
+#elif defined(ESP32)
+  dcPinMask = digitalPinToBitMask(_dc);
+  sckPinMask = digitalPinToBitMask(_sck);
+  mosiPinMask = digitalPinToBitMask(_mosi);
+  if (_dc >= 32)
   {
-    csPinMask = digitalPinToBitMask(cs);
-    csPortSet = &(PORT->Group[g_APinDescription[cs].ulPort].OUTSET.reg);
-    csPortClr = &(PORT->Group[g_APinDescription[cs].ulPort].OUTCLR.reg);
+    dcPortSet = (PORTreg_t)&(GPIO.out1_w1ts.val);
+    dcPortClr = (PORTreg_t)&(GPIO.out1_w1tc.val);
+  }
+  else
+  {
+    dcPortSet = (PORTreg_t)&(GPIO.out_w1ts);
+    dcPortClr = (PORTreg_t)&(GPIO.out_w1tc);
+  }
+  if (_sck >= 32)
+  {
+    sckPortSet = (PORTreg_t)&(GPIO.out1_w1ts.val);
+    sckPortClr = (PORTreg_t)&(GPIO.out1_w1tc.val);
+  }
+  else
+  {
+    sckPortSet = (PORTreg_t)&(GPIO.out_w1ts);
+    sckPortClr = (PORTreg_t)&(GPIO.out_w1tc);
+  }
+  if (_mosi >= 32)
+  {
+    mosiPortSet = (PORTreg_t)&(GPIO.out1_w1ts.val);
+    mosiPortClr = (PORTreg_t)&(GPIO.out1_w1tc.val);
+  }
+  else
+  {
+    mosiPortSet = (PORTreg_t)&(GPIO.out_w1ts);
+    mosiPortClr = (PORTreg_t)&(GPIO.out_w1tc);
+  }
+  if (_cs >= 32)
+  {
+    csPinMask = digitalPinToBitMask(_cs);
+    csPortSet = (PORTreg_t)&(GPIO.out1_w1ts.val);
+    csPortClr = (PORTreg_t)&(GPIO.out1_w1tc.val);
+  }
+  else if (_cs >= 0)
+  {
+    csPinMask = digitalPinToBitMask(_cs);
+    csPortSet = (PORTreg_t)&(GPIO.out_w1ts);
+    csPortClr = (PORTreg_t)&(GPIO.out_w1tc);
+  }
+  else
+  {
+    // No chip-select line defined; might be permanently tied to GND.
+    // Assign a valid GPIO register (though not used for CS), and an
+    // empty pin bitmask...the nonsense bit-twiddling might be faster
+    // than checking _cs and possibly branching.
+    csPortSet = (PORTreg_t)dcPortSet;
+    csPortClr = (PORTreg_t)dcPortClr;
+    csPinMask = 0;
+  }
+  if (_miso >= 0)
+  {
+    misoPinMask = digitalPinToBitMask(_miso);
+    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
+  }
+  else
+  {
+    misoPinMask = 0;
+    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_dc));
+  }
+#else  // !CORE_TEENSY and !ESP32
+  dcPinMask = digitalPinToBitMask(_dc);
+  sckPinMask = digitalPinToBitMask(_sck);
+  mosiPinMask = digitalPinToBitMask(_mosi);
+  dcPortSet = &(PORT->Group[g_APinDescription[_dc].ulPort].OUTSET.reg);
+  dcPortClr = &(PORT->Group[g_APinDescription[_dc].ulPort].OUTCLR.reg);
+  sckPortSet = &(PORT->Group[g_APinDescription[_sck].ulPort].OUTSET.reg);
+  sckPortClr = &(PORT->Group[g_APinDescription[_sck].ulPort].OUTCLR.reg);
+  mosiPortSet = &(PORT->Group[g_APinDescription[_mosi].ulPort].OUTSET.reg);
+  mosiPortClr = &(PORT->Group[g_APinDescription[_mosi].ulPort].OUTCLR.reg);
+  if (_cs >= 0)
+  {
+    csPinMask = digitalPinToBitMask(_cs);
+    csPortSet = &(PORT->Group[g_APinDescription[_cs].ulPort].OUTSET.reg);
+    csPortClr = &(PORT->Group[g_APinDescription[_cs].ulPort].OUTCLR.reg);
   }
   else
   {
@@ -99,28 +165,28 @@ void Arduino_SWSPI::begin(uint32_t speed)
     csPortClr = dcPortClr;
     csPinMask = 0;
   }
-  if (miso >= 0)
+  if (_miso >= 0)
   {
-    misoPinMask = digitalPinToBitMask(miso);
-    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(miso));
+    misoPinMask = digitalPinToBitMask(_miso);
+    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
   }
   else
   {
     misoPinMask = 0;
-    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(dc));
+    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_dc));
   }
 #endif // end !CORE_TEENSY
 #else  // !HAS_PORT_SET_CLR
-  dcPort = (PORTreg_t)portOutputRegister(digitalPinToPort(dc));
-  dcPinMaskSet = digitalPinToBitMask(dc);
-  sckPort = (PORTreg_t)portOutputRegister(digitalPinToPort(sck));
-  sckPinMaskSet = digitalPinToBitMask(sck);
-  mosiPort = (PORTreg_t)portOutputRegister(digitalPinToPort(mosi));
-  mosiPinMaskSet = digitalPinToBitMask(mosi);
-  if (cs >= 0)
+  dcPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_dc));
+  dcPinMaskSet = digitalPinToBitMask(_dc);
+  sckPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_sck));
+  sckPinMaskSet = digitalPinToBitMask(_sck);
+  mosiPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_mosi));
+  mosiPinMaskSet = digitalPinToBitMask(_mosi);
+  if (_cs >= 0)
   {
-    csPort = (PORTreg_t)portOutputRegister(digitalPinToPort(cs));
-    csPinMaskSet = digitalPinToBitMask(cs);
+    csPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_cs));
+    csPinMaskSet = digitalPinToBitMask(_cs);
   }
   else
   {
@@ -133,12 +199,12 @@ void Arduino_SWSPI::begin(uint32_t speed)
   }
   if (miso >= 0)
   {
-    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(miso));
-    misoPinMask = digitalPinToBitMask(miso);
+    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
+    misoPinMask = digitalPinToBitMask(_miso);
   }
   else
   {
-    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(dc));
+    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_dc));
     misoPinMask = 0;
   }
   csPinMaskClr = ~csPinMaskSet;
@@ -399,10 +465,6 @@ inline void Arduino_SWSPI::SPI_MOSI_HIGH(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
   digitalWrite(_mosi, HIGH);
-#if defined(ESP32)
-  for (volatile uint8_t i = 0; i < 1; i++)
-    ;
-#endif // end ESP32
 #endif // end !USE_FAST_PINIO
 }
 
@@ -423,10 +485,6 @@ inline void Arduino_SWSPI::SPI_MOSI_LOW(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
   digitalWrite(_mosi, LOW);
-#if defined(ESP32)
-  for (volatile uint8_t i = 0; i < 1; i++)
-    ;
-#endif // end ESP32
 #endif // end !USE_FAST_PINIO
 }
 
@@ -451,10 +509,6 @@ inline void Arduino_SWSPI::SPI_SCK_HIGH(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
   digitalWrite(_sck, HIGH);
-#if defined(ESP32)
-  for (volatile uint8_t i = 0; i < 1; i++)
-    ;
-#endif // end ESP32
 #endif // end !USE_FAST_PINIO
 }
 
@@ -479,10 +533,6 @@ inline void Arduino_SWSPI::SPI_SCK_LOW(void)
 #endif // end !HAS_PORT_SET_CLR
 #else  // !USE_FAST_PINIO
   digitalWrite(_sck, LOW);
-#if defined(ESP32)
-  for (volatile uint8_t i = 0; i < 1; i++)
-    ;
-#endif // end ESP32
 #endif // end !USE_FAST_PINIO
 }
 
