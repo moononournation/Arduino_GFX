@@ -79,45 +79,45 @@ void Arduino_SWSPI::begin(uint32_t speed)
   mosiPinMask = digitalPinToBitMask(_mosi);
   if (_dc >= 32)
   {
-    dcPortSet = (PORTreg_t)&(GPIO.out1_w1ts.val);
-    dcPortClr = (PORTreg_t)&(GPIO.out1_w1tc.val);
+    dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
   else
   {
-    dcPortSet = (PORTreg_t)&(GPIO.out_w1ts);
-    dcPortClr = (PORTreg_t)&(GPIO.out_w1tc);
+    dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
   if (_sck >= 32)
   {
-    sckPortSet = (PORTreg_t)&(GPIO.out1_w1ts.val);
-    sckPortClr = (PORTreg_t)&(GPIO.out1_w1tc.val);
+    sckPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    sckPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
   else
   {
-    sckPortSet = (PORTreg_t)&(GPIO.out_w1ts);
-    sckPortClr = (PORTreg_t)&(GPIO.out_w1tc);
+    sckPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    sckPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
   if (_mosi >= 32)
   {
-    mosiPortSet = (PORTreg_t)&(GPIO.out1_w1ts.val);
-    mosiPortClr = (PORTreg_t)&(GPIO.out1_w1tc.val);
+    mosiPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    mosiPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
   else
   {
-    mosiPortSet = (PORTreg_t)&(GPIO.out_w1ts);
-    mosiPortClr = (PORTreg_t)&(GPIO.out_w1tc);
+    mosiPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    mosiPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
   if (_cs >= 32)
   {
     csPinMask = digitalPinToBitMask(_cs);
-    csPortSet = (PORTreg_t)&(GPIO.out1_w1ts.val);
-    csPortClr = (PORTreg_t)&(GPIO.out1_w1tc.val);
+    csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
   else if (_cs >= 0)
   {
     csPinMask = digitalPinToBitMask(_cs);
-    csPortSet = (PORTreg_t)&(GPIO.out_w1ts);
-    csPortClr = (PORTreg_t)&(GPIO.out_w1tc);
+    csPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
   else
   {
@@ -237,23 +237,29 @@ void Arduino_SWSPI::writeCommand16(uint16_t c)
 
 void Arduino_SWSPI::write(uint8_t d)
 {
-  for (uint8_t bit = 0; bit < 8; bit++)
+  uint8_t bit = 0x80;
+  while (bit)
   {
-    if (d & 0x80)
+    if (d & bit)
+    {
       SPI_MOSI_HIGH();
+    }
     else
+    {
       SPI_MOSI_LOW();
+    }
     SPI_SCK_HIGH();
-    d <<= 1;
+    bit >>= 1;
     SPI_SCK_LOW();
   }
 }
 
 void Arduino_SWSPI::write16(uint16_t d)
 {
-  for (uint8_t bit = 0; bit < 16; bit++)
+  uint16_t bit = 0x8000;
+  while (bit)
   {
-    if (d & 0x8000)
+    if (d & bit)
     {
       SPI_MOSI_HIGH();
     }
@@ -262,16 +268,17 @@ void Arduino_SWSPI::write16(uint16_t d)
       SPI_MOSI_LOW();
     }
     SPI_SCK_HIGH();
+    bit >>= 1;
     SPI_SCK_LOW();
-    d <<= 1;
   }
 }
 
 void Arduino_SWSPI::write32(uint32_t d)
 {
-  for (uint8_t bit = 0; bit < 32; bit++)
+  uint32_t bit = 0x80000000;
+  while (bit)
   {
-    if (d & 0x80000000)
+    if (d & bit)
     {
       SPI_MOSI_HIGH();
     }
@@ -280,8 +287,8 @@ void Arduino_SWSPI::write32(uint32_t d)
       SPI_MOSI_LOW();
     }
     SPI_SCK_HIGH();
+    bit >>= 1;
     SPI_SCK_LOW();
-    d <<= 1;
   }
 }
 
@@ -342,9 +349,44 @@ void Arduino_SWSPI::setDataMode(uint8_t dataMode)
 
 void Arduino_SWSPI::writeRepeat(uint16_t p, uint32_t len)
 {
-  while (len--)
+  if ((p == 0x0000) || (p == 0xffff)) // no need to set MOSI level while filling black or white
   {
-    write16(p);
+    if (p)
+    {
+      SPI_MOSI_HIGH();
+    }
+    else
+    {
+      SPI_MOSI_LOW();
+    }
+    len *= 16;
+    while (len--)
+    {
+      SPI_SCK_HIGH();
+      SPI_SCK_LOW();
+    }
+  }
+  else
+  {
+    uint16_t bit;
+    while (len--)
+    {
+      bit = 0x8000;
+      while (bit)
+      {
+        if (p & bit)
+        {
+          SPI_MOSI_HIGH();
+        }
+        else
+        {
+          SPI_MOSI_LOW();
+        }
+        SPI_SCK_HIGH();
+        bit >>= 1;
+        SPI_SCK_LOW();
+      }
+    }
   }
 }
 
