@@ -1,7 +1,6 @@
 /*
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
- * https://github.com/ananevilya/Arduino-ST7789-Library.git
  */
 #include <SPI.h>
 #include "Arduino_DataBus.h"
@@ -50,15 +49,72 @@ void Arduino_HWSPI::begin(uint32_t speed)
     pinMode(_cs, OUTPUT);
   }
 
-#if defined(USE_FAST_IO)
-  dcport = portOutputRegister(digitalPinToPort(_dc));
-  dcpinmask = digitalPinToBitMask(_dc);
-  if (_cs)
-  {
-    csport = portOutputRegister(digitalPinToPort(_cs));
-    cspinmask = digitalPinToBitMask(_cs);
-  }
+#if defined(USE_FAST_PINIO)
+#if defined(HAS_PORT_SET_CLR)
+#if defined(CORE_TEENSY)
+#if !defined(KINETISK)
+  dcPinMask = digitalPinToBitMask(dc);
 #endif
+  dcPortSet = portSetRegister(dc);
+  dcPortClr = portClearRegister(dc);
+  if (cs >= 0)
+  {
+#if !defined(KINETISK)
+    csPinMask = digitalPinToBitMask(cs);
+#endif
+    csPortSet = portSetRegister(cs);
+    csPortClr = portClearRegister(cs);
+  }
+  else
+  {
+#if !defined(KINETISK)
+    csPinMask = 0;
+#endif
+    csPortSet = dcPortSet;
+    csPortClr = dcPortClr;
+  }
+#else  // !CORE_TEENSY
+  dcPinMask = digitalPinToBitMask(dc);
+  dcPortSet = &(PORT->Group[g_APinDescription[dc].ulPort].OUTSET.reg);
+  dcPortClr = &(PORT->Group[g_APinDescription[dc].ulPort].OUTCLR.reg);
+  if (cs >= 0)
+  {
+    csPinMask = digitalPinToBitMask(cs);
+    csPortSet = &(PORT->Group[g_APinDescription[cs].ulPort].OUTSET.reg);
+    csPortClr = &(PORT->Group[g_APinDescription[cs].ulPort].OUTCLR.reg);
+  }
+  else
+  {
+    // No chip-select line defined; might be permanently tied to GND.
+    // Assign a valid GPIO register (though not used for CS), and an
+    // empty pin bitmask...the nonsense bit-twiddling might be faster
+    // than checking _cs and possibly branching.
+    csPortSet = dcPortSet;
+    csPortClr = dcPortClr;
+    csPinMask = 0;
+  }
+#endif // end !CORE_TEENSY
+#else  // !HAS_PORT_SET_CLR
+  dcPort = (PORTreg_t)portOutputRegister(digitalPinToPort(dc));
+  dcPinMaskSet = digitalPinToBitMask(dc);
+  if (cs >= 0)
+  {
+    csPort = (PORTreg_t)portOutputRegister(digitalPinToPort(cs));
+    csPinMaskSet = digitalPinToBitMask(cs);
+  }
+  else
+  {
+    // No chip-select line defined; might be permanently tied to GND.
+    // Assign a valid GPIO register (though not used for CS), and an
+    // empty pin bitmask...the nonsense bit-twiddling might be faster
+    // than checking _cs and possibly branching.
+    csPort = dcPort;
+    csPinMaskSet = 0;
+  }
+  csPinMaskClr = ~csPinMaskSet;
+  dcPinMaskClr = ~dcPinMaskSet;
+#endif // !end HAS_PORT_SET_CLR
+#endif // end USE_FAST_PINIO
 
 #if defined(ESP32)
   SPI.begin(_sck, _miso, _mosi);
@@ -249,11 +305,11 @@ void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 #elif defined(ESP8266)
   SPI.writePattern((uint8_t *)data, len * 2, 1);
 #else
-  uint8_t *d = (int16_t*)data;
+  uint8_t *d = (int16_t *)data;
   while (len--)
   {
-    write(d++);
-    write(d++);
+    write(*d++);
+    write(*d++);
   }
 #endif
 }
@@ -268,8 +324,10 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t size, uint32_t repeat)
 #if defined(ESP8266) || defined(ESP32)
   SPI.writePattern(data, size, repeat);
 #else
-  while (repeat--) {
-    for (uint8_t i = 0; i < size; i++) {
+  while (repeat--)
+  {
+    for (uint8_t i = 0; i < size; i++)
+    {
       write(data[i]);
     }
   }
@@ -291,11 +349,19 @@ inline void Arduino_HWSPI::CS_HIGH(void)
 {
   if (_cs >= 0)
   {
-#if defined(USE_FAST_IO)
-    *csport |= cspinmask;
-#else
+#if defined(USE_FAST_PINIO)
+#if defined(HAS_PORT_SET_CLR)
+#if defined(KINETISK)
+    *csPortSet = 1;
+#else  // !KINETISK
+    *csPortSet = csPinMask;
+#endif // end !KINETISK
+#else  // !HAS_PORT_SET_CLR
+    *csPort |= csPinMaskSet;
+#endif // end !HAS_PORT_SET_CLR
+#else  // !USE_FAST_PINIO
     digitalWrite(_cs, HIGH);
-#endif
+#endif // end !USE_FAST_PINIO
   }
 }
 
@@ -303,28 +369,52 @@ inline void Arduino_HWSPI::CS_LOW(void)
 {
   if (_cs >= 0)
   {
-#if defined(USE_FAST_IO)
-    *csport &= ~cspinmask;
-#else
+#if defined(USE_FAST_PINIO)
+#if defined(HAS_PORT_SET_CLR)
+#if defined(KINETISK)
+    *csPortClr = 1;
+#else  // !KINETISK
+    *csPortClr = csPinMask;
+#endif // end !KINETISK
+#else  // !HAS_PORT_SET_CLR
+    *csPort &= csPinMaskClr;
+#endif // end !HAS_PORT_SET_CLR
+#else  // !USE_FAST_PINIO
     digitalWrite(_cs, LOW);
-#endif
+#endif // end !USE_FAST_PINIO
   }
 }
 
 inline void Arduino_HWSPI::DC_HIGH(void)
 {
-#if defined(USE_FAST_IO)
-  *dcport |= dcpinmask;
-#else
+#if defined(USE_FAST_PINIO)
+#if defined(HAS_PORT_SET_CLR)
+#if defined(KINETISK)
+  *dcPortSet = 1;
+#else  // !KINETISK
+  *dcPortSet = dcPinMask;
+#endif // end !KINETISK
+#else  // !HAS_PORT_SET_CLR
+  *dcPort |= dcPinMaskSet;
+#endif // end !HAS_PORT_SET_CLR
+#else  // !USE_FAST_PINIO
   digitalWrite(_dc, HIGH);
-#endif
+#endif // end !USE_FAST_PINIO
 }
 
 inline void Arduino_HWSPI::DC_LOW(void)
 {
-#if defined(USE_FAST_IO)
-  *dcport &= ~dcpinmask;
-#else
+#if defined(USE_FAST_PINIO)
+#if defined(HAS_PORT_SET_CLR)
+#if defined(KINETISK)
+  *dcPortClr = 1;
+#else  // !KINETISK
+  *dcPortClr = dcPinMask;
+#endif // end !KINETISK
+#else  // !HAS_PORT_SET_CLR
+  *dcPort &= dcPinMaskClr;
+#endif // end !HAS_PORT_SET_CLR
+#else  // !USE_FAST_PINIO
   digitalWrite(_dc, LOW);
-#endif
+#endif // end !USE_FAST_PINIO
 }

@@ -1,7 +1,6 @@
 /*
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
- * https://github.com/ananevilya/Arduino-ST7735-Library.git
  */
 #ifndef _ARDUINO_ST7735_H_
 #define _ARDUINO_ST7735_H_

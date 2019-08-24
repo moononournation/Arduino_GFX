@@ -6,16 +6,17 @@
 
 #include "SPI.h"
 #include "Arduino_HWSPI.h"
+#include "Arduino_SWSPI.h"
 #include "Arduino_GFX.h"     // Core graphics library by Adafruit
 #include "Arduino_HX8352C.h" // Hardware-specific library for HX8352C
 #include "Arduino_ILI9225.h" // Hardware-specific library for ILI9225
-#include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341 (with or without CS pin)
-#include "Arduino_ILI9486.h" // Hardware-specific library for ILI9486 (with or without CS pin)
+#include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341
+#include "Arduino_ILI9486.h" // Hardware-specific library for ILI9486
 #include "Arduino_SEPS525.h" // Hardware-specific library for SEPS525
 #include "Arduino_SSD1331.h" // Hardware-specific library for SSD1331
 #include "Arduino_SSD1351.h" // Hardware-specific library for SSD1351
-#include "Arduino_ST7735.h"  // Hardware-specific library for ST7735 (with or without CS pin)
-#include "Arduino_ST7789.h"  // Hardware-specific library for ST7789 (with or without CS pin)
+#include "Arduino_ST7735.h"  // Hardware-specific library for ST7735
+#include "Arduino_ST7789.h"  // Hardware-specific library for ST7789
 
 #if defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define TFT_BL 32
@@ -35,8 +36,8 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 
 #if defined(ESP32)
 #define TFT_CS 5
-#define TFT_DC 16
-#define TFT_RST 17
+#define TFT_DC 27
+#define TFT_RST 33
 #define TFT_BL 22
 #elif defined(ESP8266)
 #define TFT_CS 15
@@ -54,9 +55,11 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 #if defined(TFT_CS)
 // ESP32 also can customize SPI pins
 // Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
-Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
+// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
+Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
 #else
-Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
+// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
+Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, -1 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
 #endif
 
 // HX8352C IPS LCD 240x400
@@ -75,7 +78,7 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 // Arduino_SEPS525 *tft = new Arduino_SEPS525(bus, TFT_RST);
 
 // SSD1331 OLED 96x64
-Arduino_SSD1331 *tft = new Arduino_SSD1331(bus, TFT_RST);
+// Arduino_SSD1331 *tft = new Arduino_SSD1331(bus, TFT_RST);
 
 // SSD1351 OLED 128x128
 // Arduino_SSD1351 *tft = new Arduino_SSD1351(bus, TFT_RST);
@@ -100,7 +103,7 @@ Arduino_SSD1331 *tft = new Arduino_SSD1331(bus, TFT_RST);
 // 2.4" LCD 240x320
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
 // 2.4" IPS LCD 240x320
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
 //Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 
@@ -116,7 +119,10 @@ void setup()
 {
   Serial.begin(115200);
   while (!Serial)
-    ;
+  {
+    // wait and do nothing
+  }
+
   Serial.println("Arduino_GFX library Test!");
 
   tft->begin();

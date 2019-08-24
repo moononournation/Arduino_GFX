@@ -2,8 +2,8 @@
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
-#ifndef _ARDUINO_HWSPI_H_
-#define _ARDUINO_HWSPI_H_
+#ifndef _ARDUINO_SWSPI_H_
+#define _ARDUINO_SWSPI_H_
 
 // HARDWARE CONFIG ---------------------------------------------------------
 
@@ -11,8 +11,8 @@
 typedef uint8_t ADAGFX_PORT_t;       ///< PORT values are 8-bit
 #define USE_FAST_PINIO               ///< Use direct PORT register access
 #elif defined(ARDUINO_STM32_FEATHER) // WICED
-typedef class HardwareSPI SPIClass;         ///< SPI is a bit odd on WICED
-typedef uint32_t ADAGFX_PORT_t;             ///< PORT values are 32-bit
+typedef class HardwareSPI SPIClass; ///< SPI is a bit odd on WICED
+typedef uint32_t ADAGFX_PORT_t;     ///< PORT values are 32-bit
 #elif defined(__arm__)
 #if defined(ARDUINO_ARCH_SAMD)
 // Adafruit M0, M4
@@ -48,7 +48,7 @@ typedef volatile ADAGFX_PORT_t *PORTreg_t; ///< PORT register type
 #if defined(ADAFRUIT_PYPORTAL) || defined(ADAFRUIT_PYBADGE_M4_EXPRESS) || defined(ADAFRUIT_PYGAMER_M4_EXPRESS) || defined(ADAFRUIT_HALLOWING_M4_EXPRESS)
 #define USE_SPI_DMA ///< Auto DMA if using PyPortal
 #else
-                                            //#define USE_SPI_DMA               ///< If set, use DMA if available
+                                    //#define USE_SPI_DMA               ///< If set, use DMA if available
 #endif
 // Another "oops" name -- this now also handles parallel DMA.
 // If DMA is enabled, Arduino sketch MUST #include <Adafruit_ZeroDMA.h>
@@ -83,14 +83,10 @@ typedef volatile ADAGFX_PORT_t *PORTreg_t; ///< PORT register type
 #define SPI_DEFAULT_FREQ 24000000 ///< Default SPI data clock frequency
 #endif
 
-class Arduino_HWSPI : public Arduino_DataBus
+class Arduino_SWSPI : public Arduino_DataBus
 {
 public:
-#if defined(ESP32)
-  Arduino_HWSPI(int8_t dc, int8_t cs = -1, int8_t _sck = -1, int8_t _mosi = -1, int8_t _miso = -1); // Constructor
-#else
-  Arduino_HWSPI(int8_t dc, int8_t cs = -1); // Constructor
-#endif
+  Arduino_SWSPI(int8_t dc, int8_t cs, int8_t _sck, int8_t _mosi, int8_t _miso); // Constructor
 
   virtual void begin(uint32_t speed = 0);
   virtual void beginWrite();
@@ -116,12 +112,13 @@ private:
   inline void CS_LOW(void);
   inline void DC_HIGH(void);
   inline void DC_LOW(void);
+  inline void SPI_MOSI_HIGH(void);
+  inline void SPI_MOSI_LOW(void);
+  inline void SPI_SCK_HIGH(void);
+  inline void SPI_SCK_LOW(void);
+  inline bool SPI_MISO_READ(void);
 
-  int8_t _dc, _cs;
-  uint32_t _speed;
-#if defined(ESP32)
-  int8_t _sck, _mosi, _miso;
-#endif
+  int8_t _dc, _cs, _sck, _mosi, _miso;
 
   // CLASS INSTANCE VARIABLES --------------------------------------------
 
@@ -138,10 +135,34 @@ private:
   PORTreg_t dcPortSet; ///< PORT register for data/command SET
   PORTreg_t dcPortClr; ///< PORT register for data/command CLEAR
 #else                  // !HAS_PORT_SET_CLR
-  PORTreg_t csPort;           ///< PORT register for chip select
-  PORTreg_t dcPort;           ///< PORT register for data/command
+  PORTreg_t csPort;             ///< PORT register for chip select
+  PORTreg_t dcPort;             ///< PORT register for data/command
 #endif                 // end HAS_PORT_SET_CLR
 #endif                 // end USE_FAST_PINIO
+
+#if defined(USE_FAST_PINIO)
+  PORTreg_t misoPort; ///< PORT (PIN) register for MISO
+#if defined(HAS_PORT_SET_CLR)
+  PORTreg_t mosiPortSet; ///< PORT register for MOSI SET
+  PORTreg_t mosiPortClr; ///< PORT register for MOSI CLEAR
+  PORTreg_t sckPortSet;  ///< PORT register for SCK SET
+  PORTreg_t sckPortClr;  ///< PORT register for SCK CLEAR
+#if !defined(KINETISK)
+  ADAGFX_PORT_t mosiPinMask; ///< Bitmask for MOSI
+  ADAGFX_PORT_t sckPinMask;  ///< Bitmask for SCK
+#endif                       // end !KINETISK
+#else                        // !HAS_PORT_SET_CLR
+  PORTreg_t mosiPort;           ///< PORT register for MOSI
+  PORTreg_t sckPort;            ///< PORT register for SCK
+  ADAGFX_PORT_t mosiPinMaskSet; ///< Bitmask for MOSI SET (OR)
+  ADAGFX_PORT_t mosiPinMaskClr; ///< Bitmask for MOSI CLEAR (AND)
+  ADAGFX_PORT_t sckPinMaskSet;  ///< Bitmask for SCK SET (OR bitmask)
+  ADAGFX_PORT_t sckPinMaskClr;  ///< Bitmask for SCK CLEAR (AND)
+#endif                       // end HAS_PORT_SET_CLR
+#if !defined(KINETISK)
+  ADAGFX_PORT_t misoPinMask; ///< Bitmask for MISO
+#endif                       // end !KINETISK
+#endif                       // end USE_FAST_PINIO
 
 #if defined(USE_SPI_DMA)             // Used by hardware SPI and tft8
   Adafruit_ZeroDMA dma;              ///< DMA instance
@@ -160,12 +181,12 @@ private:
   ADAGFX_PORT_t dcPinMask; ///< Bitmask for data/command
 #endif                     // end !KINETISK
 #else                      // !HAS_PORT_SET_CLR
-  ADAGFX_PORT_t csPinMaskSet; ///< Bitmask for chip select SET (OR)
-  ADAGFX_PORT_t csPinMaskClr; ///< Bitmask for chip select CLEAR (AND)
-  ADAGFX_PORT_t dcPinMaskSet; ///< Bitmask for data/command SET (OR)
-  ADAGFX_PORT_t dcPinMaskClr; ///< Bitmask for data/command CLEAR (AND)
+  ADAGFX_PORT_t csPinMaskSet;   ///< Bitmask for chip select SET (OR)
+  ADAGFX_PORT_t csPinMaskClr;   ///< Bitmask for chip select CLEAR (AND)
+  ADAGFX_PORT_t dcPinMaskSet;   ///< Bitmask for data/command SET (OR)
+  ADAGFX_PORT_t dcPinMaskClr;   ///< Bitmask for data/command CLEAR (AND)
 #endif                     // end HAS_PORT_SET_CLR
 #endif                     // end USE_FAST_PINIO
 };
 
-#endif
+#endif // _ARDUINO_SWSPI_H_
