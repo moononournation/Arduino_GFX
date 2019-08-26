@@ -73,7 +73,7 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t; ///< PORT register type
 class Arduino_SWSPI : public Arduino_DataBus
 {
 public:
-  Arduino_SWSPI(int8_t dc, int8_t cs, int8_t _sck, int8_t _mosi, int8_t _miso); // Constructor
+  Arduino_SWSPI(int8_t dc, int8_t cs, int8_t _sck, int8_t _mosi, int8_t _miso = -1); // Constructor
 
   virtual void begin(uint32_t speed = 0);
   virtual void beginWrite();
@@ -95,6 +95,8 @@ public:
   virtual void setDataMode(uint8_t dataMode);
 
 private:
+  inline void write9bitCommand(uint8_t c);
+  inline void write9bitData(uint8_t d);
   inline void CS_HIGH(void);
   inline void CS_LOW(void);
   inline void DC_HIGH(void);
