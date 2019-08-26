@@ -9,6 +9,7 @@
 #include "Arduino_SWSPI.h"
 #include "Arduino_GFX.h"     // Core graphics library by Adafruit
 #include "Arduino_HX8352C.h" // Hardware-specific library for HX8352C
+#include "Arduino_HX8357B.h" // Hardware-specific library for HX8357B
 #include "Arduino_ILI9225.h" // Hardware-specific library for ILI9225
 #include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341
 #include "Arduino_ILI9486.h" // Hardware-specific library for ILI9486
@@ -36,7 +37,8 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 
 #if defined(ESP32)
 #define TFT_CS 5
-#define TFT_DC 27
+// #define TFT_DC 27
+#define TFT_DC -1 // 9-bit, SWSPI only
 #define TFT_RST 33
 #define TFT_BL 22
 #elif defined(ESP8266)
@@ -64,6 +66,9 @@ Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, -1 /* CS */, 18 /* SCK */, 23 /* 
 
 // HX8352C IPS LCD 240x400
 // Arduino_HX8352C *tft = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+
+// HX8357B IPS LCD 320x480
+Arduino_HX8357B *tft = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // ILI9225 LCD 176x220
 // Arduino_ILI9225 *tft = new Arduino_ILI9225(bus, TFT_RST);
@@ -103,7 +108,7 @@ Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, -1 /* CS */, 18 /* SCK */, 23 /* 
 // 2.4" LCD 240x320
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
 // 2.4" IPS LCD 240x320
-Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
 //Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 

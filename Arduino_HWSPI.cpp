@@ -79,25 +79,25 @@ void Arduino_HWSPI::begin(uint32_t speed)
   dcPinMask = digitalPinToBitMask(_dc);
   if (_dc >= 32)
   {
-    dcPortSet = (PORTreg_t)&(GPIO.out1_w1ts.val);
-    dcPortClr = (PORTreg_t)&(GPIO.out1_w1tc.val);
+    dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
   else
   {
-    dcPortSet = (PORTreg_t)&(GPIO.out_w1ts);
-    dcPortClr = (PORTreg_t)&(GPIO.out_w1tc);
+    dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
   if (_cs >= 32)
   {
     csPinMask = digitalPinToBitMask(_cs);
-    csPortSet = (PORTreg_t)&(GPIO.out1_w1ts.val);
-    csPortClr = (PORTreg_t)&(GPIO.out1_w1tc.val);
+    csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
   else if (_cs >= 0)
   {
     csPinMask = digitalPinToBitMask(_cs);
-    csPortSet = (PORTreg_t)&(GPIO.out_w1ts);
-    csPortClr = (PORTreg_t)&(GPIO.out_w1tc);
+    csPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
   else
   {
