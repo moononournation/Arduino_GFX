@@ -29,8 +29,18 @@ public:
   virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
   virtual inline void endWrite(void);
 
-  virtual void pushColor(uint16_t color);
   virtual void setAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+  virtual void pushColor(uint16_t color);
+
+  virtual void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg);
+  virtual void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg);
+  virtual void drawGrayscaleBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
+  virtual void drawGrayscaleBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h);
+  virtual void draw16bitRGBBitmap(int16_t x, int16_t y, const uint16_t bitmap[], int16_t w, int16_t h);
+  virtual void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h);
+  virtual void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
+  virtual void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h);
+
   virtual void setRotation(uint8_t r);
 
   virtual void writeAddrColumn(uint16_t x, uint16_t w) = 0;

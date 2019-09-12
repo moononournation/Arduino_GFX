@@ -902,7 +902,6 @@ void Arduino_GFX::drawXBitmap(int16_t x, int16_t y,
 /**************************************************************************/
 /*!
    @brief   Draw a PROGMEM-resident 8-bit image (grayscale) at the specified (x,y) pos.
-   Specifically for 8-bit display devices such as IS31FL3731; no color reduction/expansion is performed.
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate
     @param    bitmap  byte array with grayscale bitmap
@@ -913,12 +912,14 @@ void Arduino_GFX::drawXBitmap(int16_t x, int16_t y,
 void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
                                       const uint8_t bitmap[], int16_t w, int16_t h)
 {
+    uint8_t v;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
         for (int16_t i = 0; i < w; i++)
         {
-            writePixel(x + i, y, (uint8_t)pgm_read_byte(&bitmap[j * w + i]));
+            v = (uint8_t)pgm_read_byte(&bitmap[j * w + i]);
+            writePixel(x + i, y, color565(v, v, v));
         }
     }
     endWrite();
@@ -927,7 +928,6 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 /**************************************************************************/
 /*!
    @brief   Draw a RAM-resident 8-bit image (grayscale) at the specified (x,y) pos.
-   Specifically for 8-bit display devices such as IS31FL3731; no color reduction/expansion is performed.
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate
     @param    bitmap  byte array with grayscale bitmap
@@ -938,12 +938,14 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
                                       uint8_t *bitmap, int16_t w, int16_t h)
 {
+    uint8_t v;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
         for (int16_t i = 0; i < w; i++)
         {
-            writePixel(x + i, y, bitmap[j * w + i]);
+            v = bitmap[j * w + i];
+            writePixel(x + i, y, color565(v, v, v));
         }
     }
     endWrite();
@@ -952,9 +954,8 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 /**************************************************************************/
 /*!
    @brief   Draw a PROGMEM-resident 8-bit image (grayscale) with a 1-bit mask
-   (set bits = opaque, unset bits = clear) at the specified (x,y) position.
-   BOTH buffers (grayscale and mask) must be PROGMEM-resident.
-   Specifically for 8-bit display devices such as IS31FL3731; no color reduction/expansion is performed.
+            (set bits = opaque, unset bits = clear) at the specified (x,y) position.
+            BOTH buffers (grayscale and mask) must be PROGMEM-resident.
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate
     @param    bitmap  byte array with grayscale bitmap
@@ -969,6 +970,7 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 {
     int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
     uint8_t byte = 0;
+    uint8_t v;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
@@ -984,7 +986,8 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
             }
             if (byte & 0x80)
             {
-                writePixel(x + i, y, (uint8_t)pgm_read_byte(&bitmap[j * w + i]));
+                v = (uint8_t)pgm_read_byte(&bitmap[j * w + i]);
+                writePixel(x + i, y, color565(v, v, v));
             }
         }
     }
@@ -994,9 +997,8 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 /**************************************************************************/
 /*!
    @brief   Draw a RAM-resident 8-bit image (grayscale) with a 1-bit mask
-   (set bits = opaque, unset bits = clear) at the specified (x,y) position.
-   BOTH buffers (grayscale and mask) must be RAM-residentt, no mix-and-match
-   Specifically for 8-bit display devices such as IS31FL3731; no color reduction/expansion is performed.
+            (set bits = opaque, unset bits = clear) at the specified (x,y) position.
+            BOTH buffers (grayscale and mask) must be RAM-residentt, no mix-and-match
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate
     @param    bitmap  byte array with grayscale bitmap
@@ -1010,6 +1012,7 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 {
     int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
     uint8_t byte = 0;
+    uint8_t v;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
@@ -1025,7 +1028,8 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
             }
             if (byte & 0x80)
             {
-                writePixel(x + i, y, bitmap[j * w + i]);
+                v = bitmap[j * w + i];
+                writePixel(x + i, y, color565(v, v, v));
             }
         }
     }
@@ -1035,7 +1039,6 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 /**************************************************************************/
 /*!
    @brief   Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-   For 16-bit display devices; no color reduction performed.
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate
     @param    bitmap  byte array with 16-bit color bitmap
@@ -1043,15 +1046,16 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
     @param    h   Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
-                                const uint16_t bitmap[], int16_t w, int16_t h)
+void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
+                                     const uint16_t bitmap[], int16_t w, int16_t h)
 {
+    int16_t offset = 0;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
         for (int16_t i = 0; i < w; i++)
         {
-            writePixel(x + i, y, pgm_read_word(&bitmap[j * w + i]));
+            writePixel(x + i, y, pgm_read_word(&bitmap[offset++]));
         }
     }
     endWrite();
@@ -1060,7 +1064,6 @@ void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
 /**************************************************************************/
 /*!
    @brief   Draw a RAM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-   For 16-bit display devices; no color reduction performed.
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate
     @param    bitmap  byte array with 16-bit color bitmap
@@ -1068,15 +1071,16 @@ void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
     @param    h   Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
-                                uint16_t *bitmap, int16_t w, int16_t h)
+void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
+                                     uint16_t *bitmap, int16_t w, int16_t h)
 {
+    int16_t offset = 0;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
         for (int16_t i = 0; i < w; i++)
         {
-            writePixel(x + i, y, bitmap[j * w + i]);
+            writePixel(x + i, y, bitmap[offset++]);
         }
     }
     endWrite();
@@ -1084,7 +1088,9 @@ void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask (set bits = opaque, unset bits = clear) at the specified (x,y) position. BOTH buffers (color and mask) must be PROGMEM-resident. For 16-bit display devices; no color reduction performed.
+   @brief   Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask
+            (set bits = opaque, unset bits = clear) at the specified (x,y) position.
+            BOTH buffers (color and mask) must be PROGMEM-resident.
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate
     @param    bitmap  byte array with 16-bit color bitmap
@@ -1093,10 +1099,11 @@ void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
     @param    h   Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
-                                const uint16_t bitmap[], const uint8_t mask[],
-                                int16_t w, int16_t h)
+void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
+                                     const uint16_t bitmap[], const uint8_t mask[],
+                                     int16_t w, int16_t h)
 {
+    int16_t offset = 0;
     int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
     uint8_t byte = 0;
     startWrite();
@@ -1114,8 +1121,9 @@ void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
             }
             if (byte & 0x80)
             {
-                writePixel(x + i, y, pgm_read_word(&bitmap[j * w + i]));
+                writePixel(x + i, y, pgm_read_word(&bitmap[offset]));
             }
+            offset++;
         }
     }
     endWrite();
@@ -1123,7 +1131,9 @@ void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a RAM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask (set bits = opaque, unset bits = clear) at the specified (x,y) position. BOTH buffers (color and mask) must be RAM-resident. For 16-bit display devices; no color reduction performed.
+   @brief   Draw a RAM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask
+            (set bits = opaque, unset bits = clear) at the specified (x,y) position.
+            BOTH buffers (color and mask) must be RAM-resident.
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate
     @param    bitmap  byte array with 16-bit color bitmap
@@ -1132,9 +1142,10 @@ void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
     @param    h   Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
-                                uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
+void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
+                                     uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
+    int16_t offset = 0;
     int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
     uint8_t byte = 0;
     startWrite();
@@ -1152,7 +1163,149 @@ void Arduino_GFX::drawRGBBitmap(int16_t x, int16_t y,
             }
             if (byte & 0x80)
             {
-                writePixel(x + i, y, bitmap[j * w + i]);
+                writePixel(x + i, y, bitmap[offset]);
+            }
+            offset++;
+        }
+    }
+    endWrite();
+}
+
+/**************************************************************************/
+/*!
+   @brief   Draw a PROGMEM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param    x   Top left corner x coordinate
+    @param    y   Top left corner y coordinate
+    @param    bitmap  byte array with 16-bit color bitmap
+    @param    w   Width of bitmap in pixels
+    @param    h   Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
+                                     const uint8_t bitmap[], int16_t w, int16_t h)
+{
+    int16_t offset = 0;
+    startWrite();
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+        for (int16_t i = 0; i < w; i++)
+        {
+            writePixel(x + i, y, color565(pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++])));
+        }
+    }
+    endWrite();
+}
+
+/**************************************************************************/
+/*!
+   @brief   Draw a RAM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param    x   Top left corner x coordinate
+    @param    y   Top left corner y coordinate
+    @param    bitmap  byte array with 16-bit color bitmap
+    @param    w   Width of bitmap in pixels
+    @param    h   Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
+                                     uint8_t *bitmap, int16_t w, int16_t h)
+{
+    int16_t offset = 0;
+    startWrite();
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+        for (int16_t i = 0; i < w; i++)
+        {
+            writePixel(x + i, y, color565(bitmap[offset++], bitmap[offset++], bitmap[offset++]));
+        }
+    }
+    endWrite();
+}
+
+/**************************************************************************/
+/*!
+   @brief   Draw a PROGMEM-resident 24-bit image (RGB 5/6/5) with a 1-bit mask
+            (set bits = opaque, unset bits = clear) at the specified (x,y) position.
+            BOTH buffers (color and mask) must be PROGMEM-resident.
+    @param    x   Top left corner x coordinate
+    @param    y   Top left corner y coordinate
+    @param    bitmap  byte array with 16-bit color bitmap
+    @param    mask  byte array with monochrome mask bitmap
+    @param    w   Width of bitmap in pixels
+    @param    h   Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
+                                     const uint8_t bitmap[], const uint8_t mask[],
+                                     int16_t w, int16_t h)
+{
+    int16_t offset = 0;
+    int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
+    uint8_t byte = 0;
+    startWrite();
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+        for (int16_t i = 0; i < w; i++)
+        {
+            if (i & 7)
+            {
+                byte <<= 1;
+            }
+            else
+            {
+                byte = pgm_read_byte(&mask[j * bw + i / 8]);
+            }
+            if (byte & 0x80)
+            {
+                writePixel(x + i, y, color565(pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++])));
+            }
+            else
+            {
+                offset += 3;
+            }
+        }
+    }
+    endWrite();
+}
+
+/**************************************************************************/
+/*!
+   @brief   Draw a RAM-resident 24-bit image (RGB 5/6/5) with a 1-bit mask
+            (set bits = opaque, unset bits = clear) at the specified (x,y) position.
+            BOTH buffers (color and mask) must be RAM-resident.
+    @param    x   Top left corner x coordinate
+    @param    y   Top left corner y coordinate
+    @param    bitmap  byte array with 16-bit color bitmap
+    @param    mask  byte array with monochrome mask bitmap
+    @param    w   Width of bitmap in pixels
+    @param    h   Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
+                                     uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
+{
+    int16_t offset = 0;
+    int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
+    uint8_t byte = 0;
+    startWrite();
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+        for (int16_t i = 0; i < w; i++)
+        {
+            if (i & 7)
+            {
+                byte <<= 1;
+            }
+            else
+            {
+                byte = mask[j * bw + i / 8];
+            }
+            if (byte & 0x80)
+            {
+                writePixel(x + i, y, color565(bitmap[offset++], bitmap[offset++], bitmap[offset++]));
+            }
+            else
+            {
+                offset += 3;
             }
         }
     }
