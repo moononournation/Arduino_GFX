@@ -558,6 +558,14 @@ void Arduino_SWSPI::writeRepeat(uint16_t p, uint32_t len)
   }
 }
 
+void Arduino_SWSPI::writeBytes(uint8_t *data, uint32_t len)
+{
+  while (len--)
+  {
+    write(*data++);
+  }
+}
+
 void Arduino_SWSPI::writePixels(uint16_t *data, uint32_t len)
 {
   while (len--)

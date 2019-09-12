@@ -24,6 +24,7 @@ public:
     virtual void write16(uint16_t) = 0;
     virtual void write32(uint32_t) = 0;
     virtual void writeRepeat(uint16_t p, uint32_t len) = 0;
+    virtual void writeBytes(uint8_t *data, uint32_t size) = 0;
     virtual void writePixels(uint16_t *data, uint32_t size) = 0;
     virtual void writePattern(uint8_t *data, uint8_t size, uint32_t repeat) = 0;
     virtual void endWrite() = 0;

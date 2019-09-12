@@ -334,6 +334,18 @@ void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
 #endif
 }
 
+void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
+{
+#if defined(ESP8266) || defined(ESP32)
+  SPI.writeBytes(data, len);
+#else
+  while (len--)
+  {
+    write(*d++);
+  }
+#endif
+}
+
 void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 {
 #ifdef ESP32
