@@ -271,7 +271,10 @@ void Arduino_SWSPI::begin(uint32_t speed)
 
 void Arduino_SWSPI::beginWrite()
 {
-  DC_HIGH();
+  if (_dc >= 0)
+  {
+    DC_HIGH();
+  }
   CS_LOW();
 }
 
@@ -494,15 +497,15 @@ void Arduino_SWSPI::writeRepeat(uint16_t p, uint32_t len)
   if (_dc < 0) // 9-bit SPI
   {
     if (p == 0xffff) // no need to set MOSI level while filling white
+    {
+      SPI_MOSI_HIGH();
+      len *= 18; // 9-bit * 2
+      while (len--)
       {
-        SPI_MOSI_HIGH();
-        len *= 18; // 9-bit * 2
-        while (len--)
-        {
-          SPI_SCK_HIGH();
-          SPI_SCK_LOW();
-        }
+        SPI_SCK_HIGH();
+        SPI_SCK_LOW();
       }
+    }
     else
     {
       uint8_t hi = p >> 8;
