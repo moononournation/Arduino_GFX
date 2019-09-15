@@ -3,6 +3,14 @@ This library is developing for various displays and various data bus interfaces
 
 This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 
+## Currently Supported data bus
+- 4 wires hardware SPI (HWSPI)
+- 3 or 4 wires software SPI (SWSPI)
+
+## Tobe Support data bus
+- 3 wires hardware SPI (should be ESP32 only)
+- 8 bit parallel interface
+
 ## Currently Supported Display
 - HX8352C 240x400 [[test video](https://youtu.be/m2xWYbS3t7s)]
 - HX8357B 320x480 [[test video](https://youtu.be/pB6_LOCiUqg)]
