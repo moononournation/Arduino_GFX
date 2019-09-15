@@ -57,10 +57,10 @@ void Arduino_SWSPI::begin(uint32_t speed)
   else
   {
 #if !defined(KINETISK)
-    csPinMask = 0;
+    dcPinMask = 0;
 #endif
-    csPortSet = sckPortSet;
-    csPortClr = sckPortClr;
+    dcPortSet = sckPortSet;
+    dcPortClr = sckPortClr;
   }
   if (_cs >= 0)
   {
@@ -187,7 +187,7 @@ void Arduino_SWSPI::begin(uint32_t speed)
     // than checking _dc and possibly branching.
     dcPortSet = sckPortSet;
     dcPortClr = sckPortClr;
-    csPinMask = 0;
+    dcPinMask = 0;
   }
   if (_cs >= 0)
   {
