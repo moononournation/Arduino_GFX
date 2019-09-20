@@ -37,12 +37,13 @@
 #define MSB_32_SET(var, val) { uint8_t * v = (uint8_t *)&(val); (var) = v[3] | (v[2] << 8) | (v[1] << 16) | (v[0] << 24); }
 #define MSB_16_SET(var, val) { (var) = (((val) & 0xFF00) >> 8) | (((val) & 0xFF) << 8); }
 
-struct spi_struct_t {
-    spi_dev_t * dev;
+struct spi_struct_t
+{
+  spi_dev_t *dev;
 #if !CONFIG_DISABLE_HAL_LOCKS
-    xSemaphoreHandle lock;
+  xSemaphoreHandle lock;
 #endif
-    uint8_t num;
+  uint8_t num;
 };
 
 #if CONFIG_DISABLE_HAL_LOCKS
@@ -53,8 +54,7 @@ static spi_t _spi_bus_array[4] = {
     {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), 0},
     {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 1},
     {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 2},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 3}
-};
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 3}};
 #else
 #define SPI_MUTEX_LOCK()    do {} while (xSemaphoreTake(_spi->lock, portMAX_DELAY) != pdPASS)
 #define SPI_MUTEX_UNLOCK()  xSemaphoreGive(_spi->lock)
@@ -63,8 +63,7 @@ static spi_t _spi_bus_array[4] = {
     {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), NULL, 0},
     {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 1},
     {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 2},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 3}
-};
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 3}};
 #endif
 
 typedef uint32_t ARDUINOGFX_PORT_t;
@@ -89,6 +88,7 @@ public:
   virtual void writePixels(uint16_t *data, uint32_t size);
   virtual void writePattern(uint8_t *data, uint8_t size, uint32_t repeat);
   virtual void endWrite();
+  inline virtual void flush_data_buf();
 
   virtual void sendCommand(uint8_t);
   virtual void sendCommand16(uint16_t);
@@ -98,27 +98,19 @@ public:
   virtual void setDataMode(uint8_t dataMode);
 
 private:
-  inline void CS_HIGH(void);
-  inline void CS_LOW(void);
   inline void DC_HIGH(void);
   inline void DC_LOW(void);
-  inline void SPI_MOSI_HIGH(void);
-  inline void SPI_MOSI_LOW(void);
-  inline void SPI_SCK_HIGH(void);
-  inline void SPI_SCK_LOW(void);
-  inline bool SPI_MISO_READ(void);
 
   int8_t _dc, _cs, _sck, _mosi, _miso;
   uint32_t _speed;
 
-  PORTreg_t csPortSet; ///< PORT register for chip select SET
-  PORTreg_t csPortClr; ///< PORT register for chip select CLEAR
-  PORTreg_t dcPortSet; ///< PORT register for data/command SET
-  PORTreg_t dcPortClr; ///< PORT register for data/command CLEAR
-  ARDUINOGFX_PORT_t csPinMask; ///< Bitmask for chip select
+  PORTreg_t dcPortSet;         ///< PORT register for data/command SET
+  PORTreg_t dcPortClr;         ///< PORT register for data/command CLEAR
   ARDUINOGFX_PORT_t dcPinMask; ///< Bitmask for data/command
 
-  spi_t * _spi;
+  spi_t *_spi;
+  uint8_t data_buf[64] = {0};
+  uint16_t data_buf_idx = 0;
 };
 
 #endif // _ARDUINO_ESP32SPI_H_
