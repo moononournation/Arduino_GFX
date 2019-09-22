@@ -6,6 +6,7 @@
 
 #include "SPI.h"
 #include "Arduino_HWSPI.h"
+#include "Arduino_ESP32SPI.h"
 #include "Arduino_SWSPI.h"
 #include "Arduino_GFX.h"     // Core graphics library by Adafruit
 #include "Arduino_HX8352C.h" // Hardware-specific library for HX8352C
@@ -56,12 +57,14 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 //You can use different type of hardware initialization
 #if defined(TFT_CS)
 // ESP32 also can customize SPI pins
+Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
 // Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
 // Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
-Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
+// Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
 #else
-// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
-Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, -1 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
+Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, -1, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
+//Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
+// Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, -1 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
 #endif
 
 // HX8352C IPS LCD 240x400
@@ -97,6 +100,8 @@ Arduino_HX8357B *tft = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true 
 // Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 1 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
 // 1.8" GREENTAB B 128x160
 // Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 3 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
+// 1.8" Wide angle LCD 128x160
+// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 2 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */, false /* BGR */);
 // 1.5" GREENTAB B 128x128
 // Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 2 /* col offset 1 */, 3 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
 // 1.5" GREENTAB C 128x128
@@ -110,7 +115,7 @@ Arduino_HX8357B *tft = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true 
 // 2.4" IPS LCD 240x320
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
-//Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 
 #endif /* not a specific hardware */
 

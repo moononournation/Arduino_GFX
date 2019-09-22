@@ -176,7 +176,6 @@ void Arduino_ESP32SPI::writeCommand(uint8_t c)
 
 void Arduino_ESP32SPI::writeCommand16(uint16_t c)
 {
-  Serial.println("writeCommand16");
   if (_dc < 0) // 9-bit SPI
   {
     write9bitCommand(c >> 8);
@@ -329,26 +328,27 @@ void Arduino_ESP32SPI::sendData32(uint32_t d)
 
 void Arduino_ESP32SPI::setDataMode(uint8_t dataMode)
 {
-  switch (dataMode)
-  {
-  case SPI_MODE1:
-    _spi->dev->pin.ck_idle_edge = 0;
-    _spi->dev->user.ck_out_edge = 1;
-    break;
-  case SPI_MODE2:
-    _spi->dev->pin.ck_idle_edge = 1;
-    _spi->dev->user.ck_out_edge = 1;
-    break;
-  case SPI_MODE3:
-    _spi->dev->pin.ck_idle_edge = 1;
-    _spi->dev->user.ck_out_edge = 0;
-    break;
-  case SPI_MODE0:
-  default:
-    _spi->dev->pin.ck_idle_edge = 0;
-    _spi->dev->user.ck_out_edge = 0;
-    break;
-  }
+    SPI_MUTEX_LOCK();
+    switch (dataMode) {
+    case SPI_MODE1:
+        _spi->dev->pin.ck_idle_edge = 0;
+        _spi->dev->user.ck_out_edge = 1;
+        break;
+    case SPI_MODE2:
+        _spi->dev->pin.ck_idle_edge = 1;
+        _spi->dev->user.ck_out_edge = 1;
+        break;
+    case SPI_MODE3:
+        _spi->dev->pin.ck_idle_edge = 1;
+        _spi->dev->user.ck_out_edge = 0;
+        break;
+    case SPI_MODE0:
+    default:
+        _spi->dev->pin.ck_idle_edge = 0;
+        _spi->dev->user.ck_out_edge = 0;
+        break;
+    }
+    SPI_MUTEX_UNLOCK();
 }
 
 void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
@@ -374,7 +374,7 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
       else
       {
         data_buf[idx++] = hi >> 1;
-        data_buf[idx] = hi << 7;
+        data_buf[idx] = hi << 7; 
       }
       data_buf_bit_idx += 9;
 
@@ -415,12 +415,13 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
   {
     uint16_t bufLen = (len < 32) ? len : 32;
     uint16_t xferLen, l;
+    MSB_16_SET(p, p);
     uint32_t c32 = p * 0x00010001;
 
     // Issue pixels in blocks from temp buffer
     while (len)
     {                                          // While pixels remain
-      xferLen = (bufLen < len) ? bufLen : len; // How many this pass?
+      xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
       _spi->dev->mosi_dlen.usr_mosi_dbitlen = (xferLen * 16) - 1;
       _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
       l = (xferLen + 1) / 2;
