@@ -604,7 +604,7 @@ uint32_t testFilledRects(uint16_t color1, uint16_t color2)
 
     t += micros() - start;
 
-    // Outlines are not included in timing resultsb
+    // Outlines are not included in timing results
     tft->drawRect(cx - i2, cy - i2, i, i, color2);
   }
 
