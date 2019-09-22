@@ -78,6 +78,7 @@ public:
 
   virtual void begin(uint32_t speed = 0);
   virtual void beginWrite();
+  virtual void write9bitCommand(uint32_t c);
   virtual void writeCommand(uint8_t);
   virtual void writeCommand16(uint16_t);
   virtual void write(uint8_t);
@@ -110,7 +111,8 @@ private:
 
   spi_t *_spi;
   uint8_t data_buf[64] = {0};
-  uint16_t data_buf_idx = 0;
+  uint32_t *data_buf32 = (uint32_t *)&data_buf;
+  uint16_t data_buf_bit_idx = 0;
 };
 
 #endif // _ARDUINO_ESP32SPI_H_
