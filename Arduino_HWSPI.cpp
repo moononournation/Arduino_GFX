@@ -349,7 +349,7 @@ void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
 void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 {
 #ifdef ESP32
-  SPI.writePixels(data, len);
+  SPI.writePixels(data, len * 2); // don't know why len require *2
 #elif defined(ESP8266)
   SPI.writePattern((uint8_t *)data, len * 2, 1);
 #else
