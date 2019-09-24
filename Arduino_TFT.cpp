@@ -5,6 +5,7 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_GFX.h"
 #include "Arduino_TFT.h"
+#include "glcdfont.c"
 
 Arduino_TFT::Arduino_TFT(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
@@ -401,27 +402,27 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
                              uint16_t color, uint16_t bg)
 {
 
-    int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
-    uint8_t byte = 0;
+  int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+  uint8_t byte = 0;
 
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++, y++)
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
     {
-        for (int16_t i = 0; i < w; i++)
-        {
-            if (i & 7)
-            {
-                byte <<= 1;
-            }
-            else
-            {
-                byte = pgm_read_byte(&bitmap[j * byteWidth + i / 8]);
-            }
-            writeColor((byte & 0x80) ? color : bg);
-        }
+      if (i & 7)
+      {
+        byte <<= 1;
+      }
+      else
+      {
+        byte = pgm_read_byte(&bitmap[j * byteWidth + i / 8]);
+      }
+      writeColor((byte & 0x80) ? color : bg);
     }
-    endWrite();
+  }
+  endWrite();
 }
 
 /**************************************************************************/
@@ -440,27 +441,27 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
                              uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
 
-    int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
-    uint8_t byte = 0;
+  int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+  uint8_t byte = 0;
 
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++, y++)
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
     {
-        for (int16_t i = 0; i < w; i++)
-        {
-            if (i & 7)
-            {
-                byte <<= 1;
-            }
-            else
-            {
-                byte = bitmap[j * byteWidth + i / 8];
-            }
-            writeColor((byte & 0x80) ? color : bg);
-        }
+      if (i & 7)
+      {
+        byte <<= 1;
+      }
+      else
+      {
+        byte = bitmap[j * byteWidth + i / 8];
+      }
+      writeColor((byte & 0x80) ? color : bg);
     }
-    endWrite();
+  }
+  endWrite();
 }
 
 /**************************************************************************/
@@ -476,18 +477,18 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
 void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
                                       const uint8_t bitmap[], int16_t w, int16_t h)
 {
-    uint8_t v;
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++, y++)
+  uint8_t v;
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
     {
-        for (int16_t i = 0; i < w; i++)
-        {
-            v = (uint8_t)pgm_read_byte(&bitmap[j * w + i]);
-            writeColor(color565(v, v, v));
-        }
+      v = (uint8_t)pgm_read_byte(&bitmap[j * w + i]);
+      writeColor(color565(v, v, v));
     }
-    endWrite();
+  }
+  endWrite();
 }
 
 /**************************************************************************/
@@ -503,18 +504,18 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
 void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
                                       uint8_t *bitmap, int16_t w, int16_t h)
 {
-    uint8_t v;
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++, y++)
+  uint8_t v;
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
     {
-        for (int16_t i = 0; i < w; i++)
-        {
-            v = bitmap[j * w + i];
-            writeColor(color565(v, v, v));
-        }
+      v = bitmap[j * w + i];
+      writeColor(color565(v, v, v));
     }
-    endWrite();
+  }
+  endWrite();
 }
 
 /**************************************************************************/
@@ -529,18 +530,18 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
 */
 /**************************************************************************/
 void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                const uint16_t bitmap[], int16_t w, int16_t h)
+                                     const uint16_t bitmap[], int16_t w, int16_t h)
 {
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++, y++)
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
     {
-        for (int16_t i = 0; i < w; i++)
-        {
-            writeColor(pgm_read_word(&bitmap[j * w + i]));
-        }
+      writeColor(pgm_read_word(&bitmap[j * w + i]));
     }
-    endWrite();
+  }
+  endWrite();
 }
 
 /**************************************************************************/
@@ -555,18 +556,18 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
 */
 /**************************************************************************/
 void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                uint16_t *bitmap, int16_t w, int16_t h)
+                                     uint16_t *bitmap, int16_t w, int16_t h)
 {
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++, y++)
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
     {
-        for (int16_t i = 0; i < w; i++)
-        {
-            writeColor(bitmap[j * w + i]);
-        }
+      writeColor(bitmap[j * w + i]);
     }
-    endWrite();
+  }
+  endWrite();
 }
 
 /**************************************************************************/
@@ -582,17 +583,17 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      const uint8_t bitmap[], int16_t w, int16_t h)
 {
-    int16_t offset = 0;
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++, y++)
+  int16_t offset = 0;
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
     {
-        for (int16_t i = 0; i < w; i++)
-        {
-            writeColor(color565(pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++])));
-        }
+      writeColor(color565(pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++])));
     }
-    endWrite();
+  }
+  endWrite();
 }
 
 /**************************************************************************/
@@ -608,17 +609,203 @@ void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      uint8_t *bitmap, int16_t w, int16_t h)
 {
-    int16_t offset = 0;
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++, y++)
+  int16_t offset = 0;
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
     {
-        for (int16_t i = 0; i < w; i++)
+      writeColor(color565(bitmap[offset++], bitmap[offset++], bitmap[offset++]));
+    }
+  }
+  endWrite();
+}
+
+// Draw a character
+/**************************************************************************/
+/*!
+   @brief   Draw a single character
+    @param    x   Bottom left corner x coordinate
+    @param    y   Bottom left corner y coordinate
+    @param    c   The 8-bit font-indexed character (likely ascii)
+    @param    color 16-bit 5-6-5 Color to draw chraracter with
+    @param    bg 16-bit 5-6-5 Color to fill background with (if same as color, no background)
+    @param    size_x  Font magnification level in X-axis, 1 is 'original' size
+    @param    size_y  Font magnification level in Y-axis, 1 is 'original' size
+*/
+/**************************************************************************/
+void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
+                           uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y)
+{
+  if (!gfxFont)
+  { // 'Classic' built-in font
+    if (
+        (x > _max_x) ||               // Clip right
+        (y > _max_y) ||               // Clip bottom
+        ((x + 6 * size_x - 1) < 0) || // Clip left
+        ((y + 8 * size_y - 1) < 0)    // Clip top
+    )
+    {
+      return;
+    }
+
+    if (!_cp437 && (c >= 176))
+    {
+      c++; // Handle 'classic' charset behavior
+    }
+
+    uint8_t col[5];
+    for (int8_t i = 0; i < 5; i++)
+    {
+      col[i] = pgm_read_byte(&font[c * 5 + i]);
+    }
+
+    startWrite();
+    if (bg != color)
+    {
+      uint32_t w = 6 * size_x;
+      uint32_t h = 8 * size_y;
+      writeAddrWindow(x, y, w, h);
+
+      uint16_t line_buf[w];
+      if (size_x == 1)
+      {
+        line_buf[5] = bg; // last column always bg
+      }
+      else
+      {
+        for (int8_t k = 0; k < size_x; k++)
         {
-            writeColor(color565(bitmap[offset++], bitmap[offset++], bitmap[offset++]));
+          line_buf[5 * size_x + k] = bg;
         }
+      }
+      uint8_t bit = 1;
+
+      while (bit)
+      {
+        for (int8_t i = 0; i < 5; i++)
+        {
+          if (size_x == 1)
+          {
+            line_buf[i] = (col[i] & bit) ? color : bg;
+          }
+          else
+          {
+            uint16_t dot_color = (col[i] & bit) ? color : bg;
+            for (int8_t k = 0; k < size_x; k++)
+            {
+              line_buf[i * size_x + k] = dot_color;
+            }
+          }
+        }
+        if (size_y == 1)
+        {
+          _bus->writePixels(line_buf, w);
+        }
+        else
+        {
+          for (int8_t l = 0; l < size_y; l++)
+          {
+            _bus->writePixels(line_buf, w);
+          }
+        }
+        bit <<= 1;
+      }
+    }
+    else // (bg == color), no background color
+    {
+      for (int8_t i = 0; i < 5; i++)
+      { // Char bitmap = 5 columns
+        uint8_t line = col[i];
+        for (int8_t j = 0; j < 8; j++, line >>= 1)
+        {
+          if (line & 1)
+          {
+            if (size_x == 1 && size_y == 1)
+            {
+              writePixel(x + i, y + j, color);
+            }
+            else
+            {
+              writeFillRectPreclipped(x + i * size_x, y + j * size_y, size_x, size_y, color);
+            }
+          }
+        }
+      }
     }
     endWrite();
+  }
+  else
+  { // Custom font
+
+    // Character is assumed previously filtered by write() to eliminate
+    // newlines, returns, non-printable characters, etc.  Calling
+    // drawChar() directly with 'bad' characters of font may cause mayhem!
+
+    c -= (uint8_t)pgm_read_byte(&gfxFont->first);
+    GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c);
+    uint8_t *bitmap = pgm_read_bitmap_ptr(gfxFont);
+
+    uint16_t bo = pgm_read_word(&glyph->bitmapOffset);
+    uint8_t w = pgm_read_byte(&glyph->width),
+            h = pgm_read_byte(&glyph->height);
+    int8_t xo = pgm_read_byte(&glyph->xOffset),
+           yo = pgm_read_byte(&glyph->yOffset);
+    uint8_t xx, yy, bits = 0, bit = 0;
+    int16_t xo16 = 0, yo16 = 0;
+
+    if (size_x > 1 || size_y > 1)
+    {
+      xo16 = xo;
+      yo16 = yo;
+    }
+
+    // Todo: Add character clipping here
+
+    // NOTE: THERE IS NO 'BACKGROUND' COLOR OPTION ON CUSTOM FONTS.
+    // THIS IS ON PURPOSE AND BY DESIGN.  The background color feature
+    // has typically been used with the 'classic' font to overwrite old
+    // screen contents with new data.  This ONLY works because the
+    // characters are a uniform size; it's not a sensible thing to do with
+    // proportionally-spaced fonts with glyphs of varying sizes (and that
+    // may overlap).  To replace previously-drawn text when using a custom
+    // font, use the getTextBounds() function to determine the smallest
+    // rectangle encompassing a string, erase the area with fillRect(),
+    // then draw new text.  This WILL infortunately 'blink' the text, but
+    // is unavoidable.  Drawing 'background' pixels will NOT fix this,
+    // only creates a new set of problems.  Have an idea to work around
+    // this (a canvas object type for MCUs that can afford the RAM and
+    // displays supporting setAddrWindow() and pushColors()), but haven't
+    // implemented this yet.
+
+    startWrite();
+    for (yy = 0; yy < h; yy++)
+    {
+      for (xx = 0; xx < w; xx++)
+      {
+        if (!(bit++ & 7))
+        {
+          bits = pgm_read_byte(&bitmap[bo++]);
+        }
+        if (bits & 0x80)
+        {
+          if (size_x == 1 && size_y == 1)
+          {
+            writePixel(x + xo + xx, y + yo + yy, color);
+          }
+          else
+          {
+            writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
+                          size_x, size_y, color);
+          }
+        }
+        bits <<= 1;
+      }
+    }
+    endWrite();
+
+  } // End classic vs custom font
 }
 
 void Arduino_TFT::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t w,
