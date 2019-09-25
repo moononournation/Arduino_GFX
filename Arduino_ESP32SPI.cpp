@@ -521,16 +521,19 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
   }
   else // 8-bit SPI
   {
-    if (len < 32)
+    if (((len % 2) == 0) && (len < 32))
     {
       flush_data_buf();
 
       _spi->dev->mosi_dlen.usr_mosi_dbitlen = (len * 16) - 1;
       _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-      uint16_t *buf = (uint16_t *)&_spi->dev->data_buf;
-      while (len)
+      uint32_t v1, v2;
+      len >>= 1; // 2 pixels to a 32-bit data
+      for (int i = 0; i < len; i++)
       {
-        *buf++ = *data++;
+        v1 = *data++;
+        v2 = *data++;
+        _spi->dev->data_buf[i] = ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8) | ((v2 & 0xff00) << 8) | ((v1 & 0xff) << 24);
       }
       _spi->dev->cmd.usr = 1;
       while (_spi->dev->cmd.usr)
