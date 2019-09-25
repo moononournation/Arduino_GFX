@@ -1324,15 +1324,18 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                            uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y)
 {
+    uint16_t block_w;
+    uint16_t block_h;
 
-    if (!gfxFont)
-    { // 'Classic' built-in font
-
+    if (!gfxFont) // 'Classic' built-in font
+    {
+        block_w = 6 * size_x;
+        block_h = 8 * size_y;
         if (
-            (x > _max_x) ||               // Clip right
-            (y > _max_y) ||               // Clip bottom
-            ((x + 6 * size_x - 1) < 0) || // Clip left
-            ((y + 8 * size_y - 1) < 0)    // Clip top
+            (x > _max_x) ||            // Clip right
+            (y > _max_y) ||            // Clip bottom
+            ((x + block_w - 1) < 0) || // Clip left
+            ((y + block_h - 1) < 0)    // Clip top
         )
         {
             return;
@@ -1386,8 +1389,8 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
         }
         endWrite();
     }
-    else
-    { // Custom font
+    else // Custom font
+    {
 
         // Character is assumed previously filtered by write() to eliminate
         // newlines, returns, non-printable characters, etc.  Calling
@@ -1411,7 +1414,17 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
             yo16 = yo;
         }
 
-        // Todo: Add character clipping here
+        block_w = w * size_x;
+        block_h = h * size_y;
+        if (
+            (x > _max_x) ||            // Clip right
+            (y > _max_y) ||            // Clip bottom
+            ((x + block_w - 1) < 0) || // Clip left
+            ((y + block_h - 1) < 0)    // Clip top
+        )
+        {
+            return;
+        }
 
         // NOTE: THERE IS NO 'BACKGROUND' COLOR OPTION ON CUSTOM FONTS.
         // THIS IS ON PURPOSE AND BY DESIGN.  The background color feature

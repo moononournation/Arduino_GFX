@@ -638,13 +638,18 @@ void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
                            uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y)
 {
-  if (!gfxFont)
-  { // 'Classic' built-in font
+  uint16_t block_w;
+  uint16_t block_h;
+
+  if (!gfxFont) // 'Classic' built-in font
+  {
+    block_w = 6 * size_x;
+    block_h = 8 * size_y;
     if (
-        (x > _max_x) ||               // Clip right
-        (y > _max_y) ||               // Clip bottom
-        ((x + 6 * size_x - 1) < 0) || // Clip left
-        ((y + 8 * size_y - 1) < 0)    // Clip top
+        (x > _max_x) ||            // Clip right
+        (y > _max_y) ||            // Clip bottom
+        ((x + block_w - 1) < 0) || // Clip left
+        ((y + block_h - 1) < 0)    // Clip top
     )
     {
       return;
@@ -664,11 +669,9 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     startWrite();
     if (bg != color)
     {
-      uint32_t w = 6 * size_x;
-      uint32_t h = 8 * size_y;
-      writeAddrWindow(x, y, w, h);
+      writeAddrWindow(x, y, block_w, block_h);
 
-      uint16_t line_buf[w];
+      uint16_t line_buf[block_w];
       if (size_x == 1)
       {
         line_buf[5] = bg; // last column always bg
@@ -701,13 +704,13 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
         }
         if (size_y == 1)
         {
-          _bus->writePixels(line_buf, w);
+          _bus->writePixels(line_buf, block_w);
         }
         else
         {
           for (int8_t l = 0; l < size_y; l++)
           {
-            _bus->writePixels(line_buf, w);
+            _bus->writePixels(line_buf, block_w);
           }
         }
         bit <<= 1;
@@ -736,9 +739,8 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     }
     endWrite();
   }
-  else
-  { // Custom font
-
+  else // Custom font
+  {
     // Character is assumed previously filtered by write() to eliminate
     // newlines, returns, non-printable characters, etc.  Calling
     // drawChar() directly with 'bad' characters of font may cause mayhem!
@@ -761,7 +763,17 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
       yo16 = yo;
     }
 
-    // Todo: Add character clipping here
+    block_w = w * size_x;
+    block_h = h * size_y;
+    if (
+        (x > _max_x) ||            // Clip right
+        (y > _max_y) ||            // Clip bottom
+        ((x + block_w - 1) < 0) || // Clip left
+        ((y + block_h - 1) < 0)    // Clip top
+    )
+    {
+      return;
+    }
 
     // NOTE: THERE IS NO 'BACKGROUND' COLOR OPTION ON CUSTOM FONTS.
     // THIS IS ON PURPOSE AND BY DESIGN.  The background color feature
