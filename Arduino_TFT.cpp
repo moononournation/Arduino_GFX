@@ -667,7 +667,7 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     }
 
     startWrite();
-    if (bg != color)
+    if (bg != color) // have background color
     {
       writeAddrWindow(x, y, block_w, block_h);
 
@@ -775,22 +775,7 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
       return;
     }
 
-    // NOTE: THERE IS NO 'BACKGROUND' COLOR OPTION ON CUSTOM FONTS.
-    // THIS IS ON PURPOSE AND BY DESIGN.  The background color feature
-    // has typically been used with the 'classic' font to overwrite old
-    // screen contents with new data.  This ONLY works because the
-    // characters are a uniform size; it's not a sensible thing to do with
-    // proportionally-spaced fonts with glyphs of varying sizes (and that
-    // may overlap).  To replace previously-drawn text when using a custom
-    // font, use the getTextBounds() function to determine the smallest
-    // rectangle encompassing a string, erase the area with fillRect(),
-    // then draw new text.  This WILL infortunately 'blink' the text, but
-    // is unavoidable.  Drawing 'background' pixels will NOT fix this,
-    // only creates a new set of problems.  Have an idea to work around
-    // this (a canvas object type for MCUs that can afford the RAM and
-    // displays supporting setAddrWindow() and pushColors()), but haven't
-    // implemented this yet.
-
+    // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background
     startWrite();
     for (yy = 0; yy < h; yy++)
     {
@@ -800,23 +785,39 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
         {
           bits = pgm_read_byte(&bitmap[bo++]);
         }
-        if (bits & 0x80)
+        if (bg != color) // have background color
         {
+          uint8_t c = (bits & 0x80) ? color : bg;
           if (size_x == 1 && size_y == 1)
           {
-            writePixel(x + xo + xx, y + yo + yy, color);
+            writePixel(x + xo + xx, y + yo + yy, c);
           }
           else
           {
             writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
-                          size_x, size_y, color);
+                          size_x, size_y, c);
           }
+          bits <<= 1;
         }
-        bits <<= 1;
+        else // (bg == color), no background color
+        {
+          if (bits & 0x80)
+          {
+            if (size_x == 1 && size_y == 1)
+            {
+              writePixel(x + xo + xx, y + yo + yy, color);
+            }
+            else
+            {
+              writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
+                            size_x, size_y, color);
+            }
+          }
+          bits <<= 1;
+        }
       }
     }
     endWrite();
-
   } // End classic vs custom font
 }
 
