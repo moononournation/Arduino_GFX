@@ -751,7 +751,10 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
 
     uint16_t bo = pgm_read_word(&glyph->bitmapOffset);
     uint8_t w = pgm_read_byte(&glyph->width),
-            h = pgm_read_byte(&glyph->height);
+            h = pgm_read_byte(&glyph->height),
+            xAdvance = pgm_read_byte(&glyph->xAdvance),
+            yAdvance = pgm_read_byte(&gfxFont->yAdvance),
+            baseline = yAdvance * 2 / 3; // TODO: baseline is an arbitrary currently, may be define in font file
     int8_t xo = pgm_read_byte(&glyph->xOffset),
            yo = pgm_read_byte(&glyph->yOffset);
     uint8_t xx, yy, bits = 0, bit = 0;
@@ -763,8 +766,8 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
       yo16 = yo;
     }
 
-    block_w = w * size_x;
-    block_h = h * size_y;
+    block_w = xAdvance * size_x;
+    block_h = yAdvance * size_y;
     if (
         (x > _max_x) ||            // Clip right
         (y > _max_y) ||            // Clip bottom
@@ -775,32 +778,77 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
       return;
     }
 
-    // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background
+    // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background.
+    // Since it may introduce many ugly output, it should limited using on mono font only.
     startWrite();
-    for (yy = 0; yy < h; yy++)
+    if (bg != color) // have background color
     {
-      for (xx = 0; xx < w; xx++)
+      writeAddrWindow(x, y - (baseline * size_y), block_w, block_h);
+
+      uint16_t line_buf[block_w];
+      int8_t i;
+      uint16_t dot_color;
+      for (yy = 0; yy < yAdvance; yy++)
       {
-        if (!(bit++ & 7))
+        if ((yy < (baseline + yo)) || (yy > (baseline + yo + h - 1)))
         {
-          bits = pgm_read_byte(&bitmap[bo++]);
+          writeRepeat(bg, block_w * size_y);
         }
-        if (bg != color) // have background color
+        else
         {
-          uint8_t c = (bits & 0x80) ? color : bg;
-          if (size_x == 1 && size_y == 1)
+          i = 0;
+          for (xx = 0; xx < xAdvance; xx++)
           {
-            writePixel(x + xo + xx, y + yo + yy, c);
+            if ((xx < xo) || (xx > (xo + w - 1)))
+            {
+              dot_color = bg;
+            }
+            else
+            {
+              if (!(bit++ & 7))
+              {
+                bits = pgm_read_byte(&bitmap[bo++]);
+              }
+              dot_color = (bits & 0x80) ? color : bg;
+              bits <<= 1;
+            }
+
+            if (size_x == 1)
+            {
+              line_buf[i++] = dot_color;
+            }
+            else
+            {
+              for (int8_t k = 0; k < size_x; k++)
+              {
+                line_buf[i++] = dot_color;
+              }
+            }
+          }
+          if (size_y == 1)
+          {
+            _bus->writePixels(line_buf, block_w);
           }
           else
           {
-            writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
-                          size_x, size_y, c);
+            for (int8_t l = 0; l < size_y; l++)
+            {
+              _bus->writePixels(line_buf, block_w);
+            }
           }
-          bits <<= 1;
         }
-        else // (bg == color), no background color
+      }
+    }
+    else // (bg == color), no background color
+    {
+      for (yy = 0; yy < h; yy++)
+      {
+        for (xx = 0; xx < w; xx++)
         {
+          if (!(bit++ & 7))
+          {
+            bits = pgm_read_byte(&bitmap[bo++]);
+          }
           if (bits & 0x80)
           {
             if (size_x == 1 && size_y == 1)
@@ -809,8 +857,8 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
             }
             else
             {
-              writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
-                            size_x, size_y, color);
+              writeFillRectPreclipped(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
+                                      size_x, size_y, color);
             }
           }
           bits <<= 1;

@@ -1391,7 +1391,6 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
     }
     else // Custom font
     {
-
         // Character is assumed previously filtered by write() to eliminate
         // newlines, returns, non-printable characters, etc.  Calling
         // drawChar() directly with 'bad' characters of font may cause mayhem!
@@ -1402,7 +1401,10 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 
         uint16_t bo = pgm_read_word(&glyph->bitmapOffset);
         uint8_t w = pgm_read_byte(&glyph->width),
-                h = pgm_read_byte(&glyph->height);
+                h = pgm_read_byte(&glyph->height),
+                xAdvance = pgm_read_byte(&glyph->xAdvance),
+                yAdvance = pgm_read_byte(&gfxFont->yAdvance),
+                baseline = yAdvance * 2 / 3; // TODO: baseline is an arbitrary currently, may be define in font file
         int8_t xo = pgm_read_byte(&glyph->xOffset),
                yo = pgm_read_byte(&glyph->yOffset);
         uint8_t xx, yy, bits = 0, bit = 0;
@@ -1414,8 +1416,8 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
             yo16 = yo;
         }
 
-        block_w = w * size_x;
-        block_h = h * size_y;
+        block_w = xAdvance * size_x;
+        block_h = yAdvance * size_y;
         if (
             (x > _max_x) ||            // Clip right
             (y > _max_y) ||            // Clip bottom
@@ -1426,49 +1428,37 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
             return;
         }
 
-    // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background
-    startWrite();
-    for (yy = 0; yy < h; yy++)
-    {
-      for (xx = 0; xx < w; xx++)
-      {
-        if (!(bit++ & 7))
-        {
-          bits = pgm_read_byte(&bitmap[bo++]);
-        }
+        // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background.
+        // Since it may introduce many ugly output, it should limited using on mono font only.
+        startWrite();
         if (bg != color) // have background color
         {
-          uint8_t c = (bits & 0x80) ? color : bg;
-          if (size_x == 1 && size_y == 1)
-          {
-            writePixel(x + xo + xx, y + yo + yy, c);
-          }
-          else
-          {
-            writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
-                          size_x, size_y, c);
-          }
-          bits <<= 1;
+            writeFillRect(x, y - (baseline * size_y), block_w, block_h, bg);
         }
-        else // (bg == color), no background color
+        for (yy = 0; yy < h; yy++)
         {
-          if (bits & 0x80)
-          {
-            if (size_x == 1 && size_y == 1)
+            for (xx = 0; xx < w; xx++)
             {
-              writePixel(x + xo + xx, y + yo + yy, color);
+                if (!(bit++ & 7))
+                {
+                    bits = pgm_read_byte(&bitmap[bo++]);
+                }
+                if (bits & 0x80)
+                {
+                    if (size_x == 1 && size_y == 1)
+                    {
+                        writePixel(x + xo + xx, y + yo + yy, color);
+                    }
+                    else
+                    {
+                        writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
+                                      size_x, size_y, color);
+                    }
+                }
+                bits <<= 1;
             }
-            else
-            {
-              writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
-                            size_x, size_y, color);
-            }
-          }
-          bits <<= 1;
         }
-      }
-    }
-    endWrite();
+        endWrite();
     } // End classic vs custom font
 }
 /**************************************************************************/
