@@ -50,17 +50,9 @@ inline void Arduino_TFT::startWrite()
   _bus->beginWrite();
 }
 
-inline void Arduino_TFT::writeColor(uint16_t color)
+void Arduino_TFT::writeColor(uint16_t color)
 {
   _bus->write16(color);
-}
-
-inline void Arduino_TFT::writePixel(int16_t x, int16_t y, uint16_t color)
-{
-  if (_ordered_in_range(x, 0, _max_x) && _ordered_in_range(y, 0, _max_y))
-  {
-    writePixelPreclipped(x, y, color);
-  }
 }
 
 void Arduino_TFT::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
@@ -236,76 +228,6 @@ void Arduino_TFT::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
     else
     {
       writeFillRectPreclipped(x0, y0, len, 1, color);
-    }
-  }
-}
-
-/*!
-    @brief  Draw a filled rectangle to the display. Not self-contained;
-            should follow startWrite(). Typically used by higher-level
-            graphics primitives; user code shouldn't need to call this and
-            is likely to use the self-contained fillRect() instead.
-            writeFillRect() performs its own edge clipping and rejection;
-            see writeFillRectPreclipped() for a more 'raw' implementation.
-    @param  x      Horizontal position of first corner.
-    @param  y      Vertical position of first corner.
-    @param  w      Rectangle width in pixels (positive = right of first
-                   corner, negative = left of first corner).
-    @param  h      Rectangle height in pixels (positive = below first
-                   corner, negative = above first corner).
-    @param  color  16-bit fill color in '565' RGB format.
-    @note   Written in this deep-nested way because C by definition will
-            optimize for the 'if' case, not the 'else' -- avoids branches
-            and rejects clipped rectangles at the least-work possibility.
-*/
-void Arduino_TFT::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h,
-                                uint16_t color)
-{
-  if (w && h)
-  { // Nonzero width and height?
-    if (w < 0)
-    {             // If negative width...
-      x += w + 1; //   Move X to left edge
-      w = -w;     //   Use positive width
-    }
-    if (x <= _max_x)
-    { // Not off right
-      if (h < 0)
-      {             // If negative height...
-        y += h + 1; //   Move Y to top edge
-        h = -h;     //   Use positive height
-      }
-      if (y <= _max_y)
-      { // Not off bottom
-        int16_t x2 = x + w - 1;
-        if (x2 >= 0)
-        { // Not off left
-          int16_t y2 = y + h - 1;
-          if (y2 >= 0)
-          { // Not off top
-            // Rectangle partly or fully overlaps screen
-            if (x < 0)
-            {
-              x = 0;
-              w = x2 + 1;
-            } // Clip left
-            if (y < 0)
-            {
-              y = 0;
-              h = y2 + 1;
-            } // Clip top
-            if (x2 > _max_x)
-            {
-              w = _max_x - x + 1;
-            } // Clip right
-            if (y2 > _max_y)
-            {
-              h = _max_y - y + 1;
-            } // Clip bottom
-            writeFillRectPreclipped(x, y, w, h, color);
-          }
-        }
-      }
     }
   }
 }
@@ -727,7 +649,7 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
           {
             if (size_x == 1 && size_y == 1)
             {
-              writePixel(x + i, y + j, color);
+              writePixelPreclipped(x + i, y + j, color);
             }
             else
             {
@@ -853,7 +775,7 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
           {
             if (size_x == 1 && size_y == 1)
             {
-              writePixel(x + xo + xx, y + yo + yy, color);
+              writePixelPreclipped(x + xo + xx, y + yo + yy, color);
             }
             else
             {

@@ -14,7 +14,7 @@ Arduino_TFT_18bit::Arduino_TFT_18bit(
 {
 }
 
-inline void Arduino_TFT_18bit::writeColor(uint16_t color)
+void Arduino_TFT_18bit::writeColor(uint16_t color)
 {
   _bus->write((color & 0xF800) >> 8);
   _bus->write((color & 0x07E0) >> 3);
