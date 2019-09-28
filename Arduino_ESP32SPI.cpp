@@ -533,7 +533,7 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
       {
         v1 = *data++;
         v2 = *data++;
-        _spi->dev->data_buf[i] = ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8) | ((v2 & 0xff00) << 8) | ((v1 & 0xff) << 24);
+        _spi->dev->data_buf[i] = ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8) | ((v2 & 0xff00) << 8) | ((v2 & 0xff) << 24);
       }
       _spi->dev->cmd.usr = 1;
       while (_spi->dev->cmd.usr)
