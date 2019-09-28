@@ -89,7 +89,7 @@ public:
   virtual void writePixels(uint16_t *data, uint32_t size);
   virtual void writePattern(uint8_t *data, uint8_t size, uint32_t repeat);
   virtual void endWrite();
-  inline virtual void flush_data_buf();
+  virtual void flush_data_buf();
 
   virtual void sendCommand(uint8_t);
   virtual void sendCommand16(uint16_t);

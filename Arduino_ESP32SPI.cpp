@@ -204,7 +204,7 @@ void Arduino_ESP32SPI::writeCommand16(uint16_t c)
   }
 }
 
-inline void Arduino_ESP32SPI::flush_data_buf()
+void Arduino_ESP32SPI::flush_data_buf()
 {
   if (data_buf_bit_idx > 0)
   {
