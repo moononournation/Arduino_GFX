@@ -45,7 +45,7 @@ void Arduino_SSD1351::writeAddrColumn(uint16_t x, uint16_t w)
 {
   uint8_t cmd = (_rotation & 0x01) ? SSD1351_SETROW : SSD1351_SETCOLUMN;
 
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266)
   uint16_t x_range = ((x + _xStart) << 8) | (x + w - 1 + _xStart);
 
   _bus->writeCommand(cmd); // Column addr set
@@ -63,7 +63,7 @@ void Arduino_SSD1351::writeAddrRow(uint16_t y, uint16_t h)
 {
   uint8_t cmd = (_rotation & 0x01) ? SSD1351_SETCOLUMN : SSD1351_SETROW;
 
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266)
   uint16_t y_range = ((y + _yStart) << 8) | (y + h - 1 + _yStart);
 
   _bus->writeCommand(cmd); // Row addr set

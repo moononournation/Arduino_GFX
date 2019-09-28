@@ -117,7 +117,7 @@ void Arduino_HX8357B::tftInit()
 
 void Arduino_HX8357B::writeAddrColumn(uint16_t x, uint16_t w)
 {
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266)
   uint32_t x_range = ((uint32_t)(x + _xStart) << 16) | (x + w - 1 + _xStart);
 
   _bus->writeCommand(HX8357B_CASET); // Column addr set
@@ -135,7 +135,7 @@ void Arduino_HX8357B::writeAddrColumn(uint16_t x, uint16_t w)
 
 void Arduino_HX8357B::writeAddrRow(uint16_t y, uint16_t h)
 {
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266)
   uint32_t y_range = ((uint32_t)(y + _yStart) << 16) | (y + h - 1 + _yStart);
 
   _bus->writeCommand(HX8357B_PASET); // Row addr set

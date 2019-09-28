@@ -87,7 +87,7 @@ void Arduino_ILI9486::tftInit()
 
 void Arduino_ILI9486::writeAddrColumn(uint16_t x, uint16_t w)
 {
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266)
   uint32_t x_range = ((uint32_t)(x + _xStart) << 16) | (x + w - 1 + _xStart);
 
   _bus->writeCommand(ILI9486_CASET); // Column addr set
@@ -105,7 +105,7 @@ void Arduino_ILI9486::writeAddrColumn(uint16_t x, uint16_t w)
 
 void Arduino_ILI9486::writeAddrRow(uint16_t y, uint16_t h)
 {
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266)
   uint32_t y_range = ((uint32_t)(y + _yStart) << 16) | (y + h - 1 + _yStart);
 
   _bus->writeCommand(ILI9486_PASET); // Row addr set
