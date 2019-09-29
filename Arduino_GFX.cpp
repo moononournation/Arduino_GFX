@@ -1450,7 +1450,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                     }
                     else
                     {
-                        writeFillRect(x + i * size_x, y + j * size_y, size_x, size_y, color);
+                        writeFillRectPreclipped(x + i * size_x, y + j * size_y, size_x, size_y, color);
                     }
                 }
                 else if (bg != color)
