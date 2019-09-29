@@ -23,24 +23,26 @@
 #if defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define TFT_BL 32
 #include "Arduino_ILI9341_M5STACK.h"
-Arduino_HWSPI *bus = new Arduino_HWSPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
+Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
 Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 /* rotation */);
 #elif defined(ARDUINO_ODROID_ESP32)
 #define TFT_BL 14
-Arduino_HWSPI *bus = new Arduino_HWSPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
+Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
 Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus,  -1 /* RST */, 0 /* rotation */, true /* IPS */);
 #elif defined(ARDUINO_T) // TTGO T-Watch
 #define TFT_BL 12
-Arduino_HWSPI *bus = new Arduino_HWSPI(27 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
+Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(27 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
 Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true /* IPS */, 240, 240, 0, 80);
 #else /* not a specific hardware */
 
 #if defined(ESP32)
 #define TFT_CS 5
+#define TFT_DC 16
 // #define TFT_DC 27
-#define TFT_DC -1 // 9-bit, SWSPI only
-#define TFT_RST 33
+// #define TFT_DC -1 // 9-bit, SWSPI only
+#define TFT_RST 17
+// #define TFT_RST 33
 #define TFT_BL 22
 #elif defined(ESP8266)
 #define TFT_CS 15
@@ -71,7 +73,7 @@ Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, -1, 18 /* SCK */, 23 /* MOS
 // Arduino_HX8352C *tft = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // HX8357B IPS LCD 320x480
-Arduino_HX8357B *tft = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_HX8357B *tft = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // ILI9225 LCD 176x220
 // Arduino_ILI9225 *tft = new Arduino_ILI9225(bus, TFT_RST);
@@ -111,7 +113,7 @@ Arduino_HX8357B *tft = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true 
 
 // ST7789 LCD
 // 2.4" LCD 240x320
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
+Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
 // 2.4" IPS LCD 240x320
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
@@ -135,8 +137,8 @@ void setup()
 
   Serial.println("Arduino_GFX library Test!");
 
-  tft->begin();
-  // tft->begin(80000000); /* specify data bus speed */
+  // tft->begin();
+  tft->begin(40000000); /* specify data bus speed */
 
   w = tft->width();
   h = tft->height();

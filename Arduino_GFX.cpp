@@ -46,66 +46,64 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h)
 void Arduino_GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
                             uint16_t color)
 {
-  bool steep = _diff(y1, y0) > _diff(x1, x0);
-  if (steep)
-  {
-    _swap_int16_t(x0, y0);
-    _swap_int16_t(x1, y1);
-  }
-
-  if (x0 > x1)
-  {
-    _swap_int16_t(x0, x1);
-    _swap_int16_t(y0, y1);
-  }
-
-  int16_t dx, dy;
-  dx = x1 - x0;
-  dy = _diff(y1, y0);
-
-  int16_t err = dx / 2;
-  int16_t ystep;
-  int16_t len = 0;
-
-  if (y0 < y1)
-  {
-    ystep = 1;
-  }
-  else
-  {
-    ystep = -1;
-  }
-
-  for (; x0 <= x1; x0++)
-  {
-    err -= dy;
-    if (err < 0)
-    {
-      len++;
-      if (steep)
-      {
-        writeFillRectPreclipped(y0, x0, 1, len, color);
-      }
-      else
-      {
-        writeFillRectPreclipped(x0, y0, len, 1, color);
-      }
-      y0 += ystep;
-      err += dx;
-      len = 0;
-    }
-  }
-  if (len)
-  {
+    bool steep = _diff(y1, y0) > _diff(x1, x0);
     if (steep)
     {
-      writeFillRectPreclipped(y0, x0, 1, len, color);
+        _swap_int16_t(x0, y0);
+        _swap_int16_t(x1, y1);
+    }
+
+    if (x0 > x1)
+    {
+        _swap_int16_t(x0, x1);
+        _swap_int16_t(y0, y1);
+    }
+
+    int16_t dx = x1 - x0;
+    int16_t dy = _diff(y1, y0);
+    int16_t err = dx / 2;
+    int16_t step;
+    int16_t len = 0;
+
+    if (y0 < y1)
+    {
+        step = 1;
     }
     else
     {
-      writeFillRectPreclipped(x0, y0, len, 1, color);
+        step = -1;
     }
-  }
+
+    for (; x0 <= x1; x0++)
+    {
+        err -= dy;
+        if (err < 0)
+        {
+            len++;
+            if (steep)
+            {
+                writeFillRectPreclipped(y0, x0, 1, len, color);
+            }
+            else
+            {
+                writeFillRectPreclipped(x0, y0, len, 1, color);
+            }
+            y0 += step;
+            err += dx;
+            len = 0;
+        }
+    }
+    if (len)
+    {
+        if (steep)
+        {
+            writeFillRectPreclipped(y0, x0, 1, len, color);
+        }
+        else
+        {
+            writeFillRectPreclipped(x0, y0, len, 1, color);
+        }
+    }
 }
 
 /**************************************************************************/
@@ -119,10 +117,10 @@ void Arduino_GFX::startWrite()
 
 void Arduino_GFX::writePixel(int16_t x, int16_t y, uint16_t color)
 {
-  if (_ordered_in_range(x, 0, _max_x) && _ordered_in_range(y, 0, _max_y))
-  {
-    writePixelPreclipped(x, y, color);
-  }
+    if (_ordered_in_range(x, 0, _max_x) && _ordered_in_range(y, 0, _max_y))
+    {
+        writePixelPreclipped(x, y, color);
+    }
 }
 
 /**************************************************************************/
@@ -191,53 +189,53 @@ void Arduino_GFX::writeFastHLine(int16_t x, int16_t y,
 void Arduino_GFX::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h,
                                 uint16_t color)
 {
-  if (w && h)
-  { // Nonzero width and height?
-    if (w < 0)
-    {             // If negative width...
-      x += w + 1; //   Move X to left edge
-      w = -w;     //   Use positive width
-    }
-    if (x <= _max_x)
-    { // Not off right
-      if (h < 0)
-      {             // If negative height...
-        y += h + 1; //   Move Y to top edge
-        h = -h;     //   Use positive height
-      }
-      if (y <= _max_y)
-      { // Not off bottom
-        int16_t x2 = x + w - 1;
-        if (x2 >= 0)
-        { // Not off left
-          int16_t y2 = y + h - 1;
-          if (y2 >= 0)
-          { // Not off top
-            // Rectangle partly or fully overlaps screen
-            if (x < 0)
-            {
-              x = 0;
-              w = x2 + 1;
-            } // Clip left
-            if (y < 0)
-            {
-              y = 0;
-              h = y2 + 1;
-            } // Clip top
-            if (x2 > _max_x)
-            {
-              w = _max_x - x + 1;
-            } // Clip right
-            if (y2 > _max_y)
-            {
-              h = _max_y - y + 1;
-            } // Clip bottom
-            writeFillRectPreclipped(x, y, w, h, color);
-          }
+    if (w && h)
+    { // Nonzero width and height?
+        if (w < 0)
+        {               // If negative width...
+            x += w + 1; //   Move X to left edge
+            w = -w;     //   Use positive width
         }
-      }
+        if (x <= _max_x)
+        { // Not off right
+            if (h < 0)
+            {               // If negative height...
+                y += h + 1; //   Move Y to top edge
+                h = -h;     //   Use positive height
+            }
+            if (y <= _max_y)
+            { // Not off bottom
+                int16_t x2 = x + w - 1;
+                if (x2 >= 0)
+                { // Not off left
+                    int16_t y2 = y + h - 1;
+                    if (y2 >= 0)
+                    { // Not off top
+                        // Rectangle partly or fully overlaps screen
+                        if (x < 0)
+                        {
+                            x = 0;
+                            w = x2 + 1;
+                        } // Clip left
+                        if (y < 0)
+                        {
+                            y = 0;
+                            h = y2 + 1;
+                        } // Clip top
+                        if (x2 > _max_x)
+                        {
+                            w = _max_x - x + 1;
+                        } // Clip right
+                        if (y2 > _max_y)
+                        {
+                            h = _max_y - y + 1;
+                        } // Clip bottom
+                        writeFillRectPreclipped(x, y, w, h, color);
+                    }
+                }
+            }
+        }
     }
-  }
 }
 
 /**************************************************************************/
@@ -251,7 +249,7 @@ void Arduino_GFX::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h,
 */
 /**************************************************************************/
 void Arduino_GFX::writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h,
-                                uint16_t color)
+                                          uint16_t color)
 {
     // Overwrite in subclasses if desired!
     for (int16_t i = x; i < x + w; i++)
@@ -1544,7 +1542,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                     else
                     {
                         writeFillRectPreclipped(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
-                                      size_x, size_y, color);
+                                                size_x, size_y, color);
                     }
                 }
                 bits <<= 1;
