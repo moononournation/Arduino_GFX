@@ -72,7 +72,6 @@ void Arduino_GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
         err -= dy;
         if (err < 0)
         {
-            err += dx;
             if (steep)
             {
                 writeFillRectPreclipped(y0, xs, 1, len, color);
@@ -81,8 +80,9 @@ void Arduino_GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
             {
                 writeFillRectPreclipped(xs, y0, len, 1, color);
             }
-            len = 0;
+            err += dx;
             y0 += step;
+            len = 0;
             xs = x0 + 1;
         }
     }
@@ -379,6 +379,7 @@ void Arduino_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
     int16_t x = 0;
     int16_t y = r;
     int16_t len = 0;
+    int16_t xs = 0;
 
     startWrite();
     writePixel(x0, y0 + r, color);
@@ -390,22 +391,39 @@ void Arduino_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
     {
         if (f >= 0)
         {
+            writeFillRect(x0 + xs, y0 + y, len, 1, color);
+            writeFillRect(x0 - xs - len + 1, y0 + y, len, 1, color);
+            writeFillRect(x0 - xs - len + 1, y0 - y, len, 1, color);
+            writeFillRect(x0 + xs, y0 - y, len, 1, color);
+            writeFillRect(x0 + y, y0 + xs, 1, len, color);
+            writeFillRect(x0 - y, y0 + xs, 1, len, color);
+            writeFillRect(x0 - y, y0 - xs - len + 1, 1, len, color);
+            writeFillRect(x0 + y, y0 - xs - len + 1, 1, len, color);
+
             y--;
             ddF_y += 2;
             f += ddF_y;
+            len = 1;
+            xs = x;
+        }
+        else
+        {
+            len++;
         }
         x++;
         ddF_x += 2;
         f += ddF_x;
-
-        writePixel(x0 + x, y0 + y, color);
-        writePixel(x0 - x, y0 + y, color);
-        writePixel(x0 + x, y0 - y, color);
-        writePixel(x0 - x, y0 - y, color);
-        writePixel(x0 + y, y0 + x, color);
-        writePixel(x0 - y, y0 + x, color);
-        writePixel(x0 + y, y0 - x, color);
-        writePixel(x0 - y, y0 - x, color);
+    }
+    if (len)
+    {
+        writeFillRect(x0 + xs, y0 + y, len, 1, color);
+        writeFillRect(x0 - xs - len + 1, y0 + y, len, 1, color);
+        writeFillRect(x0 - xs - len + 1, y0 - y, len, 1, color);
+        writeFillRect(x0 + xs, y0 - y, len, 1, color);
+        writeFillRect(x0 + y, y0 + xs, 1, len, color);
+        writeFillRect(x0 - y, y0 + xs, 1, len, color);
+        writeFillRect(x0 - y, y0 - xs - len + 1, 1, len, color);
+        writeFillRect(x0 + y, y0 - xs - len + 1, 1, len, color);
     }
     endWrite();
 }
