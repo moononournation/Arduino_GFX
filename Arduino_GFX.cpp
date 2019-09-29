@@ -332,13 +332,14 @@ void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
                            uint16_t color)
 {
     // Update in subclasses if desired!
+    startWrite();
     if (x0 == x1)
     {
         if (y0 > y1)
         {
             _swap_int16_t(y0, y1);
         }
-        drawFastVLine(x0, y0, y1 - y0 + 1, color);
+        writeFastVLine(x0, y0, y1 - y0 + 1, color);
     }
     else if (y0 == y1)
     {
@@ -346,14 +347,13 @@ void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
         {
             _swap_int16_t(x0, x1);
         }
-        drawFastHLine(x0, y0, x1 - x0 + 1, color);
+        writeFastHLine(x0, y0, x1 - x0 + 1, color);
     }
     else
     {
-        startWrite();
         writeLine(x0, y0, x1, y1, color);
-        endWrite();
     }
+    endWrite();
 }
 
 /**************************************************************************/
