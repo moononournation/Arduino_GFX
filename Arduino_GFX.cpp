@@ -404,7 +404,7 @@ void Arduino_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
             ddF_y += 2;
             f += ddF_y;
             len = 1;
-            xs = x;
+            xs = x + 1;
         }
         else
         {
