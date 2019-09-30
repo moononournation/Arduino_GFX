@@ -12,6 +12,17 @@ Arduino_SSD1331::Arduino_SSD1331(
 {
 }
 
+void Arduino_SSD1331::begin(uint32_t speed)
+{
+#if defined(ESP8266) || defined(ESP32)
+  if (speed == 0)
+  {
+    speed = 40000000;
+  }
+#endif
+  Arduino_TFT::begin(speed);
+}
+
 // Companion code to the above tables.  Reads and issues
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_SSD1331::tftInit()

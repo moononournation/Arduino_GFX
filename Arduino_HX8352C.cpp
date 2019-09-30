@@ -13,6 +13,17 @@ Arduino_HX8352C::Arduino_HX8352C(
   _invert = ips;
 }
 
+void Arduino_HX8352C::begin(uint32_t speed)
+{
+#if defined(ESP8266) || defined(ESP32)
+  if (speed == 0)
+  {
+    speed = 40000000;
+  }
+#endif
+  Arduino_TFT::begin(speed);
+}
+
 // Companion code to the above tables.  Reads and issues
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_HX8352C::tftInit()

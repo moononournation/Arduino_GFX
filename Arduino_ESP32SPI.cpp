@@ -32,7 +32,7 @@ static void _on_apb_change(void *arg, apb_change_ev_t ev_type, uint32_t old_apb,
 
 void Arduino_ESP32SPI::begin(uint32_t speed)
 {
-  _speed = speed ? speed : 80000000;
+  _speed = speed ? speed : 40000000;
   if (_dc >= 0)
   {
     pinMode(_dc, OUTPUT);
@@ -82,12 +82,16 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
   setDataMode(SPI_MODE0);
 
   // spiSetBitOrder SPI_MSBFIRST
+  _bitOrder = SPI_MSBFIRST;
+  SPI_MUTEX_LOCK();
   _spi->dev->ctrl.wr_bit_order = 0;
   _spi->dev->ctrl.rd_bit_order = 0;
+  SPI_MUTEX_UNLOCK();
 
   // spiSetClockDiv
+  _clockDiv = spiFrequencyToClockDiv(_speed);
   SPI_MUTEX_LOCK();
-  _spi->dev->clock.val = spiFrequencyToClockDiv(_speed);
+  _spi->dev->clock.val = _clockDiv;
   SPI_MUTEX_UNLOCK();
 
   SPI_MUTEX_LOCK();
@@ -122,8 +126,10 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
   pinMatrixOutAttach(_sck, SPI_CLK_IDX(VSPI), false, false);
   if (_miso >= 0)
   {
+    SPI_MUTEX_LOCK();
     pinMode(_miso, INPUT);
     pinMatrixInAttach(_miso, SPI_MISO_IDX(VSPI), false);
+    SPI_MUTEX_UNLOCK();
   }
   pinMode(_mosi, OUTPUT);
   pinMatrixOutAttach(_mosi, SPI_MOSI_IDX(VSPI), false, false);
@@ -131,7 +137,7 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
 
 void Arduino_ESP32SPI::beginWrite()
 {
-  SPI_MUTEX_LOCK();
+  spiTransaction(_spi, _clockDiv, _dataMode, _bitOrder);
   if (_dc >= 0)
   {
     DC_HIGH();
@@ -338,6 +344,7 @@ void Arduino_ESP32SPI::sendData32(uint32_t d)
 void Arduino_ESP32SPI::setDataMode(uint8_t dataMode)
 {
   SPI_MUTEX_LOCK();
+  _dataMode = dataMode;
   switch (dataMode)
   {
   case SPI_MODE1:

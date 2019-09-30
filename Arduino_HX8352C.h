@@ -21,6 +21,7 @@ public:
       bool ips = false, int16_t w = HX8352C_TFTWIDTH, int16_t h = HX8352C_TFTHEIGHT,
       uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
+  virtual void begin(uint32_t speed = 0);
   virtual void writeAddrColumn(uint16_t x, uint16_t w);
   virtual void writeAddrRow(uint16_t y, uint16_t h);
   virtual void writeAddrMemWrite();

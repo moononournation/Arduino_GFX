@@ -110,6 +110,9 @@ private:
   ARDUINOGFX_PORT_t dcPinMask; ///< Bitmask for data/command
 
   spi_t *_spi;
+  uint32_t _clockDiv;
+  uint8_t _dataMode;
+  uint8_t _bitOrder;
   uint8_t data_buf[64] = {0};
   uint32_t *data_buf32 = (uint32_t *)&data_buf;
   uint16_t data_buf_bit_idx = 0;
