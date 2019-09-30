@@ -64,7 +64,7 @@ Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /*
 // Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
 #else
-Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, -1, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
+Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, -1, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
 //Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 // Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, -1 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
 #endif
@@ -137,8 +137,8 @@ void setup()
 
   Serial.println("Arduino_GFX library Test!");
 
-  // tft->begin();
-  tft->begin(40000000); /* specify data bus speed */
+  tft->begin();
+  // tft->begin(80000000); /* specify data bus speed */
 
   w = tft->width();
   h = tft->height();
