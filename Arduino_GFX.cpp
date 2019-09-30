@@ -62,39 +62,23 @@ void Arduino_GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
     int16_t dx = x1 - x0;
     int16_t dy = _diff(y1, y0);
     int16_t err = dx >> 1;
-    int16_t xs = x0;
     int16_t step = (y0 < y1) ? 1 : -1;
-    int16_t len = 0;
 
     for (; x0 <= x1; x0++)
     {
-        len++;
-        err -= dy;
-        if (err < 0)
-        {
-            if (steep)
-            {
-                writeFillRectPreclipped(y0, xs, 1, len, color);
-            }
-            else
-            {
-                writeFillRectPreclipped(xs, y0, len, 1, color);
-            }
-            err += dx;
-            y0 += step;
-            len = 0;
-            xs = x0 + 1;
-        }
-    }
-    if (len)
-    {
         if (steep)
         {
-            writeFillRectPreclipped(y0, xs, 1, len, color);
+            writePixel(y0, x0, color);
         }
         else
         {
-            writeFillRectPreclipped(xs, y0, len, 1, color);
+            writePixel(x0, y0, color);
+        }
+        err -= dy;
+        if (err < 0)
+        {
+            err += dx;
+            y0 += step;
         }
     }
 }
@@ -373,59 +357,13 @@ void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 void Arduino_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
                              uint16_t color)
 {
-    int16_t f = 1 - r;
-    int16_t ddF_x = 1;
-    int16_t ddF_y = -2 * r;
-    int16_t x = 0;
-    int16_t y = r;
-    int16_t len = 0;
-    int16_t xs = 0;
-
-    startWrite();
-    writePixel(x0, y0 + r, color);
-    writePixel(x0, y0 - r, color);
-    writePixel(x0 + r, y0, color);
-    writePixel(x0 - r, y0, color);
-
-    while (x < y)
-    {
-        if (f >= 0)
-        {
-            writeFillRect(x0 + xs, y0 + y, len, 1, color);
-            writeFillRect(x0 - xs - len + 1, y0 + y, len, 1, color);
-            writeFillRect(x0 - xs - len + 1, y0 - y, len, 1, color);
-            writeFillRect(x0 + xs, y0 - y, len, 1, color);
-            writeFillRect(x0 + y, y0 + xs, 1, len, color);
-            writeFillRect(x0 - y, y0 + xs, 1, len, color);
-            writeFillRect(x0 - y, y0 - xs - len + 1, 1, len, color);
-            writeFillRect(x0 + y, y0 - xs - len + 1, 1, len, color);
-
-            y--;
-            ddF_y += 2;
-            f += ddF_y;
-            len = 1;
-            xs = x + 1;
-        }
-        else
-        {
-            len++;
-        }
-        x++;
-        ddF_x += 2;
-        f += ddF_x;
-    }
-    if (len)
-    {
-        writeFillRect(x0 + xs, y0 + y, len, 1, color);
-        writeFillRect(x0 - xs - len + 1, y0 + y, len, 1, color);
-        writeFillRect(x0 - xs - len + 1, y0 - y, len, 1, color);
-        writeFillRect(x0 + xs, y0 - y, len, 1, color);
-        writeFillRect(x0 + y, y0 + xs, 1, len, color);
-        writeFillRect(x0 - y, y0 + xs, 1, len, color);
-        writeFillRect(x0 - y, y0 - xs - len + 1, 1, len, color);
-        writeFillRect(x0 + y, y0 - xs - len + 1, 1, len, color);
-    }
-    endWrite();
+  startWrite();
+  writePixel(x0, y0 + r, color);
+  writePixel(x0, y0 - r, color);
+  writePixel(x0 + r, y0, color);
+  writePixel(x0 - r, y0, color);
+  drawCircleHelper(x0, y0, r, 0xf, color);
+  endWrite();
 }
 
 /**************************************************************************/
@@ -465,8 +403,8 @@ void Arduino_GFX::drawCircleHelper(int16_t x0, int16_t y0,
         }
         if (cornername & 0x2)
         {
-            writePixel(x0 + x, y0 - y, color);
             writePixel(x0 + y, y0 - x, color);
+            writePixel(x0 + x, y0 - y, color);
         }
         if (cornername & 0x8)
         {
@@ -475,8 +413,8 @@ void Arduino_GFX::drawCircleHelper(int16_t x0, int16_t y0,
         }
         if (cornername & 0x1)
         {
-            writePixel(x0 - y, y0 - x, color);
             writePixel(x0 - x, y0 - y, color);
+            writePixel(x0 - y, y0 - x, color);
         }
     }
 }

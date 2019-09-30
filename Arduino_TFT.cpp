@@ -106,7 +106,7 @@ void Arduino_TFT::writeFastVLine(int16_t x, int16_t y, int16_t h,
         } // Clip top
         if (y2 > _max_y)
         {
-          h = _max_y - y - 1;
+          h = _max_y - y + 1;
         } // Clip bottom
         writeFillRectPreclipped(x, y, 1, h, color);
       }
@@ -153,6 +153,72 @@ void Arduino_TFT::writeFastHLine(int16_t x, int16_t y, int16_t w,
         } // Clip right
         writeFillRectPreclipped(x, y, w, 1, color);
       }
+    }
+  }
+}
+
+/**************************************************************************/
+/*!
+   @brief    Write a line.  Bresenham's algorithm - thx wikpedia
+    @param    x0  Start point x coordinate
+    @param    y0  Start point y coordinate
+    @param    x1  End point x coordinate
+    @param    y1  End point y coordinate
+    @param    color 16-bit 5-6-5 Color to draw with
+*/
+/**************************************************************************/
+void Arduino_TFT::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
+                            uint16_t color)
+{
+  bool steep = _diff(y1, y0) > _diff(x1, x0);
+  if (steep)
+  {
+    _swap_int16_t(x0, y0);
+    _swap_int16_t(x1, y1);
+  }
+
+  if (x0 > x1)
+  {
+    _swap_int16_t(x0, x1);
+    _swap_int16_t(y0, y1);
+  }
+
+  int16_t dx = x1 - x0;
+  int16_t dy = _diff(y1, y0);
+  int16_t err = dx >> 1;
+  int16_t xs = x0;
+  int16_t step = (y0 < y1) ? 1 : -1;
+  int16_t len = 0;
+
+  for (; x0 <= x1; x0++)
+  {
+    len++;
+    err -= dy;
+    if (err < 0)
+    {
+      if (steep)
+      {
+        writeFillRectPreclipped(y0, xs, 1, len, color);
+      }
+      else
+      {
+        writeFillRectPreclipped(xs, y0, len, 1, color);
+      }
+      err += dx;
+      y0 += step;
+      len = 0;
+      xs = x0 + 1;
+    }
+  }
+  if (len)
+  {
+    if (steep)
+    {
+      writeFillRectPreclipped(y0, xs, 1, len, color);
+    }
+    else
+    {
+      writeFillRectPreclipped(xs, y0, len, 1, color);
     }
   }
 }
@@ -228,6 +294,91 @@ void Arduino_TFT::pushColor(uint16_t color)
   _bus->beginWrite();
   writeColor(color);
   _bus->endWrite();
+}
+
+/**************************************************************************/
+/*!
+    @brief    Quarter-circle drawer, used to do circles and roundrects
+    @param    x0   Center-point x coordinate
+    @param    y0   Center-point y coordinate
+    @param    r   Radius of circle
+    @param    cornername  Mask bit #1 or bit #2 to indicate which quarters of the circle we're doing
+    @param    color 16-bit 5-6-5 Color to draw with
+*/
+/**************************************************************************/
+void Arduino_TFT::drawCircleHelper(int16_t x0, int16_t y0,
+                                   int16_t r, uint8_t cornername, uint16_t color)
+{
+  int16_t f = 1 - r;
+  int16_t ddF_x = 1;
+  int16_t ddF_y = -2 * r;
+  int16_t x = 0;
+  int16_t y = r;
+  int16_t len = 0;
+  int16_t xs = 1;
+
+  while (x < y)
+  {
+    if (f >= 0)
+    {
+      if (cornername & 0x4)
+      {
+        writeFillRect(x0 + xs, y0 + y, len, 1, color);
+        writeFillRect(x0 + y, y0 + xs, 1, len, color);
+      }
+      if (cornername & 0x2)
+      {
+        writeFillRect(x0 + y, y0 - xs - len + 1, 1, len, color);
+        writeFillRect(x0 + xs, y0 - y, len, 1, color);
+      }
+      if (cornername & 0x8)
+      {
+        writeFillRect(x0 - y, y0 + xs, 1, len, color);
+        writeFillRect(x0 - xs - len + 1, y0 + y, len, 1, color);
+      }
+      if (cornername & 0x1)
+      {
+        writeFillRect(x0 - xs - len + 1, y0 - y, len, 1, color);
+        writeFillRect(x0 - y, y0 - xs - len + 1, 1, len, color);
+      }
+
+      y--;
+      ddF_y += 2;
+      f += ddF_y;
+      len = 1;
+      xs = x + 1;
+    }
+    else
+    {
+      len++;
+    }
+    x++;
+    ddF_x += 2;
+    f += ddF_x;
+  }
+  if (len)
+  {
+    if (cornername & 0x4)
+    {
+      writeFillRect(x0 + xs, y0 + y, len, 1, color);
+      writeFillRect(x0 + y, y0 + xs, 1, len, color);
+    }
+    if (cornername & 0x2)
+    {
+      writeFillRect(x0 + y, y0 - xs - len + 1, 1, len, color);
+      writeFillRect(x0 + xs, y0 - y, len, 1, color);
+    }
+    if (cornername & 0x8)
+    {
+      writeFillRect(x0 - y, y0 + xs, 1, len, color);
+      writeFillRect(x0 - xs - len + 1, y0 + y, len, 1, color);
+    }
+    if (cornername & 0x1)
+    {
+      writeFillRect(x0 - xs - len + 1, y0 - y, len, 1, color);
+      writeFillRect(x0 - y, y0 - xs - len + 1, 1, len, color);
+    }
+  }
 }
 
 // TFT tuned BITMAP / XBITMAP / GRAYSCALE / RGB BITMAP FUNCTIONS ---------------------
