@@ -14,6 +14,15 @@ class Arduino_TFT : public Arduino_GFX
 public:
   Arduino_TFT(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips, int16_t w, int16_t h, uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2);
 
+  // This MUST be defined by the subclass:
+  // and also protected function: tftInit()
+  virtual void writeAddrColumn(uint16_t x, uint16_t w) = 0;
+  virtual void writeAddrRow(uint16_t y, uint16_t h) = 0;
+  virtual void writeAddrMemWrite() = 0;
+  virtual void invertDisplay(bool) = 0;
+  virtual void displayOn() = 0;
+  virtual void displayOff() = 0;
+
   virtual void begin(uint32_t speed = 0);
   virtual inline void startWrite(void);
   virtual void writeColor(uint16_t color);
@@ -22,7 +31,7 @@ public:
   virtual void writePixels(uint16_t *data, uint32_t size);
   virtual void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
   virtual void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-  virtual void writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
+  virtual void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
   virtual void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
   virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
   virtual inline void endWrite(void);
@@ -43,13 +52,6 @@ public:
   virtual void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y);
 
   virtual void setRotation(uint8_t r);
-
-  virtual void writeAddrColumn(uint16_t x, uint16_t w) = 0;
-  virtual void writeAddrRow(uint16_t y, uint16_t h) = 0;
-  virtual void writeAddrMemWrite() = 0;
-  virtual void invertDisplay(bool) = 0;
-  virtual void displayOn() = 0;
-  virtual void displayOff() = 0;
 
 protected:
   Arduino_DataBus *_bus;

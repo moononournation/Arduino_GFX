@@ -167,7 +167,7 @@ void Arduino_TFT::writeFastHLine(int16_t x, int16_t y, int16_t w,
     @param    color 16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
-void Arduino_TFT::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
+void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
                             uint16_t color)
 {
   bool steep = _diff(y1, y0) > _diff(x1, x0);

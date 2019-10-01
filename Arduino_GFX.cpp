@@ -35,7 +35,7 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h)
 
 /**************************************************************************/
 /*!
-   @brief    Write a line.  Bresenham's algorithm - thx wikpedia
+   @brief    Write a line. Check straight or slash line and call corresponding function
     @param    x0  Start point x coordinate
     @param    y0  Start point y coordinate
     @param    x1  End point x coordinate
@@ -44,6 +44,41 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h)
 */
 /**************************************************************************/
 void Arduino_GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
+                            uint16_t color)
+{
+        if (x0 == x1)
+    {
+        if (y0 > y1)
+        {
+            _swap_int16_t(y0, y1);
+        }
+        writeFastVLine(x0, y0, y1 - y0 + 1, color);
+    }
+    else if (y0 == y1)
+    {
+        if (x0 > x1)
+        {
+            _swap_int16_t(x0, x1);
+        }
+        writeFastHLine(x0, y0, x1 - x0 + 1, color);
+    }
+    else
+    {
+        writeSlashLine(x0, y0, x1, y1, color);
+    }
+}
+
+/**************************************************************************/
+/*!
+   @brief    Write a line.  Bresenham's algorithm - thx wikpedia
+    @param    x0  Start point x coordinate
+    @param    y0  Start point y coordinate
+    @param    x1  End point x coordinate
+    @param    y1  End point y coordinate
+    @param    color 16-bit 5-6-5 Color to draw with
+*/
+/**************************************************************************/
+void Arduino_GFX::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
                             uint16_t color)
 {
     bool steep = _diff(y1, y0) > _diff(x1, x0);
@@ -127,7 +162,7 @@ void Arduino_GFX::drawPixel(int16_t x, int16_t y, uint16_t color)
 void Arduino_GFX::writeFastVLine(int16_t x, int16_t y,
                                  int16_t h, uint16_t color)
 {
-    writeLine(x, y, x, y + h - 1, color);
+    writeFillRect(x, y, 1, h, color);
 }
 
 /**************************************************************************/
@@ -142,7 +177,7 @@ void Arduino_GFX::writeFastVLine(int16_t x, int16_t y,
 void Arduino_GFX::writeFastHLine(int16_t x, int16_t y,
                                  int16_t w, uint16_t color)
 {
-    writeLine(x, y, x + w - 1, y, color);
+    writeFillRect(x, y, w, 1, color);
 }
 
 /*!
@@ -322,26 +357,7 @@ void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 {
     // Update in subclasses if desired!
     startWrite();
-    if (x0 == x1)
-    {
-        if (y0 > y1)
-        {
-            _swap_int16_t(y0, y1);
-        }
-        writeFastVLine(x0, y0, y1 - y0 + 1, color);
-    }
-    else if (y0 == y1)
-    {
-        if (x0 > x1)
-        {
-            _swap_int16_t(x0, x1);
-        }
-        writeFastHLine(x0, y0, x1 - x0 + 1, color);
-    }
-    else
-    {
-        writeLine(x0, y0, x1, y1, color);
-    }
+    writeLine(x0, y0, x1, y1, color);
     endWrite();
 }
 
@@ -357,13 +373,13 @@ void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 void Arduino_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
                              uint16_t color)
 {
-  startWrite();
-  writePixel(x0, y0 + r, color);
-  writePixel(x0, y0 - r, color);
-  writePixel(x0 + r, y0, color);
-  writePixel(x0 - r, y0, color);
-  drawCircleHelper(x0, y0, r, 0xf, color);
-  endWrite();
+    startWrite();
+    writePixel(x0, y0 + r, color);
+    writePixel(x0, y0 - r, color);
+    writePixel(x0 + r, y0, color);
+    writePixel(x0 - r, y0, color);
+    drawCircleHelper(x0, y0, r, 0xf, color);
+    endWrite();
 }
 
 /**************************************************************************/
@@ -587,9 +603,11 @@ void Arduino_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w,
 void Arduino_GFX::drawTriangle(int16_t x0, int16_t y0,
                                int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
 {
-    drawLine(x0, y0, x1, y1, color);
-    drawLine(x1, y1, x2, y2, color);
-    drawLine(x2, y2, x0, y0, color);
+    startWrite();
+    writeLine(x0, y0, x1, y1, color);
+    writeLine(x1, y1, x2, y2, color);
+    writeLine(x2, y2, x0, y0, color);
+    endWrite();
 }
 
 /**************************************************************************/

@@ -133,6 +133,7 @@ public:
   virtual void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
   virtual void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
   virtual void writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
+  virtual void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
   virtual inline void endWrite(void);
 
   // CONTROL API
@@ -150,11 +151,8 @@ public:
   virtual void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
   virtual void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
   virtual void fillScreen(uint16_t color);
-  // Optional and probably not necessary to change
   virtual void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
   virtual void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-
-  // These exist only with Arduino_GFX (no subclass overrides)
   virtual void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
   virtual void drawCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color);
   virtual void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
