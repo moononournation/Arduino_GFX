@@ -7,6 +7,19 @@
 #include "Arduino_TFT.h"
 #include "glcdfont.c"
 
+// TODO: temp move drawSlashLine() and drawCircleHelper() variables to static to avoid enable PSRAM performamce issue
+static int16_t dx;
+static int16_t dy;
+static int16_t err;
+static int16_t xs;
+static int16_t step;
+static int16_t len;
+static int16_t f;
+static int16_t ddF_x;
+static int16_t ddF_y;
+static int16_t x;
+static int16_t y;
+
 Arduino_TFT::Arduino_TFT(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
     bool ips, int16_t w, int16_t h,
@@ -168,7 +181,7 @@ void Arduino_TFT::writeFastHLine(int16_t x, int16_t y, int16_t w,
 */
 /**************************************************************************/
 void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-                            uint16_t color)
+                                 uint16_t color)
 {
   bool steep = _diff(y1, y0) > _diff(x1, x0);
   if (steep)
@@ -183,12 +196,12 @@ void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
     _swap_int16_t(y0, y1);
   }
 
-  int16_t dx = x1 - x0;
-  int16_t dy = _diff(y1, y0);
-  int16_t err = dx >> 1;
-  int16_t xs = x0;
-  int16_t step = (y0 < y1) ? 1 : -1;
-  int16_t len = 0;
+  dx = x1 - x0;
+  dy = _diff(y1, y0);
+  err = dx >> 1;
+  xs = x0;
+  step = (y0 < y1) ? 1 : -1;
+  len = 0;
 
   while (x0 <= x1)
   {
@@ -299,13 +312,13 @@ void Arduino_TFT::pushColor(uint16_t color)
 void Arduino_TFT::drawCircleHelper(int16_t x0, int16_t y0,
                                    int16_t r, uint8_t cornername, uint16_t color)
 {
-  int16_t f = 1 - r;
-  int16_t ddF_x = 1;
-  int16_t ddF_y = -2 * r;
-  int16_t x = 0;
-  int16_t y = r;
-  int16_t len = 0;
-  int16_t xs = 1;
+  f = 1 - r;
+  ddF_x = 1;
+  ddF_y = -2 * r;
+  x = 0;
+  y = r;
+  len = 0;
+  xs = 1;
 
   while (x < y)
   {
