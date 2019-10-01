@@ -190,11 +190,12 @@ void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
   int16_t step = (y0 < y1) ? 1 : -1;
   int16_t len = 0;
 
-  for (; x0 <= x1; x0++)
+  while (x0 <= x1)
   {
+    x0++;
     len++;
     err -= dy;
-    if (err < 0)
+    if ((err < 0) || ((x0 > x1) && len))
     {
       if (steep)
       {
@@ -208,17 +209,6 @@ void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
       y0 += step;
       len = 0;
       xs = x0 + 1;
-    }
-  }
-  if (len)
-  {
-    if (steep)
-    {
-      writeFillRectPreclipped(y0, xs, 1, len, color);
-    }
-    else
-    {
-      writeFillRectPreclipped(xs, y0, len, 1, color);
     }
   }
 }
@@ -319,7 +309,11 @@ void Arduino_TFT::drawCircleHelper(int16_t x0, int16_t y0,
 
   while (x < y)
   {
-    if (f >= 0)
+    x++;
+    len++;
+    ddF_x += 2;
+    f += ddF_x;
+    if ((f >= 0) || ((x >= y) && len))
     {
       if (cornername & 0x4)
       {
@@ -345,38 +339,8 @@ void Arduino_TFT::drawCircleHelper(int16_t x0, int16_t y0,
       y--;
       ddF_y += 2;
       f += ddF_y;
-      len = 1;
+      len = 0;
       xs = x + 1;
-    }
-    else
-    {
-      len++;
-    }
-    x++;
-    ddF_x += 2;
-    f += ddF_x;
-  }
-  if (len)
-  {
-    if (cornername & 0x4)
-    {
-      writeFillRect(x0 + xs, y0 + y, len, 1, color);
-      writeFillRect(x0 + y, y0 + xs, 1, len, color);
-    }
-    if (cornername & 0x2)
-    {
-      writeFillRect(x0 + y, y0 - xs - len + 1, 1, len, color);
-      writeFillRect(x0 + xs, y0 - y, len, 1, color);
-    }
-    if (cornername & 0x8)
-    {
-      writeFillRect(x0 - y, y0 + xs, 1, len, color);
-      writeFillRect(x0 - xs - len + 1, y0 + y, len, 1, color);
-    }
-    if (cornername & 0x1)
-    {
-      writeFillRect(x0 - xs - len + 1, y0 - y, len, 1, color);
-      writeFillRect(x0 - y, y0 - xs - len + 1, 1, len, color);
     }
   }
 }
