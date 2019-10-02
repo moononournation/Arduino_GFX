@@ -1,14 +1,63 @@
 # Arduino_GFX
-This library is developing for various displays and various data bus interfaces
+This library is developing aim for support various data bus interfaces and various displays.
+
+As I know, it should be the first Arduino display library that can support ESP32 9-bit hardware SPI. It is very important to support the displays (e.g. HX8357B, ST7701, ...) that only have 9-bit SPI interface.
 
 This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 
+## Ease of use
+#### Simple Declaration
+(not require modify library header files)
+```C
+#include <SPI.h>
+#include <Arduino_ESP32SPI.h>
+#include <Arduino_GFX.h>
+#include <Arduino_ILI9341.h>
+Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(16 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
+Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, 17 /* RST */);
+```
+
+#### And Simple Usage
+```
+tft->begin();
+tft->fillScreen(BLACK);
+tft->setCursor(10, 10);
+tft->setTextColor(RED);
+tft->println("Hello World!");
+```
+
+
+## Performance
+This library is not putting speed at the first priority, but still paid much effort to make the display look smooth. Below are some figures compare with other 2 Arduino common display libraries.
+- MCU: ESP32D@240MHz
+- PSRAM: disable
+- Display: ILI9341
+- Interface: SPI@40MHz
+- Test time: 2019 Oct 1
+
+| Benchmark          | Adafruit_GFX | *Arduino_GFX* | TFT_eSPI    |
+| ------------------ | ------------ | ------------- | ----------- |
+| Screen fill        | 39,094       | ***32,020***  | 33,355      |
+| Text               | 96,432       | ***21,294***  | 24,015      |
+| Pixels             | 1,353,397    | *960,075*     | **768,029** |
+| Lines              | 1,061,786    | *500,028*     | **307,433** |
+| Horiz/Vert Lines   | 17,604       | *14,594*      | **14,588**  |
+| Rectangles-filled  | 405,985      | ***332,518*** | 346,379     |
+| Rectangles         | 11,647       | *9,717*       | **9,247**   |
+| Circles-filled     | 76,610       | *65,827*      | **62,179**  |
+| Circles            | 118,042      | *59,825*      | **46,916**  |
+| Triangles-filled   | 150,644      | *126,312*     | **117,575** |
+| Triangles          | 58,791       | *28,392*      | **18,706**  |
+| Rounded rects-fill | 407,911      | ***335,466*** | 376,752     |
+| Rounded rects      | 42,677       | ***23,859***  | 24,189      |
+
+
 ## Currently Supported data bus
-- 4 wires hardware SPI (HWSPI)
-- 3 or 4 wires software SPI (SWSPI)
+- 8-bit and 9-bit hardware SPI (ESP32SPI)
+- 8-bit hardware SPI (HWSPI)
+- 8-bit and 9-bit software SPI (SWSPI)
 
 ## Tobe Support data bus
-- 3 wires hardware SPI (should be ESP32 only)
 - 8 bit parallel interface
 
 ## Currently Supported Display
@@ -34,3 +83,6 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 - LG4573 480x800
 - ILI9481 320x480
 - ST7701 480x800
+- Canvas (framebuffer)
+- Mono display supported by co-operate with Canvas
+- Multi-color e-ink display supported by co-operate with Canvas
