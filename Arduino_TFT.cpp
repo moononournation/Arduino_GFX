@@ -596,10 +596,10 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     block_w = 6 * size_x;
     block_h = 8 * size_y;
     if (
-        (x > _max_x) ||            // Clip right
-        (y > _max_y) ||            // Clip bottom
-        ((x + block_w - 1) < 0) || // Clip left
-        ((y + block_h - 1) < 0)    // Clip top
+        (x < 0) ||                      // Clip left
+        (y < 0) ||                      // Clip top
+        ((x + block_w - 1) > _max_x) || // Clip right
+        ((y + block_h - 1) > _max_y)    // Clip bottom
     )
     {
       return;
@@ -719,10 +719,10 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     block_w = xAdvance * size_x;
     block_h = yAdvance * size_y;
     if (
-        (x > _max_x) ||            // Clip right
-        (y > _max_y) ||            // Clip bottom
-        ((x + block_w - 1) < 0) || // Clip left
-        ((y + block_h - 1) < 0)    // Clip top
+        (x < 0) ||                      // Clip left
+        (y < 0) ||                      // Clip top
+        ((x + block_w - 1) > _max_x) || // Clip right
+        ((y + block_h - 1) > _max_y)    // Clip bottom
     )
     {
       return;
