@@ -58,40 +58,40 @@ void Arduino_HX8357B::tftInit()
   _bus->sendData(0xA2);
   _bus->sendData(0x00);
 
-  _bus->sendCommand(0xB4);  //Set RM, DM
-  _bus->sendData(0x00); //
+  _bus->sendCommand(0xB4); //Set RM, DM
+  _bus->sendData(0x00);    //
 
-  _bus->sendCommand(0xC0);  //Set Panel Driving
-  _bus->sendData(0x10); //REV SM GS
-  _bus->sendData(0x3B); // NL[5:0]
-  _bus->sendData(0x00); //SCN[6:0]
-  _bus->sendData(0x02); //NDL 0 PTS[2:0]
-  _bus->sendData(0x11); //PTG ISC[3:0]
+  _bus->sendCommand(0xC0); //Set Panel Driving
+  _bus->sendData(0x10);    //REV SM GS
+  _bus->sendData(0x3B);    // NL[5:0]
+  _bus->sendData(0x00);    //SCN[6:0]
+  _bus->sendData(0x02);    //NDL 0 PTS[2:0]
+  _bus->sendData(0x11);    //PTG ISC[3:0]
 
-  _bus->sendCommand(0xC1);  //
-  _bus->sendData(0x10); //ne inversion
+  _bus->sendCommand(0xC1); //
+  _bus->sendData(0x10);    //ne inversion
 
-  _bus->sendCommand(0xC8);  //Set Gamma
-  _bus->sendData(0x00); //KP1,KP0
-  _bus->sendData(0x46); //KP3,KP2
-  _bus->sendData(0x12); //KP5,KP4
-  _bus->sendData(0x20); //RP1,RP0
-  _bus->sendData(0x0c); //VRP0  01
-  _bus->sendData(0x00); //VRP1
-  _bus->sendData(0x56); //KN1,KN0
-  _bus->sendData(0x12); //KN3,KN2
-  _bus->sendData(0x67); //KN5,KN4
-  _bus->sendData(0x02); //RN1,RN0
-  _bus->sendData(0x00); //VRN0
-  _bus->sendData(0x0c); //VRN1  01
+  _bus->sendCommand(0xC8); //Set Gamma
+  _bus->sendData(0x00);    //KP1,KP0
+  _bus->sendData(0x46);    //KP3,KP2
+  _bus->sendData(0x12);    //KP5,KP4
+  _bus->sendData(0x20);    //RP1,RP0
+  _bus->sendData(0x0c);    //VRP0  01
+  _bus->sendData(0x00);    //VRP1
+  _bus->sendData(0x56);    //KN1,KN0
+  _bus->sendData(0x12);    //KN3,KN2
+  _bus->sendData(0x67);    //KN5,KN4
+  _bus->sendData(0x02);    //RN1,RN0
+  _bus->sendData(0x00);    //VRN0
+  _bus->sendData(0x0c);    //VRN1  01
 
-  _bus->sendCommand(0xD0);  //Set Power
-  _bus->sendData(0x44); //DDVDH :5.28
-  _bus->sendData(0x42); // BT VGH:15.84    VGL:-7.92
-  _bus->sendData(0x06); //VREG1  4.625V
+  _bus->sendCommand(0xD0); //Set Power
+  _bus->sendData(0x44);    //DDVDH :5.28
+  _bus->sendData(0x42);    // BT VGH:15.84    VGL:-7.92
+  _bus->sendData(0x06);    //VREG1  4.625V
 
-  _bus->sendCommand(0xD1);  //Set VCOM
-  _bus->sendData(0x43); //VCOMH
+  _bus->sendCommand(0xD1); //Set VCOM
+  _bus->sendData(0x43);    //VCOMH
   _bus->sendData(0x16);
 
   _bus->sendCommand(0xD2);
@@ -109,8 +109,8 @@ void Arduino_HX8357B::tftInit()
   _bus->sendCommand(0xE9); //Set Panel
   _bus->sendData(0x00);
 
-  _bus->sendCommand(0xC5);  //Set Frame rate
-  _bus->sendData(0x08); //61.51Hz
+  _bus->sendCommand(0xC5); //Set Frame rate
+  _bus->sendData(0x08);    //61.51Hz
 
   _bus->sendCommand(0x36);
   _bus->sendData(0x0a);
@@ -126,44 +126,35 @@ void Arduino_HX8357B::tftInit()
   delay(50);
 }
 
-void Arduino_HX8357B::writeAddrColumn(uint16_t x, uint16_t w)
+void Arduino_HX8357B::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-#if defined(ESP8266)
-  uint32_t x_range = ((uint32_t)(x + _xStart) << 16) | (x + w - 1 + _xStart);
+  if ((x != _currentX) || (w != _currentW))
+  {
+    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
-  _bus->writeCommand(HX8357B_CASET); // Column addr set
-  _bus->write32(x_range);
-#else
-  uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    _bus->writeCommand(HX8357B_CASET); // Column addr set
+    _bus->write(x_start >> 8);
+    _bus->write(x_start & 0xFF); // XSTART
+    _bus->write(x_end >> 8);
+    _bus->write(x_end & 0xFF); // XEND
 
-  _bus->writeCommand(HX8357B_CASET); // Column addr set
-  _bus->write(x_start >> 8);
-  _bus->write(x_start & 0xFF); // XSTART
-  _bus->write(x_end >> 8);
-  _bus->write(x_end & 0xFF); // XEND
-#endif
-}
+    _currentX = x;
+    _currentW = w;
+  }
+  if ((y != _currentY) || (h != _currentH))
+  {
+    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
-void Arduino_HX8357B::writeAddrRow(uint16_t y, uint16_t h)
-{
-#if defined(ESP8266)
-  uint32_t y_range = ((uint32_t)(y + _yStart) << 16) | (y + h - 1 + _yStart);
+    _bus->writeCommand(HX8357B_PASET); // Row addr set
+    _bus->write(y_start >> 8);
+    _bus->write(y_start & 0xFF); // YSTART
+    _bus->write(y_end >> 8);
+    _bus->write(y_end & 0xFF); // YEND
 
-  _bus->writeCommand(HX8357B_PASET); // Row addr set
-  _bus->write32(y_range);
-#else
-  uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
+    _currentY = y;
+    _currentH = h;
+  }
 
-  _bus->writeCommand(HX8357B_PASET); // Row addr set
-  _bus->write(y_start >> 8);
-  _bus->write(y_start & 0xFF); // YSTART
-  _bus->write(y_end >> 8);
-  _bus->write(y_end & 0xFF); // YEND
-#endif
-}
-
-void Arduino_HX8357B::writeAddrMemWrite()
-{
   _bus->writeCommand(HX8357B_RAMWR); // write to RAM
 }
 

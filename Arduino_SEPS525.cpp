@@ -34,119 +34,125 @@ void Arduino_SEPS525::tftInit()
     delay(SEPS525_RST_DELAY);
   }
 
-    _bus->sendCommand(SEPS525_REDUCE_CURRENT);
-    _bus->sendData(0x01);
-    delay(1);
+  _bus->sendCommand(SEPS525_REDUCE_CURRENT);
+  _bus->sendData(0x01);
+  delay(1);
 
-    // normal mode
-    _bus->sendCommand(SEPS525_REDUCE_CURRENT);
-    _bus->sendData(0x00);
-    delay(1);
+  // normal mode
+  _bus->sendCommand(SEPS525_REDUCE_CURRENT);
+  _bus->sendData(0x00);
+  delay(1);
 
-    // display off
-    _bus->sendCommand(SEPS525_DISP_ON_OFF);
-    _bus->sendData(0x00);
+  // display off
+  _bus->sendCommand(SEPS525_DISP_ON_OFF);
+  _bus->sendData(0x00);
 
-    // turn on internal oscillator using external resistor
-    _bus->sendCommand(SEPS525_OSC_CTL);
-    _bus->sendData(0x01);
+  // turn on internal oscillator using external resistor
+  _bus->sendCommand(SEPS525_OSC_CTL);
+  _bus->sendData(0x01);
 
-    // 90 hz frame rate, divider 0
-    _bus->sendCommand(SEPS525_CLOCK_DIV);
-    _bus->sendData(0x30);
+  // 90 hz frame rate, divider 0
+  _bus->sendCommand(SEPS525_CLOCK_DIV);
+  _bus->sendData(0x30);
 
-    // duty cycle 127
-    _bus->sendCommand(0x28);
-    _bus->sendData(0x7f);
+  // duty cycle 127
+  _bus->sendCommand(0x28);
+  _bus->sendData(0x7f);
 
-    // start on line 0
-    _bus->sendCommand(0x29);
-    _bus->sendData(0x00);
+  // start on line 0
+  _bus->sendCommand(0x29);
+  _bus->sendData(0x00);
 
-    // rgb_if
-    _bus->sendCommand(SEPS525_RGB_IF);
-    _bus->sendData(0x31);
+  // rgb_if
+  _bus->sendCommand(SEPS525_RGB_IF);
+  _bus->sendData(0x31);
 
-    // driving current r g b (uA)
-    _bus->sendCommand(SEPS525_DRIVING_CURRENT_R);
-    _bus->sendData(0x45);
-    _bus->sendCommand(SEPS525_DRIVING_CURRENT_G);
-    _bus->sendData(0x34);
-    _bus->sendCommand(SEPS525_DRIVING_CURRENT_B);
-    _bus->sendData(0x33);
+  // driving current r g b (uA)
+  _bus->sendCommand(SEPS525_DRIVING_CURRENT_R);
+  _bus->sendData(0x45);
+  _bus->sendCommand(SEPS525_DRIVING_CURRENT_G);
+  _bus->sendData(0x34);
+  _bus->sendCommand(SEPS525_DRIVING_CURRENT_B);
+  _bus->sendData(0x33);
 
-    // precharge time r g b
-    _bus->sendCommand(SEPS525_PRECHARGE_TIME_R);
-    _bus->sendData(0x04);
-    _bus->sendCommand(SEPS525_PRECHARGE_TIME_G);
-    _bus->sendData(0x05);
-    _bus->sendCommand(SEPS525_PRECHARGE_TIME_B);
-    _bus->sendData(0x05);
+  // precharge time r g b
+  _bus->sendCommand(SEPS525_PRECHARGE_TIME_R);
+  _bus->sendData(0x04);
+  _bus->sendCommand(SEPS525_PRECHARGE_TIME_G);
+  _bus->sendData(0x05);
+  _bus->sendCommand(SEPS525_PRECHARGE_TIME_B);
+  _bus->sendData(0x05);
 
-    // precharge current r g b (uA)
-    _bus->sendCommand(SEPS525_PRECHARGE_CURRENT_R);
-    _bus->sendData(0x9d);
-    _bus->sendCommand(SEPS525_PRECHARGE_CURRENT_G);
-    _bus->sendData(0x8c);
-    _bus->sendCommand(SEPS525_PRECHARGE_CURRENT_B);
-    _bus->sendData(0x57);
+  // precharge current r g b (uA)
+  _bus->sendCommand(SEPS525_PRECHARGE_CURRENT_R);
+  _bus->sendData(0x9d);
+  _bus->sendCommand(SEPS525_PRECHARGE_CURRENT_G);
+  _bus->sendData(0x8c);
+  _bus->sendCommand(SEPS525_PRECHARGE_CURRENT_B);
+  _bus->sendData(0x57);
 
-    _bus->sendCommand(SEPS525_IREF);
-    _bus->sendData(0x00);
+  _bus->sendCommand(SEPS525_IREF);
+  _bus->sendData(0x00);
 
-    // display on
-    _bus->sendCommand(SEPS525_DISP_ON_OFF);
-    _bus->sendData(0x01);
+  // display on
+  _bus->sendCommand(SEPS525_DISP_ON_OFF);
+  _bus->sendData(0x01);
 }
 
-void Arduino_SEPS525::writeAddrColumn(uint16_t x, uint16_t w)
+void Arduino_SEPS525::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-  uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
-  if (_rotation & 0x01) // Portrait
+  uint8_t cmd1, cmd2, cmd3;
+  if ((x != _currentX) || (w != _currentW))
   {
-    _bus->writeCommand(SEPS525_MY1_ADDR);
+    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    if (_rotation & 0x01) // Portrait
+    {
+      cmd1 = SEPS525_MY1_ADDR;
+      cmd2 = SEPS525_M_AP_Y;
+      cmd3 = SEPS525_MY2_ADDR;
+    }
+    else
+    {
+      cmd1 = SEPS525_MX1_ADDR;
+      cmd2 = SEPS525_M_AP_X;
+      cmd3 = SEPS525_MX2_ADDR;
+    }
+    _bus->writeCommand(cmd1);
     _bus->write16(x_start);
-    _bus->writeCommand(SEPS525_M_AP_Y);
+    _bus->writeCommand(cmd2);
     _bus->write16(x_start);
-    _bus->writeCommand(SEPS525_MY2_ADDR);
+    _bus->writeCommand(cmd3);
     _bus->write16(x_end);
-  }
-  else
-  {
-    _bus->writeCommand(SEPS525_MX1_ADDR);
-    _bus->write16(x_start);
-    _bus->writeCommand(SEPS525_M_AP_X);
-    _bus->write16(x_start);
-    _bus->writeCommand(SEPS525_MX2_ADDR);
-    _bus->write16(x_end);
-  }
-}
 
-void Arduino_SEPS525::writeAddrRow(uint16_t y, uint16_t h)
-{
-  uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
-  if (_rotation & 0x01) // Portrait
-  {
-    _bus->writeCommand(SEPS525_MX1_ADDR);
-    _bus->write16(y_start);
-    _bus->writeCommand(SEPS525_M_AP_X);
-    _bus->write16(y_start);
-    _bus->writeCommand(SEPS525_MX2_ADDR);
-    _bus->write16(y_end);
+    _currentX = x;
+    _currentW = w;
   }
-  else
+  if ((y != _currentY) || (h != _currentH))
   {
-    _bus->writeCommand(SEPS525_MY1_ADDR);
+    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
+    if (_rotation & 0x01) // Portrait
+    {
+      cmd1 = SEPS525_MX1_ADDR;
+      cmd2 = SEPS525_M_AP_X;
+      cmd3 = SEPS525_MX2_ADDR;
+    }
+    else
+    {
+      cmd1 = SEPS525_MY1_ADDR;
+      cmd2 = SEPS525_M_AP_Y;
+      cmd3 = SEPS525_MY2_ADDR;
+    }
+    _bus->writeCommand(cmd1);
     _bus->write16(y_start);
-    _bus->writeCommand(SEPS525_M_AP_Y);
+    _bus->writeCommand(cmd2);
     _bus->write16(y_start);
-    _bus->writeCommand(SEPS525_MY2_ADDR);
+    _bus->writeCommand(cmd3);
     _bus->write16(y_end);
-  }
-}
 
-void Arduino_SEPS525::writeAddrMemWrite()
-{
+    _currentY = y;
+    _currentH = h;
+  }
+
   _bus->writeCommand(SEPS525_RAMWR); // write to RAM
 }
 
@@ -196,12 +202,12 @@ void Arduino_SEPS525::invertDisplay(bool i)
 
 void Arduino_SEPS525::displayOn(void)
 {
-    _bus->sendCommand(SEPS525_DISP_ON_OFF);
-    _bus->sendData(0x01);
+  _bus->sendCommand(SEPS525_DISP_ON_OFF);
+  _bus->sendData(0x01);
 }
 
 void Arduino_SEPS525::displayOff(void)
 {
-    _bus->sendCommand(SEPS525_DISP_ON_OFF);
-    _bus->sendData(0x00);
+  _bus->sendCommand(SEPS525_DISP_ON_OFF);
+  _bus->sendData(0x00);
 }

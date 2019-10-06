@@ -18,9 +18,7 @@ public:
   virtual inline void writeColor(uint16_t color);
   virtual void writeRepeat(uint16_t color, uint32_t len);
   virtual void writePixels(uint16_t *data, uint32_t size);
-  virtual void writeAddrColumn(uint16_t x, uint16_t w) = 0;
-  virtual void writeAddrRow(uint16_t y, uint16_t h) = 0;
-  virtual void writeAddrMemWrite() = 0;
+  virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) = 0;
 
   virtual void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg);
   virtual void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg);

@@ -16,9 +16,7 @@ public:
 
   // This MUST be defined by the subclass:
   // and also protected function: tftInit()
-  virtual void writeAddrColumn(uint16_t x, uint16_t w) = 0;
-  virtual void writeAddrRow(uint16_t y, uint16_t h) = 0;
-  virtual void writeAddrMemWrite() = 0;
+  virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) = 0;
   virtual void invertDisplay(bool) = 0;
   virtual void displayOn() = 0;
   virtual void displayOff() = 0;
@@ -33,7 +31,6 @@ public:
   virtual void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
   virtual void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
   virtual void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-  virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
   virtual inline void endWrite(void);
 
   virtual void setAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
@@ -60,6 +57,7 @@ protected:
   uint8_t COL_OFFSET2, ROW_OFFSET2;
   uint8_t _xStart, _yStart;
   uint16_t _currentX = 0xFFFF, _currentY = 0xFFFF;
+  uint16_t _currentW = 0xFFFF, _currentH = 0xFFFF;
   virtual void tftInit() = 0;
   bool _ips;
 

@@ -65,44 +65,32 @@ void Arduino_SSD1331::tftInit()
   _bus->sendCommand(SSD1331_DISPLAYON); //--turn on oled panel
 }
 
-void Arduino_SSD1331::writeAddrColumn(uint16_t x, uint16_t w)
+void Arduino_SSD1331::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-  uint8_t cmd = (_rotation & 0x01) ? SSD1331_SETROW : SSD1331_SETCOLUMN;
+  if ((x != _currentX) || (w != _currentW))
+  {
+    uint8_t cmd = (_rotation & 0x01) ? SSD1331_SETROW : SSD1331_SETCOLUMN;
+    uint8_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
-#if defined(ESP8266)
-  uint16_t x_range = ((x + _xStart) << 8) | (x + w - 1 + _xStart);
+    _bus->writeCommand(cmd);     // Column addr set
+    _bus->writeCommand(x_start); // XSTART
+    _bus->writeCommand(x_end);   // XEND
 
-  _bus->writeCommand(cmd); // Column addr set
-  _bus->writeCommand16(x_range);
-#else
-  uint8_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    _currentX = x;
+    _currentW = w;
+  }
+  if ((y != _currentY) || (h != _currentH))
+  {
+    uint8_t cmd = (_rotation & 0x01) ? SSD1331_SETCOLUMN : SSD1331_SETROW;
+    uint8_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
-  _bus->writeCommand(cmd);     // Column addr set
-  _bus->writeCommand(x_start); // XSTART
-  _bus->writeCommand(x_end);   // XEND
-#endif
-}
+    _bus->writeCommand(cmd);     // Row addr set
+    _bus->writeCommand(y_start); // YSTART
+    _bus->writeCommand(y_end);   // YEND
 
-void Arduino_SSD1331::writeAddrRow(uint16_t y, uint16_t h)
-{
-  uint8_t cmd = (_rotation & 0x01) ? SSD1331_SETCOLUMN : SSD1331_SETROW;
-
-#if defined(ESP8266)
-  uint16_t y_range = ((y + _yStart) << 8) | (y + h - 1 + _yStart);
-
-  _bus->writeCommand(cmd); // Row addr set
-  _bus->writeCommand16(y_range);
-#else
-  uint8_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
-
-  _bus->writeCommand(cmd);     // Row addr set
-  _bus->writeCommand(y_start); // YSTART
-  _bus->writeCommand(y_end);   // YEND
-#endif
-}
-
-void Arduino_SSD1331::writeAddrMemWrite()
-{
+    _currentY = y;
+    _currentH = h;
+  }
 }
 
 /**************************************************************************/

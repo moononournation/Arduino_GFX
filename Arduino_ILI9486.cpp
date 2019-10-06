@@ -85,44 +85,35 @@ void Arduino_ILI9486::tftInit()
   delay(25);
 }
 
-void Arduino_ILI9486::writeAddrColumn(uint16_t x, uint16_t w)
+void Arduino_ILI9486::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-#if defined(ESP8266)
-  uint32_t x_range = ((uint32_t)(x + _xStart) << 16) | (x + w - 1 + _xStart);
+  if ((x != _currentX) || (w != _currentW))
+  {
+    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
-  _bus->writeCommand(ILI9486_CASET); // Column addr set
-  _bus->write32(x_range);
-#else
-  uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    _bus->writeCommand(ILI9486_CASET); // Column addr set
+    _bus->write(x_start >> 8);
+    _bus->write(x_start & 0xFF); // XSTART
+    _bus->write(x_end >> 8);
+    _bus->write(x_end & 0xFF); // XEND
 
-  _bus->writeCommand(ILI9486_CASET); // Column addr set
-  _bus->write(x_start >> 8);
-  _bus->write(x_start & 0xFF); // XSTART
-  _bus->write(x_end >> 8);
-  _bus->write(x_end & 0xFF); // XEND
-#endif
-}
+    _currentX = x;
+    _currentW = w;
+  }
+  if ((y != _currentY) || (h != _currentH))
+  {
+    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
-void Arduino_ILI9486::writeAddrRow(uint16_t y, uint16_t h)
-{
-#if defined(ESP8266)
-  uint32_t y_range = ((uint32_t)(y + _yStart) << 16) | (y + h - 1 + _yStart);
+    _bus->writeCommand(ILI9486_PASET); // Row addr set
+    _bus->write(y_start >> 8);
+    _bus->write(y_start & 0xFF); // YSTART
+    _bus->write(y_end >> 8);
+    _bus->write(y_end & 0xFF); // YEND
 
-  _bus->writeCommand(ILI9486_PASET); // Row addr set
-  _bus->write32(y_range);
-#else
-  uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
+    _currentY = y;
+    _currentH = h;
+  }
 
-  _bus->writeCommand(ILI9486_PASET); // Row addr set
-  _bus->write(y_start >> 8);
-  _bus->write(y_start & 0xFF); // YSTART
-  _bus->write(y_end >> 8);
-  _bus->write(y_end & 0xFF); // YEND
-#endif
-}
-
-void Arduino_ILI9486::writeAddrMemWrite()
-{
   _bus->writeCommand(ILI9486_RAMWR); // write to RAM
 }
 

@@ -50,56 +50,63 @@ void Arduino_ILI9225::tftInit()
   _bus->sendData16(0x1017);
 }
 
-void Arduino_ILI9225::writeAddrColumn(uint16_t x, uint16_t w)
+void Arduino_ILI9225::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-  uint16_t start = x + _xStart, end = x + w - 1 + _xStart;
+  uint8_t cmd1, cmd2, cmd3;
 
-  if (_rotation & 0x01) // Portrait
+  if ((x != _currentX) || (w != _currentW))
   {
-    _bus->writeCommand(ILI9225_VERTICAL_WINDOW_ADDR2);
-    _bus->write16(start);
-    _bus->writeCommand(ILI9225_VERTICAL_WINDOW_ADDR1);
-    _bus->write16(end);
-    _bus->writeCommand(ILI9225_RAM_ADDR_SET2);
-    _bus->write16(start);
-  }
-  else
-  {
-    _bus->writeCommand(ILI9225_HORIZONTAL_WINDOW_ADDR2);
-    _bus->write16(start);
-    _bus->writeCommand(ILI9225_HORIZONTAL_WINDOW_ADDR1);
-    _bus->write16(end);
-    _bus->writeCommand(ILI9225_RAM_ADDR_SET1);
-    _bus->write16(start);
-  }
-}
+    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
-void Arduino_ILI9225::writeAddrRow(uint16_t y, uint16_t h)
-{
-  uint16_t start = y + _yStart, end = y + h - 1 + _yStart;
+    if (_rotation & 0x01) // Portrait
+    {
+      cmd1 = ILI9225_VERTICAL_WINDOW_ADDR2;
+      cmd2 = ILI9225_VERTICAL_WINDOW_ADDR1;
+      cmd3 = ILI9225_RAM_ADDR_SET2;
+    }
+    else
+    {
+      cmd1 = ILI9225_HORIZONTAL_WINDOW_ADDR2;
+      cmd2 = ILI9225_HORIZONTAL_WINDOW_ADDR1;
+      cmd3 = ILI9225_RAM_ADDR_SET1;
+    }
+    _bus->writeCommand(cmd1);
+    _bus->write16(x_start);
+    _bus->writeCommand(cmd2);
+    _bus->write16(x_end);
+    _bus->writeCommand(cmd3);
+    _bus->write16(x_start);
 
-  if (_rotation & 0x01) // Portrait
-  {
-    _bus->writeCommand(ILI9225_HORIZONTAL_WINDOW_ADDR2);
-    _bus->write16(start);
-    _bus->writeCommand(ILI9225_HORIZONTAL_WINDOW_ADDR1);
-    _bus->write16(end);
-    _bus->writeCommand(ILI9225_RAM_ADDR_SET1);
-    _bus->write16(start);
+    _currentX = x;
+    _currentW = w;
   }
-  else
+  if ((y != _currentY) || (h != _currentH))
   {
-    _bus->writeCommand(ILI9225_VERTICAL_WINDOW_ADDR2);
-    _bus->write16(start);
-    _bus->writeCommand(ILI9225_VERTICAL_WINDOW_ADDR1);
-    _bus->write16(end);
-    _bus->writeCommand(ILI9225_RAM_ADDR_SET2);
-    _bus->write16(start);
-  }
-}
+    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
-void Arduino_ILI9225::writeAddrMemWrite()
-{
+    if (_rotation & 0x01) // Portrait
+    {
+      cmd1 = ILI9225_HORIZONTAL_WINDOW_ADDR2;
+      cmd2 = ILI9225_HORIZONTAL_WINDOW_ADDR1;
+      cmd3 = ILI9225_RAM_ADDR_SET1;
+    }
+    else
+    {
+      cmd1 = ILI9225_VERTICAL_WINDOW_ADDR2;
+      cmd2 = ILI9225_VERTICAL_WINDOW_ADDR1;
+      cmd3 = ILI9225_RAM_ADDR_SET2;
+    }
+    _bus->writeCommand(cmd1);
+    _bus->write16(y_start);
+    _bus->writeCommand(cmd2);
+    _bus->write16(y_end);
+    _bus->writeCommand(cmd3);
+    _bus->write16(y_start);
+
+    _currentY = y;
+    _currentH = h;
+  }
+
   _bus->writeCommand(ILI9225_GRAM_DATA_REG); // write to RAM
 }
 

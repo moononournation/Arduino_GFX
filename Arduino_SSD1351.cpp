@@ -41,44 +41,34 @@ void Arduino_SSD1351::tftInit()
   _bus->sendCommand(SSD1351_DISPLAYON);     // Main screen turn on
 }
 
-void Arduino_SSD1351::writeAddrColumn(uint16_t x, uint16_t w)
+void Arduino_SSD1351::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-  uint8_t cmd = (_rotation & 0x01) ? SSD1351_SETROW : SSD1351_SETCOLUMN;
+  uint8_t cmd;
+  if ((x != _currentX) || (w != _currentW))
+  {
+    cmd = (_rotation & 0x01) ? SSD1351_SETROW : SSD1351_SETCOLUMN;
+    uint8_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
-#if defined(ESP8266)
-  uint16_t x_range = ((x + _xStart) << 8) | (x + w - 1 + _xStart);
+    _bus->writeCommand(cmd); // Column addr set
+    _bus->write(x_start);    // XSTART
+    _bus->write(x_end);      // XEND
 
-  _bus->writeCommand(cmd); // Column addr set
-  _bus->write16(x_range);
-#else
-  uint8_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    _currentX = x;
+    _currentW = w;
+  }
+  if ((y != _currentY) || (h != _currentH))
+  {
+    cmd = (_rotation & 0x01) ? SSD1351_SETCOLUMN : SSD1351_SETROW;
+    uint8_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
-  _bus->writeCommand(cmd); // Column addr set
-  _bus->write(x_start);        // XSTART
-  _bus->write(x_end);          // XEND
-#endif
-}
+    _bus->writeCommand(cmd); // Row addr set
+    _bus->write(y_start);    // YSTART
+    _bus->write(y_end);      // YEND
 
-void Arduino_SSD1351::writeAddrRow(uint16_t y, uint16_t h)
-{
-  uint8_t cmd = (_rotation & 0x01) ? SSD1351_SETCOLUMN : SSD1351_SETROW;
+    _currentY = y;
+    _currentH = h;
+  }
 
-#if defined(ESP8266)
-  uint16_t y_range = ((y + _yStart) << 8) | (y + h - 1 + _yStart);
-
-  _bus->writeCommand(cmd); // Row addr set
-  _bus->write16(y_range);
-#else
-  uint8_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
-
-  _bus->writeCommand(cmd); // Row addr set
-  _bus->write(y_start);        // YSTART
-  _bus->write(y_end);          // YEND
-#endif
-}
-
-void Arduino_SSD1351::writeAddrMemWrite()
-{
   _bus->writeCommand(SSD1351_WRITERAM); // write to RAM
 }
 
