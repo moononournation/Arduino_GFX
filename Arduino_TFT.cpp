@@ -847,7 +847,7 @@ void Arduino_TFT::setRotation(uint8_t r)
 
   case 1:
     _xStart = ROW_OFFSET1;
-    _yStart = COL_OFFSET1;
+    _yStart = COL_OFFSET2;
     break;
 
   case 2:
@@ -857,7 +857,7 @@ void Arduino_TFT::setRotation(uint8_t r)
 
   case 3:
     _xStart = ROW_OFFSET2;
-    _yStart = COL_OFFSET2;
+    _yStart = COL_OFFSET1;
     break;
   }
 }
