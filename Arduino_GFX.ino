@@ -60,13 +60,14 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 //You can use different type of hardware initialization
 #if defined(TFT_CS)
 // ESP32 also can customize SPI pins
-// Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
+// Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
 Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
 // Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
 #else
-Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, -1, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
-//Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
+// Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, -1, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
+Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, -1 /* TFT_CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
+// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
 // Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, -1 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
 #endif
 
@@ -122,6 +123,9 @@ Arduino_SSD1283A *tft = new Arduino_SSD1283A(bus, TFT_RST);
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
+// 1.14" IPS LCD 135x240 TTGO T-Display
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
+
 
 #endif /* not a specific hardware */
 
