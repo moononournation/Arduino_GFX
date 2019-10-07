@@ -75,7 +75,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - ST7735 128x160 (various tabs) [[test video](https://youtu.be/eRBSSD_N9II)]
 - ST7735 128x128 (various tabs) [[test video](https://youtu.be/6rueSV2Ee6c)]
 - ST7735 80x160 [[test video](https://youtu.be/qESHDuYo_Mk)]
-- ST7789 240x135
+- ST7789 TTGO T-Display 135x240 [[test video](https://youtu.be/Zk81_T8c20E)]
 - ST7789 240x240 [[test video](https://youtu.be/Z27zYg5uAsk)]
 - ST7789 TTGO T-Watch 240x240 [[test video](https://youtu.be/9AqsXMB8Qbk)]
 - ST7789 240x320 [[test video](https://youtu.be/ZEvc1LkuVuQ)]
