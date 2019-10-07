@@ -68,6 +68,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - ILI9341 M5Stack 320x240 [[test video](https://youtu.be/UoPpIjVSO5Q)]
 - ILI9486 320x480 (18 bit color) [[test video](https://youtu.be/pZ6izDqmVds)]
 - SEPS525 160x128 [[test video](https://youtu.be/tlmvFBHYv-k)]
+- SSD1283A 130x130 [[test video](https://youtu.be/OrIchaRikiQ)]
 - SSD1331 96x64 [[test video](https://youtu.be/v20b1A_KDcQ)]
 - SSD1351 128x128 [[test video](https://youtu.be/5TIM-qMVBNQ)]
 - SSD1351 128x96
@@ -86,3 +87,6 @@ This library is not putting speed at the first priority, but still paid much eff
 - Canvas (framebuffer)
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas
+
+## Known issue
+- ESP32SPI data bus class is a little bit faster than HWSPI, but not all chip supported, e.g. SSD1283A, ST7789@80 MHz

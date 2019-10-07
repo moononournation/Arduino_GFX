@@ -15,6 +15,7 @@
 #include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341
 #include "Arduino_ILI9486.h" // Hardware-specific library for ILI9486
 #include "Arduino_SEPS525.h" // Hardware-specific library for SEPS525
+#include "Arduino_SSD1283A.h" // Hardware-specific library for SSD1283A
 #include "Arduino_SSD1331.h" // Hardware-specific library for SSD1331
 #include "Arduino_SSD1351.h" // Hardware-specific library for SSD1351
 #include "Arduino_ST7735.h"  // Hardware-specific library for ST7735
@@ -59,8 +60,8 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 //You can use different type of hardware initialization
 #if defined(TFT_CS)
 // ESP32 also can customize SPI pins
-Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
-// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
+// Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
+Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
 // Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
 #else
@@ -86,6 +87,9 @@ Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, -1, 18 /* SCK */, 23 /* MOS
 
 // SEPS525 OLED 160x128
 // Arduino_SEPS525 *tft = new Arduino_SEPS525(bus, TFT_RST);
+
+// SSD1283A OLED 130x130
+Arduino_SSD1283A *tft = new Arduino_SSD1283A(bus, TFT_RST);
 
 // SSD1331 OLED 96x64
 // Arduino_SSD1331 *tft = new Arduino_SSD1331(bus, TFT_RST);
@@ -113,7 +117,7 @@ Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, -1, 18 /* SCK */, 23 /* MOS
 
 // ST7789 LCD
 // 2.4" LCD 240x320
-Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
 // 2.4" IPS LCD 240x320
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
