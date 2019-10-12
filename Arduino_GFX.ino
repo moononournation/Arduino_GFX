@@ -39,11 +39,12 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 
 #if defined(ESP32)
 #define TFT_CS 5
-#define TFT_DC 16
-// #define TFT_DC 27
-// #define TFT_DC -1 // 9-bit, SWSPI only
-#define TFT_RST 17
-// #define TFT_RST 33
+// #define TFT_CS -1 // for display without CS pin
+// #define TFT_DC 16
+#define TFT_DC 27
+// #define TFT_DC -1 // for display without DC pin (9-bit SPI)
+// #define TFT_RST 17
+#define TFT_RST 33
 #define TFT_BL 22
 #elif defined(ESP8266)
 #define TFT_CS 15
@@ -57,19 +58,22 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 #define TFT_BL 10
 #endif
 
-//You can use different type of hardware initialization
-#if defined(TFT_CS)
-// ESP32 also can customize SPI pins
-// Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
-Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
-// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
-// Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
-#else
-// Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(TFT_DC, -1, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
-Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, -1 /* TFT_CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
-// Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC); //for display without CS pin
-// Arduino_SWSPI *bus = new Arduino_SWSPI(TFT_DC, -1 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
-#endif
+/*
+ * Step 1: Initize one databus for your display
+*/
+
+// General software SPI
+// Arduino_DataBus *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
+
+// General hardware SPI
+// Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
+
+// ESP32 hardware SPI, more customizable parameters
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */);
+
+/*
+ * Step 2: Initize one driver for your display
+*/
 
 // HX8352C IPS LCD 240x400
 // Arduino_HX8352C *tft = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
@@ -81,7 +85,7 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, -1 /* TFT_CS */, 18 /* SCK */, 23
 // Arduino_ILI9225 *tft = new Arduino_ILI9225(bus, TFT_RST);
 
 // ILI9341 LCD 240x320
-// Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
+Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
 
 // ILI9486 LCD 320x480
 // Arduino_ILI9486 *tft = new Arduino_ILI9486(bus, TFT_RST);
@@ -90,7 +94,7 @@ Arduino_HWSPI *bus = new Arduino_HWSPI(TFT_DC, -1 /* TFT_CS */, 18 /* SCK */, 23
 // Arduino_SEPS525 *tft = new Arduino_SEPS525(bus, TFT_RST);
 
 // SSD1283A OLED 130x130
-Arduino_SSD1283A *tft = new Arduino_SSD1283A(bus, TFT_RST);
+// Arduino_SSD1283A *tft = new Arduino_SSD1283A(bus, TFT_RST);
 
 // SSD1331 OLED 96x64
 // Arduino_SSD1331 *tft = new Arduino_SSD1331(bus, TFT_RST);

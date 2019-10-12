@@ -5,13 +5,20 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_ESP32SPI.h"
 
-Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8_t miso /* = -1 */)
+Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */)
+    : _dc(dc), _spi_num(spi_num)
 {
-  _dc = dc;
-  _cs = cs;
-  _sck = sck;
-  _mosi = mosi;
-  _miso = miso;
+  if(sck == -1 && miso == -1 && mosi == -1 && cs == -1) {
+        _sck = (_spi_num == VSPI) ? SCK : 14;
+        _miso = (_spi_num == VSPI) ? MISO : 12;
+        _mosi = (_spi_num == VSPI) ? MOSI : 13;
+        _cs = (_spi_num == VSPI) ? SS : 15;
+    } else {
+        _sck = sck;
+        _miso = miso;
+        _mosi = mosi;
+        _cs = cs;
+    }
 }
 
 static void _on_apb_change(void *arg, apb_change_ev_t ev_type, uint32_t old_apb, uint32_t new_apb)
@@ -32,7 +39,13 @@ static void _on_apb_change(void *arg, apb_change_ev_t ev_type, uint32_t old_apb,
 
 void Arduino_ESP32SPI::begin(uint32_t speed)
 {
-  _speed = speed ? speed : 40000000;
+  _speed = speed ? speed : SPI_DEFAULT_FREQ;
+
+  if (!_div)
+  {
+    _div = spiFrequencyToClockDiv(_speed);
+  }
+
   if (_dc >= 0)
   {
     pinMode(_dc, OUTPUT);
@@ -52,7 +65,9 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
     dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
 
-  _spi = &_spi_bus_array[VSPI];
+  // SPI.begin(_sck, _miso, _mosi);
+  // _spi = spiStartBus(_spi_num, _div, SPI_MODE0, SPI_MSBFIRST);
+  _spi = &_spi_bus_array[_spi_num];
 
 #if !CONFIG_DISABLE_HAL_LOCKS
   if (_spi->lock == NULL)
@@ -61,11 +76,23 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
   }
 #endif
 
-  // VSPI
-  DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI_CLK_EN_2);
-  DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI_RST_2);
+  if (_spi_num == HSPI)
+  {
+    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI_CLK_EN);
+    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI_RST);
+  }
+  else if (_spi_num == VSPI)
+  {
+    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI_CLK_EN_2);
+    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI_RST_2);
+  }
+  else
+  {
+    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI_CLK_EN_1);
+    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI_RST_1);
+  }
 
-  // spiStopBus
+  // spiStopBus(spi);
   SPI_MUTEX_LOCK();
   _spi->dev->slave.trans_done = 0;
   _spi->dev->slave.slave_mode = 0;
@@ -81,17 +108,17 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
 
   setDataMode(SPI_MODE0);
 
-  // spiSetBitOrder SPI_MSBFIRST
-  _bitOrder = SPI_MSBFIRST;
+  // spiSetBitOrder(spi, bitOrder);
   SPI_MUTEX_LOCK();
+  // SPI_MSBFIRST
+  _bitOrder = SPI_MSBFIRST;
   _spi->dev->ctrl.wr_bit_order = 0;
   _spi->dev->ctrl.rd_bit_order = 0;
   SPI_MUTEX_UNLOCK();
 
-  // spiSetClockDiv
-  _clockDiv = spiFrequencyToClockDiv(_speed);
+  // spiSetClockDiv(spi, clockDiv);
   SPI_MUTEX_LOCK();
-  _spi->dev->clock.val = _clockDiv;
+  _spi->dev->clock.val = _div;
   SPI_MUTEX_UNLOCK();
 
   SPI_MUTEX_LOCK();
@@ -116,55 +143,44 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
 
   addApbChangeCallback(_spi, _on_apb_change);
 
+  // spiAttachSCK(_spi, _sck);
+  pinMode(_sck, OUTPUT);
+  pinMatrixOutAttach(_sck, SPI_CLK_IDX(_spi->num), false, false);
+
+  if (_miso >= 0)
+  {
+    // spiAttachMISO(_spi, _miso);
+    SPI_MUTEX_LOCK();
+    pinMode(_miso, INPUT);
+    pinMatrixInAttach(_miso, SPI_MISO_IDX(_spi->num), false);
+    SPI_MUTEX_UNLOCK();
+  }
+
+  // spiAttachMOSI(_spi, _mosi);
+  pinMode(_mosi, OUTPUT);
+  pinMatrixOutAttach(_mosi, SPI_MOSI_IDX(_spi->num), false, false);
+
   if (_cs >= 0)
   {
     pinMode(_cs, OUTPUT);
-    pinMatrixOutAttach(_cs, SPI_SS_IDX(VSPI, 0), false, false);
+    pinMatrixOutAttach(_cs, SPI_SS_IDX(_spi_num, 0), false, false);
     spiEnableSSPins(_spi, (1 << 0));
   }
-  pinMode(_sck, OUTPUT);
-  pinMatrixOutAttach(_sck, SPI_CLK_IDX(VSPI), false, false);
-  if (_miso >= 0)
-  {
-    SPI_MUTEX_LOCK();
-    pinMode(_miso, INPUT);
-    pinMatrixInAttach(_miso, SPI_MISO_IDX(VSPI), false);
-    SPI_MUTEX_UNLOCK();
-  }
-  pinMode(_mosi, OUTPUT);
-  pinMatrixOutAttach(_mosi, SPI_MOSI_IDX(VSPI), false, false);
+
+  // mySPISettings = SPISettings(_speed, MSBFIRST, SPI_MODE0);
 }
 
 void Arduino_ESP32SPI::beginWrite()
 {
-  spiTransaction(_spi, _clockDiv, _dataMode, _bitOrder);
   if (_dc >= 0)
   {
     DC_HIGH();
   }
   data_buf_bit_idx = 0;
   data_buf[0] = 0;
-}
 
-void Arduino_ESP32SPI::write9bitCommand(uint32_t c)
-{
-  int idx = data_buf_bit_idx >> 3;
-  int shift = (data_buf_bit_idx % 8);
-  if (shift)
-  {
-    data_buf[idx++] |= c >> (shift + 1);
-    data_buf[idx] = c << (7 - shift);
-  }
-  else
-  {
-    data_buf[idx++] = c >> 1;
-    data_buf[idx] = c << 7;
-  }
-  data_buf_bit_idx += 9;
-  if (data_buf_bit_idx >= 504) // 56 bytes * 9 bits
-  {
-    flush_data_buf();
-  }
+  // SPI_BEGIN_TRANSACTION();
+  spiTransaction(_spi, _div, _dataMode, _bitOrder);
 }
 
 void Arduino_ESP32SPI::writeCommand(uint8_t c)
@@ -207,24 +223,6 @@ void Arduino_ESP32SPI::writeCommand16(uint16_t c)
     while (_spi->dev->cmd.usr)
       ;
     DC_HIGH();
-  }
-}
-
-void Arduino_ESP32SPI::flush_data_buf()
-{
-  if (data_buf_bit_idx > 0)
-  {
-    _spi->dev->mosi_dlen.usr_mosi_dbitlen = data_buf_bit_idx - 1;
-    _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-    int len = (data_buf_bit_idx + 31) / 32;
-    for (int i = 0; i < len; i++)
-    {
-      _spi->dev->data_buf[i] = data_buf32[i];
-    }
-    _spi->dev->cmd.usr = 1;
-    while (_spi->dev->cmd.usr)
-      ;
-    data_buf_bit_idx = 0;
   }
 }
 
@@ -280,54 +278,80 @@ void Arduino_ESP32SPI::write32(uint32_t d)
 void Arduino_ESP32SPI::endWrite()
 {
   flush_data_buf();
-  SPI_MUTEX_UNLOCK();
+
+  // SPI_END_TRANSACTION();
+  spiEndTransaction(_spi);
 }
 
 void Arduino_ESP32SPI::sendCommand(uint8_t c)
 {
+  // SPI_BEGIN_TRANSACTION();
   SPI_MUTEX_LOCK();
   writeCommand(c);
+
   flush_data_buf();
+
+  // SPI_END_TRANSACTION();
   SPI_MUTEX_UNLOCK();
 }
 
 void Arduino_ESP32SPI::sendCommand16(uint16_t c)
 {
+  // SPI_BEGIN_TRANSACTION();
   SPI_MUTEX_LOCK();
+
   writeCommand16(c);
+
   flush_data_buf();
+
+  // SPI_END_TRANSACTION();
   SPI_MUTEX_UNLOCK();
 }
 
 void Arduino_ESP32SPI::sendData(uint8_t d)
 {
+  // SPI_BEGIN_TRANSACTION();
   SPI_MUTEX_LOCK();
+
   write(d);
+
   flush_data_buf();
+
+  // SPI_END_TRANSACTION();
   SPI_MUTEX_UNLOCK();
 }
 
 void Arduino_ESP32SPI::sendData16(uint16_t d)
 {
+  // SPI_BEGIN_TRANSACTION();
   SPI_MUTEX_LOCK();
+
   write16(d);
+
   flush_data_buf();
+
+  // SPI_END_TRANSACTION();
   SPI_MUTEX_UNLOCK();
 }
 
 void Arduino_ESP32SPI::sendData32(uint32_t d)
 {
+  // SPI_BEGIN_TRANSACTION();
   SPI_MUTEX_LOCK();
+
   write32(d);
+
   flush_data_buf();
+
+  // SPI_END_TRANSACTION();
   SPI_MUTEX_UNLOCK();
 }
 
 void Arduino_ESP32SPI::setDataMode(uint8_t dataMode)
 {
-  SPI_MUTEX_LOCK();
   _dataMode = dataMode;
-  switch (dataMode)
+  SPI_MUTEX_LOCK();
+  switch (_dataMode)
   {
   case SPI_MODE1:
     _spi->dev->pin.ck_idle_edge = 0;
@@ -562,4 +586,43 @@ inline void Arduino_ESP32SPI::DC_HIGH(void)
 inline void Arduino_ESP32SPI::DC_LOW(void)
 {
   *dcPortClr = dcPinMask;
+}
+
+void Arduino_ESP32SPI::write9bitCommand(uint32_t c)
+{
+  int idx = data_buf_bit_idx >> 3;
+  int shift = (data_buf_bit_idx % 8);
+  if (shift)
+  {
+    data_buf[idx++] |= c >> (shift + 1);
+    data_buf[idx] = c << (7 - shift);
+  }
+  else
+  {
+    data_buf[idx++] = c >> 1;
+    data_buf[idx] = c << 7;
+  }
+  data_buf_bit_idx += 9;
+  if (data_buf_bit_idx >= 504) // 56 bytes * 9 bits
+  {
+    flush_data_buf();
+  }
+}
+
+void Arduino_ESP32SPI::flush_data_buf()
+{
+  if (data_buf_bit_idx > 0)
+  {
+    _spi->dev->mosi_dlen.usr_mosi_dbitlen = data_buf_bit_idx - 1;
+    _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+    int len = (data_buf_bit_idx + 31) / 32;
+    for (int i = 0; i < len; i++)
+    {
+      _spi->dev->data_buf[i] = data_buf32[i];
+    }
+    _spi->dev->cmd.usr = 1;
+    while (_spi->dev->cmd.usr)
+      ;
+    data_buf_bit_idx = 0;
+  }
 }
