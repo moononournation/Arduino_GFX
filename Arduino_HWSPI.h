@@ -91,7 +91,7 @@ class Arduino_HWSPI : public Arduino_DataBus
 {
 public:
 #if defined(ESP32)
-  Arduino_HWSPI(int8_t dc, int8_t cs = -1, int8_t _sck = -1, int8_t _mosi = -1, int8_t _miso = -1); // Constructor
+  Arduino_HWSPI(int8_t dc, int8_t cs = -1, int8_t sck = -1, int8_t mosi = -1, int8_t miso = -1); // Constructor
 #else
   Arduino_HWSPI(int8_t dc, int8_t cs = -1); // Constructor
 #endif

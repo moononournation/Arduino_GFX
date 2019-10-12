@@ -212,6 +212,28 @@ void Arduino_HWSPI::write(uint8_t c)
 #endif
 }
 
+void Arduino_HWSPI::write16(uint16_t d)
+{
+#if defined(ESP8266) || defined(ESP32)
+  SPI.write16(d);
+#else
+  write(d >> 8);
+  write(d);
+#endif
+}
+
+void Arduino_HWSPI::write32(uint32_t d)
+{
+#if defined(ESP8266) || defined(ESP32)
+  SPI.write32(d);
+#else
+  write(d >> 24);
+  write(d >> 16);
+  write(d >> 8);
+  write(d);
+#endif
+}
+
 void Arduino_HWSPI::endWrite()
 {
   CS_HIGH();
@@ -271,28 +293,6 @@ void Arduino_HWSPI::sendData32(uint32_t d)
 
   CS_HIGH();
   SPI_END_TRANSACTION();
-}
-
-void Arduino_HWSPI::write16(uint16_t d)
-{
-#if defined(ESP8266) || defined(ESP32)
-  SPI.write16(d);
-#else
-  write(d >> 8);
-  write(d);
-#endif
-}
-
-void Arduino_HWSPI::write32(uint32_t d)
-{
-#if defined(ESP8266) || defined(ESP32)
-  SPI.write32(d);
-#else
-  write(d >> 24);
-  write(d >> 16);
-  write(d >> 8);
-  write(d);
-#endif
 }
 
 void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
