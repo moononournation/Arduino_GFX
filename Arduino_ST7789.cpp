@@ -32,11 +32,8 @@ void Arduino_ST7789::tftInit()
   _bus->setDataMode(SPI_MODE3);
 #endif
 
-  //  if (_rst < 0)
-  //  {
   _bus->sendCommand(ST7789_SWRESET); // 1: Software reset
   delay(ST7789_RST_DELAY);
-  //  }
 
   _bus->sendCommand(ST7789_SLPOUT); // 2: Out of sleep mode, no args, w/delay
   delay(ST7789_SLPOUT_DELAY);
@@ -55,26 +52,14 @@ void Arduino_ST7789::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_
 {
   if ((x != _currentX) || (w != _currentW))
   {
-    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
-
-    _bus->writeCommand(ST7789_CASET); // Column addr set
-    _bus->write(x_start >> 8);
-    _bus->write(x_start & 0xFF); // XSTART
-    _bus->write(x_end >> 8);
-    _bus->write(x_end & 0xFF); // XEND
+    _bus->writeC8D16D16(ST7789_CASET, x + _xStart, x + w - 1 + _xStart);
 
     _currentX = x;
     _currentW = w;
   }
   if ((y != _currentY) || (h != _currentH))
   {
-    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
-
-    _bus->writeCommand(ST7789_RASET); // Row addr set
-    _bus->write(y_start >> 8);
-    _bus->write(y_start & 0xFF); // YSTART
-    _bus->write(y_end >> 8);
-    _bus->write(y_end & 0xFF); // YEND
+    _bus->writeC8D16D16(ST7789_RASET, y + _yStart, y + h - 1 + _yStart);
 
     _currentY = y;
     _currentH = h;

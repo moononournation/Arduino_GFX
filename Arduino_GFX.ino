@@ -69,7 +69,7 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 // Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 
 // ESP32 hardware SPI, more customizable parameters
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */);
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
 
 /*
  * Step 2: Initize one driver for your display
@@ -148,8 +148,8 @@ void setup()
 
   Serial.println("Arduino_GFX library Test!");
 
-  // tft->begin();
-  tft->begin(80000000); /* specify data bus speed */
+  tft->begin();
+  // tft->begin(80000000); /* specify data bus speed */
 
   w = tft->width();
   h = tft->height();

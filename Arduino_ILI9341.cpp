@@ -61,26 +61,14 @@ void Arduino_ILI9341::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
 {
   if ((x != _currentX) || (w != _currentW))
   {
-    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
-
-    _bus->writeCommand(ILI9341_CASET); // Column addr set
-    _bus->write(x_start >> 8);
-    _bus->write(x_start & 0xFF); // XSTART
-    _bus->write(x_end >> 8);
-    _bus->write(x_end & 0xFF); // XEND
+    _bus->writeC8D16D16(ILI9341_CASET, x + _xStart, x + w - 1 + _xStart);
 
     _currentX = x;
     _currentW = w;
   }
   if ((y != _currentY) || (h != _currentH))
   {
-    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
-
-    _bus->writeCommand(ILI9341_PASET); // Row addr set
-    _bus->write(y_start >> 8);
-    _bus->write(y_start & 0xFF); // YSTART
-    _bus->write(y_end >> 8);
-    _bus->write(y_end & 0xFF); // YEND
+    _bus->writeC8D16D16(ILI9341_PASET, y + _yStart, y + h - 1 + _yStart);
 
     _currentY = y;
     _currentH = h;
