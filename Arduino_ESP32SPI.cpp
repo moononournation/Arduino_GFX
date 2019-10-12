@@ -8,17 +8,20 @@
 Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */)
     : _dc(dc), _spi_num(spi_num)
 {
-  if(sck == -1 && miso == -1 && mosi == -1 && cs == -1) {
-        _sck = (_spi_num == VSPI) ? SCK : 14;
-        _miso = (_spi_num == VSPI) ? MISO : 12;
-        _mosi = (_spi_num == VSPI) ? MOSI : 13;
-        _cs = (_spi_num == VSPI) ? SS : 15;
-    } else {
-        _sck = sck;
-        _miso = miso;
-        _mosi = mosi;
-        _cs = cs;
-    }
+  if (sck == -1 && miso == -1 && mosi == -1 && cs == -1)
+  {
+    _sck = (_spi_num == VSPI) ? SCK : 14;
+    _miso = (_spi_num == VSPI) ? MISO : 12;
+    _mosi = (_spi_num == VSPI) ? MOSI : 13;
+    _cs = (_spi_num == VSPI) ? SS : 15;
+  }
+  else
+  {
+    _sck = sck;
+    _miso = miso;
+    _mosi = mosi;
+    _cs = cs;
+  }
 }
 
 static void _on_apb_change(void *arg, apb_change_ev_t ev_type, uint32_t old_apb, uint32_t new_apb)
