@@ -89,4 +89,4 @@ This library is not putting speed at the first priority, but still paid much eff
 - Multi-color e-ink display supported by co-operate with Canvas
 
 ## Known issue
-- ESP32SPI data bus class is a little bit faster than HWSPI, but not all chip supported, e.g. SSD1283A, ST7789@80 MHz
+- ESP32SPI data bus class is a little bit faster than HWSPI, but not all chip supported, e.g. SSD1283A

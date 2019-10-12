@@ -8,18 +8,18 @@
 #include "Arduino_HWSPI.h"
 #include "Arduino_ESP32SPI.h"
 #include "Arduino_SWSPI.h"
-#include "Arduino_GFX.h"     // Core graphics library by Adafruit
-#include "Arduino_HX8352C.h" // Hardware-specific library for HX8352C
-#include "Arduino_HX8357B.h" // Hardware-specific library for HX8357B
-#include "Arduino_ILI9225.h" // Hardware-specific library for ILI9225
-#include "Arduino_ILI9341.h" // Hardware-specific library for ILI9341
-#include "Arduino_ILI9486.h" // Hardware-specific library for ILI9486
-#include "Arduino_SEPS525.h" // Hardware-specific library for SEPS525
+#include "Arduino_GFX.h"      // Core graphics library by Adafruit
+#include "Arduino_HX8352C.h"  // Hardware-specific library for HX8352C
+#include "Arduino_HX8357B.h"  // Hardware-specific library for HX8357B
+#include "Arduino_ILI9225.h"  // Hardware-specific library for ILI9225
+#include "Arduino_ILI9341.h"  // Hardware-specific library for ILI9341
+#include "Arduino_ILI9486.h"  // Hardware-specific library for ILI9486
+#include "Arduino_SEPS525.h"  // Hardware-specific library for SEPS525
 #include "Arduino_SSD1283A.h" // Hardware-specific library for SSD1283A
-#include "Arduino_SSD1331.h" // Hardware-specific library for SSD1331
-#include "Arduino_SSD1351.h" // Hardware-specific library for SSD1351
-#include "Arduino_ST7735.h"  // Hardware-specific library for ST7735
-#include "Arduino_ST7789.h"  // Hardware-specific library for ST7789
+#include "Arduino_SSD1331.h"  // Hardware-specific library for SSD1331
+#include "Arduino_SSD1351.h"  // Hardware-specific library for SSD1351
+#include "Arduino_ST7735.h"   // Hardware-specific library for ST7735
+#include "Arduino_ST7789.h"   // Hardware-specific library for ST7789
 
 #if defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define TFT_BL 32
@@ -40,11 +40,11 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 #if defined(ESP32)
 #define TFT_CS 5
 // #define TFT_CS -1 // for display without CS pin
-// #define TFT_DC 16
-#define TFT_DC 27
+#define TFT_DC 16
+// #define TFT_DC 27
 // #define TFT_DC -1 // for display without DC pin (9-bit SPI)
-// #define TFT_RST 17
-#define TFT_RST 33
+#define TFT_RST 17
+// #define TFT_RST 33
 #define TFT_BL 22
 #elif defined(ESP8266)
 #define TFT_CS 15
@@ -85,7 +85,7 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* 
 // Arduino_ILI9225 *tft = new Arduino_ILI9225(bus, TFT_RST);
 
 // ILI9341 LCD 240x320
-Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
+// Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
 
 // ILI9486 LCD 320x480
 // Arduino_ILI9486 *tft = new Arduino_ILI9486(bus, TFT_RST);
@@ -122,14 +122,13 @@ Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
 
 // ST7789 LCD
 // 2.4" LCD 240x320
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
+Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
 // 2.4" IPS LCD 240x320
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 // 1.14" IPS LCD 135x240 TTGO T-Display
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
-
 
 #endif /* not a specific hardware */
 
@@ -149,8 +148,8 @@ void setup()
 
   Serial.println("Arduino_GFX library Test!");
 
-  tft->begin();
-  // tft->begin(80000000); /* specify data bus speed */
+  // tft->begin();
+  tft->begin(80000000); /* specify data bus speed */
 
   w = tft->width();
   h = tft->height();

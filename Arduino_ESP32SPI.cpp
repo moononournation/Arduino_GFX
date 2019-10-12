@@ -95,34 +95,10 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
     DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI_RST_1);
   }
 
-  // spiStopBus(spi);
-  SPI_MUTEX_LOCK();
-  _spi->dev->slave.trans_done = 0;
-  _spi->dev->slave.slave_mode = 0;
-  _spi->dev->pin.val = 0;
-  _spi->dev->user.val = 0;
-  _spi->dev->user1.val = 0;
-  _spi->dev->ctrl.val = 0;
-  _spi->dev->ctrl1.val = 0;
-  _spi->dev->ctrl2.val = 0;
-  _spi->dev->clock.val = 0;
-  SPI_MUTEX_UNLOCK();
-  removeApbChangeCallback(_spi, _on_apb_change);
-
+  spiStopBus(_spi);
   setDataMode(SPI_MODE0);
-
-  // spiSetBitOrder(spi, bitOrder);
-  SPI_MUTEX_LOCK();
-  // SPI_MSBFIRST
-  _bitOrder = SPI_MSBFIRST;
-  _spi->dev->ctrl.wr_bit_order = 0;
-  _spi->dev->ctrl.rd_bit_order = 0;
-  SPI_MUTEX_UNLOCK();
-
-  // spiSetClockDiv(spi, clockDiv);
-  SPI_MUTEX_LOCK();
-  _spi->dev->clock.val = _div;
-  SPI_MUTEX_UNLOCK();
+  spiSetBitOrder(_spi, _bitOrder);
+  spiSetClockDiv(_spi, _div);
 
   SPI_MUTEX_LOCK();
   _spi->dev->user.usr_mosi = 1;
@@ -146,31 +122,20 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
 
   addApbChangeCallback(_spi, _on_apb_change);
 
-  // spiAttachSCK(_spi, _sck);
-  pinMode(_sck, OUTPUT);
-  pinMatrixOutAttach(_sck, SPI_CLK_IDX(_spi->num), false, false);
+  spiAttachSCK(_spi, _sck);
 
   if (_miso >= 0)
   {
-    // spiAttachMISO(_spi, _miso);
-    SPI_MUTEX_LOCK();
-    pinMode(_miso, INPUT);
-    pinMatrixInAttach(_miso, SPI_MISO_IDX(_spi->num), false);
-    SPI_MUTEX_UNLOCK();
+    spiAttachMISO(_spi, _miso);
   }
 
-  // spiAttachMOSI(_spi, _mosi);
-  pinMode(_mosi, OUTPUT);
-  pinMatrixOutAttach(_mosi, SPI_MOSI_IDX(_spi->num), false, false);
+  spiAttachMOSI(_spi, _mosi);
 
   if (_cs >= 0)
   {
-    pinMode(_cs, OUTPUT);
-    pinMatrixOutAttach(_cs, SPI_SS_IDX(_spi_num, 0), false, false);
-    spiEnableSSPins(_spi, (1 << 0));
+    spiAttachSS(_spi, 0, _cs);
+    spiSSEnable(_spi);
   }
-
-  // mySPISettings = SPISettings(_speed, MSBFIRST, SPI_MODE0);
 }
 
 void Arduino_ESP32SPI::beginWrite()
@@ -182,7 +147,6 @@ void Arduino_ESP32SPI::beginWrite()
   data_buf_bit_idx = 0;
   data_buf[0] = 0;
 
-  // SPI_BEGIN_TRANSACTION();
   spiTransaction(_spi, _div, _dataMode, _bitOrder);
 }
 
@@ -282,99 +246,58 @@ void Arduino_ESP32SPI::endWrite()
 {
   flush_data_buf();
 
-  // SPI_END_TRANSACTION();
   spiEndTransaction(_spi);
 }
 
 void Arduino_ESP32SPI::sendCommand(uint8_t c)
 {
-  // SPI_BEGIN_TRANSACTION();
-  SPI_MUTEX_LOCK();
+  beginWrite();
+
   writeCommand(c);
 
-  flush_data_buf();
-
-  // SPI_END_TRANSACTION();
-  SPI_MUTEX_UNLOCK();
+  endWrite();
 }
 
 void Arduino_ESP32SPI::sendCommand16(uint16_t c)
 {
-  // SPI_BEGIN_TRANSACTION();
-  SPI_MUTEX_LOCK();
+  beginWrite();
 
   writeCommand16(c);
 
-  flush_data_buf();
-
-  // SPI_END_TRANSACTION();
-  SPI_MUTEX_UNLOCK();
+  endWrite();
 }
 
 void Arduino_ESP32SPI::sendData(uint8_t d)
 {
-  // SPI_BEGIN_TRANSACTION();
-  SPI_MUTEX_LOCK();
+  beginWrite();
 
   write(d);
 
-  flush_data_buf();
-
-  // SPI_END_TRANSACTION();
-  SPI_MUTEX_UNLOCK();
+  endWrite();
 }
 
 void Arduino_ESP32SPI::sendData16(uint16_t d)
 {
-  // SPI_BEGIN_TRANSACTION();
-  SPI_MUTEX_LOCK();
+  beginWrite();
 
   write16(d);
 
-  flush_data_buf();
-
-  // SPI_END_TRANSACTION();
-  SPI_MUTEX_UNLOCK();
+  endWrite();
 }
 
 void Arduino_ESP32SPI::sendData32(uint32_t d)
 {
-  // SPI_BEGIN_TRANSACTION();
-  SPI_MUTEX_LOCK();
+  beginWrite();
 
   write32(d);
 
-  flush_data_buf();
-
-  // SPI_END_TRANSACTION();
-  SPI_MUTEX_UNLOCK();
+  endWrite();
 }
 
 void Arduino_ESP32SPI::setDataMode(uint8_t dataMode)
 {
   _dataMode = dataMode;
-  SPI_MUTEX_LOCK();
-  switch (_dataMode)
-  {
-  case SPI_MODE1:
-    _spi->dev->pin.ck_idle_edge = 0;
-    _spi->dev->user.ck_out_edge = 1;
-    break;
-  case SPI_MODE2:
-    _spi->dev->pin.ck_idle_edge = 1;
-    _spi->dev->user.ck_out_edge = 1;
-    break;
-  case SPI_MODE3:
-    _spi->dev->pin.ck_idle_edge = 1;
-    _spi->dev->user.ck_out_edge = 0;
-    break;
-  case SPI_MODE0:
-  default:
-    _spi->dev->pin.ck_idle_edge = 0;
-    _spi->dev->user.ck_out_edge = 0;
-    break;
-  }
-  SPI_MUTEX_UNLOCK();
+  spiSetDataMode(_spi, _dataMode);
 }
 
 void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
