@@ -29,27 +29,33 @@ tft->println("Hello World!");
 
 ## Performance
 This library is not putting speed at the first priority, but still paid much effort to make the display look smooth. Below are some figures compare with other 2 Arduino common display libraries.
-- MCU: ESP32D@240MHz
+- Arduino IDE: 1.8.10
+- MCU: ESP32-PICO-D4
 - PSRAM: disable
 - Display: ILI9341
 - Interface: SPI@40MHz
-- Test time: 2019 Oct 1
+- Test time: 2019 Oct 13
 
-| Benchmark          | Adafruit_GFX | *Arduino_GFX* | TFT_eSPI    |
-| ------------------ | ------------ | ------------- | ----------- |
-| Screen fill        | 39,094       | ***32,020***  | 33,355      |
-| Text               | 96,432       | ***21,294***  | 24,015      |
-| Pixels             | 1,353,397    | *960,075*     | **768,029** |
-| Lines              | 1,061,786    | *500,028*     | **307,433** |
-| Horiz/Vert Lines   | 17,604       | *14,594*      | **14,588**  |
-| Rectangles-filled  | 405,985      | ***332,518*** | 346,379     |
-| Rectangles         | 11,647       | *9,717*       | **9,247**   |
-| Circles-filled     | 76,610       | *65,827*      | **62,179**  |
-| Circles            | 118,042      | *59,825*      | **46,916**  |
-| Triangles-filled   | 150,644      | *126,312*     | **117,575** |
-| Triangles          | 58,791       | *28,392*      | **18,706**  |
-| Rounded rects-fill | 407,911      | ***335,466*** | 376,752     |
-| Rounded rects      | 42,677       | ***23,859***  | 24,189      |
+| Benchmark          | Adafruit_GFX  | *Arduino_GFX* | TFT_eSPI      |
+| ------------------ | ------------- | ------------- | ------------- |
+| Screen fill        | 39,055        | ***32,229***  | 33,355        |
+| Text               | 96,432        | ***18,717***  | 24,010        |
+| Pixels             | 1,353,319     | *919,219*     | **768,022**   |
+| Lines              | 1,061,808     | *455,992*     | **307,429**   |
+| Horiz/Vert Lines   | 17,614        | ***14,277***  | 14,587        |
+| Rectangles-filled  | 405,880       | ***334,974*** | 346,317       |
+| Rectangles         | 11,656        | *9,374*       | **9,251**     |
+| Circles-filled     | 76,619        | ***55,173***  | 62,182        |
+| Circles            | 118,051       | *52,315*      | **46,909**    |
+| Triangles-filled   | 150,999       | *120,362*     | **117,591**   |
+| Triangles          | 58,795        | *26,143*      | **18,704**    |
+| Rounded rects-fill | 407,755       | ***335,537*** | 376,764       |
+| Rounded rects      | 42,668        | ***21,100***  | 24,201        |
+
+| Foot print         | Adafruit_GFX  | *Arduino_GFX* | TFT_eSPI      |
+| ------------------ | ------------- | ------------- | ------------- |
+| Flash              | 232,572       | 245,544       | ***231,136*** |
+| Estimate memory    | 15,512        | 15,616        | ***15,432***  |
 
 
 ## Currently Supported data bus
