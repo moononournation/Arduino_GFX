@@ -351,13 +351,12 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
                              const uint8_t bitmap[], int16_t w, int16_t h,
                              uint16_t color, uint16_t bg)
 {
-
   int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
   uint8_t byte = 0;
 
   startWrite();
   writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  for (int16_t j = 0; j < h; j++)
   {
     for (int16_t i = 0; i < w; i++)
     {
@@ -396,7 +395,7 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
 
   startWrite();
   writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  for (int16_t j = 0; j < h; j++)
   {
     for (int16_t i = 0; i < w; i++)
     {
@@ -427,16 +426,14 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
 void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
                                       const uint8_t bitmap[], int16_t w, int16_t h)
 {
+  uint32_t len = (uint32_t)w * h;
   uint8_t v;
   startWrite();
   writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  for (uint32_t i = 0; i < len; i++)
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      v = (uint8_t)pgm_read_byte(&bitmap[j * w + i]);
+      v = (uint8_t)pgm_read_byte(&bitmap[i]);
       writeColor(color565(v, v, v));
-    }
   }
   endWrite();
 }
@@ -454,16 +451,14 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
 void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
                                       uint8_t *bitmap, int16_t w, int16_t h)
 {
+  uint32_t len = (uint32_t)w * h;
   uint8_t v;
   startWrite();
   writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  while (len--)
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      v = bitmap[j * w + i];
-      writeColor(color565(v, v, v));
-    }
+    v = *(bitmap++);
+    writeColor(color565(v, v, v));
   }
   endWrite();
 }
@@ -482,14 +477,12 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
 void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
                                      const uint16_t bitmap[], int16_t w, int16_t h)
 {
+  uint32_t len = (uint32_t)w * h;
   startWrite();
   writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  for (int16_t i = 0; i < len; i++)
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      writeColor(pgm_read_word(&bitmap[j * w + i]));
-    }
+    writeColor(pgm_read_word(&bitmap[i]));
   }
   endWrite();
 }
@@ -508,14 +501,12 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
                                      uint16_t *bitmap, int16_t w, int16_t h)
 {
+  uint32_t len = (uint32_t)w * h;
   startWrite();
   writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  while (len--)
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      writeColor(bitmap[j * w + i]);
-    }
+    writeColor(*(bitmap++));
   }
   endWrite();
 }
@@ -533,15 +524,13 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      const uint8_t bitmap[], int16_t w, int16_t h)
 {
-  int16_t offset = 0;
+  uint32_t len = (uint32_t)w * h;
+  uint32_t offset = 0;
   startWrite();
   writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  while (len--)
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      writeColor(color565(pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++])));
-    }
+    writeColor(color565(pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++])));
   }
   endWrite();
 }
@@ -559,15 +548,13 @@ void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      uint8_t *bitmap, int16_t w, int16_t h)
 {
-  int16_t offset = 0;
+  uint32_t len = (uint32_t)w * h;
+  uint32_t offset = 0;
   startWrite();
   writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  while (len--)
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      writeColor(color565(bitmap[offset++], bitmap[offset++], bitmap[offset++]));
-    }
+    writeColor(color565(bitmap[offset++], bitmap[offset++], bitmap[offset++]));
   }
   endWrite();
 }
