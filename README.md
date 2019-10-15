@@ -85,12 +85,13 @@ This library is not putting speed at the first priority, but still paid much eff
 - ST7789 240x240 [[test video](https://youtu.be/Z27zYg5uAsk)]
 - ST7789 TTGO T-Watch 240x240 [[test video](https://youtu.be/9AqsXMB8Qbk)]
 - ST7789 240x320 [[test video](https://youtu.be/ZEvc1LkuVuQ)]
+- Canvas (framebuffer)
 
 ## Tobe Support Display
 - LG4573 480x800
 - ILI9481 320x480
 - ST7701 480x800
-- Canvas (framebuffer)
+- Canvas_Indexed (for saving memory space)
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas
 

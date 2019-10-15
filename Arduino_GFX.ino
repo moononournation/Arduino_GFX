@@ -9,6 +9,7 @@
 #include "Arduino_ESP32SPI.h"
 #include "Arduino_SWSPI.h"
 #include "Arduino_GFX.h"      // Core graphics library by Adafruit
+#include "Arduino_Canvas.h"   // Canvas (framebuffer) library
 #include "Arduino_HX8352C.h"  // Hardware-specific library for HX8352C
 #include "Arduino_HX8357B.h"  // Hardware-specific library for HX8357B
 #include "Arduino_ILI9225.h"  // Hardware-specific library for ILI9225
@@ -40,11 +41,11 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 #if defined(ESP32)
 #define TFT_CS 5
 // #define TFT_CS -1 // for display without CS pin
-#define TFT_DC 16
-// #define TFT_DC 27
+// #define TFT_DC 16
+#define TFT_DC 27
 // #define TFT_DC -1 // for display without DC pin (9-bit SPI)
-#define TFT_RST 17
-// #define TFT_RST 33
+// #define TFT_RST 17
+#define TFT_RST 33
 #define TFT_BL 22
 #elif defined(ESP8266)
 #define TFT_CS 15
@@ -74,6 +75,10 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* 
 /*
  * Step 2: Initize one driver for your display
 */
+
+// Canvas (240x320 resolution only works for ESP32 with PSRAM)
+Arduino_GFX *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+Arduino_Canvas *tft = new Arduino_Canvas(240, 320, output_display);
 
 // HX8352C IPS LCD 240x400
 // Arduino_HX8352C *tft = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
@@ -122,7 +127,7 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* 
 
 // ST7789 LCD
 // 2.4" LCD 240x320
-Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
 // 2.4" IPS LCD 240x320
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
@@ -178,74 +183,87 @@ void loop(void)
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   uint32_t usecFillScreen = testFillScreen();
+  tft->flush();
   Serial.print(F("Screen fill              "));
   Serial.println(usecFillScreen);
   delay(100);
 
   tft->fillScreen(BLACK);
   uint32_t usecText = testText();
+  tft->flush();
   Serial.print(F("Text                     "));
   Serial.println(usecText);
-  delay(100);
+  delay(3000); // delay for verifing the text
 
   tft->fillScreen(BLACK);
   uint32_t usecPixels = testPixels();
+  tft->flush();
   Serial.print(F("Pixels                   "));
   Serial.println(usecPixels);
   delay(100);
 
   tft->fillScreen(BLACK);
   uint32_t usecLines = testLines(BLUE);
+  tft->flush();
   Serial.print(F("Lines                    "));
   Serial.println(usecLines);
   delay(100);
 
   tft->fillScreen(BLACK);
   uint32_t usecFastLines = testFastLines(RED, BLUE);
+  tft->flush();
   Serial.print(F("Horiz/Vert Lines         "));
   Serial.println(usecFastLines);
   delay(100);
 
   tft->fillScreen(BLACK);
   uint32_t usecFilledRects = testFilledRects(YELLOW, MAGENTA);
+  tft->flush();
   Serial.print(F("Rectangles (filled)      "));
   Serial.println(usecFilledRects);
   delay(100);
 
   uint32_t usecRects = testRects(GREEN);
+  tft->flush();
   Serial.print(F("Rectangles (outline)     "));
   Serial.println(usecRects);
   delay(100);
 
   tft->fillScreen(BLACK);
   uint32_t usecFilledCircles = testFilledCircles(10, MAGENTA);
+  tft->flush();
   Serial.print(F("Circles (filled)         "));
   Serial.println(usecFilledCircles);
   delay(100);
 
   uint32_t usecCircles = testCircles(10, WHITE);
+  tft->flush();
   Serial.print(F("Circles (outline)        "));
   Serial.println(usecCircles);
   delay(100);
 
   tft->fillScreen(BLACK);
   uint32_t usecFilledTrangles = testFilledTriangles();
+  tft->flush();
   Serial.print(F("Triangles (filled)       "));
   Serial.println(usecFilledTrangles);
   delay(100);
 
   uint32_t usecTriangles = testTriangles();
+  tft->flush();
   Serial.print(F("Triangles (outline)      "));
   Serial.println(usecTriangles);
   delay(100);
 
   tft->fillScreen(BLACK);
   uint32_t usecFilledRoundRects = testFilledRoundRects();
+  tft->flush();
   Serial.print(F("Rounded rects (filled)   "));
   Serial.println(usecFilledRoundRects);
   delay(100);
 
   uint32_t usecRoundRects = testRoundRects();
+  tft->flush();
   Serial.print(F("Rounded rects (outline)  "));
   Serial.println(usecRoundRects);
   delay(100);
@@ -385,6 +403,8 @@ void loop(void)
     tft->print(F("Benchmark Complete!"));
   }
 
+  tft->flush();
+
   delay(60 * 1000L);
 }
 
@@ -486,7 +506,6 @@ uint32_t testText()
     tft->println(F("Size 6"));
   }
   uint32_t t = micros() - start;
-  delay(3000); // delay for verifing the text
   return t;
 }
 

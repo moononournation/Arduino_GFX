@@ -287,6 +287,15 @@ inline void Arduino_GFX::endWrite()
 
 /**************************************************************************/
 /*!
+   @brief    flush framebuffer to output (for Canvas or NeoPixel sub-class)
+*/
+/**************************************************************************/
+void Arduino_GFX::flush()
+{
+}
+
+/**************************************************************************/
+/*!
    @brief    Draw a perfectly vertical line (this is often optimized in a subclass!)
     @param    x   Top-most x coordinate
     @param    y   Top-most y coordinate
