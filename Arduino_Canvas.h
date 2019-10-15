@@ -11,7 +11,6 @@
 
 class Arduino_Canvas : public Arduino_GFX
 {
-
 public:
   Arduino_Canvas(int16_t w, int16_t h, Arduino_GFX *output);
 

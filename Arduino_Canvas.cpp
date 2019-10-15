@@ -13,6 +13,7 @@ Arduino_Canvas::Arduino_Canvas(int16_t w, int16_t h, Arduino_GFX *output)
 
 void Arduino_Canvas::begin(uint32_t speed)
 {
+#if defined(ESP32)
     if (psramFound())
     {
         _framebuffer = (uint16_t *)ps_malloc(_width * _height * 2);
@@ -21,6 +22,9 @@ void Arduino_Canvas::begin(uint32_t speed)
     {
         _framebuffer = (uint16_t *)malloc(_width * _height * 2);
     }
+#else
+    _framebuffer = (uint16_t *)malloc(_width * _height * 2);
+#endif
     _output->begin(speed);
     _output->fillScreen(BLACK);
 }

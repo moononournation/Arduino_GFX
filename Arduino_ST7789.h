@@ -55,7 +55,6 @@
 
 class Arduino_ST7789 : public Arduino_TFT
 {
-
 public:
   Arduino_ST7789(
       Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0,

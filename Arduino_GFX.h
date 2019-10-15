@@ -115,7 +115,6 @@ inline uint8_t *pgm_read_bitmap_ptr(const GFXfont *gfxFont)
 /// A generic graphics superclass that can handle all sorts of drawing. At a minimum you can subclass and provide drawPixel(). At a maximum you can do a ton of overriding to optimize. Used for any/all Adafruit displays!
 class Arduino_GFX : public Print
 {
-
 public:
   Arduino_GFX(int16_t w, int16_t h); // Constructor
 

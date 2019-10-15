@@ -74,7 +74,6 @@
 
 class Arduino_ST7735 : public Arduino_TFT
 {
-
 public:
   Arduino_ST7735(
       Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0,

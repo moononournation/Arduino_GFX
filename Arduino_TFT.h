@@ -10,7 +10,6 @@
 
 class Arduino_TFT : public Arduino_GFX
 {
-
 public:
   Arduino_TFT(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips, int16_t w, int16_t h, uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2);
 
