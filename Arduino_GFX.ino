@@ -8,19 +8,20 @@
 #include "Arduino_HWSPI.h"
 #include "Arduino_ESP32SPI.h"
 #include "Arduino_SWSPI.h"
-#include "Arduino_GFX.h"      // Core graphics library by Adafruit
-#include "Arduino_Canvas.h"   // Canvas (framebuffer) library
-#include "Arduino_HX8352C.h"  // Hardware-specific library for HX8352C
-#include "Arduino_HX8357B.h"  // Hardware-specific library for HX8357B
-#include "Arduino_ILI9225.h"  // Hardware-specific library for ILI9225
-#include "Arduino_ILI9341.h"  // Hardware-specific library for ILI9341
-#include "Arduino_ILI9486.h"  // Hardware-specific library for ILI9486
-#include "Arduino_SEPS525.h"  // Hardware-specific library for SEPS525
-#include "Arduino_SSD1283A.h" // Hardware-specific library for SSD1283A
-#include "Arduino_SSD1331.h"  // Hardware-specific library for SSD1331
-#include "Arduino_SSD1351.h"  // Hardware-specific library for SSD1351
-#include "Arduino_ST7735.h"   // Hardware-specific library for ST7735
-#include "Arduino_ST7789.h"   // Hardware-specific library for ST7789
+#include "Arduino_GFX.h"            // Core graphics library by Adafruit
+#include "Arduino_Canvas.h"         // Canvas (framebuffer) library
+#include "Arduino_Canvas_Indexed.h" // Indexed Color Canvas (framebuffer) library
+#include "Arduino_HX8352C.h"        // Hardware-specific library for HX8352C
+#include "Arduino_HX8357B.h"        // Hardware-specific library for HX8357B
+#include "Arduino_ILI9225.h"        // Hardware-specific library for ILI9225
+#include "Arduino_ILI9341.h"        // Hardware-specific library for ILI9341
+#include "Arduino_ILI9486.h"        // Hardware-specific library for ILI9486
+#include "Arduino_SEPS525.h"        // Hardware-specific library for SEPS525
+#include "Arduino_SSD1283A.h"       // Hardware-specific library for SSD1283A
+#include "Arduino_SSD1331.h"        // Hardware-specific library for SSD1331
+#include "Arduino_SSD1351.h"        // Hardware-specific library for SSD1351
+#include "Arduino_ST7735.h"         // Hardware-specific library for ST7735
+#include "Arduino_ST7789.h"         // Hardware-specific library for ST7789
 
 #if defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define TFT_BL 32
@@ -76,9 +77,12 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* 
  * Step 2: Initize one driver for your display
 */
 
-// Canvas (240x320 resolution only works for ESP32 with PSRAM)
-Arduino_GFX *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-Arduino_Canvas *tft = new Arduino_Canvas(240, 320, output_display);
+// Canvas (framebuffer)
+Arduino_TFT *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// 16-bit color Canvas (240x320 resolution only works for ESP32 with PSRAM)
+// Arduino_Canvas *tft = new Arduino_Canvas(240, 320, output_display);
+// Indexed color Canvas
+Arduino_Canvas_Indexed *tft = new Arduino_Canvas_Indexed(240, 320, output_display);
 
 // HX8352C IPS LCD 240x400
 // Arduino_HX8352C *tft = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
@@ -517,7 +521,7 @@ uint32_t testPixels()
   {
     for (uint16_t x = 0; x < w; x++)
     {
-      tft->drawPixel(x, y, tft->color565(x << 3, y << 3, x * y));
+      tft->drawPixel(x, y, tft->color565(x << 5, y << 5, (x * y) << 5));
     }
   }
 

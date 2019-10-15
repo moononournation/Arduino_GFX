@@ -2,16 +2,19 @@
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
-#ifndef _Arduino_CANVAS_H_
-#define _Arduino_CANVAS_H_
+#ifndef _Arduino_CANVAS_INDEXED_H_
+#define _Arduino_CANVAS_INDEXED_H_
 
 #include "Arduino_DataBus.h"
 #include "Arduino_GFX.h"
+#include "Arduino_TFT.h"
 
-class Arduino_Canvas : public Arduino_GFX
+#define COLOR_IDX_SIZE 255
+
+class Arduino_Canvas_Indexed : public Arduino_GFX
 {
 public:
-  Arduino_Canvas(int16_t w, int16_t h, Arduino_GFX *output);
+  Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_TFT *output);
 
   virtual void begin(uint32_t speed = 0);
   virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
@@ -19,9 +22,14 @@ public:
   virtual void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
   virtual void flush(void);
 
+  virtual uint8_t get_color_index(uint16_t color);
+  virtual uint16_t get_index_color(uint8_t idx);
+
 protected:
-  uint16_t *_framebuffer;
-  Arduino_GFX *_output;
+  uint8_t *_framebuffer;
+  Arduino_TFT *_output;
+  uint16_t color_index[COLOR_IDX_SIZE];
+  uint8_t indexed_size = 0;
 
 private:
 };
