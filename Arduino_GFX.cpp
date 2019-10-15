@@ -1880,7 +1880,3 @@ void Arduino_GFX::invertDisplay(bool i)
 {
     // Do nothing, must be subclassed if supported by hardware
 }
-
-void Arduino_GFX::flush()
-{
-}
