@@ -46,7 +46,7 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h)
 void Arduino_GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
                             uint16_t color)
 {
-        if (x0 == x1)
+    if (x0 == x1)
     {
         if (y0 > y1)
         {
@@ -79,7 +79,7 @@ void Arduino_GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 */
 /**************************************************************************/
 void Arduino_GFX::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-                            uint16_t color)
+                                 uint16_t color)
 {
     bool steep = _diff(y1, y0) > _diff(x1, x0);
     if (steep)
@@ -123,7 +123,7 @@ void Arduino_GFX::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
    @brief    Start a display-writing routine, overwrite in subclasses.
 */
 /**************************************************************************/
-void Arduino_GFX::startWrite()
+inline void Arduino_GFX::startWrite()
 {
 }
 
@@ -162,7 +162,10 @@ void Arduino_GFX::drawPixel(int16_t x, int16_t y, uint16_t color)
 void Arduino_GFX::writeFastVLine(int16_t x, int16_t y,
                                  int16_t h, uint16_t color)
 {
-    writeFillRect(x, y, 1, h, color);
+    for (int16_t i = y; i < y + h; i++)
+    {
+        writePixel(x, i, color);
+    }
 }
 
 /**************************************************************************/
@@ -177,7 +180,10 @@ void Arduino_GFX::writeFastVLine(int16_t x, int16_t y,
 void Arduino_GFX::writeFastHLine(int16_t x, int16_t y,
                                  int16_t w, uint16_t color)
 {
-    writeFillRect(x, y, w, 1, color);
+    for (int16_t i = x; i < x + w; i++)
+    {
+        writePixel(i, y, color);
+    }
 }
 
 /*!
@@ -275,7 +281,7 @@ void Arduino_GFX::writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16
    @brief    End a display-writing routine, overwrite in subclasses if startWrite is defined!
 */
 /**************************************************************************/
-void Arduino_GFX::endWrite()
+inline void Arduino_GFX::endWrite()
 {
 }
 
@@ -1218,7 +1224,7 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      const uint8_t bitmap[], int16_t w, int16_t h)
 {
-    int16_t offset = 0;
+    uint32_t offset = 0;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
@@ -1243,7 +1249,7 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      uint8_t *bitmap, int16_t w, int16_t h)
 {
-    int16_t offset = 0;
+    uint32_t offset = 0;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
@@ -1272,7 +1278,7 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      const uint8_t bitmap[], const uint8_t mask[],
                                      int16_t w, int16_t h)
 {
-    int16_t offset = 0;
+    uint32_t offset = 0;
     int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
     uint8_t byte = 0;
     startWrite();
@@ -1317,7 +1323,7 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
-    int16_t offset = 0;
+    uint32_t offset = 0;
     int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
     uint8_t byte = 0;
     startWrite();
@@ -1873,4 +1879,8 @@ void Arduino_GFX::getTextBounds(const __FlashStringHelper *str,
 void Arduino_GFX::invertDisplay(bool i)
 {
     // Do nothing, must be subclassed if supported by hardware
+}
+
+void Arduino_GFX::flush()
+{
 }
