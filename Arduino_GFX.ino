@@ -79,11 +79,11 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* 
 */
 
 // Canvas (framebuffer)
-// Arduino_TFT *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_HX8347C *output_display = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 16-bit color Canvas (240x320 resolution only works for ESP32 with PSRAM)
 // Arduino_Canvas *tft = new Arduino_Canvas(240, 320, output_display);
 // Indexed color Canvas
-// Arduino_Canvas_Indexed *tft = new Arduino_Canvas_Indexed(240, 320, output_display);
+// Arduino_Canvas_Indexed *tft = new Arduino_Canvas_Indexed(240, 320, output_display, 0xC618 /* color_mask */);
 
 // HX8347C IPS LCD 240x320
 Arduino_HX8347C *tft = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);

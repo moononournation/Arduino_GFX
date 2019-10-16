@@ -6,8 +6,8 @@
 #include "Arduino_GFX.h"
 #include "Arduino_Canvas_Indexed.h"
 
-Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_TFT *output)
-    : Arduino_GFX(w, h), _output(output)
+Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_TFT *output, uint16_t color_mask)
+    : Arduino_GFX(w, h), _output(output), _color_mask(color_mask)
 {
 }
 
@@ -55,37 +55,37 @@ void Arduino_Canvas_Indexed::flush()
     _output->startWrite();
     while (len--)
     {
-        _output->writeColor(color_index[*(fb++)]);
+        _output->writeColor(_color_index[*(fb++)]);
     }
     _output->endWrite();
 }
 
 uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)
 {
-    for (uint8_t i = 0; i < indexed_size; i++)
+    color &= _color_mask;
+    for (uint8_t i = 0; i < _indexed_size; i++)
     {
-        if (color_index[i] == color)
+        if (_color_index[i] == color)
         {
             return i;
         }
     }
-    if (indexed_size < COLOR_IDX_SIZE)
+    if (_indexed_size < COLOR_IDX_SIZE)
     {
-        color_index[indexed_size] = color;
+        _color_index[_indexed_size] = color;
         // Serial.print("color_index[");
-        // Serial.print(indexed_size);
+        // Serial.print(_indexed_size);
         // Serial.print("] = ");
         // Serial.println(color);
-        return indexed_size++;
+        return _indexed_size++;
     }
     else // overflowed
     {
-        color_index[COLOR_IDX_SIZE] = color;
-        return COLOR_IDX_SIZE;
+        return 0;
     }
 }
 
 uint16_t Arduino_Canvas_Indexed::get_index_color(uint8_t idx)
 {
-    return color_index[idx];
+    return _color_index[idx];
 }
