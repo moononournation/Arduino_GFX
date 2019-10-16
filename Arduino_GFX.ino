@@ -11,6 +11,7 @@
 #include "Arduino_GFX.h"            // Core graphics library by Adafruit
 #include "Arduino_Canvas.h"         // Canvas (framebuffer) library
 #include "Arduino_Canvas_Indexed.h" // Indexed Color Canvas (framebuffer) library
+#include "Arduino_HX8347C.h"        // Hardware-specific library for HX8347C
 #include "Arduino_HX8352C.h"        // Hardware-specific library for HX8352C
 #include "Arduino_HX8357B.h"        // Hardware-specific library for HX8357B
 #include "Arduino_ILI9225.h"        // Hardware-specific library for ILI9225
@@ -78,11 +79,14 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* 
 */
 
 // Canvas (framebuffer)
-Arduino_TFT *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_TFT *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 16-bit color Canvas (240x320 resolution only works for ESP32 with PSRAM)
 // Arduino_Canvas *tft = new Arduino_Canvas(240, 320, output_display);
 // Indexed color Canvas
-Arduino_Canvas_Indexed *tft = new Arduino_Canvas_Indexed(240, 320, output_display);
+// Arduino_Canvas_Indexed *tft = new Arduino_Canvas_Indexed(240, 320, output_display);
+
+// HX8347C IPS LCD 240x320
+Arduino_HX8347C *tft = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // HX8352C IPS LCD 240x400
 // Arduino_HX8352C *tft = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
@@ -521,7 +525,7 @@ uint32_t testPixels()
   {
     for (uint16_t x = 0; x < w; x++)
     {
-      tft->drawPixel(x, y, tft->color565(x << 5, y << 5, (x * y) << 5));
+      tft->drawPixel(x, y, tft->color565(x << 3, y << 3, x * y));
     }
   }
 
