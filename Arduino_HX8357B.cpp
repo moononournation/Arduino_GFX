@@ -73,17 +73,17 @@ void Arduino_HX8357B::tftInit()
 
   _bus->sendCommand(0xC8); //Set Gamma
   _bus->sendData(0x00);    //KP1,KP0
-  _bus->sendData(0x46);    //KP3,KP2
-  _bus->sendData(0x12);    //KP5,KP4
-  _bus->sendData(0x20);    //RP1,RP0
-  _bus->sendData(0x0c);    //VRP0  01
-  _bus->sendData(0x00);    //VRP1
-  _bus->sendData(0x56);    //KN1,KN0
-  _bus->sendData(0x12);    //KN3,KN2
-  _bus->sendData(0x67);    //KN5,KN4
-  _bus->sendData(0x02);    //RN1,RN0
-  _bus->sendData(0x00);    //VRN0
-  _bus->sendData(0x0c);    //VRN1  01
+  _bus->sendData(0x32);    //KP3,KP2
+  _bus->sendData(0x36);    //KP5,KP4
+  _bus->sendData(0x45);    //RP1,RP0
+  _bus->sendData(0x06);    //VRP0  01
+  _bus->sendData(0x16);    //VRP1
+  _bus->sendData(0x37);    //KN1,KN0
+  _bus->sendData(0x75);    //KN3,KN2
+  _bus->sendData(0x77);    //KN5,KN4
+  _bus->sendData(0x54);    //RN1,RN0
+  _bus->sendData(0x0c);    //VRN0
+  _bus->sendData(0x00);    //VRN1  01
 
   _bus->sendCommand(0xD0); //Set Power
   _bus->sendData(0x44);    //DDVDH :5.28
