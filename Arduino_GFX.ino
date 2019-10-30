@@ -23,6 +23,7 @@
 #include "Arduino_SSD1351.h"        // Hardware-specific library for SSD1351
 #include "Arduino_ST7735.h"         // Hardware-specific library for ST7735
 #include "Arduino_ST7789.h"         // Hardware-specific library for ST7789
+#include "Arduino_ST7796.h"         // Hardware-specific library for ST7796
 
 #if defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define TFT_BL 32
@@ -86,7 +87,7 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* 
 // Arduino_Canvas_Indexed *tft = new Arduino_Canvas_Indexed(240, 320, output_display, 0xC618 /* color_mask */);
 
 // HX8347C IPS LCD 240x320
-Arduino_HX8347C *tft = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_HX8347C *tft = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // HX8352C IPS LCD 240x400
 // Arduino_HX8352C *tft = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
@@ -142,6 +143,10 @@ Arduino_HX8347C *tft = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true 
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 // 1.14" IPS LCD 135x240 TTGO T-Display
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
+
+// ST7796 LCD
+// 4" IPS LCD 320x480
+Arduino_ST7796 *tft = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 #endif /* not a specific hardware */
 
