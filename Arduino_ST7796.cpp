@@ -107,6 +107,10 @@ void Arduino_ST7796::tftInit()
   _bus->sendData(0x69);
   _bus->sendCommand(0X13);
   _bus->sendCommand(0X11);
+  if (_ips)
+  {
+    _bus->sendCommand(ST7796_INVON);
+  }
   _bus->sendCommand(0X29);
 }
 

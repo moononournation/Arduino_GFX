@@ -145,8 +145,10 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* 
 // Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
 
 // ST7796 LCD
+// 4" LCD 320x480
+Arduino_ST7796 *tft = new Arduino_ST7796(bus, TFT_RST);
 // 4" IPS LCD 320x480
-Arduino_ST7796 *tft = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_ST7796 *tft = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 #endif /* not a specific hardware */
 
