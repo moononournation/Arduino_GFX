@@ -27,91 +27,46 @@ void Arduino_ST7796::begin(uint32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ST7796::tftInit()
 {
-  _bus->sendCommand(ST7796_SWRESET); // 1: Software reset
-  delay(ST7796_RST_DELAY);
+  _bus->beginWrite();
+  _bus->writeC8D8(0xF0, 0xC3);
+  _bus->writeC8D8(0xF0, 0x96);
+  _bus->writeC8D8(0x3A, 0x05);
+  _bus->writeC8D8(0xB0, 0x80);
+  _bus->writeC8D16(0xB6, 0x0002);
+  _bus->writeC8D16D16(0xB5, 0x0203, 0x0004);
+  _bus->writeC8D16(0xB1, 0x8010);
+  _bus->writeC8D8(0xB4, 0x00);
+  _bus->writeC8D8(0xB7, 0xC6);
+  _bus->writeC8D8(0xC5, 0x24);
+  _bus->writeC8D8(0xE4, 0x31);
+  _bus->writeCommand(0xE8);
+  _bus->write32(0x408A0000);
+  _bus->write32(0x2919A533);
+  _bus->writeCommand(0xC2);
+  _bus->writeCommand(0xA7);
 
-  _bus->sendCommand(0xF0);
-  _bus->sendData(0xC3);
-  _bus->sendCommand(0xF0);
-  _bus->sendData(0x96);
-  _bus->sendCommand(0x3A);
-  _bus->sendData(0x05);
-  _bus->sendCommand(0xB0);
-  _bus->sendData(0x80);
-  _bus->sendCommand(0xB6);
-  _bus->sendData(0x00);
-  _bus->sendData(0x02);
-  _bus->sendCommand(0xB5);
-  _bus->sendData(0x02);
-  _bus->sendData(0x03);
-  _bus->sendData(0x00);
-  _bus->sendData(0x04);
-  _bus->sendCommand(0xB1);
-  _bus->sendData(0x80);
-  _bus->sendData(0x10);
-  _bus->sendCommand(0xB4);
-  _bus->sendData(0x00);
-  _bus->sendCommand(0xB7);
-  _bus->sendData(0xC6);
-  _bus->sendCommand(0xC5);
-  _bus->sendData(0x24);
-  _bus->sendCommand(0xE4);
-  _bus->sendData(0x31);
-  _bus->sendCommand(0xE8);
-  _bus->sendData(0x40);
-  _bus->sendData(0x8A);
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x29);
-  _bus->sendData(0x19);
-  _bus->sendData(0xA5);
-  _bus->sendData(0x33);
-  _bus->sendCommand(0xC2);
-  _bus->sendCommand(0xA7);
+  _bus->writeCommand(0xE0);
+  _bus->write32(0xF0091312);
+  _bus->write32(0x122B3C44);
+  _bus->write32(0x4B1B1817);
+  _bus->write16(0x1D21);
 
-  _bus->sendCommand(0xE0);
-  _bus->sendData(0xF0);
-  _bus->sendData(0x09);
-  _bus->sendData(0x13);
-  _bus->sendData(0x12);
-  _bus->sendData(0x12);
-  _bus->sendData(0x2B);
-  _bus->sendData(0x3C);
-  _bus->sendData(0x44);
-  _bus->sendData(0x4B);
-  _bus->sendData(0x1B);
-  _bus->sendData(0x18);
-  _bus->sendData(0x17);
-  _bus->sendData(0x1D);
-  _bus->sendData(0x21);
+  _bus->writeCommand(0XE1);
+  _bus->write32(0xF009130C);
+  _bus->write32(0x0D273B44);
+  _bus->write32(0x4D0B1717);
+  _bus->write16(0x1D21);
 
-  _bus->sendCommand(0XE1);
-  _bus->sendData(0xF0);
-  _bus->sendData(0x09);
-  _bus->sendData(0x13);
-  _bus->sendData(0x0C);
-  _bus->sendData(0x0D);
-  _bus->sendData(0x27);
-  _bus->sendData(0x3B);
-  _bus->sendData(0x44);
-  _bus->sendData(0x4D);
-  _bus->sendData(0x0B);
-  _bus->sendData(0x17);
-  _bus->sendData(0x17);
-  _bus->sendData(0x1D);
-  _bus->sendData(0x21);
-
-  _bus->sendCommand(0xF0);
-  _bus->sendData(0xC3);
-  _bus->sendCommand(0xF0);
-  _bus->sendData(0x69);
-  _bus->sendCommand(0X13);
-  _bus->sendCommand(0X11);
+  _bus->writeC8D8(0xF0, 0xC3);
+  _bus->writeC8D16(0xF0, 0x69);
+  _bus->writeCommand(0X13);
+  _bus->writeCommand(0X11);
   if (_ips)
   {
-    _bus->sendCommand(ST7796_INVON);
+    _bus->writeCommand(ST7796_INVON);
   }
-  _bus->sendCommand(0X29);
+  _bus->writeCommand(0X29);
+  _bus->endWrite();
 }
 
 void Arduino_ST7796::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
