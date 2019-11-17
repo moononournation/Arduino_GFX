@@ -251,7 +251,7 @@ void Arduino_SWSPI::begin(uint32_t speed)
     csPort = sckPort;
     csPinMaskSet = 0;
   }
-  if (miso >= 0)
+  if (_miso >= 0)
   {
     misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
     misoPinMask = digitalPinToBitMask(_miso);

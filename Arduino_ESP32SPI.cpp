@@ -2,6 +2,7 @@
  * start rewrite from:
  * https://github.com/espressif/arduino-esp32.git
  */
+#ifdef ESP32
 #include "Arduino_DataBus.h"
 #include "Arduino_ESP32SPI.h"
 
@@ -623,3 +624,4 @@ void Arduino_ESP32SPI::flush_data_buf()
     data_buf_bit_idx = 0;
   }
 }
+#endif

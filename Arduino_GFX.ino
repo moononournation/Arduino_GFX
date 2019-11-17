@@ -8,7 +8,7 @@
 #include "Arduino_HWSPI.h"
 #include "Arduino_ESP32SPI.h"
 #include "Arduino_SWSPI.h"
-#include "Arduino_GFX.h"            // Core graphics library by Adafruit
+#include "Arduino_GFX.h"            // Core graphics library
 #include "Arduino_Canvas.h"         // Canvas (framebuffer) library
 #include "Arduino_Canvas_Indexed.h" // Indexed Color Canvas (framebuffer) library
 #include "Arduino_HX8347C.h"        // Hardware-specific library for HX8347C

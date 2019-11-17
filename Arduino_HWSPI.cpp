@@ -341,7 +341,7 @@ void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
 #else
   while (len--)
   {
-    write(*d++);
+    write(*data++);
   }
 #endif
 }
