@@ -221,7 +221,7 @@ void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
       err += dx;
       y0 += step;
       len = 0;
-      xs = x0 + 1;
+      xs = x0;
     }
   }
 }
