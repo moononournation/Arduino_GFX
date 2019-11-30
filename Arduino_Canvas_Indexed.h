@@ -14,23 +14,31 @@
 class Arduino_Canvas_Indexed : public Arduino_GFX
 {
 public:
-  Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_TFT *output, uint16_t color_mask = 0xFFFF);
+  Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_TFT *output, uint8_t mask_level = 0);
 
-  virtual void begin(uint32_t speed = 0);
-  virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
-  virtual void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-  virtual void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-  virtual void flush(void);
+  void begin(uint32_t speed = 0);
+  void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
+  void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
+  void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+  void flush(void);
 
-  virtual uint8_t get_color_index(uint16_t color);
-  virtual uint16_t get_index_color(uint8_t idx);
+  uint8_t get_color_index(uint16_t color);
+  uint16_t get_index_color(uint8_t idx);
+  void raise_mask_level();
 
 protected:
   uint8_t *_framebuffer;
   Arduino_TFT *_output;
-  uint16_t _color_mask;
   uint16_t _color_index[COLOR_IDX_SIZE];
   uint8_t _indexed_size = 0;
+  uint8_t _current_mask_level;
+  uint16_t _color_mask;
+#define MAXMASKLEVEL 3
+  uint16_t mask_level_list[MAXMASKLEVEL] = {
+    0b1111111111111111, // 16-bit, 65536 colors
+    0b1111011110011110, // 12-bit, 4096 colors
+    0b1100011000011000 // 7-bit, 128 colors
+  };
 
 private:
 };

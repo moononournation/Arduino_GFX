@@ -6,9 +6,15 @@
 #include "Arduino_GFX.h"
 #include "Arduino_Canvas_Indexed.h"
 
-Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_TFT *output, uint16_t color_mask)
-    : Arduino_GFX(w, h), _output(output), _color_mask(color_mask)
+Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_TFT *output, uint8_t mask_level)
+    : Arduino_GFX(w, h), _output(output)
 {
+    if (mask_level >= MAXMASKLEVEL)
+    {
+        mask_level = MAXMASKLEVEL - 1;
+    }
+    _current_mask_level = mask_level;
+    _color_mask = mask_level_list[_current_mask_level];
 }
 
 void Arduino_Canvas_Indexed::begin(uint32_t speed)
@@ -70,22 +76,46 @@ uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)
             return i;
         }
     }
-    if (_indexed_size < COLOR_IDX_SIZE)
+    if (_indexed_size >= COLOR_IDX_SIZE) // overflowed
     {
-        _color_index[_indexed_size] = color;
-        // Serial.print("color_index[");
-        // Serial.print(_indexed_size);
-        // Serial.print("] = ");
-        // Serial.println(color);
-        return _indexed_size++;
+        raise_mask_level();
     }
-    else // overflowed
-    {
-        return 0;
-    }
+    _color_index[_indexed_size] = color;
+    // Serial.print("color_index[");
+    // Serial.print(_indexed_size);
+    // Serial.print("] = ");
+    // Serial.println(color);
+    return _indexed_size++;
 }
 
 uint16_t Arduino_Canvas_Indexed::get_index_color(uint8_t idx)
 {
     return _color_index[idx];
+}
+
+void Arduino_Canvas_Indexed::raise_mask_level()
+{
+    if ((_current_mask_level + 1) < MAXMASKLEVEL)
+    {
+        int buffer_size = _width * _height;
+        uint8_t old_indexed_size = _indexed_size;
+        uint8_t new_color;
+        _indexed_size = 0;
+        _color_mask = mask_level_list[++_current_mask_level];
+        Serial.print("Raised mask level: ");
+        Serial.println(_current_mask_level);
+
+        // update _framebuffer color index, it is a time consuming job
+        for (uint8_t old_color = 0; old_color < old_indexed_size; old_color++)
+        {
+            new_color = get_color_index(_color_index[old_color]);
+            for (int i = 0; i < buffer_size; i++)
+            {
+                if (_framebuffer[i] == old_color)
+                {
+                    _framebuffer[i] = new_color;
+                }
+            }
+        }
+    }
 }
