@@ -495,28 +495,9 @@ void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
   }
   else // 8-bit SPI
   {
-    if (len < 64)
+    while (len--)
     {
-      flush_data_buf();
-
-      _spi->dev->mosi_dlen.usr_mosi_dbitlen = (len * 8) - 1;
-      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-      uint8_t *buf = (uint8_t *)&_spi->dev->data_buf;
-      while (len)
-      {
-        *buf++ = *data++;
-      }
-      _spi->dev->cmd.usr = 1;
-      while (_spi->dev->cmd.usr)
-        ;
-      data_buf_bit_idx = 0;
-    }
-    else
-    {
-      while (len--)
-      {
-        write(*data++);
-      }
+      write(*data++);
     }
   }
 }

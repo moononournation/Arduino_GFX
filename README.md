@@ -73,6 +73,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - ILI9225 176x220 [[test video](https://youtu.be/jm2UrCG27F4)]
 - ILI9341 240x320 [[test video](https://youtu.be/NtlEEL7MkQY)]
 - ILI9341 M5Stack 320x240 [[test video](https://youtu.be/UoPpIjVSO5Q)]
+- ILI9481 320x480 (18 bit color) [[test video](https://youtu.be/YxjuuCFhlqM)]
 - ILI9486 320x480 (18 bit color) [[test video](https://youtu.be/pZ6izDqmVds)]
 - SEPS525 160x128 [[test video](https://youtu.be/tlmvFBHYv-k)]
 - SSD1283A 130x130 [[test video](https://youtu.be/OrIchaRikiQ)]
@@ -92,7 +93,6 @@ This library is not putting speed at the first priority, but still paid much eff
 
 ## Tobe Support Display
 - LG4573 480x800
-- ILI9481 320x480
 - ST7701 480x800
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas

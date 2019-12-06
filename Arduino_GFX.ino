@@ -16,6 +16,7 @@
 #include "Arduino_HX8357B.h"        // Hardware-specific library for HX8357B
 #include "Arduino_ILI9225.h"        // Hardware-specific library for ILI9225
 #include "Arduino_ILI9341.h"        // Hardware-specific library for ILI9341
+#include "Arduino_ILI9481.h"        // Hardware-specific library for ILI9481
 #include "Arduino_ILI9486.h"        // Hardware-specific library for ILI9486
 #include "Arduino_SEPS525.h"        // Hardware-specific library for SEPS525
 #include "Arduino_SSD1283A.h"       // Hardware-specific library for SSD1283A
@@ -80,12 +81,11 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* 
 */
 
 // Canvas (framebuffer)
-// Arduino_HX8347C *output_display = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-Arduino_ST7789 *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_ST7789 *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 16-bit color Canvas (240x320 resolution only works for ESP32 with PSRAM)
 // Arduino_Canvas *tft = new Arduino_Canvas(240, 320, output_display);
 // Indexed color Canvas, mask_level: 0-2, larger mask level mean less color variation but can have faster index mapping
-Arduino_Canvas_Indexed *tft = new Arduino_Canvas_Indexed(240, 320, output_display, MAXMASKLEVEL /* mask_level */);
+// Arduino_Canvas_Indexed *tft = new Arduino_Canvas_Indexed(240, 320, output_display, MAXMASKLEVEL /* mask_level */);
 
 // HX8347C IPS LCD 240x320
 // Arduino_HX8347C *tft = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
@@ -101,6 +101,9 @@ Arduino_Canvas_Indexed *tft = new Arduino_Canvas_Indexed(240, 320, output_displa
 
 // ILI9341 LCD 240x320
 // Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
+
+// ILI9481 LCD 320x480
+Arduino_ILI9481 *tft = new Arduino_ILI9481(bus, TFT_RST);
 
 // ILI9486 LCD 320x480
 // Arduino_ILI9486 *tft = new Arduino_ILI9486(bus, TFT_RST);

@@ -641,13 +641,13 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
         }
         if (size_y == 1)
         {
-          _bus->writePixels(line_buf, block_w);
+          writePixels(line_buf, block_w);
         }
         else
         {
           for (int8_t l = 0; l < size_y; l++)
           {
-            _bus->writePixels(line_buf, block_w);
+            writePixels(line_buf, block_w);
           }
         }
         bit <<= 1;
@@ -764,13 +764,13 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
           }
           if (size_y == 1)
           {
-            _bus->writePixels(line_buf, block_w);
+            writePixels(line_buf, block_w);
           }
           else
           {
             for (int8_t l = 0; l < size_y; l++)
             {
-              _bus->writePixels(line_buf, block_w);
+              writePixels(line_buf, block_w);
             }
           }
         }
