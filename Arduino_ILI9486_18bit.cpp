@@ -2,14 +2,14 @@
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
-#include "Arduino_ILI9486.h"
+#include "Arduino_ILI9486_18bit.h"
 
-Arduino_ILI9486::Arduino_ILI9486(Arduino_DataBus *bus, int8_t rst, uint8_t r)
+Arduino_ILI9486_18bit::Arduino_ILI9486_18bit(Arduino_DataBus *bus, int8_t rst, uint8_t r)
     : Arduino_TFT_18bit(bus, rst, r, false, ILI9486_TFTWIDTH, ILI9486_TFTHEIGHT, 0, 0, 0, 0)
 {
 }
 
-void Arduino_ILI9486::begin(uint32_t speed)
+void Arduino_ILI9486_18bit::begin(uint32_t speed)
 {
 #if defined(ESP8266) || defined(ESP32)
   if (speed == 0)
@@ -22,7 +22,7 @@ void Arduino_ILI9486::begin(uint32_t speed)
 
 // Companion code to the above tables.  Reads and issues
 // a series of LCD commands stored in PROGMEM byte array.
-void Arduino_ILI9486::tftInit()
+void Arduino_ILI9486_18bit::tftInit()
 {
   if (_rst < 0)
   {
@@ -85,7 +85,7 @@ void Arduino_ILI9486::tftInit()
   delay(25);
 }
 
-void Arduino_ILI9486::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_ILI9486_18bit::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW))
   {
@@ -123,7 +123,7 @@ void Arduino_ILI9486::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
     @param   m  The index for rotation, from 0-3 inclusive
 */
 /**************************************************************************/
-void Arduino_ILI9486::setRotation(uint8_t r)
+void Arduino_ILI9486_18bit::setRotation(uint8_t r)
 {
   Arduino_TFT::setRotation(r);
   switch (_rotation)
@@ -148,18 +148,18 @@ void Arduino_ILI9486::setRotation(uint8_t r)
   _bus->endWrite();
 }
 
-void Arduino_ILI9486::invertDisplay(bool i)
+void Arduino_ILI9486_18bit::invertDisplay(bool i)
 {
   _bus->sendCommand(i ? ILI9486_INVON : ILI9486_INVOFF);
 }
 
-void Arduino_ILI9486::displayOn(void)
+void Arduino_ILI9486_18bit::displayOn(void)
 {
   _bus->sendCommand(ILI9486_SLPOUT);
   delay(ILI9486_SLPOUT_DELAY);
 }
 
-void Arduino_ILI9486::displayOff(void)
+void Arduino_ILI9486_18bit::displayOff(void)
 {
   _bus->sendCommand(ILI9486_SLPIN);
   delay(ILI9486_SLPIN_DELAY);

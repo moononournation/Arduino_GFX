@@ -2,8 +2,8 @@
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
-#ifndef _ARDUINO_ILI9481_H_
-#define _ARDUINO_ILI9481_H_
+#ifndef _ARDUINO_ILI9481_18BIT_H_
+#define _ARDUINO_ILI9481_18BIT_H_
 
 #include "Arduino.h"
 #include "Print.h"
@@ -46,10 +46,10 @@
 #define ILI9481_MADCTL_HF 0x02
 #define ILI9481_MADCTL_VF 0x01
 
-class Arduino_ILI9481 : public Arduino_TFT_18bit
+class Arduino_ILI9481_18bit : public Arduino_TFT_18bit
 {
 public:
-  Arduino_ILI9481(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0, bool ips = false);
+  Arduino_ILI9481_18bit(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0, bool ips = false);
 
   virtual void begin(uint32_t speed = 0);
   virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);

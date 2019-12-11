@@ -2,14 +2,14 @@
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
-#include "Arduino_ILI9481.h"
+#include "Arduino_ILI9481_18bit.h"
 
-Arduino_ILI9481::Arduino_ILI9481(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
+Arduino_ILI9481_18bit::Arduino_ILI9481_18bit(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
     : Arduino_TFT_18bit(bus, rst, r, ips, ILI9481_TFTWIDTH, ILI9481_TFTHEIGHT, 0, 0, 0, 0)
 {
 }
 
-void Arduino_ILI9481::begin(uint32_t speed)
+void Arduino_ILI9481_18bit::begin(uint32_t speed)
 {
 #if defined(ESP8266) || defined(ESP32)
   if (speed == 0)
@@ -22,7 +22,7 @@ void Arduino_ILI9481::begin(uint32_t speed)
 
 // Companion code to the above tables.  Reads and issues
 // a series of LCD commands stored in PROGMEM byte array.
-void Arduino_ILI9481::tftInit()
+void Arduino_ILI9481_18bit::tftInit()
 {
   if (_rst < 0)
   {
@@ -108,7 +108,7 @@ void Arduino_ILI9481::tftInit()
   _bus->sendCommand(0x29);
 }
 
-void Arduino_ILI9481::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_ILI9481_18bit::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW))
   {
@@ -146,7 +146,7 @@ void Arduino_ILI9481::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
     @param   m  The index for rotation, from 0-3 inclusive
 */
 /**************************************************************************/
-void Arduino_ILI9481::setRotation(uint8_t r)
+void Arduino_ILI9481_18bit::setRotation(uint8_t r)
 {
   Arduino_TFT::setRotation(r);
   switch (_rotation)
@@ -171,18 +171,18 @@ void Arduino_ILI9481::setRotation(uint8_t r)
   _bus->endWrite();
 }
 
-void Arduino_ILI9481::invertDisplay(bool i)
+void Arduino_ILI9481_18bit::invertDisplay(bool i)
 {
   _bus->sendCommand(_ips ? (i ? ILI9481_INVOFF : ILI9481_INVON) : (i ? ILI9481_INVON : ILI9481_INVOFF));
 }
 
-void Arduino_ILI9481::displayOn(void)
+void Arduino_ILI9481_18bit::displayOn(void)
 {
   _bus->sendCommand(ILI9481_SLPOUT);
   delay(ILI9481_SLPOUT_DELAY);
 }
 
-void Arduino_ILI9481::displayOff(void)
+void Arduino_ILI9481_18bit::displayOff(void)
 {
   _bus->sendCommand(ILI9481_SLPIN);
   delay(ILI9481_SLPIN_DELAY);

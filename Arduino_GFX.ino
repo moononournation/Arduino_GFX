@@ -16,8 +16,8 @@
 #include "Arduino_HX8357B.h"        // Hardware-specific library for HX8357B
 #include "Arduino_ILI9225.h"        // Hardware-specific library for ILI9225
 #include "Arduino_ILI9341.h"        // Hardware-specific library for ILI9341
-#include "Arduino_ILI9481.h"        // Hardware-specific library for ILI9481
-#include "Arduino_ILI9486.h"        // Hardware-specific library for ILI9486
+#include "Arduino_ILI9481_18bit.h"        // Hardware-specific library for ILI9481
+#include "Arduino_ILI9486_18bit.h"        // Hardware-specific library for ILI9486
 #include "Arduino_SEPS525.h"        // Hardware-specific library for SEPS525
 #include "Arduino_SSD1283A.h"       // Hardware-specific library for SSD1283A
 #include "Arduino_SSD1331.h"        // Hardware-specific library for SSD1331
@@ -103,10 +103,10 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* 
 // Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
 
 // ILI9481 LCD 320x480
-Arduino_ILI9481 *tft = new Arduino_ILI9481(bus, TFT_RST);
+Arduino_ILI9481_18bit *tft = new Arduino_ILI9481_18bit(bus, TFT_RST);
 
 // ILI9486 LCD 320x480
-// Arduino_ILI9486 *tft = new Arduino_ILI9486(bus, TFT_RST);
+// Arduino_ILI9486_18bit *tft = new Arduino_ILI9486_18bit(bus, TFT_RST);
 
 // SEPS525 OLED 160x128
 // Arduino_SEPS525 *tft = new Arduino_SEPS525(bus, TFT_RST);
