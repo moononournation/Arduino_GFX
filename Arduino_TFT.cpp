@@ -589,92 +589,95 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
         ((y + block_h - 1) > _max_y)    // Clip bottom
     )
     {
-      return;
+      // partial draw char by parent class
+      Arduino_GFX::drawChar(x, y, c, color, bg, size_x, size_y);
     }
-
-    if (!_cp437 && (c >= 176))
+    else
     {
-      c++; // Handle 'classic' charset behavior
-    }
-
-    uint8_t col[5];
-    for (int8_t i = 0; i < 5; i++)
-    {
-      col[i] = pgm_read_byte(&font[c * 5 + i]);
-    }
-
-    startWrite();
-    if (bg != color) // have background color
-    {
-      writeAddrWindow(x, y, block_w, block_h);
-
-      uint16_t line_buf[block_w];
-      if (size_x == 1)
+      if (!_cp437 && (c >= 176))
       {
-        line_buf[5] = bg; // last column always bg
+        c++; // Handle 'classic' charset behavior
       }
-      else
-      {
-        for (int8_t k = 0; k < size_x; k++)
-        {
-          line_buf[5 * size_x + k] = bg;
-        }
-      }
-      uint8_t bit = 1;
 
-      while (bit)
+      uint8_t col[5];
+      for (int8_t i = 0; i < 5; i++)
       {
-        for (int8_t i = 0; i < 5; i++)
+        col[i] = pgm_read_byte(&font[c * 5 + i]);
+      }
+
+      startWrite();
+      if (bg != color) // have background color
+      {
+        writeAddrWindow(x, y, block_w, block_h);
+
+        uint16_t line_buf[block_w];
+        if (size_x == 1)
         {
-          if (size_x == 1)
-          {
-            line_buf[i] = (col[i] & bit) ? color : bg;
-          }
-          else
-          {
-            uint16_t dot_color = (col[i] & bit) ? color : bg;
-            for (int8_t k = 0; k < size_x; k++)
-            {
-              line_buf[i * size_x + k] = dot_color;
-            }
-          }
-        }
-        if (size_y == 1)
-        {
-          writePixels(line_buf, block_w);
+          line_buf[5] = bg; // last column always bg
         }
         else
         {
-          for (int8_t l = 0; l < size_y; l++)
+          for (int8_t k = 0; k < size_x; k++)
           {
-            writePixels(line_buf, block_w);
+            line_buf[5 * size_x + k] = bg;
           }
         }
-        bit <<= 1;
-      }
-    }
-    else // (bg == color), no background color
-    {
-      for (int8_t i = 0; i < 5; i++)
-      { // Char bitmap = 5 columns
-        uint8_t line = col[i];
-        for (int8_t j = 0; j < 8; j++, line >>= 1)
+        uint8_t bit = 1;
+
+        while (bit)
         {
-          if (line & 1)
+          for (int8_t i = 0; i < 5; i++)
           {
-            if (size_x == 1 && size_y == 1)
+            if (size_x == 1)
             {
-              writePixelPreclipped(x + i, y + j, color);
+              line_buf[i] = (col[i] & bit) ? color : bg;
             }
             else
             {
-              writeFillRectPreclipped(x + i * size_x, y + j * size_y, size_x, size_y, color);
+              uint16_t dot_color = (col[i] & bit) ? color : bg;
+              for (int8_t k = 0; k < size_x; k++)
+              {
+                line_buf[i * size_x + k] = dot_color;
+              }
+            }
+          }
+          if (size_y == 1)
+          {
+            writePixels(line_buf, block_w);
+          }
+          else
+          {
+            for (int8_t l = 0; l < size_y; l++)
+            {
+              writePixels(line_buf, block_w);
+            }
+          }
+          bit <<= 1;
+        }
+      }
+      else // (bg == color), no background color
+      {
+        for (int8_t i = 0; i < 5; i++)
+        { // Char bitmap = 5 columns
+          uint8_t line = col[i];
+          for (int8_t j = 0; j < 8; j++, line >>= 1)
+          {
+            if (line & 1)
+            {
+              if (size_x == 1 && size_y == 1)
+              {
+                writePixelPreclipped(x + i, y + j, color);
+              }
+              else
+              {
+                writeFillRectPreclipped(x + i * size_x, y + j * size_y, size_x, size_y, color);
+              }
             }
           }
         }
       }
+      endWrite();
     }
-    endWrite();
   }
   else // Custom font
   {
@@ -712,97 +715,100 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
         ((y - baseline + block_h - 1) > _max_y) // Clip bottom
     )
     {
-      return;
+      // partial draw char by parent class
+      Arduino_GFX::drawChar(x, y, c, color, bg, size_x, size_y);
     }
-
-    // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background.
-    // Since it may introduce many ugly output, it should limited using on mono font only.
-    startWrite();
-    if (bg != color) // have background color
+    else
     {
-      writeAddrWindow(x, y - (baseline * size_y), block_w, block_h);
-
-      uint16_t line_buf[block_w];
-      int8_t i;
-      uint16_t dot_color;
-      for (yy = 0; yy < yAdvance; yy++)
+      // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background.
+      // Since it may introduce many ugly output, it should limited using on mono font only.
+      startWrite();
+      if (bg != color) // have background color
       {
-        if ((yy < (baseline + yo)) || (yy > (baseline + yo + h - 1)))
-        {
-          writeRepeat(bg, block_w * size_y);
-        }
-        else
-        {
-          i = 0;
-          for (xx = 0; xx < xAdvance; xx++)
-          {
-            if ((xx < xo) || (xx > (xo + w - 1)))
-            {
-              dot_color = bg;
-            }
-            else
-            {
-              if (!(bit++ & 7))
-              {
-                bits = pgm_read_byte(&bitmap[bo++]);
-              }
-              dot_color = (bits & 0x80) ? color : bg;
-              bits <<= 1;
-            }
+        writeAddrWindow(x, y - (baseline * size_y), block_w, block_h);
 
-            if (size_x == 1)
-            {
-              line_buf[i++] = dot_color;
-            }
-            else
-            {
-              for (int8_t k = 0; k < size_x; k++)
-              {
-                line_buf[i++] = dot_color;
-              }
-            }
-          }
-          if (size_y == 1)
+        uint16_t line_buf[block_w];
+        int8_t i;
+        uint16_t dot_color;
+        for (yy = 0; yy < yAdvance; yy++)
+        {
+          if ((yy < (baseline + yo)) || (yy > (baseline + yo + h - 1)))
           {
-            writePixels(line_buf, block_w);
+            writeRepeat(bg, block_w * size_y);
           }
           else
           {
-            for (int8_t l = 0; l < size_y; l++)
+            i = 0;
+            for (xx = 0; xx < xAdvance; xx++)
+            {
+              if ((xx < xo) || (xx > (xo + w - 1)))
+              {
+                dot_color = bg;
+              }
+              else
+              {
+                if (!(bit++ & 7))
+                {
+                  bits = pgm_read_byte(&bitmap[bo++]);
+                }
+                dot_color = (bits & 0x80) ? color : bg;
+                bits <<= 1;
+              }
+
+              if (size_x == 1)
+              {
+                line_buf[i++] = dot_color;
+              }
+              else
+              {
+                for (int8_t k = 0; k < size_x; k++)
+                {
+                  line_buf[i++] = dot_color;
+                }
+              }
+            }
+            if (size_y == 1)
             {
               writePixels(line_buf, block_w);
             }
-          }
-        }
-      }
-    }
-    else // (bg == color), no background color
-    {
-      for (yy = 0; yy < h; yy++)
-      {
-        for (xx = 0; xx < w; xx++)
-        {
-          if (!(bit++ & 7))
-          {
-            bits = pgm_read_byte(&bitmap[bo++]);
-          }
-          if (bits & 0x80)
-          {
-            if (size_x == 1 && size_y == 1)
-            {
-              writePixelPreclipped(x + xo + xx, y + yo + yy, color);
-            }
             else
             {
-              writeFillRectPreclipped(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
-                                      size_x, size_y, color);
+              for (int8_t l = 0; l < size_y; l++)
+              {
+                writePixels(line_buf, block_w);
+              }
             }
           }
-          bits <<= 1;
         }
       }
+      else // (bg == color), no background color
+      {
+        for (yy = 0; yy < h; yy++)
+        {
+          for (xx = 0; xx < w; xx++)
+          {
+            if (!(bit++ & 7))
+            {
+              bits = pgm_read_byte(&bitmap[bo++]);
+            }
+            if (bits & 0x80)
+            {
+              if (size_x == 1 && size_y == 1)
+              {
+                writePixelPreclipped(x + xo + xx, y + yo + yy, color);
+              }
+              else
+              {
+                writeFillRectPreclipped(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
+                                        size_x, size_y, color);
+              }
+            }
+            bits <<= 1;
+          }
+        }
+      }
+      endWrite();
     }
-    endWrite();
   } // End classic vs custom font
 }
 
