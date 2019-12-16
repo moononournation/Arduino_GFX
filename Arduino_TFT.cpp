@@ -170,6 +170,101 @@ void Arduino_TFT::writeFastHLine(int16_t x, int16_t y, int16_t w,
   }
 }
 
+/*!
+    @brief  A lower-level version of writeFillRect(). This version requires
+            all inputs are in-bounds, that width and height are positive,
+            and no part extends offscreen. NO EDGE CLIPPING OR REJECTION IS
+            PERFORMED. If higher-level graphics primitives are written to
+            handle their own clipping earlier in the drawing process, this
+            can avoid unnecessary function calls and repeated clipping
+            operations in the lower-level functions.
+    @param  x      Horizontal position of first corner. MUST BE WITHIN
+                   SCREEN BOUNDS.
+    @param  y      Vertical position of first corner. MUST BE WITHIN SCREEN
+                   BOUNDS.
+    @param  w      Rectangle width in pixels. MUST BE POSITIVE AND NOT
+                   EXTEND OFF SCREEN.
+    @param  h      Rectangle height in pixels. MUST BE POSITIVE AND NOT
+                   EXTEND OFF SCREEN.
+    @param  color  16-bit fill color in '565' RGB format.
+    @note   This is a new function, no graphics primitives besides rects
+            and horizontal/vertical lines are written to best use this yet.
+*/
+void Arduino_TFT::writeFillRectPreclipped(int16_t x, int16_t y,
+                                          int16_t w, int16_t h, uint16_t color)
+{
+#ifdef ESP8266
+  yield();
+#endif
+  writeAddrWindow(x, y, w, h);
+  writeRepeat(color, (uint32_t)w * h);
+}
+
+inline void Arduino_TFT::endWrite()
+{
+  _bus->endWrite();
+}
+
+/**************************************************************************/
+/*!
+   @brief    Push a pixel, overwrite in subclasses if startWrite is defined!
+   @param    color 16-bit 5-6-5 Color to fill with
+*/
+/**************************************************************************/
+void Arduino_TFT::pushColor(uint16_t color)
+{
+  _bus->beginWrite();
+  writeColor(color);
+  _bus->endWrite();
+}
+
+
+void Arduino_TFT::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t w,
+                                uint16_t h)
+{
+  startWrite();
+
+  writeAddrWindow(x0, y0, w, h);
+
+  endWrite();
+}
+
+/**************************************************************************/
+/*!
+    @brief      Set rotation setting for display
+    @param  x   0 thru 3 corresponding to 4 cardinal rotations
+*/
+/**************************************************************************/
+void Arduino_TFT::setRotation(uint8_t r)
+{
+  Arduino_GFX::setRotation(r);
+  switch (_rotation)
+  {
+  case 0:
+    _xStart = COL_OFFSET1;
+    _yStart = ROW_OFFSET1;
+    break;
+
+  case 1:
+    _xStart = ROW_OFFSET1;
+    _yStart = COL_OFFSET2;
+    break;
+
+  case 2:
+    _xStart = COL_OFFSET2;
+    _yStart = ROW_OFFSET2;
+    break;
+
+  case 3:
+    _xStart = ROW_OFFSET2;
+    _yStart = COL_OFFSET1;
+    break;
+  }
+}
+
+// TFT optimization code, too big for ATMEL family
+#if defined(ESP32)
+
 /**************************************************************************/
 /*!
    @brief    Write a line.  Bresenham's algorithm - thx wikpedia
@@ -224,54 +319,6 @@ void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
       xs = x0;
     }
   }
-}
-
-/*!
-    @brief  A lower-level version of writeFillRect(). This version requires
-            all inputs are in-bounds, that width and height are positive,
-            and no part extends offscreen. NO EDGE CLIPPING OR REJECTION IS
-            PERFORMED. If higher-level graphics primitives are written to
-            handle their own clipping earlier in the drawing process, this
-            can avoid unnecessary function calls and repeated clipping
-            operations in the lower-level functions.
-    @param  x      Horizontal position of first corner. MUST BE WITHIN
-                   SCREEN BOUNDS.
-    @param  y      Vertical position of first corner. MUST BE WITHIN SCREEN
-                   BOUNDS.
-    @param  w      Rectangle width in pixels. MUST BE POSITIVE AND NOT
-                   EXTEND OFF SCREEN.
-    @param  h      Rectangle height in pixels. MUST BE POSITIVE AND NOT
-                   EXTEND OFF SCREEN.
-    @param  color  16-bit fill color in '565' RGB format.
-    @note   This is a new function, no graphics primitives besides rects
-            and horizontal/vertical lines are written to best use this yet.
-*/
-void Arduino_TFT::writeFillRectPreclipped(int16_t x, int16_t y,
-                                          int16_t w, int16_t h, uint16_t color)
-{
-#ifdef ESP8266
-  yield();
-#endif
-  writeAddrWindow(x, y, w, h);
-  writeRepeat(color, (uint32_t)w * h);
-}
-
-inline void Arduino_TFT::endWrite()
-{
-  _bus->endWrite();
-}
-
-/**************************************************************************/
-/*!
-   @brief    Push a pixel, overwrite in subclasses if startWrite is defined!
-   @param    color 16-bit 5-6-5 Color to fill with
-*/
-/**************************************************************************/
-void Arduino_TFT::pushColor(uint16_t color)
-{
-  _bus->beginWrite();
-  writeColor(color);
-  _bus->endWrite();
 }
 
 /**************************************************************************/
@@ -811,46 +858,4 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     }
   } // End classic vs custom font
 }
-
-void Arduino_TFT::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t w,
-                                uint16_t h)
-{
-  startWrite();
-
-  writeAddrWindow(x0, y0, w, h);
-
-  endWrite();
-}
-
-/**************************************************************************/
-/*!
-    @brief      Set rotation setting for display
-    @param  x   0 thru 3 corresponding to 4 cardinal rotations
-*/
-/**************************************************************************/
-void Arduino_TFT::setRotation(uint8_t r)
-{
-  Arduino_GFX::setRotation(r);
-  switch (_rotation)
-  {
-  case 0:
-    _xStart = COL_OFFSET1;
-    _yStart = ROW_OFFSET1;
-    break;
-
-  case 1:
-    _xStart = ROW_OFFSET1;
-    _yStart = COL_OFFSET2;
-    break;
-
-  case 2:
-    _xStart = COL_OFFSET2;
-    _yStart = ROW_OFFSET2;
-    break;
-
-  case 3:
-    _xStart = ROW_OFFSET2;
-    _yStart = COL_OFFSET1;
-    break;
-  }
-}
+#endif // defined(ESP32)
