@@ -14,7 +14,7 @@
 class Arduino_Canvas_Indexed : public Arduino_GFX
 {
 public:
-  Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_TFT *output, uint8_t mask_level = 0);
+  Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *output, int16_t output_x = 0, int16_t output_y = 0, uint8_t mask_level = 0);
 
   void begin(uint32_t speed = 0);
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
@@ -28,7 +28,8 @@ public:
 
 protected:
   uint8_t *_framebuffer;
-  Arduino_TFT *_output;
+  Arduino_G *_output;
+  int16_t _output_x, _output_y;
   uint16_t _color_index[COLOR_IDX_SIZE];
   uint8_t _indexed_size = 0;
   uint8_t _current_mask_level;

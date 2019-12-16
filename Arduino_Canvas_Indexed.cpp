@@ -6,8 +6,8 @@
 #include "Arduino_GFX.h"
 #include "Arduino_Canvas_Indexed.h"
 
-Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_TFT *output, uint8_t mask_level)
-    : Arduino_GFX(w, h), _output(output)
+Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *output, int16_t output_x, int16_t output_y, uint8_t mask_level)
+    : Arduino_GFX(w, h), _output(output), _output_x(output_x), _output_y(output_y)
 {
     if (mask_level >= MAXMASKLEVEL)
     {
@@ -56,14 +56,7 @@ void Arduino_Canvas_Indexed::writeFastHLine(int16_t x, int16_t y,
 
 void Arduino_Canvas_Indexed::flush()
 {
-    uint32_t len = _width * _height;
-    uint8_t *fb = _framebuffer;
-    _output->startWrite();
-    while (len--)
-    {
-        _output->writeColor(_color_index[*(fb++)]);
-    }
-    _output->endWrite();
+    _output->drawIndexedBitmap(_output_x, _output_y, _framebuffer, _color_index, _width, _height);
 }
 
 uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)

@@ -20,7 +20,9 @@ public:
   // This MUST be defined by the subclass:
   virtual void begin(uint32_t speed = 0) = 0;
 
+  virtual void fillScreen(uint16_t color) = 0;
   virtual void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg) = 0;
+  virtual void drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h) = 0;
   virtual void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) = 0;
   virtual void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h) = 0;
 

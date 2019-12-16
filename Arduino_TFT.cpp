@@ -512,6 +512,29 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
+   @brief   Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param    x   Top left corner x coordinate
+    @param    y   Top left corner y coordinate
+    @param    bitmap  byte array with 16-bit color bitmap
+    @param    w   Width of bitmap in pixels
+    @param    h   Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_TFT::drawIndexedBitmap(int16_t x, int16_t y,
+uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
+{
+    uint32_t len = w * h;
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    while (len--)
+    {
+        writeColor(color_index[*(bitmap++)]);
+    }
+    endWrite();
+}
+
+/**************************************************************************/
+/*!
    @brief   Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
    For 16-bit display devices; no color reduction performed.
     @param    x   Top left corner x coordinate
@@ -858,4 +881,5 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     }
   } // End classic vs custom font
 }
+
 #endif // defined(ESP32)

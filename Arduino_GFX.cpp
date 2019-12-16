@@ -1087,6 +1087,31 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
+   @brief   Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param    x   Top left corner x coordinate
+    @param    y   Top left corner y coordinate
+    @param    bitmap  byte array with 16-bit color bitmap
+    @param    w   Width of bitmap in pixels
+    @param    h   Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
+                                    uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
+{
+    int16_t offset = 0;
+    startWrite();
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+        for (int16_t i = 0; i < w; i++)
+        {
+            writePixel(x + i, y, color_index[bitmap[offset++]]);
+        }
+    }
+    endWrite();
+}
+
+/**************************************************************************/
+/*!
    @brief   Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate
