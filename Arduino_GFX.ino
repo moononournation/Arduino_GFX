@@ -34,8 +34,8 @@ Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 
 #elif defined(ARDUINO_ODROID_ESP32)
 #define TFT_BL 14
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
-Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus,  -1 /* RST */, 0 /* rotation */, true /* IPS */);
+Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 3 /* rotation */);
+// Arduino_ST7789 *tft = new Arduino_ST7789(bus,  -1 /* RST */, 1 /* rotation */, true /* IPS */);
 #elif defined(ARDUINO_T) // TTGO T-Watch
 #define TFT_BL 12
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(27 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
@@ -71,10 +71,10 @@ Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 // Arduino_DataBus *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
 
 // General hardware SPI
-// Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
+Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 
 // ESP32 hardware SPI, more customizable parameters
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
+// Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
 
 /*
  * Step 2: Initize one driver for your display
@@ -506,24 +506,30 @@ uint32_t testText()
   tft->println(F("with my blurglecruncheon,"));
   tft->setTextColor(DARKGREY, WHITE);
   tft->println(F("see if I don't!"));
-  if (h > 160)
-  {
-    tft->setTextColor(ORANGE);
-    tft->setTextSize(4);
-    tft->println(F("Size 4"));
-  }
-  if (h > 220)
-  {
-    tft->setTextColor(GREENYELLOW);
-    tft->setTextSize(5);
-    tft->println(F("Size 5"));
-  }
-  if (h > 240)
-  {
-    tft->setTextColor(PINK);
-    tft->setTextSize(6);
-    tft->println(F("Size 6"));
-  }
+  tft->setTextColor(RED);
+  tft->setTextSize(2);
+  tft->println(F("Size 2"));
+  tft->setTextColor(ORANGE);
+  tft->setTextSize(3);
+  tft->println(F("Size 3"));
+  tft->setTextColor(YELLOW);
+  tft->setTextSize(4);
+  tft->println(F("Size 4"));
+  tft->setTextColor(GREENYELLOW);
+  tft->setTextSize(5);
+  tft->println(F("Size 5"));
+  tft->setTextColor(GREEN);
+  tft->setTextSize(6);
+  tft->println(F("Size 6"));
+  tft->setTextColor(BLUE);
+  tft->setTextSize(7);
+  tft->println(F("Size 7"));
+  tft->setTextColor(PURPLE);
+  tft->setTextSize(8);
+  tft->println(F("Size 8"));
+  tft->setTextColor(PINK);
+  tft->setTextSize(9);
+  tft->println(F("Size 9"));
   uint32_t t = micros() - start;
   return t;
 }
