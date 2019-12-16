@@ -57,5 +57,5 @@ void Arduino_Canvas::writeFastHLine(int16_t x, int16_t y,
 
 void Arduino_Canvas::flush()
 {
-    _output->draw16bitRGBBitmap(0, 0, _framebuffer, _width, _height);
+    _output->draw16bitRGBBitmap(_output_x, _output_y, _framebuffer, _width, _height);
 }
