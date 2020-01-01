@@ -4,6 +4,9 @@
   See end of file for original header text and MIT license info.
 */
 
+/*******************************************************************************
+ * Start of Arduino_GFX setting
+ ******************************************************************************/
 #include "SPI.h"
 #include "Arduino_HWSPI.h"
 #include "Arduino_ESP32SPI.h"
@@ -16,8 +19,8 @@
 #include "Arduino_HX8357B.h"        // Hardware-specific library for HX8357B
 #include "Arduino_ILI9225.h"        // Hardware-specific library for ILI9225
 #include "Arduino_ILI9341.h"        // Hardware-specific library for ILI9341
-#include "Arduino_ILI9481_18bit.h"        // Hardware-specific library for ILI9481
-#include "Arduino_ILI9486_18bit.h"        // Hardware-specific library for ILI9486
+#include "Arduino_ILI9481_18bit.h"  // Hardware-specific library for ILI9481
+#include "Arduino_ILI9486_18bit.h"  // Hardware-specific library for ILI9486
 #include "Arduino_SEPS525.h"        // Hardware-specific library for SEPS525
 #include "Arduino_SSD1283A.h"       // Hardware-specific library for SSD1283A
 #include "Arduino_SSD1331.h"        // Hardware-specific library for SSD1331
@@ -30,16 +33,16 @@
 #define TFT_BL 32
 #include "Arduino_ILI9341_M5STACK.h"
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
-Arduino_ILI9341_M5STACK *tft = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 /* rotation */);
+Arduino_ILI9341_M5STACK *gfx = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 /* rotation */);
 #elif defined(ARDUINO_ODROID_ESP32)
 #define TFT_BL 14
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
-Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, -1 /* RST */, 3 /* rotation */);
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus,  -1 /* RST */, 1 /* rotation */, true /* IPS */);
+Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 3 /* rotation */);
+// Arduino_ST7789 *gfx = new Arduino_ST7789(bus,  -1 /* RST */, 1 /* rotation */, true /* IPS */);
 #elif defined(ARDUINO_T) // TTGO T-Watch
 #define TFT_BL 12
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(27 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
-Arduino_ST7789 *tft = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true /* IPS */, 240, 240, 0, 80);
+Arduino_ST7789 *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true /* IPS */, 240, 240, 0, 80);
 #else /* not a specific hardware */
 
 #if defined(ESP32)
@@ -83,78 +86,82 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Canvas (framebuffer)
 // Arduino_ST7789 *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 16-bit color Canvas (240x320 resolution only works for ESP32 with PSRAM)
-// Arduino_Canvas *tft = new Arduino_Canvas(240, 320, output_display);
+// Arduino_Canvas *gfx = new Arduino_Canvas(240, 320, output_display);
 // Indexed color Canvas, mask_level: 0-2, larger mask level mean less color variation but can have faster index mapping
-// Arduino_Canvas_Indexed *tft = new Arduino_Canvas_Indexed(240, 320, output_display, MAXMASKLEVEL /* mask_level */);
+// Arduino_Canvas_Indexed *gfx = new Arduino_Canvas_Indexed(240, 320, output_display, MAXMASKLEVEL /* mask_level */);
 
 // HX8347C IPS LCD 240x320
-// Arduino_HX8347C *tft = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_HX8347C *gfx = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // HX8352C IPS LCD 240x400
-// Arduino_HX8352C *tft = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_HX8352C *gfx = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // HX8357B IPS LCD 320x480
-// Arduino_HX8357B *tft = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_HX8357B *gfx = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // ILI9225 LCD 176x220
-// Arduino_ILI9225 *tft = new Arduino_ILI9225(bus, TFT_RST);
+// Arduino_ILI9225 *gfx = new Arduino_ILI9225(bus, TFT_RST);
 
 // ILI9341 LCD 240x320
-// Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, TFT_RST);
+// Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST);
 
 // ILI9481 LCD 320x480
-Arduino_ILI9481_18bit *tft = new Arduino_ILI9481_18bit(bus, TFT_RST);
+Arduino_ILI9481_18bit *gfx = new Arduino_ILI9481_18bit(bus, TFT_RST);
 
 // ILI9486 LCD 320x480
-// Arduino_ILI9486_18bit *tft = new Arduino_ILI9486_18bit(bus, TFT_RST);
+// Arduino_ILI9486_18bit *gfx = new Arduino_ILI9486_18bit(bus, TFT_RST);
 
 // SEPS525 OLED 160x128
-// Arduino_SEPS525 *tft = new Arduino_SEPS525(bus, TFT_RST);
+// Arduino_SEPS525 *gfx = new Arduino_SEPS525(bus, TFT_RST);
 
 // SSD1283A OLED 130x130
-// Arduino_SSD1283A *tft = new Arduino_SSD1283A(bus, TFT_RST);
+// Arduino_SSD1283A *gfx = new Arduino_SSD1283A(bus, TFT_RST);
 
 // SSD1331 OLED 96x64
-// Arduino_SSD1331 *tft = new Arduino_SSD1331(bus, TFT_RST);
+// Arduino_SSD1331 *gfx = new Arduino_SSD1331(bus, TFT_RST);
 
 // SSD1351 OLED 128x128
-// Arduino_SSD1351 *tft = new Arduino_SSD1351(bus, TFT_RST);
+// Arduino_SSD1351 *gfx = new Arduino_SSD1351(bus, TFT_RST);
 
 // ST7735 LCD
 // 1.8" REDTAB 128x160
-// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST);
+// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST);
 // 1.8" BLACKTAB 128x160
-// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 1 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */, false /* BGR */);
+// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 1 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */, false /* BGR */);
 // 1.8" GREENTAB A 128x160
-// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 1 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
+// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 1 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
 // 1.8" GREENTAB B 128x160
-// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 3 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
+// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 3 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
 // 1.8" Wide angle LCD 128x160
-// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 2 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */, false /* BGR */);
+// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 2 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */, false /* BGR */);
 // 1.5" GREENTAB B 128x128
-// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 2 /* col offset 1 */, 3 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
+// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 2 /* col offset 1 */, 3 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
 // 1.5" GREENTAB C 128x128
-// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 0 /* col offset 1 */, 32 /* row offset 1 */);
+// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 0 /* col offset 1 */, 32 /* row offset 1 */);
 // 0.96" IPS LCD 80x160
-// Arduino_ST7735 *tft = new Arduino_ST7735(bus, TFT_RST, 3 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
+// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 3 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
 
 // ST7789 LCD
 // 2.4" LCD 240x320
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST);
+// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST);
 // 2.4" IPS LCD 240x320
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
+// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 // 1.14" IPS LCD 135x240 TTGO T-Display
-// Arduino_ST7789 *tft = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
+// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
 
 // ST7796 LCD
 // 4" LCD 320x480
-// Arduino_ST7796 *tft = new Arduino_ST7796(bus, TFT_RST);
+// Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST);
 // 4" IPS LCD 320x480
-// Arduino_ST7796 *tft = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 #endif /* not a specific hardware */
+/*******************************************************************************
+ * End of Arduino_GFX setting
+ ******************************************************************************/
+
 
 uint32_t w, h, n, n1, cx, cy, cx1, cy1, cn, cn1;
 uint8_t tsa, tsb, tsc, ds;
@@ -172,11 +179,11 @@ void setup()
 
   Serial.println("Arduino_GFX library Test!");
 
-  tft->begin();
-  // tft->begin(80000000); /* specify data bus speed */
+  gfx->begin();
+  // gfx->begin(80000000); /* specify data bus speed */
 
-  w = tft->width();
-  h = tft->height();
+  w = gfx->width();
+  h = gfx->height();
   n = min(w, h);
   n1 = min(w, h) - 1;
   cx = w / 2;
@@ -186,9 +193,9 @@ void setup()
   cn = min(cx1, cy1);
   cn1 = min(cx1, cy1) - 1;
   tsa = ((w <= 160) || (h <= 160)) ? 1 : (((w <= 240) || (h <= 240)) ? 2 : 3); // text size A
-  tsb = ((w <= 240) || (h <= 220)) ? 1 : 2;    // text size B
-  tsc = ((w <= 220) || (h <= 220)) ? 1 : 2;    // text size C
-  ds = (w <= 160) ? 9 : 12;                    // digit size
+  tsb = ((w <= 240) || (h <= 220)) ? 1 : 2;                                    // text size B
+  tsc = ((w <= 220) || (h <= 220)) ? 1 : 2;                                    // text size C
+  ds = (w <= 160) ? 9 : 12;                                                    // digit size
 
 #ifdef TFT_BL
   pinMode(TFT_BL, OUTPUT);
@@ -202,87 +209,87 @@ void loop(void)
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   uint32_t usecFillScreen = testFillScreen();
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Screen fill              "));
   Serial.println(usecFillScreen);
   delay(100);
 
-  tft->fillScreen(BLACK);
+  gfx->fillScreen(BLACK);
   uint32_t usecText = testText();
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Text                     "));
   Serial.println(usecText);
   delay(3000); // delay for verifing the text
 
-  tft->fillScreen(BLACK);
+  gfx->fillScreen(BLACK);
   uint32_t usecPixels = testPixels();
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Pixels                   "));
   Serial.println(usecPixels);
   delay(100);
 
-  tft->fillScreen(BLACK);
+  gfx->fillScreen(BLACK);
   uint32_t usecLines = testLines(BLUE);
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Lines                    "));
   Serial.println(usecLines);
   delay(100);
 
-  tft->fillScreen(BLACK);
+  gfx->fillScreen(BLACK);
   uint32_t usecFastLines = testFastLines(RED, BLUE);
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Horiz/Vert Lines         "));
   Serial.println(usecFastLines);
   delay(100);
 
-  tft->fillScreen(BLACK);
+  gfx->fillScreen(BLACK);
   uint32_t usecFilledRects = testFilledRects(YELLOW, MAGENTA);
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Rectangles (filled)      "));
   Serial.println(usecFilledRects);
   delay(100);
 
   uint32_t usecRects = testRects(GREEN);
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Rectangles (outline)     "));
   Serial.println(usecRects);
   delay(100);
 
-  tft->fillScreen(BLACK);
+  gfx->fillScreen(BLACK);
   uint32_t usecFilledCircles = testFilledCircles(10, MAGENTA);
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Circles (filled)         "));
   Serial.println(usecFilledCircles);
   delay(100);
 
   uint32_t usecCircles = testCircles(10, WHITE);
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Circles (outline)        "));
   Serial.println(usecCircles);
   delay(100);
 
-  tft->fillScreen(BLACK);
+  gfx->fillScreen(BLACK);
   uint32_t usecFilledTrangles = testFilledTriangles();
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Triangles (filled)       "));
   Serial.println(usecFilledTrangles);
   delay(100);
 
   uint32_t usecTriangles = testTriangles();
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Triangles (outline)      "));
   Serial.println(usecTriangles);
   delay(100);
 
-  tft->fillScreen(BLACK);
+  gfx->fillScreen(BLACK);
   uint32_t usecFilledRoundRects = testFilledRoundRects();
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Rounded rects (filled)   "));
   Serial.println(usecFilledRoundRects);
   delay(100);
 
   uint32_t usecRoundRects = testRoundRects();
-  tft->flush();
+  gfx->flush();
   Serial.print(F("Rounded rects (outline)  "));
   Serial.println(usecRoundRects);
   delay(100);
@@ -293,136 +300,136 @@ void loop(void)
   int8_t d = 1;
   for (int32_t i = 0; i < h; i++)
   {
-    tft->drawFastHLine(0, i, w, c);
+    gfx->drawFastHLine(0, i, w, c);
     c += d;
     if (c <= 4 || c >= 11)
       d = -d;
   }
 
-  tft->setCursor(0, 0);
-  tft->setTextColor(MAGENTA);
-  tft->setTextSize(tsa);
-  tft->println(F("Arduino GFX"));
-  tft->setTextSize(1);
-  tft->println(F(""));
+  gfx->setCursor(0, 0);
+  gfx->setTextColor(MAGENTA);
+  gfx->setTextSize(tsa);
+  gfx->println(F("Arduino GFX"));
+  gfx->setTextSize(1);
+  gfx->println(F(""));
 
   if (h > w)
   {
-    tft->setTextColor(GREEN);
-    tft->setTextSize(tsb);
-    tft->print(F("Benchmark "));
-    tft->setTextSize(tsc);
+    gfx->setTextColor(GREEN);
+    gfx->setTextSize(tsb);
+    gfx->print(F("Benchmark "));
+    gfx->setTextSize(tsc);
     if (ds == 12)
     {
-      tft->print(F("   "));
+      gfx->print(F("   "));
     }
-    tft->println(F("micro-secs"));
-    tft->setTextSize(1);
-    tft->println(F(""));
-    tft->setTextColor(YELLOW);
+    gfx->println(F("micro-secs"));
+    gfx->setTextSize(1);
+    gfx->println(F(""));
+    gfx->setTextColor(YELLOW);
   }
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("Screen fill "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("Screen fill "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecFillScreen);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("Text        "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("Text        "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecText);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("Pixels      "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("Pixels      "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecPixels);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("Lines       "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("Lines       "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecLines);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("H/V Lines   "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("H/V Lines   "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecFastLines);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("Rectangles F"));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("Rectangles F"));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecFilledRects);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("Rectangles  "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("Rectangles  "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecRects);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("Circles F   "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("Circles F   "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecFilledCircles);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("Circles     "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("Circles     "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecCircles);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("Triangles F "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("Triangles F "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecFilledTrangles);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("Triangles   "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("Triangles   "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecTriangles);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("RoundRects F"));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("RoundRects F"));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecFilledRoundRects);
 
-  tft->setTextColor(CYAN);
-  tft->setTextSize(tsb);
-  tft->print(F("RoundRects  "));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(tsc);
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(F("RoundRects  "));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
   printnice(usecRoundRects);
 
   if (h > w)
   {
-    tft->setTextSize(1);
-    tft->println(F(""));
-    tft->setTextColor(GREEN);
-    tft->setTextSize(tsc);
-    tft->print(F("Benchmark Complete!"));
+    gfx->setTextSize(1);
+    gfx->println(F(""));
+    gfx->setTextColor(GREEN);
+    gfx->setTextSize(tsc);
+    gfx->print(F("Benchmark Complete!"));
   }
 
-  tft->flush();
+  gfx->flush();
 
   delay(60 * 1000L);
 }
@@ -441,7 +448,7 @@ void printnice(int32_t v)
     memmove(str + 1, str, strlen(str) + 1);
     *str = ' ';
   }
-  tft->println(str);
+  gfx->println(str);
 }
 
 static inline uint32_t micros_start() __attribute__((always_inline));
@@ -457,11 +464,11 @@ uint32_t testFillScreen()
 {
   uint32_t start = micros_start();
   // Shortened this tedious test!
-  tft->fillScreen(WHITE);
-  tft->fillScreen(RED);
-  tft->fillScreen(GREEN);
-  tft->fillScreen(BLUE);
-  tft->fillScreen(BLACK);
+  gfx->fillScreen(WHITE);
+  gfx->fillScreen(RED);
+  gfx->fillScreen(GREEN);
+  gfx->fillScreen(BLUE);
+  gfx->fillScreen(BLACK);
 
   return (micros() - start) / 5;
 }
@@ -469,67 +476,67 @@ uint32_t testFillScreen()
 uint32_t testText()
 {
   uint32_t start = micros_start();
-  tft->setCursor(0, 0);
-  tft->setTextSize(1);
-  tft->setTextColor(WHITE, BLACK);
-  tft->println(F("Hello World!"));
-  tft->setTextSize(2);
-  tft->setTextColor(tft->color565(0xff, 0x00, 0x00));
-  tft->print(F("RED "));
-  tft->setTextColor(tft->color565(0x00, 0xff, 0x00));
-  tft->print(F("GREEN "));
-  tft->setTextColor(tft->color565(0x00, 0x00, 0xff));
-  tft->println(F("BLUE"));
-  tft->setTextSize(tsa);
-  tft->setTextSize(3);
-  tft->setTextColor(YELLOW);
-  tft->println(1234.56);
-  tft->setTextColor(WHITE);
-  tft->println((w > 128) ? 0xDEADBEEF : 0xDEADBEE, HEX);
-  tft->setTextColor(CYAN, WHITE);
-  tft->println(F("Groop,"));
-  tft->setTextSize(tsc);
-  tft->setTextColor(MAGENTA, WHITE);
-  tft->println(F("I implore thee,"));
-  tft->setTextSize(1);
-  tft->setTextColor(NAVY, WHITE);
-  tft->println(F("my foonting turlingdromes."));
-  tft->setTextColor(DARKGREEN, WHITE);
-  tft->println(F("And hooptiously drangle me"));
-  tft->setTextColor(DARKCYAN, WHITE);
-  tft->println(F("with crinkly bindlewurdles,"));
-  tft->setTextColor(MAROON, WHITE);
-  tft->println(F("Or I will rend thee"));
-  tft->setTextColor(PURPLE, WHITE);
-  tft->println(F("in the gobberwartsb"));
-  tft->setTextColor(OLIVE, WHITE);
-  tft->println(F("with my blurglecruncheon,"));
-  tft->setTextColor(DARKGREY, WHITE);
-  tft->println(F("see if I don't!"));
-  tft->setTextColor(RED);
-  tft->setTextSize(2);
-  tft->println(F("Size 2"));
-  tft->setTextColor(ORANGE);
-  tft->setTextSize(3);
-  tft->println(F("Size 3"));
-  tft->setTextColor(YELLOW);
-  tft->setTextSize(4);
-  tft->println(F("Size 4"));
-  tft->setTextColor(GREENYELLOW);
-  tft->setTextSize(5);
-  tft->println(F("Size 5"));
-  tft->setTextColor(GREEN);
-  tft->setTextSize(6);
-  tft->println(F("Size 6"));
-  tft->setTextColor(BLUE);
-  tft->setTextSize(7);
-  tft->println(F("Size 7"));
-  tft->setTextColor(PURPLE);
-  tft->setTextSize(8);
-  tft->println(F("Size 8"));
-  tft->setTextColor(PINK);
-  tft->setTextSize(9);
-  tft->println(F("Size 9"));
+  gfx->setCursor(0, 0);
+  gfx->setTextSize(1);
+  gfx->setTextColor(WHITE, BLACK);
+  gfx->println(F("Hello World!"));
+  gfx->setTextSize(2);
+  gfx->setTextColor(gfx->color565(0xff, 0x00, 0x00));
+  gfx->print(F("RED "));
+  gfx->setTextColor(gfx->color565(0x00, 0xff, 0x00));
+  gfx->print(F("GREEN "));
+  gfx->setTextColor(gfx->color565(0x00, 0x00, 0xff));
+  gfx->println(F("BLUE"));
+  gfx->setTextSize(tsa);
+  gfx->setTextSize(3);
+  gfx->setTextColor(YELLOW);
+  gfx->println(1234.56);
+  gfx->setTextColor(WHITE);
+  gfx->println((w > 128) ? 0xDEADBEEF : 0xDEADBEE, HEX);
+  gfx->setTextColor(CYAN, WHITE);
+  gfx->println(F("Groop,"));
+  gfx->setTextSize(tsc);
+  gfx->setTextColor(MAGENTA, WHITE);
+  gfx->println(F("I implore thee,"));
+  gfx->setTextSize(1);
+  gfx->setTextColor(NAVY, WHITE);
+  gfx->println(F("my foonting turlingdromes."));
+  gfx->setTextColor(DARKGREEN, WHITE);
+  gfx->println(F("And hooptiously drangle me"));
+  gfx->setTextColor(DARKCYAN, WHITE);
+  gfx->println(F("with crinkly bindlewurdles,"));
+  gfx->setTextColor(MAROON, WHITE);
+  gfx->println(F("Or I will rend thee"));
+  gfx->setTextColor(PURPLE, WHITE);
+  gfx->println(F("in the gobberwartsb"));
+  gfx->setTextColor(OLIVE, WHITE);
+  gfx->println(F("with my blurglecruncheon,"));
+  gfx->setTextColor(DARKGREY, WHITE);
+  gfx->println(F("see if I don't!"));
+  gfx->setTextColor(RED);
+  gfx->setTextSize(2);
+  gfx->println(F("Size 2"));
+  gfx->setTextColor(ORANGE);
+  gfx->setTextSize(3);
+  gfx->println(F("Size 3"));
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(4);
+  gfx->println(F("Size 4"));
+  gfx->setTextColor(GREENYELLOW);
+  gfx->setTextSize(5);
+  gfx->println(F("Size 5"));
+  gfx->setTextColor(GREEN);
+  gfx->setTextSize(6);
+  gfx->println(F("Size 6"));
+  gfx->setTextColor(BLUE);
+  gfx->setTextSize(7);
+  gfx->println(F("Size 7"));
+  gfx->setTextColor(PURPLE);
+  gfx->setTextSize(8);
+  gfx->println(F("Size 8"));
+  gfx->setTextColor(PINK);
+  gfx->setTextSize(9);
+  gfx->println(F("Size 9"));
   uint32_t t = micros() - start;
   return t;
 }
@@ -542,7 +549,7 @@ uint32_t testPixels()
   {
     for (uint16_t x = 0; x < w; x++)
     {
-      tft->drawPixel(x, y, tft->color565(x << 3, y << 3, x * y));
+      gfx->drawPixel(x, y, gfx->color565(x << 3, y << 3, x * y));
     }
   }
 
@@ -561,14 +568,14 @@ uint32_t testLines(uint16_t color)
 
   for (x2 = 0; x2 < w; x2 += 6)
   {
-    tft->drawLine(x1, y1, x2, y2, color);
+    gfx->drawLine(x1, y1, x2, y2, color);
   }
 
   x2 = w - 1;
 
   for (y2 = 0; y2 < h; y2 += 6)
   {
-    tft->drawLine(x1, y1, x2, y2, color);
+    gfx->drawLine(x1, y1, x2, y2, color);
   }
 
   t = micros() - start; // fillScreen doesn't count against timing
@@ -581,13 +588,13 @@ uint32_t testLines(uint16_t color)
 
   for (x2 = 0; x2 < w; x2 += 6)
   {
-    tft->drawLine(x1, y1, x2, y2, color);
+    gfx->drawLine(x1, y1, x2, y2, color);
   }
 
   x2 = 0;
   for (y2 = 0; y2 < h; y2 += 6)
   {
-    tft->drawLine(x1, y1, x2, y2, color);
+    gfx->drawLine(x1, y1, x2, y2, color);
   }
 
   t += micros() - start;
@@ -600,12 +607,12 @@ uint32_t testLines(uint16_t color)
 
   for (x2 = 0; x2 < w; x2 += 6)
   {
-    tft->drawLine(x1, y1, x2, y2, color);
+    gfx->drawLine(x1, y1, x2, y2, color);
   }
   x2 = w - 1;
   for (y2 = 0; y2 < h; y2 += 6)
   {
-    tft->drawLine(x1, y1, x2, y2, color);
+    gfx->drawLine(x1, y1, x2, y2, color);
   }
   t += micros() - start;
 
@@ -617,13 +624,13 @@ uint32_t testLines(uint16_t color)
 
   for (x2 = 0; x2 < w; x2 += 6)
   {
-    tft->drawLine(x1, y1, x2, y2, color);
+    gfx->drawLine(x1, y1, x2, y2, color);
   }
 
   x2 = 0;
   for (y2 = 0; y2 < h; y2 += 6)
   {
-    tft->drawLine(x1, y1, x2, y2, color);
+    gfx->drawLine(x1, y1, x2, y2, color);
   }
 
   t += micros() - start;
@@ -639,9 +646,9 @@ uint32_t testFastLines(uint16_t color1, uint16_t color2)
   start = micros_start();
 
   for (y = 0; y < h; y += 5)
-    tft->drawFastHLine(0, y, w, color1);
+    gfx->drawFastHLine(0, y, w, color1);
   for (x = 0; x < w; x += 5)
-    tft->drawFastVLine(x, 0, h, color2);
+    gfx->drawFastVLine(x, 0, h, color2);
 
   return micros() - start;
 }
@@ -657,12 +664,12 @@ uint32_t testFilledRects(uint16_t color1, uint16_t color2)
 
     start = micros_start();
 
-    tft->fillRect(cx1 - i2, cy1 - i2, i, i, color1);
+    gfx->fillRect(cx1 - i2, cy1 - i2, i, i, color1);
 
     t += micros() - start;
 
     // Outlines are not included in timing results
-    tft->drawRect(cx - i2, cy - i2, i, i, color2);
+    gfx->drawRect(cx - i2, cy - i2, i, i, color2);
   }
 
   return t;
@@ -677,7 +684,7 @@ uint32_t testRects(uint16_t color)
   for (i = 2; i < n; i += 6)
   {
     i2 = i / 2;
-    tft->drawRect(cx - i2, cy - i2, i, i, color);
+    gfx->drawRect(cx - i2, cy - i2, i, i, color);
   }
 
   return micros() - start;
@@ -694,7 +701,7 @@ uint32_t testFilledCircles(uint8_t radius, uint16_t color)
   {
     for (y = radius; y < h; y += r2)
     {
-      tft->fillCircle(x, y, radius, color);
+      gfx->fillCircle(x, y, radius, color);
     }
   }
 
@@ -716,7 +723,7 @@ uint32_t testCircles(uint8_t radius, uint16_t color)
   {
     for (y = 0; y < h1; y += r2)
     {
-      tft->drawCircle(x, y, radius, color);
+      gfx->drawCircle(x, y, radius, color);
     }
   }
 
@@ -733,11 +740,11 @@ uint32_t testFilledTriangles()
   for (i = cn1; i > 10; i -= 5)
   {
     start = micros_start();
-    tft->fillTriangle(cx1, cy1 - i, cx1 - i, cy1 + i, cx1 + i, cy1 + i,
-                      tft->color565(0, i, i));
+    gfx->fillTriangle(cx1, cy1 - i, cx1 - i, cy1 + i, cx1 + i, cy1 + i,
+                      gfx->color565(0, i, i));
     t += micros() - start;
-    tft->drawTriangle(cx1, cy1 - i, cx1 - i, cy1 + i, cx1 + i, cy1 + i,
-                      tft->color565(i, i, 0));
+    gfx->drawTriangle(cx1, cy1 - i, cx1 - i, cy1 + i, cx1 + i, cy1 + i,
+                      gfx->color565(i, i, 0));
   }
 
   return t;
@@ -752,11 +759,11 @@ uint32_t testTriangles()
 
   for (i = 0; i < cn; i += 5)
   {
-    tft->drawTriangle(
+    gfx->drawTriangle(
         cx1, cy1 - i,     // peak
         cx1 - i, cy1 + i, // bottom left
         cx1 + i, cy1 + i, // bottom right
-        tft->color565(0, 0, i));
+        gfx->color565(0, 0, i));
   }
 
   return micros() - start;
@@ -772,7 +779,7 @@ uint32_t testFilledRoundRects()
   for (i = n1; i > 20; i -= 6)
   {
     i2 = i / 2;
-    tft->fillRoundRect(cx1 - i2, cy1 - i2, i, i, i / 8, tft->color565(0, i, 0));
+    gfx->fillRoundRect(cx1 - i2, cy1 - i2, i, i, i / 8, gfx->color565(0, i, 0));
   }
 
   return micros() - start;
@@ -788,7 +795,7 @@ uint32_t testRoundRects()
   for (i = 0; i < n1; i += 6)
   {
     i2 = i / 2;
-    tft->drawRoundRect(cx1 - i2, cy1 - i2, i, i, i / 8, tft->color565(i, 0, 0));
+    gfx->drawRoundRect(cx1 - i2, cy1 - i2, i, i, i / 8, gfx->color565(i, 0, 0));
   }
 
   return micros() - start;
