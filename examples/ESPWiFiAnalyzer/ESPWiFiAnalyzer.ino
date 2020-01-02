@@ -253,7 +253,7 @@ void loop()
 #if defined(ESP32)
   int n = WiFi.scanNetworks(false /* async */, true /* show_hidden */, true /* passive */, 500 /* max_ms_per_chan */);
 #else
-  int n = WiFi.scanNetworks();
+  int n = WiFi.scanNetworks(false /* async */, true /* show_hidden */);
 #endif
 
   // clear old graph
@@ -298,6 +298,7 @@ void loop()
 
         // noise stat
         int32_t noise = rssi - RSSI_FLOOR;
+        noise *= noise;
         if (channel > 4)
         {
           noise_list[idx - 4] += noise;
@@ -391,7 +392,7 @@ void loop()
   gfx->setTextColor(WHITE);
   gfx->setCursor(0, banner_height);
   gfx->print(n);
-  gfx->print(" networks found, free channels: ");
+  gfx->print(" networks found, lesser noise channels: ");
   bool listed_first_channel = false;
   int32_t min_noise = 0;
   for (channel = 1; channel <= 11; channel++) // channels 12-14 may not available
