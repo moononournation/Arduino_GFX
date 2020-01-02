@@ -394,10 +394,11 @@ void loop()
   gfx->print(n);
   gfx->print(" networks found, lesser noise channels: ");
   bool listed_first_channel = false;
-  int32_t min_noise = 0;
-  for (channel = 1; channel <= 11; channel++) // channels 12-14 may not available
+  int32_t min_noise = noise_list[0]; // init with channel 1 value
+  for (channel = 2; channel <= 11; channel++) // channels 12-14 may not available
   {
     idx = channel - 1;
+    log_i("min_noise: %d, noise_list[%d]: %d", min_noise, idx, noise_list[idx]);
     if (noise_list[idx] < min_noise)
     {
       min_noise = noise_list[idx];
