@@ -107,10 +107,10 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino_ILI9225 *gfx = new Arduino_ILI9225(bus, TFT_RST);
 
 // ILI9341 LCD 240x320
-// Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST);
+Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST);
 
 // ILI9481 LCD 320x480
-Arduino_ILI9481_18bit *gfx = new Arduino_ILI9481_18bit(bus, TFT_RST);
+// Arduino_ILI9481_18bit *gfx = new Arduino_ILI9481_18bit(bus, TFT_RST);
 
 // ILI9486 LCD 320x480
 // Arduino_ILI9486_18bit *gfx = new Arduino_ILI9486_18bit(bus, TFT_RST);
