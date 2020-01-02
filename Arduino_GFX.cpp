@@ -1577,7 +1577,7 @@ size_t Arduino_GFX::write(uint8_t c)
         }
         else if (c != '\r')
         { // Ignore carriage returns
-            if (wrap && ((cursor_x + textsize_x * 6) > _max_x))
+            if (wrap && ((cursor_x + (textsize_x * 6) - 1) > _max_x))
             {                               // Off right?
                 cursor_x = 0;               // Reset x to zero,
                 cursor_y += textsize_y * 8; // advance y one line
@@ -1606,7 +1606,7 @@ size_t Arduino_GFX::write(uint8_t c)
                 if ((w > 0) && (h > 0))
                 {                                                        // Is there an associated bitmap?
                     int16_t xo = (int8_t)pgm_read_byte(&glyph->xOffset); // sic
-                    if (wrap && ((cursor_x + textsize_x * (xo + w)) > _max_x))
+                    if (wrap && ((cursor_x + (textsize_x * (xo + w)) - 1) > _max_x))
                     {
                         cursor_x = 0;
                         cursor_y += (int16_t)textsize_y *
@@ -1735,7 +1735,7 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
                         xa = pgm_read_byte(&glyph->xAdvance);
                 int8_t xo = pgm_read_byte(&glyph->xOffset),
                        yo = pgm_read_byte(&glyph->yOffset);
-                if (wrap && ((*x + (((int16_t)xo + gw) * textsize_x)) > _max_x))
+                if (wrap && ((*x + (((int16_t)xo + gw) * textsize_x) - 1) > _max_x))
                 {
                     *x = 0; // Reset x to zero, advance y by one line
                     *y += textsize_y * (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
@@ -1777,7 +1777,7 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
         }
         else if (c != '\r')
         { // Normal char; ignore carriage returns
-            if (wrap && ((*x + textsize_x * 6) > _max_x))
+            if (wrap && ((*x + (textsize_x * 6) - 1) > _max_x))
             {                         // Off right?
                 *x = 0;               // Reset x to zero,
                 *y += textsize_y * 8; // advance y one line
