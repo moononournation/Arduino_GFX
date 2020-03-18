@@ -1606,16 +1606,16 @@ size_t Arduino_GFX::write(uint8_t c)
             if ((c >= first) && (c <= (uint8_t)pgm_read_byte(&gfxFont->last)))
             {
                 GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c - first);
-                uint8_t w = pgm_read_byte(&glyph->width);
+                uint8_t w = pgm_read_byte(&glyph->xAdvance);
                 int16_t xo = (int8_t)pgm_read_byte(&glyph->xOffset); // sic
-                if (wrap && ((cursor_x + (textsize_x * (xo + w)) - 1) > _max_x))
+                if (wrap && ((cursor_x + (textsize_x * w) - 1) > _max_x))
                 {
                     cursor_x = 0;
                     cursor_y += (int16_t)textsize_y *
                                 (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
                 }
                 drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor, textsize_x, textsize_y);
-                cursor_x += (uint8_t)pgm_read_byte(&glyph->xAdvance) * (int16_t)textsize_x;
+                cursor_x += textsize_x * w;
             }
         }
     }
