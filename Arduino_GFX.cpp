@@ -1506,7 +1506,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
         int8_t xo = pgm_read_byte(&glyph->xOffset),
                yo = pgm_read_byte(&glyph->yOffset);
         uint8_t xx, yy, bits = 0, bit = 0;
-        int16_t xo16 = 0, yo16 = 0;
+        int16_t xo16, yo16;
 
         if (size_x > 1 || size_y > 1)
         {
@@ -1550,7 +1550,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                     else
                     {
                         writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
-                                                size_x, size_y, color);
+                                      size_x, size_y, color);
                     }
                 }
                 bits <<= 1;
@@ -1601,19 +1601,15 @@ size_t Arduino_GFX::write(uint8_t c)
             if ((c >= first) && (c <= (uint8_t)pgm_read_byte(&gfxFont->last)))
             {
                 GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c - first);
-                uint8_t w = pgm_read_byte(&glyph->width),
-                        h = pgm_read_byte(&glyph->height);
-                if ((w > 0) && (h > 0))
-                {                                                        // Is there an associated bitmap?
-                    int16_t xo = (int8_t)pgm_read_byte(&glyph->xOffset); // sic
-                    if (wrap && ((cursor_x + (textsize_x * (xo + w)) - 1) > _max_x))
-                    {
-                        cursor_x = 0;
-                        cursor_y += (int16_t)textsize_y *
-                                    (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
-                    }
-                    drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor, textsize_x, textsize_y);
+                uint8_t w = pgm_read_byte(&glyph->width);
+                int16_t xo = (int8_t)pgm_read_byte(&glyph->xOffset); // sic
+                if (wrap && ((cursor_x + (textsize_x * (xo + w)) - 1) > _max_x))
+                {
+                    cursor_x = 0;
+                    cursor_y += (int16_t)textsize_y *
+                                (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
                 }
+                drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor, textsize_x, textsize_y);
                 cursor_x += (uint8_t)pgm_read_byte(&glyph->xAdvance) * (int16_t)textsize_x;
             }
         }

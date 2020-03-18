@@ -218,7 +218,6 @@ void Arduino_TFT::pushColor(uint16_t color)
   _bus->endWrite();
 }
 
-
 void Arduino_TFT::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t w,
                                 uint16_t h)
 {
@@ -521,16 +520,16 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
 */
 /**************************************************************************/
 void Arduino_TFT::drawIndexedBitmap(int16_t x, int16_t y,
-uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
+                                    uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
 {
-    uint32_t len = w * h;
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    while (len--)
-    {
-        writeColor(color_index[*(bitmap++)]);
-    }
-    endWrite();
+  uint32_t len = w * h;
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  while (len--)
+  {
+    writeColor(color_index[*(bitmap++)]);
+  }
+  endWrite();
 }
 
 /**************************************************************************/
@@ -754,9 +753,8 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     // Character is assumed previously filtered by write() to eliminate
     // newlines, returns, non-printable characters, etc.  Calling
     // drawChar() directly with 'bad' characters of font may cause mayhem!
-
-    c -= (uint8_t)pgm_read_byte(&gfxFont->first);
-    GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c);
+    uint8_t first = pgm_read_byte(&gfxFont->first);
+    GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c - first);
     uint8_t *bitmap = pgm_read_bitmap_ptr(gfxFont);
 
     uint16_t bo = pgm_read_word(&glyph->bitmapOffset);
@@ -768,7 +766,7 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     int8_t xo = pgm_read_byte(&glyph->xOffset),
            yo = pgm_read_byte(&glyph->yOffset);
     uint8_t xx, yy, bits = 0, bit = 0;
-    int16_t xo16 = 0, yo16 = 0;
+    int16_t xo16, yo16;
 
     if (size_x > 1 || size_y > 1)
     {
