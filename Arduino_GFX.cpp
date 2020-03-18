@@ -1454,22 +1454,22 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                 {
                     if (size_x == 1 && size_y == 1)
                     {
-                        writePixelPreclipped(x + i, y + j, color);
+                        writePixel(x + i, y + j, color);
                     }
                     else
                     {
-                        writeFillRectPreclipped(x + i * size_x, y + j * size_y, size_x, size_y, color);
+                        writeFillRect(x + i * size_x, y + j * size_y, size_x, size_y, color);
                     }
                 }
                 else if (bg != color)
                 {
                     if (size_x == 1 && size_y == 1)
                     {
-                        writePixelPreclipped(x + i, y + j, bg);
+                        writePixel(x + i, y + j, bg);
                     }
                     else
                     {
-                        writeFillRectPreclipped(x + i * size_x, y + j * size_y, size_x, size_y, bg);
+                        writeFillRect(x + i * size_x, y + j * size_y, size_x, size_y, bg);
                     }
                 }
             }
@@ -1545,11 +1545,11 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                 {
                     if (size_x == 1 && size_y == 1)
                     {
-                        writePixelPreclipped(x + xo + xx, y + yo + yy, color);
+                        writePixel(x + xo + xx, y + yo + yy, color);
                     }
                     else
                     {
-                        writeFillRectPreclipped(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
+                        writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
                                                 size_x, size_y, color);
                     }
                 }
