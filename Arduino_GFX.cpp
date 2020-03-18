@@ -1508,6 +1508,11 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
         uint8_t xx, yy, bits = 0, bit = 0;
         int16_t xo16, yo16;
 
+        if (xAdvance < w)
+        {
+            xAdvance = w; // Don't know why it exists
+        }
+
         if (size_x > 1 || size_y > 1)
         {
             xo16 = xo;

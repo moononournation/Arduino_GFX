@@ -768,6 +768,11 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     uint8_t xx, yy, bits = 0, bit = 0;
     int16_t xo16, yo16;
 
+    if (xAdvance < w)
+    {
+      xAdvance = w; // Don't know why it exists
+    }
+
     if (size_x > 1 || size_y > 1)
     {
       xo16 = xo;
@@ -776,10 +781,11 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
 
     block_w = xAdvance * size_x;
     block_h = yAdvance * size_y;
+    int16_t x1 = (xo < 0) ? (x + xo) : x;
     if (
-        (x < 0) ||                              // Clip left
+        (x1 < 0) ||                             // Clip left
         ((y - baseline) < 0) ||                 // Clip top
-        ((x + block_w - 1) > _max_x) ||         // Clip right
+        ((x1 + block_w - 1) > _max_x) ||        // Clip right
         ((y - baseline + block_h - 1) > _max_y) // Clip bottom
     )
     {
@@ -790,6 +796,12 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     {
       // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background.
       // Since it may introduce many ugly output, it should limited using on mono font only.
+      if (xo < 0) // padding X offset to >= 0
+      {
+        x += xo;
+        xo = 0;
+      }
+
       startWrite();
       if (bg != color) // have background color
       {
