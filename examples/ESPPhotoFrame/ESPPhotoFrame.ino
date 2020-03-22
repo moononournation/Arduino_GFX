@@ -18,9 +18,6 @@
 
 #define HTTP_TIMEOUT 60000 // in ms, wait a while for server processing
 
-// WDT, enable auto restart from unexpected hang, it may caused by JPEG decode
-#define ENABLE_WDT
-
 /*******************************************************************************
  * Start of Arduino_GFX setting
  ******************************************************************************/
@@ -179,11 +176,17 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST);
  * End of Arduino_GFX setting
  ******************************************************************************/
 
-#include <WiFi.h>
+#if defined(ESP32)
 #include <esp_jpg_decode.h>
 #include <esp_task_wdt.h>
-#include <SPI.h>
+#include <WiFi.h>
 #include <HTTPClient.h>
+#else // ESP8266
+#include "esp_jpg_decode.h"
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#endif
+#include <SPI.h>
 
 static int len, offset;
 static unsigned long next_show_millis = 0;
@@ -213,7 +216,7 @@ void setup()
   digitalWrite(TFT_BL, HIGH);
 #endif
 
-#ifdef ENABLE_WDT
+#if defined(ESP32)
   // set WDT timeout a little bit longer than HTTP timeout
   esp_task_wdt_init((HTTP_TIMEOUT / 1000) + 1, true);
   enableLoopWDT();
@@ -266,7 +269,6 @@ void loop()
         {
           // get tcp stream
           WiFiClient *http_stream = http.getStreamPtr();
-
           esp_jpg_decode(len, JPG_SCALE_NONE, http_stream_reader, tft_writer, http_stream /* arg */);
         }
       }
@@ -274,9 +276,11 @@ void loop()
     http.end();
   }
 
-#ifdef ENABLE_WDT
+#if defined(ESP32)
   // notify WDT still working
   feedLoopWDT();
+#else // ESP8266
+  yield();
 #endif
 }
 
@@ -314,9 +318,11 @@ static bool tft_writer(void *arg, uint16_t x, uint16_t y, uint16_t w, uint16_t h
     gfx->draw24bitRGBBitmap(x, y, data, w, h);
   }
 
-#ifdef ENABLE_WDT
+#if defined(ESP32)
   // notify WDT still working
   feedLoopWDT();
+#else // ESP8266
+  yield();
 #endif
 
   return true; // Continue to decompression
