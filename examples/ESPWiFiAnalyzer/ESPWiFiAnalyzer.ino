@@ -171,6 +171,7 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST);
 #include "WiFi.h"
 #else
 #include "ESP8266WiFi.h"
+#define log_i(format, ...) Serial.printf(format, ##__VA_ARGS__)
 #endif
 
 int w, h, text_size, banner_height, graph_baseline, graph_height, channel_width, signal_width;
