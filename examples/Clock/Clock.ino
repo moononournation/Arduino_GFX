@@ -180,18 +180,18 @@ static uint8_t conv2d(const char *p)
     return (10 * (*p - '0')) + (*++p - '0');
 }
 
-static int w, h, center;
-static uint8_t hHandLen, mHandLen, sHandLen, markLen;
+static int16_t w, h, center;
+static int16_t hHandLen, mHandLen, sHandLen, markLen;
 static float sdeg, mdeg, hdeg;
-static uint8_t osx = 0, osy = 0, omx = 0, omy = 0, ohx = 0, ohy = 0; // Saved H, M, S x & y coords
-static uint8_t nsx, nsy, nmx, nmy, nhx, nhy;                         // H, M, S x & y coords
-static uint8_t xMin, yMin, xMax, yMax;                               // redraw range
-static uint8_t hh, mm, ss;
+static int16_t osx = 0, osy = 0, omx = 0, omy = 0, ohx = 0, ohy = 0; // Saved H, M, S x & y coords
+static int16_t nsx, nsy, nmx, nmy, nhx, nhy;                         // H, M, S x & y coords
+static int16_t xMin, yMin, xMax, yMax;                               // redraw range
+static int16_t hh, mm, ss;
 static unsigned long targetTime; // next action time
 
-static uint8_t *cached_points;
+static int16_t *cached_points;
 static int cached_points_idx = 0;
-static uint8_t *last_cached_point;
+static int16_t *last_cached_point;
 
 void setup(void)
 {
@@ -218,7 +218,7 @@ void setup(void)
     mHandLen = center * 2 / 3;
     sHandLen = center * 5 / 6;
     markLen = sHandLen / 6;
-    cached_points = (uint8_t *)malloc((hHandLen + 1 + mHandLen + 1 + sHandLen + 1) * 2);
+    cached_points = (int16_t *)malloc((hHandLen + 1 + mHandLen + 1 + sHandLen + 1) * 2 * 2);
 
     // Draw 60 clock marks
     draw_square_clock_mark(
@@ -285,10 +285,10 @@ void loop()
     }
 }
 
-void draw_square_clock_mark(uint8_t innerR1, uint8_t outerR1, uint8_t innerR2, uint8_t outerR2, uint8_t innerR3, uint8_t outerR3)
+void draw_square_clock_mark(int16_t innerR1, int16_t outerR1, int16_t innerR2, int16_t outerR2, int16_t innerR3, int16_t outerR3)
 {
     float x, y;
-    uint8_t x0, x1, y0, y1, innerR, outerR;
+    int16_t x0, x1, y0, y1, innerR, outerR;
     uint16_t c;
 
     for (int i = 0; i < 60; i++)
@@ -357,7 +357,7 @@ void redraw_hands_cached_draw_and_erase()
     gfx->endWrite();
 }
 
-void draw_and_erase_cached_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint16_t color, uint8_t *cache, uint16_t cache_len, bool cross_check_second, bool cross_check_hour)
+void draw_and_erase_cached_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t color, int16_t *cache, int16_t cache_len, bool cross_check_second, bool cross_check_hour)
 {
 #if defined(ESP8266)
     yield();
@@ -365,19 +365,19 @@ void draw_and_erase_cached_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, 
     bool steep = _diff(y1, y0) > _diff(x1, x0);
     if (steep)
     {
-        _swap_uint8_t(x0, y0);
-        _swap_uint8_t(x1, y1);
+        _swap_int16_t(x0, y0);
+        _swap_int16_t(x1, y1);
     }
 
-    uint8_t dx, dy;
+    int16_t dx, dy;
     dx = _diff(x1, x0);
     dy = _diff(y1, y0);
 
-    uint8_t err = dx / 2;
+    int16_t err = dx / 2;
     int8_t xstep = (x0 < x1) ? 1 : -1;
     int8_t ystep = (y0 < y1) ? 1 : -1;
     x1 += xstep;
-    uint8_t x, y, ox, oy;
+    int16_t x, y, ox, oy;
     for (uint16_t i = 0; i <= dx; i++)
     {
         if (steep)
@@ -430,9 +430,9 @@ void draw_and_erase_cached_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, 
     }
 }
 
-void write_cache_pixel(uint8_t x, uint8_t y, uint16_t color, bool cross_check_second, bool cross_check_hour)
+void write_cache_pixel(int16_t x, int16_t y, int16_t color, bool cross_check_second, bool cross_check_hour)
 {
-    uint8_t *cache = cached_points;
+    int16_t *cache = cached_points;
     if (cross_check_second)
     {
         for (int i = 0; i <= sHandLen; i++)
