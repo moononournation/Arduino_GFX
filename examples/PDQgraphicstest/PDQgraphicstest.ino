@@ -269,6 +269,19 @@ void loop(void)
   delay(100);
 
   gfx->fillScreen(BLACK);
+  uint32_t usecFilledArcs = testFillArcs();
+  gfx->flush();
+  Serial.print(F("Fill Arcs                "));
+  Serial.println(usecFilledArcs);
+  delay(100);
+
+  uint32_t usecArcs = testArcs();
+  gfx->flush();
+  Serial.print(F("Draw Arcs                "));
+  Serial.println(usecArcs);
+  delay(100);
+
+  gfx->fillScreen(BLACK);
   uint32_t usecFilledTrangles = testFilledTriangles();
   gfx->flush();
   Serial.print(F("Triangles (filled)       "));
@@ -329,96 +342,21 @@ void loop(void)
     gfx->setTextColor(YELLOW);
   }
 
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("Screen fill "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecFillScreen);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("Text        "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecText);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("Pixels      "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecPixels);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("Lines       "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecLines);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("H/V Lines   "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecFastLines);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("Rectangles F"));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecFilledRects);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("Rectangles  "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecRects);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("Circles F   "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecFilledCircles);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("Circles     "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecCircles);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("Triangles F "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecFilledTrangles);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("Triangles   "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecTriangles);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("RoundRects F"));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecFilledRoundRects);
-
-  gfx->setTextColor(CYAN);
-  gfx->setTextSize(tsb);
-  gfx->print(F("RoundRects  "));
-  gfx->setTextColor(YELLOW);
-  gfx->setTextSize(tsc);
-  printnice(usecRoundRects);
+  printnice(F("Screen fill "), usecFillScreen);
+  printnice(F("Text        "), usecText);
+  printnice(F("Pixels      "), usecPixels);
+  printnice(F("Lines       "), usecLines);
+  printnice(F("H/V Lines   "), usecFastLines);
+  printnice(F("Rectangles F"), usecFilledRects);
+  printnice(F("Rectangles  "), usecRects);
+  printnice(F("Circles F   "), usecFilledCircles);
+  printnice(F("Circles     "), usecCircles);
+  printnice(F("Arcs F      "), usecFilledArcs);
+  printnice(F("Arcs        "), usecArcs);
+  printnice(F("Triangles F "), usecFilledTrangles);
+  printnice(F("Triangles   "), usecTriangles);
+  printnice(F("RoundRects F"), usecFilledRoundRects);
+  printnice(F("RoundRects  "), usecRoundRects);
 
   if (h > w)
   {
@@ -434,8 +372,14 @@ void loop(void)
   delay(60 * 1000L);
 }
 
-void printnice(int32_t v)
+void printnice(const __FlashStringHelper* item, int32_t v)
 {
+  gfx->setTextColor(CYAN);
+  gfx->setTextSize(tsb);
+  gfx->print(item);
+  gfx->setTextColor(YELLOW);
+  gfx->setTextSize(tsc);
+
   char str[32] = {0};
   sprintf(str, "%lu", v);
   for (char *p = (str + strlen(str)) - 3; p > str; p -= 3)
@@ -729,6 +673,34 @@ uint32_t testCircles(uint8_t radius, uint16_t color)
   }
 
   return micros() - start;
+}
+
+uint32_t testFillArcs()
+{
+  int16_t i, r = 360 / cn;
+  uint32_t start = micros_start();
+
+  for (i = 6; i < cn; i += 6)
+  {
+    Serial.println(i * r);
+    gfx->fillArc(cx1, cy1, i, i - 3, 0, i * r, RED);
+  }
+
+  return (micros() - start) / 5;
+}
+
+uint32_t testArcs()
+{
+  int16_t i, r = 360 / cn;
+  uint32_t start = micros_start();
+
+  for (i = 6; i < cn; i += 6)
+  {
+    Serial.println(i * r);
+    gfx->drawArc(cx1, cy1, i, i - 3, 0, i * r, WHITE);
+  }
+
+  return (micros() - start) / 5;
 }
 
 uint32_t testFilledTriangles()

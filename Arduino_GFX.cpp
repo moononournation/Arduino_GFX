@@ -1,10 +1,14 @@
 /*
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
+ * 
+ * Arc function come from:
+ * https://github.com/lovyan03/LovyanGFX.git
  */
 #include "Arduino_DataBus.h"
 #include "Arduino_GFX.h"
 #include "glcdfont.c"
+#include "float.h"
 #ifdef __AVR__
 #include <avr/pgmspace.h>
 #elif defined(ESP8266) || defined(ESP32)
@@ -13,9 +17,9 @@
 
 /**************************************************************************/
 /*!
-   @brief    Instatiate a GFX context for graphics! Can only be done by a superclass
-   @param    w   Display width, in pixels
-   @param    h   Display height, in pixels
+    @brief  Instatiate a GFX context for graphics! Can only be done by a superclass
+    @param  w   Display width, in pixels
+    @param  h   Display height, in pixels
 */
 /**************************************************************************/
 Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : Arduino_G(w, h)
@@ -35,12 +39,12 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : Arduino_G(w, h)
 
 /**************************************************************************/
 /*!
-   @brief    Write a line. Check straight or slash line and call corresponding function
-    @param    x0  Start point x coordinate
-    @param    y0  Start point y coordinate
-    @param    x1  End point x coordinate
-    @param    y1  End point y coordinate
-    @param    color 16-bit 5-6-5 Color to draw with
+    @brief  Write a line. Check straight or slash line and call corresponding function
+    @param  x0      Start point x coordinate
+    @param  y0      Start point y coordinate
+    @param  x1      End point x coordinate
+    @param  y1      End point y coordinate
+    @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
@@ -70,12 +74,12 @@ void Arduino_GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 
 /**************************************************************************/
 /*!
-   @brief    Write a line.  Bresenham's algorithm - thx wikpedia
-    @param    x0  Start point x coordinate
-    @param    y0  Start point y coordinate
-    @param    x1  End point x coordinate
-    @param    y1  End point y coordinate
-    @param    color 16-bit 5-6-5 Color to draw with
+    @brief  Write a line.  Bresenham's algorithm - thx wikpedia
+    @param  x0      Start point x coordinate
+    @param  y0      Start point y coordinate
+    @param  x1      End point x coordinate
+    @param  y1      End point y coordinate
+    @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
@@ -120,7 +124,7 @@ void Arduino_GFX::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 
 /**************************************************************************/
 /*!
-   @brief    Start a display-writing routine, overwrite in subclasses.
+    @brief  Start a display-writing routine, overwrite in subclasses.
 */
 /**************************************************************************/
 inline void Arduino_GFX::startWrite()
@@ -137,10 +141,10 @@ void Arduino_GFX::writePixel(int16_t x, int16_t y, uint16_t color)
 
 /**************************************************************************/
 /*!
-   @brief    Write a pixel, overwrite in subclasses if startWrite is defined!
-    @param   x   x coordinate
-    @param   y   y coordinate
-   @param    color 16-bit 5-6-5 Color to fill with
+    @brief  Write a pixel, overwrite in subclasses if startWrite is defined!
+    @param  x       x coordinate
+    @param  y       y coordinate
+    @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
 void Arduino_GFX::drawPixel(int16_t x, int16_t y, uint16_t color)
@@ -152,11 +156,11 @@ void Arduino_GFX::drawPixel(int16_t x, int16_t y, uint16_t color)
 
 /**************************************************************************/
 /*!
-   @brief    Write a perfectly vertical line, overwrite in subclasses if startWrite is defined!
-    @param    x   Top-most x coordinate
-    @param    y   Top-most y coordinate
-    @param    h   Height in pixels
-   @param    color 16-bit 5-6-5 Color to fill with
+    @brief  Write a perfectly vertical line, overwrite in subclasses if startWrite is defined!
+    @param  x       Top-most x coordinate
+    @param  y       Top-most y coordinate
+    @param  h       Height in pixels
+    @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
 void Arduino_GFX::writeFastVLine(int16_t x, int16_t y,
@@ -170,11 +174,11 @@ void Arduino_GFX::writeFastVLine(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief    Write a perfectly horizontal line, overwrite in subclasses if startWrite is defined!
-    @param    x   Left-most x coordinate
-    @param    y   Left-most y coordinate
-    @param    w   Width in pixels
-   @param    color 16-bit 5-6-5 Color to fill with
+    @brief  Write a perfectly horizontal line, overwrite in subclasses if startWrite is defined!
+    @param  x       Left-most x coordinate
+    @param  y       Left-most y coordinate
+    @param  w       Width in pixels
+    @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
 void Arduino_GFX::writeFastHLine(int16_t x, int16_t y,
@@ -186,6 +190,7 @@ void Arduino_GFX::writeFastHLine(int16_t x, int16_t y,
     }
 }
 
+/**************************************************************************/
 /*!
     @brief  Draw a filled rectangle to the display. Not self-contained;
             should follow startWrite(). Typically used by higher-level
@@ -193,17 +198,18 @@ void Arduino_GFX::writeFastHLine(int16_t x, int16_t y,
             is likely to use the self-contained fillRect() instead.
             writeFillRect() performs its own edge clipping and rejection;
             see writeFillRectPreclipped() for a more 'raw' implementation.
-    @param  x      Horizontal position of first corner.
-    @param  y      Vertical position of first corner.
-    @param  w      Rectangle width in pixels (positive = right of first
-                   corner, negative = left of first corner).
-    @param  h      Rectangle height in pixels (positive = below first
-                   corner, negative = above first corner).
-    @param  color  16-bit fill color in '565' RGB format.
+    @param  x       Horizontal position of first corner.
+    @param  y       Vertical position of first corner.
+    @param  w       Rectangle width in pixels (positive = right of first
+                    corner, negative = left of first corner).
+    @param  h       Rectangle height in pixels (positive = below first
+                    corner, negative = above first corner).
+    @param  color   16-bit fill color in '565' RGB format.
     @note   Written in this deep-nested way because C by definition will
             optimize for the 'if' case, not the 'else' -- avoids branches
             and rejects clipped rectangles at the least-work possibility.
 */
+/**************************************************************************/
 void Arduino_GFX::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h,
                                 uint16_t color)
 {
@@ -258,12 +264,12 @@ void Arduino_GFX::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h,
 
 /**************************************************************************/
 /*!
-   @brief    Write a rectangle completely with one color, overwrite in subclasses if startWrite is defined!
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    w   Width in pixels
-    @param    h   Height in pixels
-   @param    color 16-bit 5-6-5 Color to fill with
+    @brief  Write a rectangle completely with one color, overwrite in subclasses if startWrite is defined!
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  w       Width in pixels
+    @param  h       Height in pixels
+    @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
 void Arduino_GFX::writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h,
@@ -278,7 +284,7 @@ void Arduino_GFX::writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16
 
 /**************************************************************************/
 /*!
-   @brief    End a display-writing routine, overwrite in subclasses if startWrite is defined!
+    @brief  End a display-writing routine, overwrite in subclasses if startWrite is defined!
 */
 /**************************************************************************/
 inline void Arduino_GFX::endWrite()
@@ -287,7 +293,7 @@ inline void Arduino_GFX::endWrite()
 
 /**************************************************************************/
 /*!
-   @brief    flush framebuffer to output (for Canvas or NeoPixel sub-class)
+    @brief  flush framebuffer to output (for Canvas or NeoPixel sub-class)
 */
 /**************************************************************************/
 void Arduino_GFX::flush()
@@ -296,11 +302,11 @@ void Arduino_GFX::flush()
 
 /**************************************************************************/
 /*!
-   @brief    Draw a perfectly vertical line (this is often optimized in a subclass!)
-    @param    x   Top-most x coordinate
-    @param    y   Top-most y coordinate
-    @param    h   Height in pixels
-   @param    color 16-bit 5-6-5 Color to fill with
+    @brief  Draw a perfectly vertical line (this is often optimized in a subclass!)
+    @param  x       Top-most x coordinate
+    @param  y       Top-most y coordinate
+    @param  h       Height in pixels
+    @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
 void Arduino_GFX::drawFastVLine(int16_t x, int16_t y,
@@ -313,11 +319,11 @@ void Arduino_GFX::drawFastVLine(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief    Draw a perfectly horizontal line (this is often optimized in a subclass!)
-    @param    x   Left-most x coordinate
-    @param    y   Left-most y coordinate
-    @param    w   Width in pixels
-   @param    color 16-bit 5-6-5 Color to fill with
+    @brief  Draw a perfectly horizontal line (this is often optimized in a subclass!)
+    @param  x       Left-most x coordinate
+    @param  y       Left-most y coordinate
+    @param  w       Width in pixels
+    @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
 void Arduino_GFX::drawFastHLine(int16_t x, int16_t y,
@@ -330,12 +336,12 @@ void Arduino_GFX::drawFastHLine(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief    Fill a rectangle completely with one color. Update in subclasses if desired!
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    w   Width in pixels
-    @param    h   Height in pixels
-   @param    color 16-bit 5-6-5 Color to fill with
+    @brief  Fill a rectangle completely with one color. Update in subclasses if desired!
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  w       Width in pixels
+    @param  h       Height in pixels
+    @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
 void Arduino_GFX::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
@@ -348,8 +354,8 @@ void Arduino_GFX::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
 
 /**************************************************************************/
 /*!
-   @brief    Fill the screen completely with one color. Update in subclasses if desired!
-    @param    color 16-bit 5-6-5 Color to fill with
+    @brief  Fill the screen completely with one color. Update in subclasses if desired!
+    @param  color 16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
 void Arduino_GFX::fillScreen(uint16_t color)
@@ -359,12 +365,12 @@ void Arduino_GFX::fillScreen(uint16_t color)
 
 /**************************************************************************/
 /*!
-   @brief    Draw a line
-    @param    x0  Start point x coordinate
-    @param    y0  Start point y coordinate
-    @param    x1  End point x coordinate
-    @param    y1  End point y coordinate
-    @param    color 16-bit 5-6-5 Color to draw with
+    @brief  Draw a line
+    @param  x0      Start point x coordinate
+    @param  y0      Start point y coordinate
+    @param  x1      End point x coordinate
+    @param  y1      End point y coordinate
+    @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
@@ -378,11 +384,11 @@ void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 
 /**************************************************************************/
 /*!
-   @brief    Draw a circle outline
-    @param    x0   Center-point x coordinate
-    @param    y0   Center-point y coordinate
-    @param    r   Radius of circle
-    @param    color 16-bit 5-6-5 Color to draw with
+    @brief  Draw a circle outline
+    @param  x0      Center-point x coordinate
+    @param  y0      Center-point y coordinate
+    @param  r       Radius of circle
+    @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
@@ -399,12 +405,12 @@ void Arduino_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
 
 /**************************************************************************/
 /*!
-    @brief    Quarter-circle drawer, used to do circles and roundrects
-    @param    x0   Center-point x coordinate
-    @param    y0   Center-point y coordinate
-    @param    r   Radius of circle
-    @param    cornername  Mask bit #1 or bit #2 to indicate which quarters of the circle we're doing
-    @param    color 16-bit 5-6-5 Color to draw with
+    @brief  Quarter-circle drawer, used to do circles and roundrects
+    @param  x0          Center-point x coordinate
+    @param  y0          Center-point y coordinate
+    @param  r           Radius of circle
+    @param  cornername  Mask bit #1 or bit #2 to indicate which quarters of the circle we're doing
+    @param  color       16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::drawCircleHelper(int16_t x0, int16_t y0,
@@ -452,11 +458,11 @@ void Arduino_GFX::drawCircleHelper(int16_t x0, int16_t y0,
 
 /**************************************************************************/
 /*!
-   @brief    Draw a circle with filled color
-    @param    x0   Center-point x coordinate
-    @param    y0   Center-point y coordinate
-    @param    r   Radius of circle
-    @param    color 16-bit 5-6-5 Color to fill with
+    @brief  Draw a circle with filled color
+    @param  x0      Center-point x coordinate
+    @param  y0      Center-point y coordinate
+    @param  r       Radius of circle
+    @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
 void Arduino_GFX::fillCircle(int16_t x0, int16_t y0, int16_t r,
@@ -471,12 +477,12 @@ void Arduino_GFX::fillCircle(int16_t x0, int16_t y0, int16_t r,
 /**************************************************************************/
 /*!
     @brief  Quarter-circle drawer with fill, used for circles and roundrects
-    @param  x0       Center-point x coordinate
-    @param  y0       Center-point y coordinate
-    @param  r        Radius of circle
-    @param  corners  Mask bits indicating which quarters we're doing
-    @param  delta    Offset from center-point, used for round-rects
-    @param  color    16-bit 5-6-5 Color to fill with
+    @param  x0      Center-point x coordinate
+    @param  y0      Center-point y coordinate
+    @param  r       Radius of circle
+    @param  corners Mask bits indicating which quarters we're doing
+    @param  delta   Offset from center-point, used for round-rects
+    @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
 void Arduino_GFX::fillCircleHelper(int16_t x0, int16_t y0, int16_t r,
@@ -527,12 +533,189 @@ void Arduino_GFX::fillCircleHelper(int16_t x0, int16_t y0, int16_t r,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a rectangle with no fill color
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    w   Width in pixels
-    @param    h   Height in pixels
-    @param    color 16-bit 5-6-5 Color to draw with
+    @brief  Draw an arc outline
+    @param  x       Center-point x coordinate
+    @param  y       Center-point y coordinate
+    @param  r1      Outer radius of arc
+    @param  r2      Inner radius of arc
+    @param  start   degree of arc start
+    @param  end     degree of arc end
+    @param  color   16-bit 5-6-5 Color to fill with
+*/
+/**************************************************************************/
+void Arduino_GFX::drawArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color)
+{
+    if (r1 < r2)
+    {
+        _swap_int16_t(r1, r2);
+    }
+    if (r1 < 1)
+    {
+        r1 = 1;
+    }
+    if (r2 < 1)
+    {
+        r2 = 1;
+    }
+    bool equal = fabsf(start - end) < FLT_EPSILON;
+    start = fmodf(start, 360);
+    end = fmodf(end, 360);
+    if (start < 0)
+        start += 360.0;
+    if (end < 0)
+        end += 360.0;
+
+    startWrite();
+    fillArcHelper(x, y, r1, r2, start, start, color);
+    fillArcHelper(x, y, r1, r2, end, end, color);
+    if (!equal && (fabsf(start - end) <= 0.0001))
+    {
+        start = .0;
+        end = 360.0;
+    }
+    fillArcHelper(x, y, r1, r1, start, end, color);
+    fillArcHelper(x, y, r2, r2, start, end, color);
+    endWrite();
+}
+
+/**************************************************************************/
+/*!
+    @brief  Draw an arc with filled color
+    @param  x       Center-point x coordinate
+    @param  y       Center-point y coordinate
+    @param  r1      Outer radius of arc
+    @param  r2      Inner radius of arc
+    @param  start   degree of arc start
+    @param  end     degree of arc end
+    @param  color   16-bit 5-6-5 Color to fill with
+*/
+/**************************************************************************/
+void Arduino_GFX::fillArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color)
+{
+    if (r1 < r2)
+    {
+        _swap_int16_t(r1, r2);
+    }
+    if (r1 < 1)
+    {
+        r1 = 1;
+    }
+    if (r2 < 1)
+    {
+        r2 = 1;
+    }
+    bool equal = fabsf(start - end) < FLT_EPSILON;
+    start = fmodf(start, 360);
+    end = fmodf(end, 360);
+    if (start < 0)
+        start += 360.0;
+    if (end < 0)
+        end += 360.0;
+    if (!equal && (fabsf(start - end) <= 0.0001))
+    {
+        start = .0;
+        end = 360.0;
+    }
+
+    startWrite();
+    fillArcHelper(x, y, r1, r2, start, end, color);
+    endWrite();
+}
+
+/**************************************************************************/
+/*!
+    @brief  Arc drawer with fill
+    @param  cx      Center-point x coordinate
+    @param  cy      Center-point y coordinate
+    @param  oradius Outer radius of arc
+    @param  iradius Inner radius of arc
+    @param  start   degree of arc start
+    @param  end     degree of arc end
+    @param  color   16-bit 5-6-5 Color to fill with
+*/
+/**************************************************************************/
+void Arduino_GFX::fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t iradius, float start, float end, uint16_t color)
+{
+    float s_cos = (cos(start * DEGTORAD));
+    float e_cos = (cos(end * DEGTORAD));
+    float sslope = s_cos / (sin(start * DEGTORAD));
+    float eslope = -1000000;
+    if (end != 360.0)
+        eslope = e_cos / (sin(end * DEGTORAD));
+    float swidth = 0.5 / s_cos;
+    float ewidth = -0.5 / e_cos;
+    --iradius;
+    int ir2 = iradius * iradius + iradius;
+    int or2 = oradius * oradius + oradius;
+
+    bool start180 = !(start < 180);
+    bool end180 = end < 180;
+    bool reversed = start + 180 < end || (end < start && start < end + 180);
+
+    int xs = -oradius;
+    int y = -oradius;
+    int ye = oradius;
+    int xe = oradius + 1;
+    if (!reversed)
+    {
+        if ((end >= 270 || end < 90) && (start >= 270 || start < 90))
+            xs = 0;
+        else if (end < 270 && end >= 90 && start < 270 && start >= 90)
+            xe = 1;
+        if (end >= 180 && start >= 180)
+            ye = 0;
+        else if (end < 180 && start < 180)
+            y = 0;
+    }
+    do
+    {
+        int y2 = y * y;
+        int x = xs;
+        if (x < 0)
+        {
+            while (x * x + y2 >= or2)
+                ++x;
+            if (xe != 1)
+                xe = 1 - x;
+        }
+        float ysslope = (y + swidth) * sslope;
+        float yeslope = (y + ewidth) * eslope;
+        int len = 0;
+        do
+        {
+            bool flg1 = start180 != (x <= ysslope);
+            bool flg2 = end180 != (x <= yeslope);
+            int distance = x * x + y2;
+            if (distance >= ir2 && ((flg1 && flg2) || (reversed && (flg1 || flg2))) && x != xe && distance < or2)
+            {
+                ++len;
+            }
+            else
+            {
+                if (len)
+                {
+                    writeFastHLine(cx + x - len, cy + y, len, color);
+                    len = 0;
+                }
+                if (distance >= or2)
+                    break;
+                if (x < 0 && distance < ir2)
+                {
+                    x = -x;
+                }
+            }
+        } while (++x <= xe);
+    } while (++y <= ye);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Draw a rectangle with no fill color
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  w       Width in pixels
+    @param  h       Height in pixels
+    @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::drawRect(int16_t x, int16_t y, int16_t w, int16_t h,
@@ -548,13 +731,13 @@ void Arduino_GFX::drawRect(int16_t x, int16_t y, int16_t w, int16_t h,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a rounded rectangle with no fill color
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    w   Width in pixels
-    @param    h   Height in pixels
-    @param    r   Radius of corner rounding
-    @param    color 16-bit 5-6-5 Color to draw with
+    @brief  Draw a rounded rectangle with no fill color
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  w       Width in pixels
+    @param  h       Height in pixels
+    @param  r       Radius of corner rounding
+    @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::drawRoundRect(int16_t x, int16_t y, int16_t w,
@@ -579,13 +762,13 @@ void Arduino_GFX::drawRoundRect(int16_t x, int16_t y, int16_t w,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a rounded rectangle with fill color
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    w   Width in pixels
-    @param    h   Height in pixels
-    @param    r   Radius of corner rounding
-    @param    color 16-bit 5-6-5 Color to draw/fill with
+    @brief  Draw a rounded rectangle with fill color
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  w       Width in pixels
+    @param  h       Height in pixels
+    @param  r       Radius of corner rounding
+    @param  color   16-bit 5-6-5 Color to draw/fill with
 */
 /**************************************************************************/
 void Arduino_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w,
@@ -605,14 +788,14 @@ void Arduino_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a triangle with no fill color
-    @param    x0  Vertex #0 x coordinate
-    @param    y0  Vertex #0 y coordinate
-    @param    x1  Vertex #1 x coordinate
-    @param    y1  Vertex #1 y coordinate
-    @param    x2  Vertex #2 x coordinate
-    @param    y2  Vertex #2 y coordinate
-    @param    color 16-bit 5-6-5 Color to draw with
+    @brief  Draw a triangle with no fill color
+    @param  x0      Vertex #0 x coordinate
+    @param  y0      Vertex #0 y coordinate
+    @param  x1      Vertex #1 x coordinate
+    @param  y1      Vertex #1 y coordinate
+    @param  x2      Vertex #2 x coordinate
+    @param  y2      Vertex #2 y coordinate
+    @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::drawTriangle(int16_t x0, int16_t y0,
@@ -627,14 +810,14 @@ void Arduino_GFX::drawTriangle(int16_t x0, int16_t y0,
 
 /**************************************************************************/
 /*!
-   @brief     Draw a triangle with color-fill
-    @param    x0  Vertex #0 x coordinate
-    @param    y0  Vertex #0 y coordinate
-    @param    x1  Vertex #1 x coordinate
-    @param    y1  Vertex #1 y coordinate
-    @param    x2  Vertex #2 x coordinate
-    @param    y2  Vertex #2 y coordinate
-    @param    color 16-bit 5-6-5 Color to fill/draw with
+    @brief  Draw a triangle with color-fill
+    @param  x0      Vertex #0 x coordinate
+    @param  y0      Vertex #0 y coordinate
+    @param  x1      Vertex #1 x coordinate
+    @param  y1      Vertex #1 y coordinate
+    @param  x2      Vertex #2 x coordinate
+    @param  y2      Vertex #2 y coordinate
+    @param  color   16-bit 5-6-5 Color to fill/draw with
 */
 /**************************************************************************/
 void Arduino_GFX::fillTriangle(int16_t x0, int16_t y0,
@@ -747,13 +930,13 @@ void Arduino_GFX::fillTriangle(int16_t x0, int16_t y0,
 
 /**************************************************************************/
 /*!
-   @brief      Draw a PROGMEM-resident 1-bit image at the specified (x,y) position, using the specified foreground color (unset bits are transparent).
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with monochrome bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-    @param    color 16-bit 5-6-5 Color to draw with
+    @brief  Draw a PROGMEM-resident 1-bit image at the specified (x,y) position, using the specified foreground color (unset bits are transparent).
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with monochrome bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
+    @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
@@ -787,14 +970,14 @@ void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief      Draw a PROGMEM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with monochrome bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-    @param    color 16-bit 5-6-5 Color to draw pixels with
-    @param    bg 16-bit 5-6-5 Color to draw background with
+    @brief  Draw a PROGMEM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with monochrome bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
+    @param  color   16-bit 5-6-5 Color to draw pixels with
+    @param  bg      16-bit 5-6-5 Color to draw background with
 */
 /**************************************************************************/
 void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
@@ -826,13 +1009,13 @@ void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief      Draw a RAM-resident 1-bit image at the specified (x,y) position, using the specified foreground color (unset bits are transparent).
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with monochrome bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-    @param    color 16-bit 5-6-5 Color to draw with
+    @brief  Draw a RAM-resident 1-bit image at the specified (x,y) position, using the specified foreground color (unset bits are transparent).
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with monochrome bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
+    @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
@@ -866,14 +1049,14 @@ void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief      Draw a RAM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with monochrome bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-    @param    color 16-bit 5-6-5 Color to draw pixels with
-    @param    bg 16-bit 5-6-5 Color to draw background with
+    @brief  Draw a RAM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with monochrome bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
+    @param  color   16-bit 5-6-5 Color to draw pixels with
+    @param  bg      16-bit 5-6-5 Color to draw background with
 */
 /**************************************************************************/
 void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
@@ -904,23 +1087,22 @@ void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief      Draw PROGMEM-resident XBitMap Files (*.xbm), exported from GIMP.
-   Usage: Export from GIMP to *.xbm, rename *.xbm to *.c and open in editor.
-   C Array can be directly used with this function.
-   There is no RAM-resident version of this function; if generating bitmaps
-   in RAM, use the format defined by drawBitmap() and call that instead.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with monochrome bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-    @param    color 16-bit 5-6-5 Color to draw pixels with
+   @brief   Draw PROGMEM-resident XBitMap Files (*.xbm), exported from GIMP.
+            Usage: Export from GIMP to *.xbm, rename *.xbm to *.c and open in editor.
+            C Array can be directly used with this function.
+            There is no RAM-resident version of this function; if generating bitmaps
+            in RAM, use the format defined by drawBitmap() and call that instead.
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with monochrome bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
+    @param  color   16-bit 5-6-5 Color to draw pixels with
 */
 /**************************************************************************/
 void Arduino_GFX::drawXBitmap(int16_t x, int16_t y,
                               const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color)
 {
-
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
 
@@ -950,12 +1132,12 @@ void Arduino_GFX::drawXBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a PROGMEM-resident 8-bit image (grayscale) at the specified (x,y) pos.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with grayscale bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @brief  Draw a PROGMEM-resident 8-bit image (grayscale) at the specified (x,y) pos.
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with grayscale bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
@@ -976,12 +1158,12 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a RAM-resident 8-bit image (grayscale) at the specified (x,y) pos.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with grayscale bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @brief  Draw a RAM-resident 8-bit image (grayscale) at the specified (x,y) pos.
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with grayscale bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
@@ -1002,15 +1184,15 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a PROGMEM-resident 8-bit image (grayscale) with a 1-bit mask
+    @brief  Draw a PROGMEM-resident 8-bit image (grayscale) with a 1-bit mask
             (set bits = opaque, unset bits = clear) at the specified (x,y) position.
             BOTH buffers (grayscale and mask) must be PROGMEM-resident.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with grayscale bitmap
-    @param    mask  byte array with mask bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with grayscale bitmap
+    @param  mask    byte array with mask bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
@@ -1045,15 +1227,15 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a RAM-resident 8-bit image (grayscale) with a 1-bit mask
+    @brief  Draw a RAM-resident 8-bit image (grayscale) with a 1-bit mask
             (set bits = opaque, unset bits = clear) at the specified (x,y) position.
             BOTH buffers (grayscale and mask) must be RAM-residentt, no mix-and-match
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with grayscale bitmap
-    @param    mask  byte array with mask bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with grayscale bitmap
+    @param  mask    byte array with mask bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
@@ -1088,11 +1270,11 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 /**************************************************************************/
 /*!
    @brief   Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with 16-bit color bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
@@ -1112,12 +1294,12 @@ void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @brief  Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with 16-bit color bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
@@ -1137,12 +1319,12 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a RAM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @brief  Draw a RAM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with 16-bit color bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
@@ -1162,15 +1344,15 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask
+    @brief  Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask
             (set bits = opaque, unset bits = clear) at the specified (x,y) position.
             BOTH buffers (color and mask) must be PROGMEM-resident.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    mask  byte array with monochrome mask bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with 16-bit color bitmap
+    @param  mask    byte array with monochrome mask bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
@@ -1205,15 +1387,15 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a RAM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask
+    @brief  Draw a RAM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask
             (set bits = opaque, unset bits = clear) at the specified (x,y) position.
             BOTH buffers (color and mask) must be RAM-resident.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    mask  byte array with monochrome mask bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with 16-bit color bitmap
+    @param  mask    byte array with monochrome mask bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
@@ -1247,12 +1429,12 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a PROGMEM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @brief  Draw a PROGMEM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with 16-bit color bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
@@ -1272,12 +1454,12 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a RAM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @brief  Draw a RAM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with 16-bit color bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
@@ -1297,15 +1479,15 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a PROGMEM-resident 24-bit image (RGB 5/6/5) with a 1-bit mask
+    @brief  Draw a PROGMEM-resident 24-bit image (RGB 5/6/5) with a 1-bit mask
             (set bits = opaque, unset bits = clear) at the specified (x,y) position.
             BOTH buffers (color and mask) must be PROGMEM-resident.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    mask  byte array with monochrome mask bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with 16-bit color bitmap
+    @param  mask    byte array with monochrome mask bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
@@ -1343,15 +1525,15 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-   @brief   Draw a RAM-resident 24-bit image (RGB 5/6/5) with a 1-bit mask
+    @brief  Draw a RAM-resident 24-bit image (RGB 5/6/5) with a 1-bit mask
             (set bits = opaque, unset bits = clear) at the specified (x,y) position.
             BOTH buffers (color and mask) must be RAM-resident.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    mask  byte array with monochrome mask bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with 16-bit color bitmap
+    @param  mask    byte array with monochrome mask bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
@@ -1391,13 +1573,13 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
 // Draw a character
 /**************************************************************************/
 /*!
-   @brief   Draw a single character
-    @param    x   Bottom left corner x coordinate
-    @param    y   Bottom left corner y coordinate
-    @param    c   The 8-bit font-indexed character (likely ascii)
-    @param    color 16-bit 5-6-5 Color to draw chraracter with
-    @param    bg 16-bit 5-6-5 Color to fill background with (if same as color, no background)
-    @param    size  Font magnification level, 1 is 'original' size
+    @brief  Draw a single character
+    @param  x       Bottom left corner x coordinate
+    @param  y       Bottom left corner y coordinate
+    @param  c       The 8-bit font-indexed character (likely ascii)
+    @param  color   16-bit 5-6-5 Color to draw chraracter with
+    @param  bg      16-bit 5-6-5 Color to fill background with (if same as color, no background)
+    @param  size    Font magnification level, 1 is 'original' size
 */
 /**************************************************************************/
 void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
@@ -1409,14 +1591,14 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 // Draw a character
 /**************************************************************************/
 /*!
-   @brief   Draw a single character
-    @param    x   Bottom left corner x coordinate
-    @param    y   Bottom left corner y coordinate
-    @param    c   The 8-bit font-indexed character (likely ascii)
-    @param    color 16-bit 5-6-5 Color to draw chraracter with
-    @param    bg 16-bit 5-6-5 Color to fill background with (if same as color, no background)
-    @param    size_x  Font magnification level in X-axis, 1 is 'original' size
-    @param    size_y  Font magnification level in Y-axis, 1 is 'original' size
+    @brief  Draw a single character
+    @param  x       Bottom left corner x coordinate
+    @param  y       Bottom left corner y coordinate
+    @param  c       The 8-bit font-indexed character (likely ascii)
+    @param  color   16-bit 5-6-5 Color to draw chraracter with
+    @param  bg      16-bit 5-6-5 Color to fill background with (if same as color, no background)
+    @param  size_x  Font magnification level in X-axis, 1 is 'original' size
+    @param  size_y  Font magnification level in Y-axis, 1 is 'original' size
 */
 /**************************************************************************/
 void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
@@ -1567,7 +1749,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 /**************************************************************************/
 /*!
     @brief  Print one byte/character of data, used to support print()
-    @param  c  The 8-bit ascii character to write
+    @param  c   The 8-bit ascii character to write
 */
 /**************************************************************************/
 size_t Arduino_GFX::write(uint8_t c)
@@ -1624,8 +1806,8 @@ size_t Arduino_GFX::write(uint8_t c)
 
 /**************************************************************************/
 /*!
-    @brief   Set text 'magnification' size. Each increase in s makes 1 pixel that much bigger.
-    @param  s  Desired text size. 1 is default 6x8, 2 is 12x16, 3 is 18x24, etc
+    @brief  Set text 'magnification' size. Each increase in s makes 1 pixel that much bigger.
+    @param  s   Desired text size. 1 is default 6x8, 2 is 12x16, 3 is 18x24, etc
 */
 /**************************************************************************/
 void Arduino_GFX::setTextSize(uint8_t s)
@@ -1635,9 +1817,9 @@ void Arduino_GFX::setTextSize(uint8_t s)
 
 /**************************************************************************/
 /*!
-    @brief   Set text 'magnification' size. Each increase in s makes 1 pixel that much bigger.
-    @param  s_x  Desired text width magnification level in X-axis. 1 is default
-    @param  s_y  Desired text width magnification level in Y-axis. 1 is default
+    @brief  Set text 'magnification' size. Each increase in s makes 1 pixel that much bigger.
+    @param  s_x Desired text width magnification level in X-axis. 1 is default
+    @param  s_y Desired text width magnification level in Y-axis. 1 is default
 */
 /**************************************************************************/
 void Arduino_GFX::setTextSize(uint8_t s_x, uint8_t s_y)
@@ -1648,7 +1830,7 @@ void Arduino_GFX::setTextSize(uint8_t s_x, uint8_t s_y)
 
 /**************************************************************************/
 /*!
-    @brief      Set rotation setting for display
+    @brief  Set rotation setting for display
     @param  r   0 thru 3 corresponding to 4 cardinal rotations
 */
 /**************************************************************************/
@@ -1676,8 +1858,8 @@ void Arduino_GFX::setRotation(uint8_t r)
 
 /**************************************************************************/
 /*!
-    @brief Set the font to display when print()ing, either custom or default
-    @param  f  The GFXfont object, if NULL use built in 6x8 font
+    @brief  Set the font to display when print()ing, either custom or default
+    @param  f   The GFXfont object, if NULL use built in 6x8 font
 */
 /**************************************************************************/
 void Arduino_GFX::setFont(const GFXfont *f)
@@ -1702,15 +1884,15 @@ void Arduino_GFX::setFont(const GFXfont *f)
 
 /**************************************************************************/
 /*!
-    @brief    Helper to determine size of a character with current font/size.
-       Broke this out as it's used by both the PROGMEM- and RAM-resident getTextBounds() functions.
-    @param    c     The ascii character in question
-    @param    x     Pointer to x location of character
-    @param    y     Pointer to y location of character
-    @param    minx  Minimum clipping value for X
-    @param    miny  Minimum clipping value for Y
-    @param    maxx  Maximum clipping value for X
-    @param    maxy  Maximum clipping value for Y
+    @brief  Helper to determine size of a character with current font/size.
+            Broke this out as it's used by both the PROGMEM- and RAM-resident getTextBounds() functions.
+    @param  c       The ascii character in question
+    @param  x       Pointer to x location of character
+    @param  y       Pointer to y location of character
+    @param  minx    Minimum clipping value for X
+    @param  miny    Minimum clipping value for Y
+    @param  maxx    Maximum clipping value for X
+    @param  maxy    Maximum clipping value for Y
 */
 /**************************************************************************/
 void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
@@ -1808,14 +1990,14 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
 
 /**************************************************************************/
 /*!
-    @brief    Helper to determine size of a string with current font/size. Pass string and a cursor position, returns UL corner and W,H.
-    @param    str     The ascii string to measure
-    @param    x       The current cursor X
-    @param    y       The current cursor Y
-    @param    x1      The boundary X coordinate, set by function
-    @param    y1      The boundary Y coordinate, set by function
-    @param    w      The boundary width, set by function
-    @param    h      The boundary height, set by function
+    @brief  Helper to determine size of a string with current font/size. Pass string and a cursor position, returns UL corner and W,H.
+    @param  str The ascii string to measure
+    @param  x   The current cursor X
+    @param  y   The current cursor Y
+    @param  x1  The boundary X coordinate, set by function
+    @param  y1  The boundary Y coordinate, set by function
+    @param  w   The boundary width, set by function
+    @param  h   The boundary height, set by function
 */
 /**************************************************************************/
 void Arduino_GFX::getTextBounds(const char *str, int16_t x, int16_t y,
@@ -1848,14 +2030,14 @@ void Arduino_GFX::getTextBounds(const char *str, int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-    @brief    Helper to determine size of a string with current font/size. Pass string and a cursor position, returns UL corner and W,H.
-    @param    str    The ascii string to measure (as an arduino String() class)
-    @param    x      The current cursor X
-    @param    y      The current cursor Y
-    @param    x1     The boundary X coordinate, set by function
-    @param    y1     The boundary Y coordinate, set by function
-    @param    w      The boundary width, set by function
-    @param    h      The boundary height, set by function
+    @brief  Helper to determine size of a string with current font/size. Pass string and a cursor position, returns UL corner and W,H.
+    @param  str The ascii string to measure (as an arduino String() class)
+    @param  x   The current cursor X
+    @param  y   The current cursor Y
+    @param  x1  The boundary X coordinate, set by function
+    @param  y1  The boundary Y coordinate, set by function
+    @param  w   The boundary width, set by function
+    @param  h   The boundary height, set by function
 */
 /**************************************************************************/
 void Arduino_GFX::getTextBounds(const String &str, int16_t x, int16_t y,
@@ -1869,14 +2051,14 @@ void Arduino_GFX::getTextBounds(const String &str, int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-    @brief    Helper to determine size of a PROGMEM string with current font/size. Pass string and a cursor position, returns UL corner and W,H.
-    @param    str     The flash-memory ascii string to measure
-    @param    x       The current cursor X
-    @param    y       The current cursor Y
-    @param    x1      The boundary X coordinate, set by function
-    @param    y1      The boundary Y coordinate, set by function
-    @param    w      The boundary width, set by function
-    @param    h      The boundary height, set by function
+    @brief  Helper to determine size of a PROGMEM string with current font/size. Pass string and a cursor position, returns UL corner and W,H.
+    @param  str The flash-memory ascii string to measure
+    @param  x   The current cursor X
+    @param  y   The current cursor Y
+    @param  x1  The boundary X coordinate, set by function
+    @param  y1  The boundary Y coordinate, set by function
+    @param  w   The boundary width, set by function
+    @param  h   The boundary height, set by function
 */
 /**************************************************************************/
 void Arduino_GFX::getTextBounds(const __FlashStringHelper *str,
@@ -1907,8 +2089,8 @@ void Arduino_GFX::getTextBounds(const __FlashStringHelper *str,
 
 /**************************************************************************/
 /*!
-    @brief      Invert the display (ideally using built-in hardware command)
-    @param   i  True if you want to invert, false to make 'normal'
+    @brief  Invert the display (ideally using built-in hardware command)
+    @param  i   True if you want to invert, false to make 'normal'
 */
 /**************************************************************************/
 void Arduino_GFX::invertDisplay(bool i)

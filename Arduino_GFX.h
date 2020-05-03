@@ -15,6 +15,10 @@
 #include "Arduino_DataBus.h"
 #include "gfxfont.h"
 
+#ifndef DEGTORAD
+#define DEGTORAD 0.017453292519943295769236907684886F
+#endif
+
 // Color definitions
 #define BLACK 0x0000       ///<   0,   0,   0
 #define NAVY 0x000F        ///<   0,   0, 123
@@ -156,6 +160,9 @@ public:
   void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
   void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
   void fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, int16_t delta, uint16_t color);
+  void drawArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color);
+  void fillArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color);
+  void fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t iradius, float start, float end, uint16_t color);
   void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
   void fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
   void drawRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color);
@@ -191,7 +198,7 @@ public:
   virtual void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
   virtual void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h);
   virtual void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y);
-#else // not defined(ESP32)
+#else  // not defined(ESP32)
   void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
   void drawCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color);
   void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg);
