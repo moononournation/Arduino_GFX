@@ -1,4 +1,4 @@
-#if defined(ESP8266)
+// #if defined(ESP8266)
 // extract from esp32 source code for filling ESP8266 missing code
 // Copyright 2015-2016 Espressif Systems (Shanghai) PTE LTD
 //
@@ -78,4 +78,4 @@ extern "C"
 #endif
 
 #endif /* _TJPGDEC */
-#endif // ESP8266
+// #endif // ESP8266

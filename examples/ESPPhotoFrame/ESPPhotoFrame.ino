@@ -176,7 +176,8 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
  ******************************************************************************/
 
 #if defined(ESP32)
-#include <esp_jpg_decode.h>
+// #include <esp_jpg_decode.h>
+#include "esp_jpg_decode.h"
 #include <esp_task_wdt.h>
 #include <WiFi.h>
 #include <HTTPClient.h>

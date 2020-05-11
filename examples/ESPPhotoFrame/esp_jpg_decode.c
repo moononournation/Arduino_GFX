@@ -1,4 +1,4 @@
-#if defined(ESP8266)
+// #if defined(ESP8266)
 // extract from esp32 source code for filling ESP8266 missing code
 // Copyright 2015-2016 Espressif Systems (Shanghai) PTE LTD
 //
@@ -87,4 +87,4 @@ void esp_jpg_decode(size_t len, jpg_scale_t scale, jpg_reader_cb reader, jpg_wri
     }
 }
 
-#endif // ESP8266
+// #endif // ESP8266
