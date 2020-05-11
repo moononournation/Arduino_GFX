@@ -372,7 +372,7 @@ void loop(void)
   delay(60 * 1000L);
 }
 
-void printnice(const __FlashStringHelper* item, int32_t v)
+void printnice(const __FlashStringHelper* item, long unsigned int v)
 {
   gfx->setTextColor(CYAN);
   gfx->setTextSize(tsb);
