@@ -176,12 +176,12 @@ public:
   void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h);
   void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], const uint8_t mask[], int16_t w, int16_t h);
   void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h);
-  void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size);
   void getTextBounds(const char *string, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
   void getTextBounds(const __FlashStringHelper *s, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
   void getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
   void setTextSize(uint8_t s);
   void setTextSize(uint8_t sx, uint8_t sy);
+  void setTextSize(uint8_t sx, uint8_t sy, uint8_t pixel_margin);
   void setFont(const GFXfont *f = NULL);
 
 // TFT optimization code, too big for ATMEL family
@@ -197,7 +197,7 @@ public:
   virtual void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h);
   virtual void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
   virtual void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h);
-  virtual void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y);
+  virtual void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg);
 #else  // not defined(ESP32)
   void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
   void drawCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color);
@@ -210,7 +210,7 @@ public:
   void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h);
   void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
   void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h);
-  void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y);
+  void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg);
 #endif // defined(ESP32)
 
   /**********************************************************************/
@@ -352,6 +352,7 @@ protected:
   uint8_t
       textsize_x, ///< Desired magnification in X-axis of text to print()
       textsize_y, ///< Desired magnification in Y-axis of text to print()
+      text_pixel_margin, ///< Margin for each text pixel
       _rotation;  ///< Display rotation (0 thru 3)
   bool
       wrap,   ///< If set, 'wrap' text at right edge of display

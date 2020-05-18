@@ -31,6 +31,7 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : Arduino_G(w, h)
     _rotation = 0;
     cursor_y = cursor_x = 0;
     textsize_x = textsize_y = 1;
+    text_pixel_margin = 0;
     textcolor = textbgcolor = 0xFFFF;
     wrap = true;
     _cp437 = false;
@@ -1579,38 +1580,18 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
     @param  c       The 8-bit font-indexed character (likely ascii)
     @param  color   16-bit 5-6-5 Color to draw chraracter with
     @param  bg      16-bit 5-6-5 Color to fill background with (if same as color, no background)
-    @param  size    Font magnification level, 1 is 'original' size
 */
 /**************************************************************************/
 void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
-                           uint16_t color, uint16_t bg, uint8_t size)
-{
-    drawChar(x, y, c, color, bg, size, size);
-}
-
-// Draw a character
-/**************************************************************************/
-/*!
-    @brief  Draw a single character
-    @param  x       Bottom left corner x coordinate
-    @param  y       Bottom left corner y coordinate
-    @param  c       The 8-bit font-indexed character (likely ascii)
-    @param  color   16-bit 5-6-5 Color to draw chraracter with
-    @param  bg      16-bit 5-6-5 Color to fill background with (if same as color, no background)
-    @param  size_x  Font magnification level in X-axis, 1 is 'original' size
-    @param  size_y  Font magnification level in Y-axis, 1 is 'original' size
-*/
-/**************************************************************************/
-void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
-                           uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y)
+                           uint16_t color, uint16_t bg)
 {
     uint16_t block_w;
     uint16_t block_h;
 
     if (!gfxFont) // 'Classic' built-in font
     {
-        block_w = 6 * size_x;
-        block_h = 8 * size_y;
+        block_w = 6 * textsize_x;
+        block_h = 8 * textsize_y;
         if (
             (x > _max_x) ||            // Clip right
             (y > _max_y) ||            // Clip bottom
@@ -1634,37 +1615,37 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
             {
                 if (line & 1)
                 {
-                    if (size_x == 1 && size_y == 1)
+                    if (textsize_x == 1 && textsize_y == 1)
                     {
                         writePixel(x + i, y + j, color);
                     }
                     else
                     {
-                        writeFillRect(x + i * size_x, y + j * size_y, size_x, size_y, color);
+                        writeFillRect(x + i * textsize_x, y + j * textsize_y, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
                     }
                 }
                 else if (bg != color)
                 {
-                    if (size_x == 1 && size_y == 1)
+                    if (textsize_x == 1 && textsize_y == 1)
                     {
                         writePixel(x + i, y + j, bg);
                     }
                     else
                     {
-                        writeFillRect(x + i * size_x, y + j * size_y, size_x, size_y, bg);
+                        writeFillRect(x + i * textsize_x, y + j * textsize_y, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, bg);
                     }
                 }
             }
         }
         if (bg != color)
         { // If opaque, draw vertical line for last column
-            if (size_x == 1 && size_y == 1)
+            if (textsize_x == 1 && textsize_y == 1)
             {
                 writeFastVLine(x + 5, y, 8, bg);
             }
             else
             {
-                writeFillRect(x + 5 * size_x, y, size_x, 8 * size_y, bg);
+                writeFillRect(x + 5 * textsize_x, y, textsize_x, 8 * textsize_y, bg);
             }
         }
         endWrite();
@@ -1695,14 +1676,14 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
             xAdvance = w; // Don't know why it exists
         }
 
-        if (size_x > 1 || size_y > 1)
+        if (textsize_x > 1 || textsize_y > 1)
         {
             xo16 = xo;
             yo16 = yo;
         }
 
-        block_w = xAdvance * size_x;
-        block_h = yAdvance * size_y;
+        block_w = xAdvance * textsize_x;
+        block_h = yAdvance * textsize_y;
         if (
             (x > _max_x) ||            // Clip right
             (y > _max_y) ||            // Clip bottom
@@ -1718,7 +1699,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
         startWrite();
         if (bg != color) // have background color
         {
-            writeFillRect(x, y - (baseline * size_y), block_w, block_h, bg);
+            writeFillRect(x, y - (baseline * textsize_y), block_w, block_h, bg);
         }
         for (yy = 0; yy < h; yy++)
         {
@@ -1730,14 +1711,14 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                 }
                 if (bits & 0x80)
                 {
-                    if (size_x == 1 && size_y == 1)
+                    if (textsize_x == 1 && textsize_y == 1)
                     {
                         writePixel(x + xo + xx, y + yo + yy, color);
                     }
                     else
                     {
-                        writeFillRect(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
-                                      size_x, size_y, color);
+                        writeFillRect(x + (xo16 + xx) * textsize_x, y + (yo16 + yy) * textsize_y,
+                                      textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
                     }
                 }
                 bits <<= 1;
@@ -1769,7 +1750,7 @@ size_t Arduino_GFX::write(uint8_t c)
                 cursor_x = 0;               // Reset x to zero,
                 cursor_y += textsize_y * 8; // advance y one line
             }
-            drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor, textsize_x, textsize_y);
+            drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor);
             cursor_x += textsize_x * 6; // Advance x one char
         }
     }
@@ -1796,7 +1777,7 @@ size_t Arduino_GFX::write(uint8_t c)
                     cursor_y += (int16_t)textsize_y *
                                 (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
                 }
-                drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor, textsize_x, textsize_y);
+                drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor);
                 cursor_x += textsize_x * w;
             }
         }
@@ -1812,7 +1793,7 @@ size_t Arduino_GFX::write(uint8_t c)
 /**************************************************************************/
 void Arduino_GFX::setTextSize(uint8_t s)
 {
-    setTextSize(s, s);
+    setTextSize(s, s, 0);
 }
 
 /**************************************************************************/
@@ -1824,6 +1805,20 @@ void Arduino_GFX::setTextSize(uint8_t s)
 /**************************************************************************/
 void Arduino_GFX::setTextSize(uint8_t s_x, uint8_t s_y)
 {
+    setTextSize(s_x, s_y, 0);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Set text 'magnification' size. Each increase in s makes 1 pixel that much bigger.
+    @param  s_x             Desired text width magnification level in X-axis. 1 is default
+    @param  s_y             Desired text width magnification level in Y-axis. 1 is default
+    @param  pixel_margin    Margin for each text pixel. 0 is default
+*/
+/**************************************************************************/
+void Arduino_GFX::setTextSize(uint8_t s_x, uint8_t s_y, uint8_t pixel_margin)
+{
+    text_pixel_margin = ((pixel_margin < s_x) && (pixel_margin < s_y)) ? pixel_margin : 0;
     textsize_x = (s_x > 0) ? s_x : 1;
     textsize_y = (s_y > 0) ? s_y : 1;
 }

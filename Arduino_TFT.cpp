@@ -637,20 +637,17 @@ void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
     @param    c   The 8-bit font-indexed character (likely ascii)
     @param    color 16-bit 5-6-5 Color to draw chraracter with
     @param    bg 16-bit 5-6-5 Color to fill background with (if same as color, no background)
-    @param    size_x  Font magnification level in X-axis, 1 is 'original' size
-    @param    size_y  Font magnification level in Y-axis, 1 is 'original' size
 */
 /**************************************************************************/
-void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
-                           uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y)
+void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg)
 {
   uint16_t block_w;
   uint16_t block_h;
 
   if (!gfxFont) // 'Classic' built-in font
   {
-    block_w = 6 * size_x;
-    block_h = 8 * size_y;
+    block_w = 6 * textsize_x;
+    block_h = 8 * textsize_y;
     if (
         (x < 0) ||                      // Clip left
         (y < 0) ||                      // Clip top
@@ -659,7 +656,7 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     )
     {
       // partial draw char by parent class
-      Arduino_GFX::drawChar(x, y, c, color, bg, size_x, size_y);
+      Arduino_GFX::drawChar(x, y, c, color, bg);
     }
     else
     {
@@ -680,45 +677,63 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
         writeAddrWindow(x, y, block_w, block_h);
 
         uint16_t line_buf[block_w];
-        if (size_x == 1)
+        if (textsize_x == 1)
         {
           line_buf[5] = bg; // last column always bg
         }
         else
         {
-          for (int8_t k = 0; k < size_x; k++)
+          for (int8_t k = 0; k < textsize_x; k++)
           {
-            line_buf[5 * size_x + k] = bg;
+            line_buf[5 * textsize_x + k] = bg;
           }
         }
         uint8_t bit = 1;
+        bool draw_dot;
 
         while (bit)
         {
           for (int8_t i = 0; i < 5; i++)
           {
-            if (size_x == 1)
+            draw_dot = col[i] & bit;
+            if (textsize_x == 1)
             {
-              line_buf[i] = (col[i] & bit) ? color : bg;
+              line_buf[i] = (draw_dot) ? color : bg;
             }
             else
             {
-              uint16_t dot_color = (col[i] & bit) ? color : bg;
-              for (int8_t k = 0; k < size_x; k++)
+              if (draw_dot)
               {
-                line_buf[i * size_x + k] = dot_color;
+                for (int8_t k = 0; k < textsize_x; k++)
+                {
+                  line_buf[i * textsize_x + k] = (k < (textsize_x - text_pixel_margin)) ? color : bg;
+                }
+              }
+              else
+              {
+                for (int8_t k = 0; k < textsize_x; k++)
+                {
+                  line_buf[i * textsize_x + k] = bg;
+                }
               }
             }
           }
-          if (size_y == 1)
+          if (textsize_y == 1)
           {
             writePixels(line_buf, block_w);
           }
           else
           {
-            for (int8_t l = 0; l < size_y; l++)
+            for (int8_t l = 0; l < textsize_y; l++)
             {
-              writePixels(line_buf, block_w);
+              if (l < (textsize_y - text_pixel_margin))
+              {
+                writePixels(line_buf, block_w);
+              }
+              else
+              {
+                writeRepeat(bg, block_w);
+              }
             }
           }
           bit <<= 1;
@@ -733,13 +748,13 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
           {
             if (line & 1)
             {
-              if (size_x == 1 && size_y == 1)
+              if (textsize_x == 1 && textsize_y == 1)
               {
                 writePixelPreclipped(x + i, y + j, color);
               }
               else
               {
-                writeFillRectPreclipped(x + i * size_x, y + j * size_y, size_x, size_y, color);
+                writeFillRectPreclipped(x + i * textsize_x, y + j * textsize_y, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
               }
             }
           }
@@ -773,14 +788,14 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
       xAdvance = w; // Don't know why it exists
     }
 
-    if (size_x > 1 || size_y > 1)
+    if (textsize_x > 1 || textsize_y > 1)
     {
       xo16 = xo;
       yo16 = yo;
     }
 
-    block_w = xAdvance * size_x;
-    block_h = yAdvance * size_y;
+    block_w = xAdvance * textsize_x;
+    block_h = yAdvance * textsize_y;
     int16_t x1 = (xo < 0) ? (x + xo) : x;
     if (
         (x1 < 0) ||                             // Clip left
@@ -790,7 +805,7 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
     )
     {
       // partial draw char by parent class
-      Arduino_GFX::drawChar(x, y, c, color, bg, size_x, size_y);
+      Arduino_GFX::drawChar(x, y, c, color, bg);
     }
     else
     {
@@ -805,16 +820,16 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
       startWrite();
       if (bg != color) // have background color
       {
-        writeAddrWindow(x, y - (baseline * size_y), block_w, block_h);
+        writeAddrWindow(x, y - (baseline * textsize_y), block_w, block_h);
 
         uint16_t line_buf[block_w];
         int8_t i;
-        uint16_t dot_color;
+        bool draw_dot;
         for (yy = 0; yy < yAdvance; yy++)
         {
           if ((yy < (baseline + yo)) || (yy > (baseline + yo + h - 1)))
           {
-            writeRepeat(bg, block_w * size_y);
+            writeRepeat(bg, block_w * textsize_y);
           }
           else
           {
@@ -823,7 +838,7 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
             {
               if ((xx < xo) || (xx > (xo + w - 1)))
               {
-                dot_color = bg;
+                draw_dot = false;
               }
               else
               {
@@ -831,31 +846,48 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
                 {
                   bits = pgm_read_byte(&bitmap[bo++]);
                 }
-                dot_color = (bits & 0x80) ? color : bg;
+                draw_dot = bits & 0x80;
                 bits <<= 1;
               }
 
-              if (size_x == 1)
+              if (textsize_x == 1)
               {
-                line_buf[i++] = dot_color;
+                line_buf[i++] = draw_dot ? color : bg;
               }
               else
               {
-                for (int8_t k = 0; k < size_x; k++)
+                if (draw_dot)
                 {
-                  line_buf[i++] = dot_color;
+                  for (int8_t k = 0; k < textsize_x; k++)
+                  {
+                    line_buf[i++] = (k < (textsize_x - text_pixel_margin)) ? color : bg;
+                  }
+                }
+                else
+                {
+                  for (int8_t k = 0; k < textsize_x; k++)
+                  {
+                    line_buf[i++] = bg;
+                  }
                 }
               }
             }
-            if (size_y == 1)
+            if (textsize_y == 1)
             {
               writePixels(line_buf, block_w);
             }
             else
             {
-              for (int8_t l = 0; l < size_y; l++)
+              for (int8_t l = 0; l < textsize_y; l++)
               {
-                writePixels(line_buf, block_w);
+                if (l < (textsize_y - text_pixel_margin))
+                {
+                  writePixels(line_buf, block_w);
+                }
+                else
+                {
+                  writeRepeat(bg, block_w);
+                }
               }
             }
           }
@@ -873,14 +905,14 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c,
             }
             if (bits & 0x80)
             {
-              if (size_x == 1 && size_y == 1)
+              if (textsize_x == 1 && textsize_y == 1)
               {
                 writePixelPreclipped(x + xo + xx, y + yo + yy, color);
               }
               else
               {
-                writeFillRectPreclipped(x + (xo16 + xx) * size_x, y + (yo16 + yy) * size_y,
-                                        size_x, size_y, color);
+                writeFillRectPreclipped(x + (xo16 + xx) * textsize_x, y + (yo16 + yy) * textsize_y,
+                                        textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
               }
             }
             bits <<= 1;
