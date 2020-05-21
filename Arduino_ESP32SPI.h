@@ -115,6 +115,8 @@ protected:
   virtual void flush_data_buf();
 
 private:
+  inline void CS_HIGH(void);
+  inline void CS_LOW(void);
   inline void DC_HIGH(void);
   inline void DC_LOW(void);
 
@@ -125,7 +127,10 @@ private:
 
   PORTreg_t dcPortSet; ///< PORT register for data/command SET
   PORTreg_t dcPortClr; ///< PORT register for data/command CLEAR
+  PORTreg_t csPortSet; ///< PORT register for chip select SET
+  PORTreg_t csPortClr; ///< PORT register for chip select CLEAR
   uint32_t dcPinMask;  ///< Bitmask for data/command
+  uint32_t csPinMask;  ///< Bitmask for chip select
 
   spi_t *_spi;
   uint8_t _dataMode;

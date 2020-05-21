@@ -55,7 +55,6 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
     pinMode(_dc, OUTPUT);
     digitalWrite(_dc, HIGH); // Data mode
   }
-
   if (_dc >= 32)
   {
     dcPinMask = digitalPinToBitMask(_dc);
@@ -67,6 +66,24 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
     dcPinMask = digitalPinToBitMask(_dc);
     dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
     dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+
+  if (_cs >= 0)
+  {
+    pinMode(_cs, OUTPUT);
+    digitalWrite(_cs, HIGH); // disable chip select
+  }
+  if (_cs >= 32)
+  {
+    csPinMask = digitalPinToBitMask(_cs);
+    csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+  }
+  else if (_dc >= 0)
+  {
+    csPinMask = digitalPinToBitMask(_cs);
+    csPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
 
   // SPI.begin(_sck, _miso, _mosi);
@@ -131,24 +148,20 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
   }
 
   spiAttachMOSI(_spi, _mosi);
-
-  if (_cs >= 0)
-  {
-    spiAttachSS(_spi, 0, _cs);
-    spiSSEnable(_spi);
-  }
 }
 
 void Arduino_ESP32SPI::beginWrite()
 {
-  if (_dc >= 0)
-  {
-    DC_HIGH();
-  }
   data_buf_bit_idx = 0;
   data_buf[0] = 0;
 
   spiTransaction(_spi, _div, _dataMode, _bitOrder);
+
+  if (_dc >= 0)
+  {
+    DC_HIGH();
+  }
+  CS_LOW();
 }
 
 void Arduino_ESP32SPI::writeCommand(uint8_t c)
@@ -318,6 +331,7 @@ void Arduino_ESP32SPI::endWrite()
 {
   flush_data_buf();
 
+  CS_HIGH();
   spiEndTransaction(_spi);
 }
 
@@ -513,7 +527,29 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
   }
   else // 8-bit SPI
   {
-    if (((len % 2) == 0) && (len < 32))
+    if (len > 32)
+    {
+      flush_data_buf();
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = 511;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      uint32_t v1, v2;
+      while (len > 32)
+      {
+        for (int i = 0; i < 16; i++)
+        {
+          v1 = *data++;
+          v2 = *data++;
+          _spi->dev->data_buf[i] = ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8) | ((v2 & 0xff00) << 8) | ((v2 & 0xff) << 24);
+        }
+        _spi->dev->cmd.usr = 1;
+        while (_spi->dev->cmd.usr)
+          ;
+
+        len -= 32;
+      }
+    }
+
+    if ((len % 2) == 0)
     {
       flush_data_buf();
 
@@ -530,7 +566,6 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
       _spi->dev->cmd.usr = 1;
       while (_spi->dev->cmd.usr)
         ;
-      data_buf_bit_idx = 0;
     }
     else
     {
@@ -565,6 +600,16 @@ inline void Arduino_ESP32SPI::DC_HIGH(void)
 inline void Arduino_ESP32SPI::DC_LOW(void)
 {
   *dcPortClr = dcPinMask;
+}
+
+inline void Arduino_ESP32SPI::CS_HIGH(void)
+{
+  *csPortSet = csPinMask;
+}
+
+inline void Arduino_ESP32SPI::CS_LOW(void)
+{
+  *csPortClr = csPinMask;
 }
 
 inline void Arduino_ESP32SPI::write9bit(uint32_t d)
