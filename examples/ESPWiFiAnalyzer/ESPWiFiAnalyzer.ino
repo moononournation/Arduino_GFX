@@ -15,23 +15,8 @@
 #include "Arduino_HWSPI.h"
 #include "Arduino_ESP32SPI.h"
 #include "Arduino_SWSPI.h"
-#include "Arduino_GFX.h"            // Core graphics library
-#include "Arduino_Canvas.h"         // Canvas (framebuffer) library
-#include "Arduino_Canvas_Indexed.h" // Indexed Color Canvas (framebuffer) library
-#include "Arduino_HX8347C.h"        // Hardware-specific library for HX8347C
-#include "Arduino_HX8352C.h"        // Hardware-specific library for HX8352C
-#include "Arduino_HX8357B.h"        // Hardware-specific library for HX8357B
-#include "Arduino_ILI9225.h"        // Hardware-specific library for ILI9225
-#include "Arduino_ILI9341.h"        // Hardware-specific library for ILI9341
-#include "Arduino_ILI9481_18bit.h"  // Hardware-specific library for ILI9481
-#include "Arduino_ILI9486_18bit.h"  // Hardware-specific library for ILI9486
-#include "Arduino_SEPS525.h"        // Hardware-specific library for SEPS525
-#include "Arduino_SSD1283A.h"       // Hardware-specific library for SSD1283A
-#include "Arduino_SSD1331.h"        // Hardware-specific library for SSD1331
-#include "Arduino_SSD1351.h"        // Hardware-specific library for SSD1351
-#include "Arduino_ST7735.h"         // Hardware-specific library for ST7735
-#include "Arduino_ST7789.h"         // Hardware-specific library for ST7789
-#include "Arduino_ST7796.h"         // Hardware-specific library for ST7796
+#include "Arduino_GFX.h"     // Core graphics library
+#include "Arduino_Display.h" // Various display driver
 
 #if defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define TFT_BL 32
@@ -166,7 +151,6 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST);
  * End of Arduino_GFX setting
  ******************************************************************************/
 
-
 #if defined(ESP32)
 #include "WiFi.h"
 #else
@@ -182,9 +166,8 @@ int w, h, text_size, banner_height, graph_baseline, graph_height, channel_width,
 
 // Channel color mapping from channel 1 to 14
 uint16_t channel_color[] = {
-  RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-  RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA
-};
+    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
+    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA};
 
 uint8_t scan_count = 0;
 
@@ -227,9 +210,12 @@ void setup()
   gfx->print(" Analyzer");
 }
 
-bool matchBssidPrefix(uint8_t *a, uint8_t *b) {
-  for (int i = 0; i < 5; i++) { // only compare first 5 bytes
-    if (a[i] != b[i]) {
+bool matchBssidPrefix(uint8_t *a, uint8_t *b)
+{
+  for (int i = 0; i < 5; i++)
+  { // only compare first 5 bytes
+    if (a[i] != b[i])
+    {
       return false;
     }
   }
@@ -245,7 +231,7 @@ void loop()
   int32_t channel;
   int idx;
   int32_t rssi;
-  uint8_t * bssid;
+  uint8_t *bssid;
   String ssid;
   uint16_t color;
   int height, offset, text_width;
@@ -277,24 +263,26 @@ void loop()
       bssid = WiFi.BSSID(i);
 
       // channel peak stat
-      if (peak_list[idx] < rssi) {
+      if (peak_list[idx] < rssi)
+      {
         peak_list[idx] = rssi;
         peak_id_list[idx] = i;
       }
 
       // check signal come from same AP
       bool duplicate_SSID = false;
-      for (int j = 0; j < i; j++) {
+      for (int j = 0; j < i; j++)
+      {
         if (
-          (WiFi.channel(j) == channel)
-          && matchBssidPrefix(WiFi.BSSID(j), bssid)
-        ) {
+            (WiFi.channel(j) == channel) && matchBssidPrefix(WiFi.BSSID(j), bssid))
+        {
           duplicate_SSID = true;
           break;
         }
       }
 
-      if (!duplicate_SSID) {
+      if (!duplicate_SSID)
+      {
         ap_count_list[idx]++;
 
         // noise stat
@@ -356,18 +344,24 @@ void loop()
       gfx->drawLine(offset, graph_baseline - height, offset - signal_width, graph_baseline + 1, color);
       gfx->drawLine(offset, graph_baseline - height, offset + signal_width, graph_baseline + 1, color);
 
-      if (i == peak_id_list[idx]) {
+      if (i == peak_id_list[idx])
+      {
         // Print SSID, signal strengh and if not encrypted
         String ssid = WiFi.SSID(i);
-        if (ssid.length() == 0) {
+        if (ssid.length() == 0)
+        {
           ssid = WiFi.BSSIDstr(i);
         }
         text_width = (ssid.length() + 6) * 6;
-        if (text_width > w) {
+        if (text_width > w)
+        {
           offset = 0;
-        } else {
+        }
+        else
+        {
           offset = (channel - 1) * channel_width;
-          if ((offset + text_width) > w) {
+          if ((offset + text_width) > w)
+          {
             offset = w - text_width;
           }
         }
@@ -395,7 +389,7 @@ void loop()
   gfx->print(n);
   gfx->print(" networks found, lesser noise channels: ");
   bool listed_first_channel = false;
-  int32_t min_noise = noise_list[0]; // init with channel 1 value
+  int32_t min_noise = noise_list[0];          // init with channel 1 value
   for (channel = 2; channel <= 11; channel++) // channels 12-14 may not available
   {
     idx = channel - 1;

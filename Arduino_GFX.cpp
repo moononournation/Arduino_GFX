@@ -642,7 +642,9 @@ void Arduino_GFX::fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t
     float sslope = s_cos / (sin(start * DEGTORAD));
     float eslope = -1000000;
     if (end != 360.0)
+    {
         eslope = e_cos / (sin(end * DEGTORAD));
+    }
     float swidth = 0.5 / s_cos;
     float ewidth = -0.5 / e_cos;
     --iradius;
@@ -660,13 +662,21 @@ void Arduino_GFX::fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t
     if (!reversed)
     {
         if ((end >= 270 || end < 90) && (start >= 270 || start < 90))
+        {
             xs = 0;
+        }
         else if (end < 270 && end >= 90 && start < 270 && start >= 90)
+        {
             xe = 1;
+        }
         if (end >= 180 && start >= 180)
+        {
             ye = 0;
+        }
         else if (end < 180 && start < 180)
+        {
             y = 0;
+        }
     }
     do
     {
@@ -675,9 +685,13 @@ void Arduino_GFX::fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t
         if (x < 0)
         {
             while (x * x + y2 >= or2)
+            {
                 ++x;
+            }
             if (xe != 1)
+            {
                 xe = 1 - x;
+            }
         }
         float ysslope = (y + swidth) * sslope;
         float yeslope = (y + ewidth) * eslope;
