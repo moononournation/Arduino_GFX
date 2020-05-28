@@ -14,7 +14,7 @@ class Arduino_TFT_18bit : public Arduino_TFT
 public:
   Arduino_TFT_18bit(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips, int16_t w, int16_t h, uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2);
 
-  virtual inline void writeColor(uint16_t color);
+  virtual void writeColor(uint16_t color);
   virtual void writeRepeat(uint16_t color, uint32_t len);
   virtual void writePixels(uint16_t *data, uint32_t size);
   virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) = 0;

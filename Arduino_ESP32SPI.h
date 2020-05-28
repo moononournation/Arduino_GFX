@@ -111,7 +111,7 @@ public:
   virtual void setDataMode(uint8_t dataMode);
 
 protected:
-  virtual inline void write9bit(uint32_t c);
+  virtual void write9bit(uint32_t c);
   virtual void flush_data_buf();
 
 private:
