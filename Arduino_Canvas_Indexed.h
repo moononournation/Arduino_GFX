@@ -9,7 +9,7 @@
 #include "Arduino_GFX.h"
 #include "Arduino_TFT.h"
 
-#define COLOR_IDX_SIZE 255
+#define COLOR_IDX_SIZE 256
 
 class Arduino_Canvas_Indexed : public Arduino_GFX
 {

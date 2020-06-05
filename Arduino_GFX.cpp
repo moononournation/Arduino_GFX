@@ -1295,7 +1295,7 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
 void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
                                     uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
 {
-    int16_t offset = 0;
+    int32_t offset = 0;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
@@ -1320,7 +1320,7 @@ void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
 void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
                                      const uint16_t bitmap[], int16_t w, int16_t h)
 {
-    int16_t offset = 0;
+    int32_t offset = 0;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
@@ -1345,7 +1345,7 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
                                      uint16_t *bitmap, int16_t w, int16_t h)
 {
-    int16_t offset = 0;
+    int32_t offset = 0;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
@@ -1374,7 +1374,7 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
                                      const uint16_t bitmap[], const uint8_t mask[],
                                      int16_t w, int16_t h)
 {
-    int16_t offset = 0;
+    int32_t offset = 0;
     int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
     uint8_t byte = 0;
     startWrite();
@@ -1416,7 +1416,7 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
                                      uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
-    int16_t offset = 0;
+    int32_t offset = 0;
     int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
     uint8_t byte = 0;
     startWrite();
@@ -1455,7 +1455,7 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      const uint8_t bitmap[], int16_t w, int16_t h)
 {
-    uint32_t offset = 0;
+    int32_t offset = 0;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
@@ -1480,7 +1480,7 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      uint8_t *bitmap, int16_t w, int16_t h)
 {
-    uint32_t offset = 0;
+    int32_t offset = 0;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
@@ -1509,7 +1509,7 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      const uint8_t bitmap[], const uint8_t mask[],
                                      int16_t w, int16_t h)
 {
-    uint32_t offset = 0;
+    int32_t offset = 0;
     int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
     uint8_t byte = 0;
     startWrite();
@@ -1554,7 +1554,7 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
                                      uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
-    uint32_t offset = 0;
+    int32_t offset = 0;
     int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
     uint8_t byte = 0;
     startWrite();

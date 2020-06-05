@@ -19,14 +19,30 @@ Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *
 
 void Arduino_Canvas_Indexed::begin(uint32_t speed)
 {
+#if defined(ESP32)
+    if (psramFound())
+    {
+        _framebuffer = (uint8_t *)ps_malloc(_width * _height);
+    }
+    else
+    {
+        _framebuffer = (uint8_t *)malloc(_width * _height);
+    }
+#else
     _framebuffer = (uint8_t *)malloc(_width * _height);
+#endif
+    if (!_framebuffer)
+    {
+        Serial.println(F("_framebuffer allocation failed."));
+    }
+
     _output->begin(speed);
     _output->fillScreen(BLACK);
 }
 
 void Arduino_Canvas_Indexed::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
-    _framebuffer[(y * _width) + x] = get_color_index(color);
+    _framebuffer[((int32_t)y * _width) + x] = get_color_index(color);
 }
 
 void Arduino_Canvas_Indexed::writeFastVLine(int16_t x, int16_t y,
@@ -34,7 +50,7 @@ void Arduino_Canvas_Indexed::writeFastVLine(int16_t x, int16_t y,
 {
     uint8_t idx = get_color_index(color);
 
-    uint8_t *fb = _framebuffer + (y * _width) + x;
+    uint8_t *fb = _framebuffer + ((int32_t)y * _width) + x;
     while (h--)
     {
         *fb = idx;
@@ -47,7 +63,7 @@ void Arduino_Canvas_Indexed::writeFastHLine(int16_t x, int16_t y,
 {
     uint8_t idx = get_color_index(color);
 
-    uint8_t *fb = _framebuffer + (y * _width) + x;
+    uint8_t *fb = _framebuffer + ((int32_t)y * _width) + x;
     while (w--)
     {
         *(fb++) = idx;

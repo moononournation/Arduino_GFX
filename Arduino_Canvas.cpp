@@ -25,19 +25,23 @@ void Arduino_Canvas::begin(uint32_t speed)
 #else
     _framebuffer = (uint16_t *)malloc(_width * _height * 2);
 #endif
+    if (!_framebuffer)
+    {
+        Serial.println(F("_framebuffer allocation failed."));
+    }
     _output->begin(speed);
     _output->fillScreen(BLACK);
 }
 
 void Arduino_Canvas::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
-    _framebuffer[(y * _width) + x] = color;
+    _framebuffer[((int32_t)y * _width) + x] = color;
 }
 
 void Arduino_Canvas::writeFastVLine(int16_t x, int16_t y,
                                     int16_t h, uint16_t color)
 {
-    uint16_t *fb = _framebuffer + (y * _width) + x;
+    uint16_t *fb = _framebuffer + ((int32_t)y * _width) + x;
     while (h--)
     {
         *fb = color;
@@ -48,7 +52,7 @@ void Arduino_Canvas::writeFastVLine(int16_t x, int16_t y,
 void Arduino_Canvas::writeFastHLine(int16_t x, int16_t y,
                                     int16_t w, uint16_t color)
 {
-    uint16_t *fb = _framebuffer + (y * _width) + x;
+    uint16_t *fb = _framebuffer + ((int32_t)y * _width) + x;
     while (w--)
     {
         *(fb++) = color;
