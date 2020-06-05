@@ -87,6 +87,9 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Indexed color Canvas, mask_level: 0-2, larger mask level mean less color variation but can have faster index mapping
 // Arduino_Canvas_Indexed *gfx = new Arduino_Canvas_Indexed(240, 320, output_display, MAXMASKLEVEL /* mask_level */);
 
+// GC9A01 IPS LCD 240x240
+// Arduino_GC9A01 *gfx = new Arduino_GC9A01(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+
 // HX8347C IPS LCD 240x320
 // Arduino_HX8347C *gfx = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 

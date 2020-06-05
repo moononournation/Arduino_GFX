@@ -67,6 +67,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - 8 bit parallel interface
 
 ## Currently Supported Display
+- GC9A01 round display 240x240 [[test video](https://youtu.be/kJrAFm20-zg)]
 - HX8347C 240x320 [[test video](https://youtu.be/25ymuV51YQM)]
 - HX8352C 240x400 [[test video](https://youtu.be/m2xWYbS3t7s)]
 - HX8357B 320x480 [[test video](https://youtu.be/pB6_LOCiUqg)]

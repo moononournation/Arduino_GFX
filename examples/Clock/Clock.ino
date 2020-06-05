@@ -73,6 +73,9 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Indexed color Canvas, mask_level: 0-2, larger mask level mean less color variation but can have faster index mapping
 // Arduino_Canvas_Indexed *gfx = new Arduino_Canvas_Indexed(240, 320, output_display, MAXMASKLEVEL /* mask_level */);
 
+// GC9A01 IPS LCD 240x240
+// Arduino_GC9A01 *gfx = new Arduino_GC9A01(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+
 // HX8347C IPS LCD 240x320
 // Arduino_HX8347C *gfx = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
@@ -205,7 +208,8 @@ void setup(void)
     cached_points = (int16_t *)malloc((hHandLen + 1 + mHandLen + 1 + sHandLen + 1) * 2 * 2);
 
     // Draw 60 clock marks
-    draw_square_clock_mark(
+    draw_round_clock_mark(
+    // draw_square_clock_mark(
         center - markLen, center,
         center - (markLen * 2 / 3), center,
         center - (markLen / 2), center);
@@ -267,6 +271,45 @@ void loop()
 
         delay(1);
     }
+}
+
+void draw_round_clock_mark(int16_t innerR1, int16_t outerR1, int16_t innerR2, int16_t outerR2, int16_t innerR3, int16_t outerR3)
+{
+  float x, y;
+  int16_t x0, x1, y0, y1, innerR, outerR;
+  uint16_t c;
+
+  for (int i = 0; i < 60; i++)
+  {
+    if ((i % 15) == 0)
+    {
+      innerR = innerR1;
+      outerR = outerR1;
+      c = MARK_COLOR;
+    }
+    else if ((i % 5) == 0)
+    {
+      innerR = innerR2;
+      outerR = outerR2;
+      c = MARK_COLOR;
+    }
+    else
+    {
+      innerR = innerR3;
+      outerR = outerR3;
+      c = SUBMARK_COLOR;
+    }
+
+    mdeg = (SIXTIETH_RADIAN * i) - RIGHT_ANGLE_RADIAN;
+    x = cos(mdeg);
+    y = sin(mdeg);
+    x0 = x * outerR + center;
+    y0 = y * outerR + center;
+    x1 = x * innerR + center;
+    y1 = y * innerR + center;
+
+    gfx->drawLine(x0, y0, x1, y1, c);
+  }
 }
 
 void draw_square_clock_mark(int16_t innerR1, int16_t outerR1, int16_t innerR2, int16_t outerR2, int16_t innerR3, int16_t outerR3)
