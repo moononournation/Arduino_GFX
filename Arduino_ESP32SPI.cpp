@@ -79,7 +79,7 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
     csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_dc >= 0)
+  else if (_cs >= 0)
   {
     csPinMask = digitalPinToBitMask(_cs);
     csPortSet = (PORTreg_t)&GPIO.out_w1ts;
