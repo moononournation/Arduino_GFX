@@ -186,6 +186,15 @@ void setup()
 #endif
 }
 
+static inline uint32_t micros_start() __attribute__((always_inline));
+static inline uint32_t micros_start()
+{
+  uint8_t oms = millis();
+  while ((uint8_t)millis() == oms)
+    ;
+  return micros();
+}
+
 void loop(void)
 {
 
@@ -290,6 +299,12 @@ void loop(void)
   Serial.println(usecRoundRects);
   delay(100);
 
+  uint32_t start = micros_start();
+  gfx->flush();
+  uint32_t usecFlush = micros() - start;
+  Serial.print(F("flush (Canvas only)      "));
+  Serial.println(usecFlush);
+
   Serial.println(F("Done!"));
 
   uint16_t c = 4;
@@ -376,15 +391,6 @@ void printnice(const __FlashStringHelper *item, long unsigned int v)
     *str = ' ';
   }
   gfx->println(str);
-}
-
-static inline uint32_t micros_start() __attribute__((always_inline));
-static inline uint32_t micros_start()
-{
-  uint8_t oms = millis();
-  while ((uint8_t)millis() == oms)
-    ;
-  return micros();
 }
 
 uint32_t testFillScreen()
