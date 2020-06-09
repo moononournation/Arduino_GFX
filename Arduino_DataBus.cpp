@@ -24,3 +24,11 @@ void Arduino_DataBus::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   write16(d1);
   write16(d2);
 }
+
+void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  while (len--)
+  {
+    write16(idx[*(data++)]);
+  }
+}

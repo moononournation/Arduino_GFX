@@ -331,8 +331,9 @@ void Arduino_ESP32SPI::endWrite()
 {
   flush_data_buf();
 
-  CS_HIGH();
   spiEndTransaction(_spi);
+
+  CS_HIGH();
 }
 
 void Arduino_ESP32SPI::sendCommand(uint8_t c)
@@ -579,14 +580,14 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
 
 /**
  * @param data uint8_t *
- * @param size uint8_t  max for size is 64Byte
+ * @param len uint8_t
  * @param repeat uint32_t
  */
-void Arduino_ESP32SPI::writePattern(uint8_t *data, uint8_t size, uint32_t repeat)
+void Arduino_ESP32SPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
   while (repeat--)
   {
-    writeBytes(data, size);
+    writeBytes(data, len);
   }
 }
 

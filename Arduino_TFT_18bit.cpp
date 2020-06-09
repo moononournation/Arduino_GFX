@@ -39,10 +39,10 @@ void Arduino_TFT_18bit::writeRepeat(uint16_t color, uint32_t len)
 #endif
 }
 
-void Arduino_TFT_18bit::writePixels(uint16_t *data, uint32_t size)
+void Arduino_TFT_18bit::writePixels(uint16_t *data, uint32_t len)
 {
   uint16_t d;
-  while (size--)
+  while (len--)
   {
     d = *data++;
     _bus->write((d & 0xF800) >> 8);

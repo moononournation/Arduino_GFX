@@ -579,14 +579,14 @@ void Arduino_SWSPI::writePixels(uint16_t *data, uint32_t len)
 
 /**
  * @param data uint8_t *
- * @param size uint8_t  max for size is 64Byte
+ * @param len uint8_t
  * @param repeat uint32_t
  */
-void Arduino_SWSPI::writePattern(uint8_t *data, uint8_t size, uint32_t repeat)
+void Arduino_SWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
   while (repeat--)
   {
-    for (uint8_t i = 0; i < size; i++)
+    for (uint8_t i = 0; i < len; i++)
     {
       write(data[i]);
     }

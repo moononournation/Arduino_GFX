@@ -16,7 +16,7 @@ public:
 
   virtual void writeColor(uint16_t color);
   virtual void writeRepeat(uint16_t color, uint32_t len);
-  virtual void writePixels(uint16_t *data, uint32_t size);
+  virtual void writePixels(uint16_t *data, uint32_t len);
   virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) = 0;
 
   virtual void invertDisplay(bool) = 0;

@@ -63,7 +63,7 @@ inline void Arduino_TFT::startWrite()
   _bus->beginWrite();
 }
 
-void Arduino_TFT::writeColor(uint16_t color)
+inline void Arduino_TFT::writeColor(uint16_t color)
 {
   _bus->write16(color);
 }
@@ -79,9 +79,9 @@ void Arduino_TFT::writeRepeat(uint16_t color, uint32_t len)
   _bus->writeRepeat(color, len);
 }
 
-void Arduino_TFT::writePixels(uint16_t *data, uint32_t size)
+void Arduino_TFT::writePixels(uint16_t *data, uint32_t len)
 {
-  _bus->writePixels(data, size);
+  _bus->writePixels(data, len);
 }
 
 /*!
@@ -574,10 +574,7 @@ void Arduino_TFT::drawIndexedBitmap(int16_t x, int16_t y,
   uint32_t len = w * h;
   startWrite();
   writeAddrWindow(x, y, w, h);
-  while (len--)
-  {
-    writeColor(color_index[*(bitmap++)]);
-  }
+  _bus->writeIndexedPixels(bitmap, color_index, len);
   endWrite();
 }
 
