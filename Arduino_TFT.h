@@ -63,6 +63,7 @@ protected:
   uint16_t _currentW = 0xFFFF, _currentH = 0xFFFF;
   virtual void tftInit() = 0;
   bool _ips;
+  int8_t _override_datamode = -1;
 
 private:
 };

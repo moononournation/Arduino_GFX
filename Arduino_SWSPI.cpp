@@ -14,7 +14,7 @@ Arduino_SWSPI::Arduino_SWSPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8
   _miso = miso;
 }
 
-void Arduino_SWSPI::begin(uint32_t speed)
+void Arduino_SWSPI::begin(uint32_t speed, int8_t dataMode)
 {
   if (_dc >= 0)
   {
@@ -485,11 +485,6 @@ void Arduino_SWSPI::sendData32(uint32_t d)
   write32(d);
 
   CS_HIGH();
-}
-
-void Arduino_SWSPI::setDataMode(uint8_t dataMode)
-{
-  // Not Implemented
 }
 
 void Arduino_SWSPI::writeRepeat(uint16_t p, uint32_t len)

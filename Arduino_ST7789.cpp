@@ -21,6 +21,7 @@ void Arduino_ST7789::begin(uint32_t speed)
     speed = 40000000;
   }
 #endif
+  _override_datamode = SPI_MODE3;
   Arduino_TFT::begin(speed);
 }
 
@@ -28,10 +29,6 @@ void Arduino_ST7789::begin(uint32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ST7789::tftInit()
 {
-#ifdef ESP32
-  _bus->setDataMode(SPI_MODE3);
-#endif
-
   _bus->sendCommand(ST7789_SWRESET); // 1: Software reset
   delay(ST7789_RST_DELAY);
 

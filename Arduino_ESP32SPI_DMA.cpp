@@ -25,9 +25,10 @@ Arduino_ESP32SPI_DMA::Arduino_ESP32SPI_DMA(int8_t dc /* = -1 */, int8_t cs /* = 
   }
 }
 
-void Arduino_ESP32SPI_DMA::begin(uint32_t speed)
+void Arduino_ESP32SPI_DMA::begin(uint32_t speed, int8_t dataMode)
 {
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
+  _dataMode = dataMode;
 
   if (!_div)
   {
@@ -82,7 +83,7 @@ void Arduino_ESP32SPI_DMA::begin(uint32_t speed)
       .command_bits = 0,
       .address_bits = 0,
       .dummy_bits = 0,
-      .mode = 3,
+      .mode = _dataMode,
       .duty_cycle_pos = 128,
       .cs_ena_pretrans = 0,
       .cs_ena_posttrans = 0,
@@ -90,7 +91,7 @@ void Arduino_ESP32SPI_DMA::begin(uint32_t speed)
       .input_delay_ns = 0,
       .spics_io_num = _cs,
       .flags = 0,
-      .queue_size = 3,
+      .queue_size = 1,
   };
   esp_err_t ret;
 
@@ -144,16 +145,16 @@ void Arduino_ESP32SPI_DMA::writeCommand(uint8_t c)
 
     DC_LOW();
 
-    spi_transaction_t t;
-    memset(&t, 0, sizeof(t));
-    t.length = 8;
-    t.tx_data[0] = c;
-    t.flags = SPI_TRANS_USE_TXDATA;
+    spi_transaction_t ct;
+    memset(&ct, 0, sizeof(ct));
+    ct.length = 8;
+    ct.tx_data[0] = c;
+    ct.flags = SPI_TRANS_USE_TXDATA;
 
-    esp_err_t ret = spi_device_polling_transmit(_handle, &t);
+    esp_err_t ret = spi_device_polling_transmit(_handle, &ct);
     if (ret != ESP_OK)
     {
-      log_e("Arduino_ESP32SPI_DMA::write() spi_device_polling_transmit error: %d", ret);
+      log_e("spi_device_polling_transmit error: %d", ret);
     }
 
     DC_HIGH();
@@ -173,16 +174,16 @@ void Arduino_ESP32SPI_DMA::writeCommand16(uint16_t c)
 
     DC_LOW();
 
-    spi_transaction_t t;
-    memset(&t, 0, sizeof(t));
-    t.length = 16;
-    t.tx_data[0] = c;
-    t.flags = SPI_TRANS_USE_TXDATA;
+    spi_transaction_t ct;
+    memset(&ct, 0, sizeof(ct));
+    ct.length = 16;
+    ct.tx_data[0] = c;
+    ct.flags = SPI_TRANS_USE_TXDATA;
 
-    esp_err_t ret = spi_device_polling_transmit(_handle, &t);
+    esp_err_t ret = spi_device_polling_transmit(_handle, &ct);
     if (ret != ESP_OK)
     {
-      log_e("Arduino_ESP32SPI_DMA::write() spi_device_polling_transmit error: %d", ret);
+      log_e("spi_device_polling_transmit error: %d", ret);
     }
 
     DC_HIGH();
@@ -234,26 +235,30 @@ void Arduino_ESP32SPI_DMA::writeC8D8(uint8_t c, uint8_t d)
 
     DC_LOW();
 
-    spi_transaction_t t;
-    memset(&t, 0, sizeof(t));
-    t.length = 8;
-    t.tx_data[0] = c;
-    t.flags = SPI_TRANS_USE_TXDATA;
+    spi_transaction_t ct;
+    memset(&ct, 0, sizeof(ct));
+    ct.length = 8;
+    ct.tx_data[0] = c;
+    ct.flags = SPI_TRANS_USE_TXDATA;
 
-    esp_err_t ret = spi_device_polling_transmit(_handle, &t);
+    esp_err_t ret = spi_device_polling_transmit(_handle, &ct);
     if (ret != ESP_OK)
     {
-      log_e("Arduino_ESP32SPI_DMA::write() spi_device_polling_transmit error: %d", ret);
+      log_e("spi_device_polling_transmit error: %d", ret);
     }
 
     DC_HIGH();
 
-    t.tx_data[0] = d;
+    spi_transaction_t dt;
+    memset(&dt, 0, sizeof(dt));
+    dt.length = 8;
+    dt.tx_data[0] = d;
+    dt.flags = SPI_TRANS_USE_TXDATA;
 
-    ret = spi_device_polling_transmit(_handle, &t);
+    ret = spi_device_polling_transmit(_handle, &dt);
     if (ret != ESP_OK)
     {
-      log_e("Arduino_ESP32SPI_DMA::write() spi_device_polling_transmit error: %d", ret);
+      log_e("spi_device_polling_transmit error: %d", ret);
     }
   }
 }
@@ -272,13 +277,13 @@ void Arduino_ESP32SPI_DMA::writeC8D16(uint8_t c, uint16_t d)
 
     DC_LOW();
 
-    spi_transaction_t t;
-    memset(&t, 0, sizeof(t));
-    t.length = 8;
-    t.tx_data[0] = c;
-    t.flags = SPI_TRANS_USE_TXDATA;
+    spi_transaction_t ct;
+    memset(&ct, 0, sizeof(ct));
+    ct.length = 8;
+    ct.tx_data[0] = c;
+    ct.flags = SPI_TRANS_USE_TXDATA;
 
-    esp_err_t ret = spi_device_polling_transmit(_handle, &t);
+    esp_err_t ret = spi_device_polling_transmit(_handle, &ct);
     if (ret != ESP_OK)
     {
       log_e("Arduino_ESP32SPI_DMA::write() spi_device_polling_transmit error: %d", ret);
@@ -286,14 +291,17 @@ void Arduino_ESP32SPI_DMA::writeC8D16(uint8_t c, uint16_t d)
 
     DC_HIGH();
 
-    t.length = 16;
-    t.tx_data[0] = (d >> 8);
-    t.tx_data[1] = (d & 0xff);
+    spi_transaction_t dt;
+    memset(&dt, 0, sizeof(dt));
+    dt.length = 16;
+    dt.tx_data[0] = (d >> 8);
+    dt.tx_data[1] = (d & 0xff);
+    dt.flags = SPI_TRANS_USE_TXDATA;
 
-    ret = spi_device_polling_transmit(_handle, &t);
+    ret = spi_device_polling_transmit(_handle, &dt);
     if (ret != ESP_OK)
     {
-      log_e("Arduino_ESP32SPI_DMA::write() spi_device_polling_transmit error: %d", ret);
+      log_e("spi_device_polling_transmit error: %d", ret);
     }
   }
 }
@@ -314,30 +322,33 @@ void Arduino_ESP32SPI_DMA::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
     DC_LOW();
 
-    spi_transaction_t t;
-    memset(&t, 0, sizeof(t));
-    t.length = 8;
-    t.tx_data[0] = c;
-    t.flags = SPI_TRANS_USE_TXDATA;
+    spi_transaction_t ct;
+    memset(&ct, 0, sizeof(ct));
+    ct.length = 8;
+    ct.tx_data[0] = c;
+    ct.flags = SPI_TRANS_USE_TXDATA;
 
-    esp_err_t ret = spi_device_polling_transmit(_handle, &t);
+    esp_err_t ret = spi_device_polling_transmit(_handle, &ct);
     if (ret != ESP_OK)
     {
-      log_e("Arduino_ESP32SPI_DMA::write() spi_device_polling_transmit error: %d", ret);
+      log_e("spi_device_polling_transmit error: %d", ret);
     }
 
     DC_HIGH();
 
-    t.length = 32;
-    t.tx_data[0] = (d1 >> 8);
-    t.tx_data[1] = (d1 & 0xff);
-    t.tx_data[2] = (d2 >> 8);
-    t.tx_data[3] = (d2 & 0xff);
+    spi_transaction_t dt;
+    memset(&dt, 0, sizeof(dt));
+    dt.length = 32;
+    dt.tx_data[0] = (d1 >> 8);
+    dt.tx_data[1] = (d1 & 0xff);
+    dt.tx_data[2] = (d2 >> 8);
+    dt.tx_data[3] = (d2 & 0xff);
+    dt.flags = SPI_TRANS_USE_TXDATA;
 
-    ret = spi_device_polling_transmit(_handle, &t);
+    ret = spi_device_polling_transmit(_handle, &dt);
     if (ret != ESP_OK)
     {
-      log_e("Arduino_ESP32SPI_DMA::write() spi_device_polling_transmit error: %d", ret);
+      log_e("spi_device_polling_transmit error: %d", ret);
     }
   }
 }
@@ -396,12 +407,6 @@ void Arduino_ESP32SPI_DMA::sendData32(uint32_t d)
   endWrite();
 }
 
-void Arduino_ESP32SPI_DMA::setDataMode(uint8_t dataMode)
-{
-  _dataMode = dataMode;
-  // spiSetDataMode(_spi, _dataMode);
-}
-
 void Arduino_ESP32SPI_DMA::writeRepeat(uint16_t p, uint32_t len)
 {
   flush_data_buf();
@@ -457,7 +462,7 @@ void Arduino_ESP32SPI_DMA::writeRepeat(uint16_t p, uint32_t len)
       esp_err_t ret = spi_device_polling_transmit(_handle, &t);
       if (ret != ESP_OK)
       {
-        log_e("Arduino_ESP32SPI_DMA::writeRepeat() spi_device_polling_transmit error: %d", ret);
+        log_e("spi_device_queue_trans error: %d", ret);
       }
 
       len -= xferLen;
@@ -480,6 +485,7 @@ void Arduino_ESP32SPI_DMA::writeRepeat(uint16_t p, uint32_t len)
     while (len) // While pixels remain
     {
       xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
+
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
       t.length = xferLen * 16;
@@ -488,7 +494,7 @@ void Arduino_ESP32SPI_DMA::writeRepeat(uint16_t p, uint32_t len)
       esp_err_t ret = spi_device_polling_transmit(_handle, &t);
       if (ret != ESP_OK)
       {
-        log_e("Arduino_ESP32SPI_DMA::writeRepeat() spi_device_polling_transmit error: %d", ret);
+        log_e("spi_device_queue_trans error: %d", ret);
       }
 
       len -= xferLen;
@@ -533,6 +539,7 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint
     while (len) // While pixels remain
     {
       xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
+
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
       t.length = xferLen * 16;
@@ -547,7 +554,7 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint
       esp_err_t ret = spi_device_polling_transmit(_handle, &t);
       if (ret != ESP_OK)
       {
-        log_e("Arduino_ESP32SPI_DMA::writeRepeat() spi_device_polling_transmit error: %d", ret);
+        log_e("spi_device_queue_trans error: %d", ret);
       }
 
       len -= xferLen;
@@ -574,6 +581,7 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
     while (len) // While pixels remain
     {
       xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
+
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
       t.length = xferLen * 16;
@@ -588,7 +596,7 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
       esp_err_t ret = spi_device_polling_transmit(_handle, &t);
       if (ret != ESP_OK)
       {
-        log_e("Arduino_ESP32SPI_DMA::writeRepeat() spi_device_polling_transmit error: %d", ret);
+        log_e("spi_device_queue_trans error: %d", ret);
       }
 
       len -= xferLen;
@@ -664,7 +672,7 @@ void Arduino_ESP32SPI_DMA::flush_data_buf()
     esp_err_t ret = spi_device_polling_transmit(_handle, &t);
     if (ret != ESP_OK)
     {
-      log_e("Arduino_ESP32SPI_DMA::writeRepeat() spi_device_polling_transmit error: %d", ret);
+      log_e("spi_device_polling_transmit error: %d", ret);
     }
 
     data_buf_bit_idx = 0;

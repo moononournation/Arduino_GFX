@@ -40,7 +40,14 @@ Arduino_TFT::Arduino_TFT(
 
 void Arduino_TFT::begin(uint32_t speed)
 {
-  _bus->begin(speed);
+  if (_override_datamode >= 0)
+  {
+    _bus->begin(speed, _override_datamode);
+  }
+  else
+  {
+    _bus->begin(speed);
+  }
 
   if (_rst >= 0)
   {

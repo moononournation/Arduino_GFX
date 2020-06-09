@@ -41,9 +41,10 @@ static void _on_apb_change(void *arg, apb_change_ev_t ev_type, uint32_t old_apb,
   }
 }
 
-void Arduino_ESP32SPI::begin(uint32_t speed)
+void Arduino_ESP32SPI::begin(uint32_t speed, int8_t dataMode)
 {
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
+  _dataMode = dataMode;
 
   if (!_div)
   {
@@ -114,7 +115,7 @@ void Arduino_ESP32SPI::begin(uint32_t speed)
   }
 
   spiStopBus(_spi);
-  setDataMode(SPI_MODE0);
+  spiSetDataMode(_spi, _dataMode);
   spiSetBitOrder(_spi, _bitOrder);
   spiSetClockDiv(_spi, _div);
 
@@ -379,12 +380,6 @@ void Arduino_ESP32SPI::sendData32(uint32_t d)
   write32(d);
 
   endWrite();
-}
-
-void Arduino_ESP32SPI::setDataMode(uint8_t dataMode)
-{
-  _dataMode = dataMode;
-  spiSetDataMode(_spi, _dataMode);
 }
 
 void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)

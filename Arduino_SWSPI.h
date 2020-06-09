@@ -75,7 +75,7 @@ class Arduino_SWSPI : public Arduino_DataBus
 public:
   Arduino_SWSPI(int8_t dc, int8_t cs, int8_t _sck, int8_t _mosi, int8_t _miso = -1); // Constructor
 
-  virtual void begin(uint32_t speed = 0);
+  virtual void begin(uint32_t speed = 0, int8_t dataMode = -1);
   virtual void beginWrite();
   virtual void writeCommand(uint8_t);
   virtual void writeCommand16(uint16_t);
@@ -93,7 +93,6 @@ public:
   virtual void sendData(uint8_t);
   virtual void sendData16(uint16_t);
   virtual void sendData32(uint32_t);
-  virtual void setDataMode(uint8_t dataMode);
 
 private:
   inline void write9bitCommand(uint8_t c);

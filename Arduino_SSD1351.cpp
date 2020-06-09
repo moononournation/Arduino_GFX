@@ -21,6 +21,7 @@ void Arduino_SSD1351::begin(uint32_t speed)
     speed = 16000000;
   }
 #endif
+  _override_datamode = SPI_MODE0;
   Arduino_TFT::begin(speed);
 }
 
@@ -28,8 +29,6 @@ void Arduino_SSD1351::begin(uint32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_SSD1351::tftInit()
 {
-  _bus->setDataMode(SPI_MODE0);
-
   _bus->sendCommand(SSD1351_COMMANDLOCK); // set command lock
   _bus->sendData(0x12);
   _bus->sendCommand(SSD1351_COMMANDLOCK); // set command lock

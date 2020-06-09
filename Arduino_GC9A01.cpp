@@ -23,10 +23,6 @@ void Arduino_GC9A01::begin(uint32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_GC9A01::tftInit()
 {
-#ifdef ESP32
-  _bus->setDataMode(SPI_MODE3);
-#endif
-
   _bus->sendCommand(0xEF);
   _bus->sendCommand(0xEB);
   _bus->sendData(0x14);

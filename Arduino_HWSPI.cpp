@@ -39,9 +39,10 @@ Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */)
   _cs = cs;
 }
 
-void Arduino_HWSPI::begin(uint32_t speed)
+void Arduino_HWSPI::begin(uint32_t speed, int8_t dataMode)
 {
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
+  _dataMode = dataMode;
 
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
@@ -154,24 +155,49 @@ void Arduino_HWSPI::begin(uint32_t speed)
 
 #if defined(ESP32)
   SPI.begin(_sck, _miso, _mosi);
-  mySPISettings = SPISettings(_speed, MSBFIRST, SPI_MODE0);
+  if (_dataMode >= 0)
+  {
+    _dataMode = SPI_MODE0;
+  }
+  mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(ESP8266)
   SPI.begin();
-  mySPISettings = SPISettings(_speed, MSBFIRST, SPI_MODE0);
+  if (_dataMode >= 0)
+  {
+    _dataMode = SPI_MODE0;
+  }
+  mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(SPI_HAS_TRANSACTION)
   SPI.begin();
-  mySPISettings = SPISettings(_speed, MSBFIRST, SPI_MODE2);
+  if (_dataMode >= 0)
+  {
+    _dataMode = SPI_MODE2;
+  }
+  mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(__AVR__) || defined(CORE_TEENSY)
   SPCRbackup = SPCR;
   SPI.begin();
   SPI.setClockDivider(SPI_CLOCK_DIV2);
-  SPI.setDataMode(SPI_MODE2);
+  if (_dataMode >= 0)
+  {
+    _dataMode = SPI_MODE2;
+  }
+  SPI.setDataMode(_dataMode);
   mySPCR = SPCR;     // save our preferred state
   SPCR = SPCRbackup; // then restore
 #elif defined(__SAM3X8E__)
   SPI.begin();
   SPI.setClockDivider(21); //4MHz
-  SPI.setDataMode(SPI_MODE2);
+  if (_dataMode >= 0)
+  {
+    _dataMode = SPI_MODE2;
+  }
+  SPI.setDataMode(_dataMode);
+#elif defined(__arm__)
+  if (_dataMode >= 0)
+  {
+    _dataMode = SPI_MODE2;
+  }
 #endif
 }
 
@@ -207,7 +233,7 @@ void Arduino_HWSPI::write(uint8_t c)
   SPCR = SPCRbackup;
 #elif defined(__arm__)
   SPI.setClockDivider(21); //4MHz
-  SPI.setDataMode(SPI_MODE2);
+  SPI.setDataMode(_dataMode);
   SPI.transfer(c);
 #endif
 }
@@ -379,15 +405,6 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
       write(data[i]);
     }
   }
-#endif
-}
-
-void Arduino_HWSPI::setDataMode(uint8_t dataMode)
-{
-#if defined(SPI_HAS_TRANSACTION)
-  mySPISettings = SPISettings(_speed, MSBFIRST, dataMode);
-#else
-  SPI.setDataMode(dataMode);
 #endif
 }
 
