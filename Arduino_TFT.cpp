@@ -643,13 +643,9 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
     return;
   }
 
-  uint32_t len = (uint32_t)w * h;
   startWrite();
   writeAddrWindow(x, y, w, h);
-  while (len--)
-  {
-    writeColor(*(bitmap++));
-  }
+  _bus->writePixels(bitmap, w * h);
   endWrite();
 }
 
