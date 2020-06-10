@@ -21,6 +21,11 @@ void Arduino_Canvas::begin(uint32_t speed)
     else
     {
         _framebuffer = (uint16_t *)malloc(_width * _height * 2);
+        // hack for allocate memory over 63,360 pixels
+        // uint16_t *tmp;
+        // _framebuffer = (uint16_t *)malloc(_width * _height);
+        // tmp = (uint16_t *)malloc(_width * _height);
+        // log_v(tmp - _framebuffer);
     }
 #else
     _framebuffer = (uint16_t *)malloc(_width * _height * 2);
