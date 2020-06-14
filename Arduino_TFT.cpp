@@ -555,14 +555,45 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
   endWrite();
 }
 
+#if defined(ESP32)
 /**************************************************************************/
 /*!
-   @brief   Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
+    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  bitmap      byte array of Indexed color bitmap
+    @param  color_index byte array of 16-bit color index
+    @param  w           Width of bitmap in pixels
+    @param  h           Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_TFT::writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
+{
+  _bus->writeIndexedPixels(bitmap, color_index, len);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  bitmap      byte array of Indexed color bitmap
+    @param  color_index byte array of 16-bit color index
+    @param  w           Width of bitmap in pixels
+    @param  h           Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_TFT::writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
+{
+  _bus->writeIndexedPixelsDouble(bitmap, color_index, len);
+}
+#endif // ESP32
+
+/**************************************************************************/
+/*!
+    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  x           Top left corner x coordinate
+    @param  y           Top left corner y coordinate
+    @param  bitmap      byte array of Indexed color bitmap
+    @param  color_index byte array of 16-bit color index
+    @param  w           Width of bitmap in pixels
+    @param  h           Height of bitmap in pixels
 */
 /**************************************************************************/
 void Arduino_TFT::drawIndexedBitmap(int16_t x, int16_t y,
@@ -645,7 +676,7 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
 
   startWrite();
   writeAddrWindow(x, y, w, h);
-  _bus->writePixels(bitmap, w * h);
+  _bus->writePixels(bitmap, (uint32_t)w * h);
   endWrite();
 }
 

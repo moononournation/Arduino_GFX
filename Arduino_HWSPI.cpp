@@ -329,7 +329,7 @@ void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
 #define TMPBUF_PIXELS (TMPBUF_LONGWORDS * 2)
   static uint32_t temp[TMPBUF_LONGWORDS];
   uint32_t c32 = p * 0x00010001;
-  uint16_t bufLen = (len < TMPBUF_PIXELS) ? len : TMPBUF_PIXELS,
+  uint32_t bufLen = (len < TMPBUF_PIXELS) ? len : TMPBUF_PIXELS,
            xferLen, fillLen;
   // Fill temp buffer 32 bits at a time
   fillLen = (bufLen + 1) / 2; // Round up to next 32-bit boundary

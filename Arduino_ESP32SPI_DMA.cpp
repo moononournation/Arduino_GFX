@@ -562,6 +562,59 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint
   }
 }
 
+void Arduino_ESP32SPI_DMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  if (_dc < 0) // 9-bit SPI
+  {
+    uint32_t l = len;
+    uint8_t *d = data;
+    uint16_t p;
+    uint8_t hi, lo;
+    while (l--)
+    {
+      p = idx[*(d++)];
+      hi = p >> 8;
+      lo = p;
+      write(hi);
+      write(lo);
+      write(hi);
+      write(lo);
+    }
+  }
+  else // 8-bit SPI
+  {
+    flush_data_buf();
+
+    uint16_t bufLen = (len < (MAX_TRANSFER_SZ / 16 / 2)) ? len : (MAX_TRANSFER_SZ / 16 / 2);
+    uint16_t xferLen, p;
+
+    while (len) // While pixels remain
+    {
+      xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
+
+      spi_transaction_t t;
+      memset(&t, 0, sizeof(t));
+      t.length = xferLen * 16;
+      t.tx_buffer = data_buf;
+      for (int i = 0; i < xferLen; i++)
+      {
+        p = idx[*(data++)];
+        MSB_16_SET(p, p);
+        data_buf16[(i * 2)] = p;
+        data_buf16[(i * 2) + 1] = p;
+      }
+
+      esp_err_t ret = spi_device_polling_transmit(_handle, &t);
+      if (ret != ESP_OK)
+      {
+        log_e("spi_device_queue_trans error: %d", ret);
+      }
+
+      len -= xferLen;
+    }
+  }
+}
+
 void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
 {
   if (_dc < 0) // 9-bit SPI

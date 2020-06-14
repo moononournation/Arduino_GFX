@@ -25,6 +25,7 @@ void Arduino_DataBus::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   write16(d2);
 }
 
+#if defined(ESP32)
 void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   while (len--)
@@ -32,3 +33,17 @@ void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t 
     write16(idx[*(data++)]);
   }
 }
+
+void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  uint32_t l = len;
+  uint8_t *d = data;
+  uint16_t p;
+  while (l--)
+  {
+    p = idx[*(d++)];
+    write16(p);
+    write16(p);
+  }
+}
+#endif // ESP32

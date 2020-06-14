@@ -29,9 +29,12 @@ public:
     virtual void writeRepeat(uint16_t p, uint32_t len) = 0;
     virtual void writeBytes(uint8_t *data, uint32_t len) = 0;
     virtual void writePixels(uint16_t *data, uint32_t len) = 0;
-    virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
     virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) = 0;
     virtual void endWrite() = 0;
+#if defined(ESP32)
+    virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
+    virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
+#endif // ESP32
 
     virtual void sendCommand(uint8_t c) = 0;
     virtual void sendCommand16(uint16_t c) = 0;
