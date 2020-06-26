@@ -90,7 +90,7 @@ void Arduino_ESP32SPI_DMA::begin(uint32_t speed, int8_t dataMode)
       .clock_speed_hz = _speed,
       .input_delay_ns = 0,
       .spics_io_num = -1, // avoid use system CS control
-      .flags = 0,
+      .flags = (_miso < 0) ? SPI_DEVICE_NO_DUMMY : 0,
       .queue_size = 1,
   };
   esp_err_t ret;
