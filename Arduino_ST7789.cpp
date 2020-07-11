@@ -21,7 +21,7 @@ void Arduino_ST7789::begin(uint32_t speed)
     speed = 40000000;
   }
 #endif
-  _override_datamode = SPI_MODE3;
+  _override_datamode = 3; // SPI_MODE3
   Arduino_TFT::begin(speed);
 }
 
