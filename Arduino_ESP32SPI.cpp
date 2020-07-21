@@ -506,13 +506,13 @@ void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
   else // 8-bit SPI
   {
     uint32_t *p = (uint32_t *)data;
-    if (len > 64)
+    if (len >= 64)
     {
       flush_data_buf();
       _spi->dev->mosi_dlen.usr_mosi_dbitlen = 511;
       _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
       uint32_t *p = (uint32_t *)data;
-      while (len > 64)
+      while (len >= 64)
       {
         for (int i = 0; i < 16; i++)
         {
@@ -526,7 +526,7 @@ void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
       }
     }
 
-    if ((len % 4) == 0)
+    if ((len > 0) && ((len % 4) == 0))
     {
       flush_data_buf();
 
@@ -563,13 +563,13 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
   }
   else // 8-bit SPI
   {
-    if (len > 32)
+    if (len >= 32)
     {
       flush_data_buf();
       _spi->dev->mosi_dlen.usr_mosi_dbitlen = 511;
       _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
       uint32_t v1, v2;
-      while (len > 32)
+      while (len >= 32)
       {
         for (int i = 0; i < 16; i++)
         {
@@ -585,7 +585,7 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
       }
     }
 
-    if ((len % 2) == 0)
+    if ((len > 0) && ((len % 2) == 0))
     {
       flush_data_buf();
 
