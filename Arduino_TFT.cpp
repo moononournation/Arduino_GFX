@@ -91,6 +91,11 @@ void Arduino_TFT::writePixels(uint16_t *data, uint32_t len)
   _bus->writePixels(data, len);
 }
 
+void Arduino_TFT::writeBytes(uint8_t *data, uint32_t len)
+{
+  _bus->writeBytes(data, len);
+}
+
 /*!
     @brief  Draw a vertical line on the display. Performs edge clipping and
             rejection. Not self-contained; should follow startWrite().
