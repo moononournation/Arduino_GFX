@@ -163,17 +163,16 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
  ******************************************************************************/
 
 #if defined(ESP32)
-// #include <esp_jpg_decode.h>
-#include "esp_jpg_decode.h"
 #include <esp_task_wdt.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 #else // ESP8266
-#include "esp_jpg_decode.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #endif
-#include <SPI.h>
+
+#include "JpegDec.h"
+static JpegDec jpegDec;
 
 static int len, offset;
 static unsigned long next_show_millis = 0;
@@ -257,7 +256,8 @@ void loop()
         {
           // get tcp stream
           WiFiClient *http_stream = http.getStreamPtr();
-          esp_jpg_decode(len, JPG_SCALE_NONE, http_stream_reader, tft_writer, http_stream /* arg */);
+          jpegDec.prepare(http_stream_reader, http_stream);
+          jpegDec.decode(JPG_SCALE_NONE, jpegDec.gfx_writer, gfx);
         }
       }
     }
@@ -272,17 +272,27 @@ void loop()
 #endif
 }
 
-static size_t http_stream_reader(void *arg, size_t index, uint8_t *buf, size_t len)
+static size_t http_stream_reader(JpegDec *jpegDec, size_t index, uint8_t *buf, size_t len)
 {
-  WiFiClient *http_stream = (WiFiClient *)arg;
+  WiFiClient *http_stream = (WiFiClient *)jpegDec->input;
+  uint8_t wait = 0;
   if (buf)
   {
     // Serial.printf("[HTTP] read: %d\n", len);
     size_t a = http_stream->available();
     size_t r = 0;
-    while (r < len)
+    while ((r < len) && (wait < 10))
     {
-      r += http_stream->readBytes(buf + r, min((len - r), a));
+      if (a)
+      {
+        r += http_stream->readBytes(buf + r, min((len - r), a));
+      }
+      else
+      {
+        delay(10);
+        wait++;
+      }
+      a = http_stream->available();
     }
     return r;
   }
@@ -290,28 +300,18 @@ static size_t http_stream_reader(void *arg, size_t index, uint8_t *buf, size_t l
   {
     // Serial.printf("[HTTP] skip: %d\n", len);
     int l = len;
-    while (l--)
+    while ((--l) && (wait < 10))
     {
-      http_stream->read();
+      if (http_stream->available())
+      {
+        http_stream->read();
+      }
+      else
+      {
+        delay(10);
+        wait++;
+      }
     }
     return len;
   }
-}
-
-static bool tft_writer(void *arg, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t *data)
-{
-  if (data)
-  {
-    // Serial.printf("%d, %d, %d, %d\n", x, y, w, h);
-    gfx->draw24bitRGBBitmap(x, y, data, w, h);
-  }
-
-#if defined(ESP32)
-  // notify WDT still working
-  feedLoopWDT();
-#else // ESP8266
-  yield();
-#endif
-
-  return true; // Continue to decompression
 }
