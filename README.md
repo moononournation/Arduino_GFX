@@ -63,8 +63,9 @@ This library is not putting speed at the first priority, but still paid much eff
 - 8-bit hardware SPI (HWSPI)
 - 8-bit and 9-bit software SPI (SWSPI)
 
-## Tobe Support data bus
+## Tobe Support data bus (Donation can make it happen)
 - 8 bit parallel interface
+- 16 bit parallel interface
 
 ## Currently Supported Display
 - GC9A01 round display 240x240 [[test video](https://youtu.be/kJrAFm20-zg)]
@@ -92,11 +93,24 @@ This library is not putting speed at the first priority, but still paid much eff
 - Canvas (framebuffer)
 - Canvas_Indexed (for saving memory space)
 
-## Tobe Support Display
+## Tobe Support Display (Donation can make it happen)
 - LG4573 480x800
 - ST7701 480x800
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas
+- ILI9486 320x480 (3 bit color) supported by co-operate with Canvas
 
 ## Known issue
 - ESP32SPI data bus class is a little bit faster than HWSPI, but not all chip supported, e.g. SSD1283A
+
+## Used source code
+- http://elm-chan.org/fsw/tjpgd/00index.html
+- https://github.com/adafruit/Adafruit-GFX-Library.git
+- https://github.com/adafruit/Adafruit_ILI9341.git
+- https://github.com/adafruit/Adafruit-SSD1351-library.git
+- https://github.com/ananevilya/Arduino-ST7789-Library.git
+- https://github.com/BasementCat/arduino-tft-gif
+- https://github.com/espressif/arduino-esp32.git
+- https://github.com/gitcnd/LCDWIKI_SPI.git
+- https://github.com/lovyan03/LovyanGFX.git
+- https://github.com/lovyan03/M5Stack_JpgLoopAnime
