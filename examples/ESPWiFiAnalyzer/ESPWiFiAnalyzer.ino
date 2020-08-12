@@ -94,7 +94,7 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino_ILI9225 *gfx = new Arduino_ILI9225(bus, TFT_RST);
 
 // ILI9341 LCD 240x320
-Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST);
+// Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST);
 
 // ILI9481 LCD 320x480
 // Arduino_ILI9481_18bit *gfx = new Arduino_ILI9481_18bit(bus, TFT_RST);
@@ -136,7 +136,7 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST);
 // 2.4" LCD 240x320
 // Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST);
 // 2.4" IPS LCD 240x320
-// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 1 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
 // Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 // 1.14" IPS LCD 135x240 TTGO T-Display
@@ -194,7 +194,7 @@ void setup()
   w = gfx->width();
   h = gfx->height();
   text_size = (h < 200) ? 1 : 2;
-  banner_height = text_size * 8;
+  banner_height = text_size * 3 * 4;
   graph_baseline = h - 20;                            // minus 2 text lines
   graph_height = graph_baseline - banner_height - 30; // minus 3 text lines
   channel_width = w / 17;
@@ -202,14 +202,12 @@ void setup()
 
   // init banner
   gfx->setTextSize(text_size);
-  gfx->fillScreen(BLUE);
-  gfx->setTextColor(WHITE, RED);
+  gfx->fillScreen(BLACK);
+  gfx->setTextColor(RED);
   gfx->setCursor(0, 0);
-  gfx->print(" ESP ");
-  gfx->setTextColor(WHITE, GREEN);
-  gfx->print(" WiFi ");
-  gfx->setTextColor(WHITE, BLUE);
-  gfx->print(" Analyzer");
+  gfx->print("ESP");
+  gfx->setTextColor(WHITE);
+  gfx->print(" WiFi Analyzer");
 }
 
 bool matchBssidPrefix(uint8_t *a, uint8_t *b)
