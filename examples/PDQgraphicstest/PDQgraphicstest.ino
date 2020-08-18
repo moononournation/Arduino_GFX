@@ -7,7 +7,6 @@
 /*******************************************************************************
  * Start of Arduino_GFX setting
  ******************************************************************************/
-#include "SPI.h"
 #include "Arduino_HWSPI.h"
 #include "Arduino_ESP32SPI.h"
 #include "Arduino_SWSPI.h"
@@ -68,6 +67,7 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 */
 
 // Canvas (framebuffer)
+// #define CANVAS
 // Arduino_ST7789 *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 16-bit color Canvas (240x320 resolution only works for ESP32 with PSRAM)
 // Arduino_Canvas *gfx = new Arduino_Canvas(240 /* width */, 320 /* height */, output_display);
@@ -168,13 +168,13 @@ void setup()
   w = gfx->width();
   h = gfx->height();
   n = min(w, h);
-  n1 = min(w, h) - 1;
+  n1 = n - 1;
   cx = w / 2;
   cy = h / 2;
   cx1 = cx - 1;
   cy1 = cy - 1;
   cn = min(cx1, cy1);
-  cn1 = min(cx1, cy1) - 1;
+  cn1 = cn - 1;
   tsa = ((w <= 160) || (h <= 160)) ? 1 : (((w <= 240) || (h <= 240)) ? 2 : 3); // text size A
   tsb = ((w <= 240) || (h <= 220)) ? 1 : 2;                                    // text size B
   tsc = ((w <= 220) || (h <= 220)) ? 1 : 2;                                    // text size C
@@ -197,113 +197,59 @@ static inline uint32_t micros_start()
 
 void loop(void)
 {
-
-  Serial.println(F("Benchmark                Time (microseconds)"));
+  Serial.println(F("Benchmark\tmicro-secs"));
 
   uint32_t usecFillScreen = testFillScreen();
-  gfx->flush();
-  Serial.print(F("Screen fill              "));
-  Serial.println(usecFillScreen);
-  delay(100);
+  serialOut(F("Screen fill\t"), usecFillScreen, 100, true);
 
-  gfx->fillScreen(BLACK);
   uint32_t usecText = testText();
-  gfx->flush();
-  Serial.print(F("Text                     "));
-  Serial.println(usecText);
-  delay(3000); // delay for verifing the text
+  serialOut(F("Text\t"), usecText, 3000, true);
 
-  gfx->fillScreen(BLACK);
   uint32_t usecPixels = testPixels();
-  gfx->flush();
-  Serial.print(F("Pixels                   "));
-  Serial.println(usecPixels);
-  delay(100);
+  serialOut(F("Pixels\t"), usecPixels, 100, true);
 
-  gfx->fillScreen(BLACK);
   uint32_t usecLines = testLines(BLUE);
-  gfx->flush();
-  Serial.print(F("Lines                    "));
-  Serial.println(usecLines);
-  delay(100);
+  serialOut(F("Lines\t"), usecLines, 100, true);
 
-  gfx->fillScreen(BLACK);
   uint32_t usecFastLines = testFastLines(RED, BLUE);
-  gfx->flush();
-  Serial.print(F("Horiz/Vert Lines         "));
-  Serial.println(usecFastLines);
-  delay(100);
+  serialOut(F("Horiz/Vert Lines\t"), usecFastLines, 100, true);
 
-  gfx->fillScreen(BLACK);
   uint32_t usecFilledRects = testFilledRects(YELLOW, MAGENTA);
-  gfx->flush();
-  Serial.print(F("Rectangles (filled)      "));
-  Serial.println(usecFilledRects);
-  delay(100);
+  serialOut(F("Rectangles (filled)\t"), usecFilledRects, 100, false);
 
   uint32_t usecRects = testRects(GREEN);
-  gfx->flush();
-  Serial.print(F("Rectangles (outline)     "));
-  Serial.println(usecRects);
-  delay(100);
+  serialOut(F("Rectangles (outline)\t"), usecRects, 100, true);
 
-  gfx->fillScreen(BLACK);
   uint32_t usecFilledCircles = testFilledCircles(10, MAGENTA);
-  gfx->flush();
-  Serial.print(F("Circles (filled)         "));
-  Serial.println(usecFilledCircles);
-  delay(100);
+  serialOut(F("Circles (filled)\t"), usecFilledCircles, 100, false);
 
   uint32_t usecCircles = testCircles(10, WHITE);
-  gfx->flush();
-  Serial.print(F("Circles (outline)        "));
-  Serial.println(usecCircles);
-  delay(100);
+  serialOut(F("Circles (outline)\t"), usecCircles, 100, true);
 
-  gfx->fillScreen(BLACK);
   uint32_t usecFilledArcs = testFillArcs();
-  gfx->flush();
-  Serial.print(F("Fill Arcs                "));
-  Serial.println(usecFilledArcs);
-  delay(100);
+  serialOut(F("Arcs (filled)\t"), usecFilledArcs, 100, false);
 
   uint32_t usecArcs = testArcs();
-  gfx->flush();
-  Serial.print(F("Draw Arcs                "));
-  Serial.println(usecArcs);
-  delay(100);
+  serialOut(F("Arcs (outline)\t"), usecArcs, 100, true);
 
-  gfx->fillScreen(BLACK);
   uint32_t usecFilledTrangles = testFilledTriangles();
-  gfx->flush();
-  Serial.print(F("Triangles (filled)       "));
-  Serial.println(usecFilledTrangles);
-  delay(100);
+  serialOut(F("Triangles (filled)\t"), usecFilledTrangles, 100, false);
 
   uint32_t usecTriangles = testTriangles();
-  gfx->flush();
-  Serial.print(F("Triangles (outline)      "));
-  Serial.println(usecTriangles);
-  delay(100);
+  serialOut(F("Triangles (outline)\t"), usecTriangles, 100, true);
 
-  gfx->fillScreen(BLACK);
   uint32_t usecFilledRoundRects = testFilledRoundRects();
-  gfx->flush();
-  Serial.print(F("Rounded rects (filled)   "));
-  Serial.println(usecFilledRoundRects);
-  delay(100);
+  serialOut(F("Rounded rects (filled)\t"), usecFilledRoundRects, 100, true);
 
   uint32_t usecRoundRects = testRoundRects();
-  gfx->flush();
-  Serial.print(F("Rounded rects (outline)  "));
-  Serial.println(usecRoundRects);
-  delay(100);
+  serialOut(F("Rounded rects (outline)\t"), usecRoundRects, 100, true);
 
+#ifdef CANVAS
   uint32_t start = micros_start();
   gfx->flush();
   uint32_t usecFlush = micros() - start;
-  Serial.print(F("flush (Canvas only)      "));
-  Serial.println(usecFlush);
+  serialOut(F("flush (Canvas only)\t"), usecFlush, 100);
+#endif
 
   Serial.println(F("Done!"));
 
@@ -314,21 +260,21 @@ void loop(void)
     gfx->drawFastHLine(0, i, w, c);
     c += d;
     if (c <= 4 || c >= 11)
+    {
       d = -d;
+    }
   }
 
   gfx->setCursor(0, 0);
   gfx->setTextColor(MAGENTA);
   gfx->setTextSize(tsa);
   gfx->println(F("Arduino GFX"));
-  gfx->setTextSize(1);
-  gfx->println(F(""));
 
   if (h > w)
   {
     gfx->setTextColor(GREEN);
     gfx->setTextSize(tsb);
-    gfx->print(F("Benchmark "));
+    gfx->print(F("\nBenchmark "));
     gfx->setTextSize(tsc);
     if (ds == 12)
     {
@@ -336,7 +282,7 @@ void loop(void)
     }
     gfx->println(F("micro-secs"));
     gfx->setTextSize(1);
-    gfx->println(F(""));
+    gfx->println();
     gfx->setTextColor(YELLOW);
   }
 
@@ -358,19 +304,33 @@ void loop(void)
 
   if (h > w)
   {
-    gfx->setTextSize(1);
-    gfx->println(F(""));
     gfx->setTextColor(GREEN);
     gfx->setTextSize(tsc);
-    gfx->print(F("Benchmark Complete!"));
+    gfx->print(F("\nBenchmark Complete!"));
   }
 
+#ifdef CANVAS
   gfx->flush();
+#endif
 
   delay(60 * 1000L);
 }
 
-void printnice(const __FlashStringHelper *item, long unsigned int v)
+void serialOut(const __FlashStringHelper *item, uint32_t v, uint32_t d, bool clear)
+{
+#ifdef CANVAS
+  gfx->flush();
+#endif
+  Serial.print(item);
+  Serial.println(v);
+  delay(d);
+  if (clear)
+  {
+    gfx->fillScreen(BLACK);
+  }
+}
+
+void printnice(const __FlashStringHelper *item, uint32_t v)
 {
   gfx->setTextColor(CYAN);
   gfx->setTextSize(tsb);
@@ -484,7 +444,9 @@ uint32_t testPixels()
     {
       gfx->drawPixel(x, y, gfx->color565(x << 3, y << 3, x * y));
     }
+#ifdef ESP8266
     yield(); // avoid long run triggered ESP8266 WDT restart
+#endif
   }
 
   return micros() - start;
@@ -601,9 +563,6 @@ uint32_t testFilledRects(uint16_t color1, uint16_t color2)
     gfx->fillRect(cx1 - i2, cy1 - i2, i, i, color1);
 
     t += micros() - start;
-
-    // Outlines are not included in timing results
-    gfx->drawRect(cx - i2, cy - i2, i, i, color2);
   }
 
   return t;
