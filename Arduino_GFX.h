@@ -159,10 +159,6 @@ public:
   void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
   void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
   void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
-  void fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, int16_t delta, uint16_t color);
-  void drawArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color);
-  void fillArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color);
-  void fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t iradius, float start, float end, uint16_t color);
   void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
   void fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
   void drawRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color);
@@ -184,10 +180,18 @@ public:
   void setTextSize(uint8_t sx, uint8_t sy, uint8_t pixel_margin);
   void setFont(const GFXfont *f = NULL);
 
+  // adopt from LovyanGFX
+  void drawEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color);
+  void drawEllipseHelper(int32_t x, int32_t y, int32_t rx, int32_t ry, uint8_t cornername, uint16_t color);
+  void fillEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color);
+  void fillEllipseHelper(int32_t x, int32_t y, int32_t rx, int32_t ry, uint8_t cornername, int16_t delta, uint16_t color);
+  void drawArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color);
+  void fillArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color);
+  void fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t iradius, float start, float end, uint16_t color);
+
 // TFT optimization code, too big for ATMEL family
 #if defined(ESP32)
   virtual void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
-  virtual void drawCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color);
   virtual void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg);
   virtual void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg);
   virtual void drawGrayscaleBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
@@ -200,7 +204,6 @@ public:
   virtual void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg);
 #else  // not defined(ESP32)
   void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
-  void drawCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color);
   void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg);
   void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg);
   void drawGrayscaleBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
@@ -350,10 +353,10 @@ protected:
       textcolor,   ///< 16-bit background color for print()
       textbgcolor; ///< 16-bit text color for print()
   uint8_t
-      textsize_x, ///< Desired magnification in X-axis of text to print()
-      textsize_y, ///< Desired magnification in Y-axis of text to print()
+      textsize_x,        ///< Desired magnification in X-axis of text to print()
+      textsize_y,        ///< Desired magnification in Y-axis of text to print()
       text_pixel_margin, ///< Margin for each text pixel
-      _rotation;  ///< Display rotation (0 thru 3)
+      _rotation;         ///< Display rotation (0 thru 3)
   bool
       wrap,   ///< If set, 'wrap' text at right edge of display
       _cp437; ///< If set, use correct CP437 charset (default is off)

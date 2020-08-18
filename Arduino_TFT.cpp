@@ -7,18 +7,13 @@
 #include "Arduino_TFT.h"
 #include "glcdfont.c"
 
-// TODO: temp move drawSlashLine() and drawCircleHelper() variables to static to avoid enable PSRAM performamce issue
+// TODO: temp move drawSlashLine() variables to static to avoid enable PSRAM performamce issue
 static int16_t dx;
 static int16_t dy;
 static int16_t err;
 static int16_t xs;
 static int16_t step;
 static int16_t len;
-static int16_t f;
-static int16_t ddF_x;
-static int16_t ddF_y;
-static int16_t x;
-static int16_t y;
 
 Arduino_TFT::Arduino_TFT(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
@@ -328,65 +323,6 @@ void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
       y0 += step;
       len = 0;
       xs = x0;
-    }
-  }
-}
-
-/**************************************************************************/
-/*!
-    @brief    Quarter-circle drawer, used to do circles and roundrects
-    @param    x0   Center-point x coordinate
-    @param    y0   Center-point y coordinate
-    @param    r   Radius of circle
-    @param    cornername  Mask bit #1 or bit #2 to indicate which quarters of the circle we're doing
-    @param    color 16-bit 5-6-5 Color to draw with
-*/
-/**************************************************************************/
-void Arduino_TFT::drawCircleHelper(int16_t x0, int16_t y0,
-                                   int16_t r, uint8_t cornername, uint16_t color)
-{
-  f = 1 - r;
-  ddF_x = 1;
-  ddF_y = -2 * r;
-  x = 0;
-  y = r;
-  len = 0;
-  xs = 1;
-
-  while (x < y)
-  {
-    x++;
-    len++;
-    ddF_x += 2;
-    f += ddF_x;
-    if ((f >= 0) || ((x >= y) && len))
-    {
-      if (cornername & 0x4)
-      {
-        writeFillRect(x0 + xs, y0 + y, len, 1, color);
-        writeFillRect(x0 + y, y0 + xs, 1, len, color);
-      }
-      if (cornername & 0x2)
-      {
-        writeFillRect(x0 + y, y0 - xs - len + 1, 1, len, color);
-        writeFillRect(x0 + xs, y0 - y, len, 1, color);
-      }
-      if (cornername & 0x8)
-      {
-        writeFillRect(x0 - y, y0 + xs, 1, len, color);
-        writeFillRect(x0 - xs - len + 1, y0 + y, len, 1, color);
-      }
-      if (cornername & 0x1)
-      {
-        writeFillRect(x0 - xs - len + 1, y0 - y, len, 1, color);
-        writeFillRect(x0 - y, y0 - xs - len + 1, 1, len, color);
-      }
-
-      y--;
-      ddF_y += 2;
-      f += ddF_y;
-      len = 0;
-      xs = x + 1;
     }
   }
 }

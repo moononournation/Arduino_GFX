@@ -386,150 +386,244 @@ void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 /**************************************************************************/
 /*!
     @brief  Draw a circle outline
-    @param  x0      Center-point x coordinate
-    @param  y0      Center-point y coordinate
+    @param  x       Center-point x coordinate
+    @param  y       Center-point y coordinate
     @param  r       Radius of circle
     @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
-void Arduino_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
-                             uint16_t color)
+void Arduino_GFX::drawCircle(int16_t x, int16_t y,
+                             int16_t r, uint16_t color)
 {
     startWrite();
-    writePixel(x0, y0 + r, color);
-    writePixel(x0, y0 - r, color);
-    writePixel(x0 + r, y0, color);
-    writePixel(x0 - r, y0, color);
-    drawCircleHelper(x0, y0, r, 0xf, color);
+    drawEllipseHelper(x, y, r, r, 0xf, color);
     endWrite();
 }
 
 /**************************************************************************/
 /*!
-    @brief  Quarter-circle drawer, used to do circles and roundrects
-    @param  x0          Center-point x coordinate
-    @param  y0          Center-point y coordinate
-    @param  r           Radius of circle
+    @brief  Quarter-ellipse drawer, used to do circles and roundrects
+    @param  x           Center-point x coordinate
+    @param  y           Center-point y coordinate
+    @param  rx          radius of x coordinate
+    @param  ry          radius of y coordinate
     @param  cornername  Mask bit #1 or bit #2 to indicate which quarters of the circle we're doing
     @param  color       16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
-void Arduino_GFX::drawCircleHelper(int16_t x0, int16_t y0,
-                                   int16_t r, uint8_t cornername, uint16_t color)
+void Arduino_GFX::drawEllipseHelper(int32_t x, int32_t y,
+                                    int32_t rx, int32_t ry,
+                                    uint8_t cornername, uint16_t color)
 {
-    int16_t f = 1 - r;
-    int16_t ddF_x = 1;
-    int16_t ddF_y = -2 * r;
-    int16_t x = 0;
-    int16_t y = r;
-
-    while (x < y)
+    if (rx < 0 || ry < 0 || ((rx == 0) && (ry == 0)))
     {
-        if (f >= 0)
+        return;
+    }
+    if (ry == 0)
+    {
+        drawFastHLine(x - rx, y, (ry << 2) + 1, color);
+        return;
+    }
+    if (rx == 0)
+    {
+        drawFastVLine(x, y - ry, (rx << 2) + 1, color);
+        return;
+    }
+
+    int32_t xt, yt, s, i;
+    int32_t rx2 = rx * rx;
+    int32_t ry2 = ry * ry;
+
+    i = -1;
+    xt = 0;
+    yt = ry;
+    s = (ry2 << 1) + rx2 * (1 - (ry << 1));
+    do
+    {
+        while (s < 0)
+            s += ry2 * ((++xt << 2) + 2);
+        if (cornername & 0x1)
         {
-            y--;
-            ddF_y += 2;
-            f += ddF_y;
-        }
-        x++;
-        ddF_x += 2;
-        f += ddF_x;
-        if (cornername & 0x4)
-        {
-            writePixel(x0 + x, y0 + y, color);
-            writePixel(x0 + y, y0 + x, color);
+            writeFastHLine(x - xt, y - yt, xt - i, color);
         }
         if (cornername & 0x2)
         {
-            writePixel(x0 + y, y0 - x, color);
-            writePixel(x0 + x, y0 - y, color);
+            writeFastHLine(x + i + 1, y - yt, xt - i, color);
+        }
+        if (cornername & 0x4)
+        {
+            writeFastHLine(x + i + 1, y + yt, xt - i, color);
         }
         if (cornername & 0x8)
         {
-            writePixel(x0 - y, y0 + x, color);
-            writePixel(x0 - x, y0 + y, color);
+            writeFastHLine(x - xt, y + yt, xt - i, color);
         }
+        i = xt;
+        s -= (--yt) * rx2 << 2;
+    } while (ry2 * xt <= rx2 * yt);
+
+    i = -1;
+    yt = 0;
+    xt = rx;
+    s = (rx2 << 1) + ry2 * (1 - (rx << 1));
+    do
+    {
+        while (s < 0)
+            s += rx2 * ((++yt << 2) + 2);
         if (cornername & 0x1)
         {
-            writePixel(x0 - x, y0 - y, color);
-            writePixel(x0 - y, y0 - x, color);
+            writeFastVLine(x - xt, y - yt, yt - i, color);
         }
-    }
+        if (cornername & 0x2)
+        {
+            writeFastVLine(x + xt, y - yt, yt - i, color);
+        }
+        if (cornername & 0x4)
+        {
+            writeFastVLine(x + xt, y + i + 1, yt - i, color);
+        }
+        if (cornername & 0x8)
+        {
+            writeFastVLine(x - xt, y + i + 1, yt - i, color);
+        }
+        i = yt;
+        s -= (--xt) * ry2 << 2;
+    } while (rx2 * yt <= ry2 * xt);
 }
 
 /**************************************************************************/
 /*!
     @brief  Draw a circle with filled color
-    @param  x0      Center-point x coordinate
-    @param  y0      Center-point y coordinate
+    @param  x       Center-point x coordinate
+    @param  y       Center-point y coordinate
     @param  r       Radius of circle
     @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
-void Arduino_GFX::fillCircle(int16_t x0, int16_t y0, int16_t r,
-                             uint16_t color)
+void Arduino_GFX::fillCircle(int16_t x, int16_t y,
+                             int16_t r, uint16_t color)
 {
     startWrite();
-    writeFastVLine(x0, y0 - r, 2 * r + 1, color);
-    fillCircleHelper(x0, y0, r, 3, 0, color);
+    fillEllipseHelper(x, y, r, r, 3, 0, color);
     endWrite();
 }
 
 /**************************************************************************/
 /*!
     @brief  Quarter-circle drawer with fill, used for circles and roundrects
-    @param  x0      Center-point x coordinate
-    @param  y0      Center-point y coordinate
-    @param  r       Radius of circle
+    @param  x       Center-point x coordinate
+    @param  y       Center-point y coordinate
+    @param  rx      Radius of x coordinate
+    @param  ry      Radius of y coordinate
     @param  corners Mask bits indicating which quarters we're doing
     @param  delta   Offset from center-point, used for round-rects
     @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
-void Arduino_GFX::fillCircleHelper(int16_t x0, int16_t y0, int16_t r,
-                                   uint8_t corners, int16_t delta, uint16_t color)
+void Arduino_GFX::fillEllipseHelper(int32_t x, int32_t y,
+                                    int32_t rx, int32_t ry,
+                                    uint8_t corners, int16_t delta, uint16_t color)
 {
-
-    int16_t f = 1 - r;
-    int16_t ddF_x = 1;
-    int16_t ddF_y = -2 * r;
-    int16_t x = 0;
-    int16_t y = r;
-    int16_t px = x;
-    int16_t py = y;
-
-    delta++; // Avoid some +1's in the loop
-
-    while (x < y)
+    if (rx < 0 || ry < 0 || ((rx == 0) && (ry == 0)))
     {
-        if (f >= 0)
-        {
-            y--;
-            ddF_y += 2;
-            f += ddF_y;
-        }
-        x++;
-        ddF_x += 2;
-        f += ddF_x;
-        // These checks avoid double-drawing certain lines, important
-        // for the SSD1306 library which has an INVERT drawing mode.
-        if (x < (y + 1))
-        {
-            if (corners & 1)
-                writeFastVLine(x0 + x, y0 - y, 2 * y + delta, color);
-            if (corners & 2)
-                writeFastVLine(x0 - x, y0 - y, 2 * y + delta, color);
-        }
-        if (y != py)
-        {
-            if (corners & 1)
-                writeFastVLine(x0 + py, y0 - px, 2 * px + delta, color);
-            if (corners & 2)
-                writeFastVLine(x0 - py, y0 - px, 2 * px + delta, color);
-            py = y;
-        }
-        px = x;
+        return;
     }
+    if (ry == 0)
+    {
+        drawFastHLine(x - rx, y, (ry << 2) + 1, color);
+        return;
+    }
+    if (rx == 0)
+    {
+        drawFastVLine(x, y - ry, (rx << 2) + 1, color);
+        return;
+    }
+
+    int32_t xt, yt, i;
+    int32_t rx2 = (int32_t)rx * rx;
+    int32_t ry2 = (int32_t)ry * ry;
+    int32_t s;
+
+    writeFastHLine(x - rx, y, (rx << 1) + 1, color);
+    i = 0;
+    yt = 0;
+    xt = rx;
+    s = (rx2 << 1) + ry2 * (1 - (rx << 1));
+    do
+    {
+        while (s < 0)
+        {
+            s += rx2 * ((++yt << 2) + 2);
+        }
+        if (corners & 1)
+        {
+            writeFillRect(x - xt, y - yt, (xt << 1) + 1 + delta, yt - i, color);
+        }
+        if (corners & 2)
+        {
+            writeFillRect(x - xt, y + i + 1, (xt << 1) + 1 + delta, yt - i, color);
+        }
+        i = yt;
+        s -= (--xt) * ry2 << 2;
+    } while (rx2 * yt <= ry2 * xt);
+
+    xt = 0;
+    yt = ry;
+    s = (ry2 << 1) + rx2 * (1 - (ry << 1));
+    do
+    {
+        while (s < 0)
+        {
+            s += ry2 * ((++xt << 2) + 2);
+        }
+        if (corners & 1)
+        {
+            writeFastHLine(x - xt, y - yt, (xt << 1) + 1 + delta, color);
+        }
+        if (corners & 2)
+        {
+            writeFastHLine(x - xt, y + yt, (xt << 1) + 1 + delta, color);
+        }
+        s -= (--yt) * rx2 << 2;
+    } while (ry2 * xt <= rx2 * yt);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Draw an ellipse outline
+    @param  x       Center-point x coordinate
+    @param  y       Center-point y coordinate
+    @param  rx      radius of x coordinate
+    @param  ry      radius of y coordinate
+    @param  start   degree of ellipse start
+    @param  end     degree of ellipse end
+    @param  color   16-bit 5-6-5 Color to draw with
+*/
+/**************************************************************************/
+void Arduino_GFX::drawEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color)
+{
+    startWrite();
+    drawEllipseHelper(x, y, rx, ry, 0xf, color);
+    endWrite();
+}
+
+/**************************************************************************/
+/*!
+    @brief  Draw an ellipse with filled color
+    @param  x       Center-point x coordinate
+    @param  y       Center-point y coordinate
+    @param  rx      radius of x coordinate
+    @param  ry      radius of y coordinate
+    @param  start   degree of ellipse start
+    @param  end     degree of ellipse end
+    @param  color   16-bit 5-6-5 Color to fill with
+*/
+/**************************************************************************/
+void Arduino_GFX::fillEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color)
+{
+    startWrite();
+    fillEllipseHelper(x, y, rx, ry, 3, 0, color);
+    endWrite();
 }
 
 /**************************************************************************/
@@ -541,7 +635,7 @@ void Arduino_GFX::fillCircleHelper(int16_t x0, int16_t y0, int16_t r,
     @param  r2      Inner radius of arc
     @param  start   degree of arc start
     @param  end     degree of arc end
-    @param  color   16-bit 5-6-5 Color to fill with
+    @param  color   16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
 void Arduino_GFX::drawArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color)
@@ -768,10 +862,10 @@ void Arduino_GFX::drawRoundRect(int16_t x, int16_t y, int16_t w,
     writeFastVLine(x, y + r, h - 2 * r, color);         // Left
     writeFastVLine(x + w - 1, y + r, h - 2 * r, color); // Right
     // draw four corners
-    drawCircleHelper(x + r, y + r, r, 1, color);
-    drawCircleHelper(x + w - r - 1, y + r, r, 2, color);
-    drawCircleHelper(x + w - r - 1, y + h - r - 1, r, 4, color);
-    drawCircleHelper(x + r, y + h - r - 1, r, 8, color);
+    drawEllipseHelper(x + r, y + r, r, r, 1, color);
+    drawEllipseHelper(x + w - r - 1, y + r, r, r, 2, color);
+    drawEllipseHelper(x + w - r - 1, y + h - r - 1, r, r, 4, color);
+    drawEllipseHelper(x + r, y + h - r - 1, r, r, 8, color);
     endWrite();
 }
 
@@ -794,10 +888,10 @@ void Arduino_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w,
         r = max_radius;
     // smarter version
     startWrite();
-    writeFillRect(x + r, y, w - 2 * r, h, color);
+    writeFillRect(x, y + r, w, h - (r << 1), color);
     // draw four corners
-    fillCircleHelper(x + w - r - 1, y + r, r, 1, h - 2 * r - 1, color);
-    fillCircleHelper(x + r, y + r, r, 2, h - 2 * r - 1, color);
+    fillEllipseHelper(x + r, y + r, r, r, 1, w - 2 * r - 1, color);
+    fillEllipseHelper(x + r, y + h - r - 1, r, r, 2, w - 2 * r - 1, color);
     endWrite();
 }
 
@@ -838,7 +932,6 @@ void Arduino_GFX::drawTriangle(int16_t x0, int16_t y0,
 void Arduino_GFX::fillTriangle(int16_t x0, int16_t y0,
                                int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
 {
-
     int16_t a, b, y, last;
 
     // Sort coordinates by Y order (y2 >= y1 >= y0)
@@ -957,7 +1050,6 @@ void Arduino_GFX::fillTriangle(int16_t x0, int16_t y0,
 void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
                              const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color)
 {
-
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
 
@@ -999,7 +1091,6 @@ void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
                              const uint8_t bitmap[], int16_t w, int16_t h,
                              uint16_t color, uint16_t bg)
 {
-
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
 
@@ -1036,7 +1127,6 @@ void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
 void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
                              uint8_t *bitmap, int16_t w, int16_t h, uint16_t color)
 {
-
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
 
@@ -1077,7 +1167,6 @@ void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
 void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
                              uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
-
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
 
@@ -1742,6 +1831,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
         endWrite();
     } // End classic vs custom font
 }
+
 /**************************************************************************/
 /*!
     @brief  Print one byte/character of data, used to support print()
@@ -1910,7 +2000,6 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
 {
     if (gfxFont)
     {
-
         if (c == '\n')
         {           // Newline?
             *x = 0; // Reset x to zero, advance y by one line
