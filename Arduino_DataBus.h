@@ -31,10 +31,10 @@ public:
     virtual void writePixels(uint16_t *data, uint32_t len) = 0;
     virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) = 0;
     virtual void endWrite() = 0;
-#if defined(ESP32)
+#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
     virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
     virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
-#endif // ESP32
+#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
     virtual void sendCommand(uint8_t c) = 0;
     virtual void sendCommand16(uint16_t c) = 0;

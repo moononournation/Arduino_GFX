@@ -6,9 +6,15 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_HWSPI.h"
 
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+#define HWSPI LCD_SPI
+#else
+#define HWSPI SPI
+#endif
+
 #if defined(SPI_HAS_TRANSACTION)
-#define SPI_BEGIN_TRANSACTION() SPI.beginTransaction(mySPISettings)
-#define SPI_END_TRANSACTION() SPI.endTransaction()
+#define SPI_BEGIN_TRANSACTION() HWSPI.beginTransaction(mySPISettings)
+#define SPI_END_TRANSACTION() HWSPI.endTransaction()
 #else
 #define SPI_BEGIN_TRANSACTION() \
   {                             \
@@ -154,21 +160,21 @@ void Arduino_HWSPI::begin(uint32_t speed, int8_t dataMode)
 #endif // end USE_FAST_PINIO
 
 #if defined(ESP32)
-  SPI.begin(_sck, _miso, _mosi);
+  HWSPI.begin(_sck, _miso, _mosi);
   if (_dataMode >= 0)
   {
     _dataMode = SPI_MODE0;
   }
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(ESP8266)
-  SPI.begin();
+  HWSPI.begin();
   if (_dataMode >= 0)
   {
     _dataMode = SPI_MODE0;
   }
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(SPI_HAS_TRANSACTION)
-  SPI.begin();
+  HWSPI.begin();
   if (_dataMode >= 0)
   {
     _dataMode = SPI_MODE2;
@@ -176,23 +182,23 @@ void Arduino_HWSPI::begin(uint32_t speed, int8_t dataMode)
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(__AVR__) || defined(CORE_TEENSY)
   SPCRbackup = SPCR;
-  SPI.begin();
-  SPI.setClockDivider(SPI_CLOCK_DIV2);
+  HWSPI.begin();
+  HWSPI.setClockDivider(SPI_CLOCK_DIV2);
   if (_dataMode >= 0)
   {
     _dataMode = SPI_MODE2;
   }
-  SPI.setDataMode(_dataMode);
+  HWSPI.setDataMode(_dataMode);
   mySPCR = SPCR;     // save our preferred state
   SPCR = SPCRbackup; // then restore
 #elif defined(__SAM3X8E__)
-  SPI.begin();
-  SPI.setClockDivider(21); //4MHz
+  HWSPI.begin();
+  HWSPI.setClockDivider(21); //4MHz
   if (_dataMode >= 0)
   {
     _dataMode = SPI_MODE2;
   }
-  SPI.setDataMode(_dataMode);
+  HWSPI.setDataMode(_dataMode);
 #elif defined(__arm__)
   if (_dataMode >= 0)
   {
@@ -225,23 +231,23 @@ void Arduino_HWSPI::writeCommand16(uint16_t c)
 void Arduino_HWSPI::write(uint8_t c)
 {
 #if defined(SPI_HAS_TRANSACTION)
-  SPI.transfer(c);
+  HWSPI.transfer(c);
 #elif defined(__AVR__) || defined(CORE_TEENSY)
   SPCRbackup = SPCR;
   SPCR = mySPCR;
-  SPI.transfer(c);
+  HWSPI.transfer(c);
   SPCR = SPCRbackup;
 #elif defined(__arm__)
-  SPI.setClockDivider(21); //4MHz
-  SPI.setDataMode(_dataMode);
-  SPI.transfer(c);
+  HWSPI.setClockDivider(21); //4MHz
+  HWSPI.setDataMode(_dataMode);
+  HWSPI.transfer(c);
 #endif
 }
 
 void Arduino_HWSPI::write16(uint16_t d)
 {
 #if defined(ESP8266) || defined(ESP32)
-  SPI.write16(d);
+  HWSPI.write16(d);
 #else
   write(d >> 8);
   write(d);
@@ -251,7 +257,7 @@ void Arduino_HWSPI::write16(uint16_t d)
 void Arduino_HWSPI::write32(uint32_t d)
 {
 #if defined(ESP8266) || defined(ESP32)
-  SPI.write32(d);
+  HWSPI.write32(d);
 #else
   write(d >> 24);
   write(d >> 16);
@@ -341,14 +347,14 @@ void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
   while (len)
   {                                          // While pixels remain
     xferLen = (bufLen < len) ? bufLen : len; // How many this pass?
-    SPI.writePixels((uint16_t *)temp, xferLen * 2);
+    HWSPI.writePixels((uint16_t *)temp, xferLen * 2);
     len -= xferLen;
   }
 #elif defined(ESP8266)
   static uint8_t temp[2];
   temp[0] = p >> 8;
   temp[1] = p & 0xFF;
-  SPI.writePattern((uint8_t *)temp, 2, len);
+  HWSPI.writePattern((uint8_t *)temp, 2, len);
 #else
   uint8_t hi = p >> 8, lo = p;
 
@@ -363,7 +369,7 @@ void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
 void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
 {
 #if defined(ESP8266) || defined(ESP32)
-  SPI.writeBytes(data, len);
+  HWSPI.writeBytes(data, len);
 #else
   while (len--)
   {
@@ -375,9 +381,9 @@ void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
 void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 {
 #ifdef ESP32
-  SPI.writePixels(data, len * 2); // don't know why len require *2
+  HWSPI.writePixels(data, len * 2); // don't know why len require *2
 #elif defined(ESP8266)
-  SPI.writePattern((uint8_t *)data, len * 2, 1);
+  HWSPI.writePattern((uint8_t *)data, len * 2, 1);
 #else
   uint8_t *d = (uint8_t *)data;
   while (len--)
@@ -396,7 +402,7 @@ void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
 #if defined(ESP8266) || defined(ESP32)
-  SPI.writePattern(data, len, repeat);
+  HWSPI.writePattern(data, len, repeat);
 #else
   while (repeat--)
   {

@@ -25,7 +25,7 @@ void Arduino_DataBus::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   write16(d2);
 }
 
-#if defined(ESP32)
+#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   while (len--)
@@ -46,4 +46,4 @@ void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uin
     write16(p);
   }
 }
-#endif // ESP32
+#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)

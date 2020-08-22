@@ -52,7 +52,7 @@ void Arduino_TFT_18bit::writePixels(uint16_t *data, uint32_t len)
 }
 
 // TFT optimization code, too big for ATMEL family
-#if defined(ESP32)
+#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
 // TFT tuned BITMAP / XBITMAP / GRAYSCALE / RGB BITMAP FUNCTIONS ---------------------
 
@@ -334,4 +334,4 @@ void Arduino_TFT_18bit::draw24bitRGBBitmap(int16_t x, int16_t y,
   endWrite();
 }
 
-#endif // defined(ESP32)
+#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)

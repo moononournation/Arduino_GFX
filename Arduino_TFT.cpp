@@ -269,7 +269,7 @@ void Arduino_TFT::setRotation(uint8_t r)
 }
 
 // TFT optimization code, too big for ATMEL family
-#if defined(ESP32)
+#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
 /**************************************************************************/
 /*!
@@ -496,7 +496,6 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
   endWrite();
 }
 
-#if defined(ESP32)
 /**************************************************************************/
 /*!
     @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
@@ -524,7 +523,6 @@ void Arduino_TFT::writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_inde
 {
   _bus->writeIndexedPixelsDouble(bitmap, color_index, len);
 }
-#endif // ESP32
 
 /**************************************************************************/
 /*!
@@ -985,4 +983,4 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color
   } // End classic vs custom font
 }
 
-#endif // defined(ESP32)
+#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)

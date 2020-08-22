@@ -24,7 +24,7 @@ public:
   virtual void displayOff() = 0;
 
 // TFT optimization code, too big for ATMEL family
-#if defined(ESP32)
+#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
   virtual void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg);
   virtual void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg);
   virtual void drawGrayscaleBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
@@ -34,7 +34,7 @@ public:
   virtual void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h);
   virtual void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
   virtual void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h);
-#endif // defined(ESP32)
+#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
 protected:
 

@@ -67,6 +67,12 @@ This library is not putting speed at the first priority, but still paid much eff
 - 8 bit parallel interface
 - 16 bit parallel interface
 
+## Currently Supported Dev Device
+- M5Stack Core Family
+- Odroid Go
+- TTGO T-Watch
+- Wio Terminal
+
 ## Currently Supported Display
 - GC9A01 round display 240x240 [[test video](https://youtu.be/kJrAFm20-zg)]
 - HX8347C 240x320 [[test video](https://youtu.be/25ymuV51YQM)]
