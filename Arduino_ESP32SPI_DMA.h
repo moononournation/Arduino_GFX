@@ -63,7 +63,7 @@ class Arduino_ESP32SPI_DMA : public Arduino_DataBus
 public:
   Arduino_ESP32SPI_DMA(int8_t dc = -1, int8_t cs = -1, int8_t sck = -1, int8_t mosi = -1, int8_t miso = -1, uint8_t spi_num = VSPI); // Constructor
 
-  virtual void begin(uint32_t speed = 0, int8_t dataMode = SPI_MODE0);
+  virtual void begin(int speed = 0, int8_t dataMode = SPI_MODE0);
   virtual void beginWrite();
   virtual void writeCommand(uint8_t);
   virtual void writeCommand16(uint16_t);
@@ -100,7 +100,7 @@ private:
 
   int8_t _dc, _cs, _sck, _mosi, _miso;
   uint8_t _spi_num;
-  uint32_t _speed;
+  int _speed;
   uint32_t _div = 0;
 
   PORTreg_t dcPortSet; ///< PORT register for data/command SET

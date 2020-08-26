@@ -50,44 +50,12 @@ typedef volatile uint32_t *PORTreg_t; ///< PORT register type
     (var) = (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8); \
   }
 
-struct spi_struct_t
-{
-  spi_dev_t *dev;
-#if !CONFIG_DISABLE_HAL_LOCKS
-  xSemaphoreHandle lock;
-#endif
-  uint8_t num;
-};
-
-#if CONFIG_DISABLE_HAL_LOCKS
-#define SPI_MUTEX_LOCK()
-#define SPI_MUTEX_UNLOCK()
-
-static spi_t _spi_bus_array[4] = {
-    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 1},
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 2},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 3}};
-#else // !CONFIG_DISABLE_HAL_LOCKS
-#define SPI_MUTEX_LOCK() \
-  do                     \
-  {                      \
-  } while (xSemaphoreTake(_spi->lock, portMAX_DELAY) != pdPASS)
-#define SPI_MUTEX_UNLOCK() xSemaphoreGive(_spi->lock)
-
-static spi_t _spi_bus_array[4] = {
-    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), NULL, 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 1},
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 2},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 3}};
-#endif // CONFIG_DISABLE_HAL_LOCKS
-
 class Arduino_ESP32SPI : public Arduino_DataBus
 {
 public:
   Arduino_ESP32SPI(int8_t dc = -1, int8_t cs = -1, int8_t sck = -1, int8_t mosi = -1, int8_t miso = -1, uint8_t spi_num = VSPI); // Constructor
 
-  virtual void begin(uint32_t speed = 0, int8_t dataMode = SPI_MODE0);
+  virtual void begin(int speed = 0, int8_t dataMode = SPI_MODE0);
   virtual void beginWrite();
   virtual void writeCommand(uint8_t);
   virtual void writeCommand16(uint16_t);
@@ -121,7 +89,7 @@ private:
 
   int8_t _dc, _cs, _sck, _mosi, _miso;
   uint8_t _spi_num;
-  uint32_t _speed;
+  int _speed;
   uint32_t _div = 0;
 
   PORTreg_t dcPortSet; ///< PORT register for data/command SET

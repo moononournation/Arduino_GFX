@@ -6,6 +6,38 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_ESP32SPI.h"
 
+struct spi_struct_t
+{
+  spi_dev_t *dev;
+#if !CONFIG_DISABLE_HAL_LOCKS
+  xSemaphoreHandle lock;
+#endif
+  uint8_t num;
+};
+
+#if CONFIG_DISABLE_HAL_LOCKS
+#define SPI_MUTEX_LOCK()
+#define SPI_MUTEX_UNLOCK()
+
+static spi_t _spi_bus_array[4] = {
+    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), 0},
+    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 1},
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 2},
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 3}};
+#else // !CONFIG_DISABLE_HAL_LOCKS
+#define SPI_MUTEX_LOCK() \
+  do                     \
+  {                      \
+  } while (xSemaphoreTake(_spi->lock, portMAX_DELAY) != pdPASS)
+#define SPI_MUTEX_UNLOCK() xSemaphoreGive(_spi->lock)
+
+static spi_t _spi_bus_array[4] = {
+    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), NULL, 0},
+    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 1},
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 2},
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 3}};
+#endif // CONFIG_DISABLE_HAL_LOCKS
+
 Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */)
     : _dc(dc), _spi_num(spi_num)
 {
@@ -41,7 +73,7 @@ static void _on_apb_change(void *arg, apb_change_ev_t ev_type, uint32_t old_apb,
   }
 }
 
-void Arduino_ESP32SPI::begin(uint32_t speed, int8_t dataMode)
+void Arduino_ESP32SPI::begin(int speed, int8_t dataMode)
 {
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
   _dataMode = dataMode;

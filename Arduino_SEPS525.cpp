@@ -12,7 +12,7 @@ Arduino_SEPS525::Arduino_SEPS525(
 {
 }
 
-void Arduino_SEPS525::begin(uint32_t speed)
+void Arduino_SEPS525::begin(int speed)
 {
 #if defined(ESP8266) || defined(ESP32)
   if (speed == 0)

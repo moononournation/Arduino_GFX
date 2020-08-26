@@ -9,7 +9,7 @@ Arduino_ILI9486_18bit::Arduino_ILI9486_18bit(Arduino_DataBus *bus, int8_t rst, u
 {
 }
 
-void Arduino_ILI9486_18bit::begin(uint32_t speed)
+void Arduino_ILI9486_18bit::begin(int speed)
 {
 #if defined(ESP8266) || defined(ESP32)
   if (speed == 0)

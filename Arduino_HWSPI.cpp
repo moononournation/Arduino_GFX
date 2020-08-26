@@ -45,7 +45,7 @@ Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */)
   _cs = cs;
 }
 
-void Arduino_HWSPI::begin(uint32_t speed, int8_t dataMode)
+void Arduino_HWSPI::begin(int speed, int8_t dataMode)
 {
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
   _dataMode = dataMode;
@@ -161,21 +161,21 @@ void Arduino_HWSPI::begin(uint32_t speed, int8_t dataMode)
 
 #if defined(ESP32)
   HWSPI.begin(_sck, _miso, _mosi);
-  if (_dataMode >= 0)
+  if (_dataMode < 0)
   {
     _dataMode = SPI_MODE0;
   }
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(ESP8266)
   HWSPI.begin();
-  if (_dataMode >= 0)
+  if (_dataMode < 0)
   {
     _dataMode = SPI_MODE0;
   }
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(SPI_HAS_TRANSACTION)
   HWSPI.begin();
-  if (_dataMode >= 0)
+  if (_dataMode < 0)
   {
     _dataMode = SPI_MODE2;
   }
@@ -184,7 +184,7 @@ void Arduino_HWSPI::begin(uint32_t speed, int8_t dataMode)
   SPCRbackup = SPCR;
   HWSPI.begin();
   HWSPI.setClockDivider(SPI_CLOCK_DIV2);
-  if (_dataMode >= 0)
+  if (_dataMode < 0)
   {
     _dataMode = SPI_MODE2;
   }
@@ -194,13 +194,13 @@ void Arduino_HWSPI::begin(uint32_t speed, int8_t dataMode)
 #elif defined(__SAM3X8E__)
   HWSPI.begin();
   HWSPI.setClockDivider(21); //4MHz
-  if (_dataMode >= 0)
+  if (_dataMode < 0)
   {
     _dataMode = SPI_MODE2;
   }
   HWSPI.setDataMode(_dataMode);
 #elif defined(__arm__)
-  if (_dataMode >= 0)
+  if (_dataMode < 0)
   {
     _dataMode = SPI_MODE2;
   }

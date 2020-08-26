@@ -11,7 +11,7 @@ Arduino_Canvas::Arduino_Canvas(int16_t w, int16_t h, Arduino_G *output, int16_t 
 {
 }
 
-void Arduino_Canvas::begin(uint32_t speed)
+void Arduino_Canvas::begin(int speed)
 {
 #if defined(ESP32)
     if (psramFound())

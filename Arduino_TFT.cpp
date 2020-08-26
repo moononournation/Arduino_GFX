@@ -33,7 +33,7 @@ Arduino_TFT::Arduino_TFT(
   ROW_OFFSET2 = row_offset2;
 }
 
-void Arduino_TFT::begin(uint32_t speed)
+void Arduino_TFT::begin(int speed)
 {
   if (_override_datamode >= 0)
   {

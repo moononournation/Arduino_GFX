@@ -13,7 +13,7 @@ Arduino_SSD1283A::Arduino_SSD1283A(
 {
 }
 
-void Arduino_SSD1283A::begin(uint32_t speed)
+void Arduino_SSD1283A::begin(int speed)
 {
 #if defined(ESP8266) || defined(ESP32)
   if (speed == 0)

@@ -14,7 +14,7 @@ Arduino_SWSPI::Arduino_SWSPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8
   _miso = miso;
 }
 
-void Arduino_SWSPI::begin(uint32_t speed, int8_t dataMode)
+void Arduino_SWSPI::begin(int speed, int8_t dataMode)
 {
   if (_dc >= 0)
   {

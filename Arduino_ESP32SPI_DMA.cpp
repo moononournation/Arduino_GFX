@@ -25,7 +25,7 @@ Arduino_ESP32SPI_DMA::Arduino_ESP32SPI_DMA(int8_t dc /* = -1 */, int8_t cs /* = 
   }
 }
 
-void Arduino_ESP32SPI_DMA::begin(uint32_t speed, int8_t dataMode)
+void Arduino_ESP32SPI_DMA::begin(int speed, int8_t dataMode)
 {
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
   _dataMode = dataMode;
@@ -83,14 +83,14 @@ void Arduino_ESP32SPI_DMA::begin(uint32_t speed, int8_t dataMode)
       .command_bits = 0,
       .address_bits = 0,
       .dummy_bits = 0,
-      .mode = _dataMode,
+      .mode = (uint8_t)_dataMode,
       .duty_cycle_pos = 128,
       .cs_ena_pretrans = 0,
       .cs_ena_posttrans = 0,
       .clock_speed_hz = _speed,
       .input_delay_ns = 0,
       .spics_io_num = -1, // avoid use system CS control
-      .flags = (_miso < 0) ? SPI_DEVICE_NO_DUMMY : 0,
+      .flags = (_miso < 0) ? (uint32_t)SPI_DEVICE_NO_DUMMY : 0,
       .queue_size = 1,
   };
   esp_err_t ret;

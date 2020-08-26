@@ -20,7 +20,7 @@ public:
   virtual void displayOn() = 0;
   virtual void displayOff() = 0;
 
-  virtual void begin(uint32_t speed = 0);
+  virtual void begin(int speed = 0);
   virtual void startWrite(void);
   virtual void writeColor(uint16_t color);
   virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);

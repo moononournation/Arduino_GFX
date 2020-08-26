@@ -96,7 +96,7 @@ public:
   Arduino_HWSPI(int8_t dc, int8_t cs = -1); // Constructor
 #endif
 
-  virtual void begin(uint32_t speed = 0, int8_t dataMode = -1);
+  virtual void begin(int speed = 0, int8_t dataMode = -1);
   virtual void beginWrite();
   virtual void writeCommand(uint8_t);
   virtual void writeCommand16(uint16_t);
@@ -122,7 +122,6 @@ private:
   inline void DC_LOW(void);
 
   int8_t _dc, _cs;
-  uint32_t _speed;
 #if defined(ESP32)
   int8_t _sck, _mosi, _miso;
 #endif

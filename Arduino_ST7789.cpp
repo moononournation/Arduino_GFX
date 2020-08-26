@@ -13,7 +13,7 @@ Arduino_ST7789::Arduino_ST7789(
 {
 }
 
-void Arduino_ST7789::begin(uint32_t speed)
+void Arduino_ST7789::begin(int speed)
 {
 #if defined(ESP8266) || defined(ESP32)
   if (speed == 0)

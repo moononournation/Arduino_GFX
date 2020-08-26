@@ -87,7 +87,7 @@ class Arduino_ILI9341 : public Arduino_TFT
 public:
   Arduino_ILI9341(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0);
 
-  virtual void begin(uint32_t speed = 0);
+  virtual void begin(int speed = 0);
   virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
   virtual void setRotation(uint8_t r);
   virtual void invertDisplay(bool);

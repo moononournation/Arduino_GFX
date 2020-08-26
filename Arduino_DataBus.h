@@ -16,7 +16,7 @@ class Arduino_DataBus
 public:
     Arduino_DataBus();
 
-    virtual void begin(uint32_t speed, int8_t dataMode = -1) = 0;
+    virtual void begin(int speed, int8_t dataMode = -1) = 0;
     virtual void beginWrite() = 0;
     virtual void writeCommand(uint8_t c) = 0;
     virtual void writeCommand16(uint16_t c) = 0;
@@ -43,6 +43,7 @@ public:
     virtual void sendData32(uint32_t d) = 0;
 
 protected:
+    int    _speed;
     int8_t _dataMode;
 };
 
