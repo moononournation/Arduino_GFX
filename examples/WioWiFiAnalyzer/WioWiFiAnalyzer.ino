@@ -26,13 +26,14 @@ int w, h, text_size, banner_height, graph24_baseline, graph50_baseline, graph_ba
 
 // Channel legend mapping
 uint16_t channel_legend[] = {
-    1, 2, 3, 4, 5, 6, 7,         //  1,  2,  3,  4,  5,  6,  7,
-    8, 9, 10, 11, 12, 13, 14,    //  8,  9, 10, 11, 12, 13, 14,
-    34, 0, 38, 0, 42, 0, 46,     // 34, 36, 38, 40, 42, 44, 46,
-    0, 50, 0, 54, 0, 60, 0,      // 48, 50, 52, 54, 56, 60, 64,
-    0, 104, 0, 112, 0, 120, 0,   //100,104,108,112,116,120,124,
-    128, 0, 136, 0, 149, 0, 157, //128,132,136,140,149,153,157,
-    0, 165};                     // 161,165
+    1, 2, 3, 4, 5, 6, 7,       //  1,  2,  3,  4,  5,  6,  7,
+    8, 9, 10, 11, 12, 13, 14,  //  8,  9, 10, 11, 12, 13, 14,
+    34, 0, 0, 40, 0, 0, 46,    // 34, 36, 38, 40, 42, 44, 46,
+    0, 0, 52, 0, 0, 60, 64,    // 48, 50, 52, 54, 56, 60, 64,
+    0, 0, 0,                   // dummy, dummy, dummy,
+    100, 0, 0, 112, 0, 0, 124, //100,104,108,112,116,120,124,
+    0, 0, 136, 0, 0, 153, 0,   //128,132,136,140,149,153,157,
+    0, 165};                   // 161,165
 
 // Channel color mapping
 uint16_t channel_color[] = {
@@ -40,6 +41,7 @@ uint16_t channel_color[] = {
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
+    WHITE, WHITE, WHITE,
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
     RED, ORANGE};
@@ -62,9 +64,9 @@ int channelIdx(int channel)
   }
   if (channel <= 140)
   {
-    return 28 + ((channel - 100) / 4);
+    return 31 + ((channel - 100) / 4);
   }
-  return 39 + ((channel - 149) / 4);
+  return 42 + ((channel - 149) / 4);
 }
 
 void setup()
@@ -93,7 +95,7 @@ void setup()
   graph24_baseline = banner_height + graph_height + 10;
   graph50_baseline = graph24_baseline + graph_height + 30;
   channel24_width = w / 17;
-  channel50_width = w / 33;
+  channel50_width = w / 36;
 
   // init banner
   gfx->setTextSize(text_size);
@@ -107,9 +109,9 @@ void setup()
 
 void loop()
 {
-  uint8_t ap_count_list[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  int32_t peak_list[] = {RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR};
-  int peak_id_list[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 - 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+  uint8_t ap_count_list[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  int32_t peak_list[] = {RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR};
+  int peak_id_list[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 - 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
   int32_t channel;
   int idx;
   int32_t rssi;
@@ -246,7 +248,7 @@ void loop()
 
   // draw 5 GHz graph base axle
   gfx->drawFastHLine(0, graph50_baseline, 320, WHITE);
-  for (idx = 14; idx < 44; idx++)
+  for (idx = 14; idx < 47; idx++)
   {
     channel = channel_legend[idx];
     offset = (idx - 14 + 2) * channel50_width;
