@@ -26,14 +26,17 @@ int w, h, text_size, banner_height, graph24_baseline, graph50_baseline, graph_ba
 
 // Channel legend mapping
 uint16_t channel_legend[] = {
-    1, 2, 3, 4, 5, 6, 7,       //  1,  2,  3,  4,  5,  6,  7,
-    8, 9, 10, 11, 12, 13, 14,  //  8,  9, 10, 11, 12, 13, 14,
-    34, 0, 0, 40, 0, 0, 46,    // 34, 36, 38, 40, 42, 44, 46,
-    0, 0, 52, 0, 56, 0, 64,    // 48, 50, 52, 54, 56, 60, 64,
-    0, 0, 0,                   // dummy, dummy, dummy,
-    100, 0, 0, 112, 0, 0, 124, //100,104,108,112,116,120,124,
-    0, 0, 136, 0, 0, 153, 0,   //128,132,136,140,149,153,157,
-    0, 165};                   // 161,165
+    1, 2, 3, 4, 5, 6, 7,      //  1,  2,  3,  4,  5,  6,  7,
+    8, 9, 10, 11, 12, 13, 14, //  8,  9, 10, 11, 12, 13, 14,
+    32, 0, 0, 0, 40, 0, 0,    // 32, 34, 36, 38, 40, 42, 44,
+    0, 48, 0, 0, 0, 56, 0,    // 46, 48, 50, 52, 54, 56, 58,
+    0, 0, 64, 0, 0, 0,        // 60, 62, 64, 68,N/A, 96,
+    100, 0, 0, 0, 108, 0, 0,  //100,102,104,106,108,110,112,
+    0, 116, 0, 0, 0, 124, 0,  //114,116,118,120,122,124,126,
+    0, 0, 132, 0, 0, 0, 140,  //128,N/A,132,134,136,138,140,
+    0, 0, 0, 149, 0, 0, 0,    //142,144,N/A,149,151,153,155,
+    157, 0, 0, 0, 165, 0, 0,  //157,159,161,163,165,167,169,
+    0, 173};                  //171,173
 
 // Channel color mapping
 uint16_t channel_color[] = {
@@ -41,7 +44,10 @@ uint16_t channel_color[] = {
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    WHITE, WHITE, WHITE,
+    RED, ORANGE, YELLOW, GREEN, WHITE, MAGENTA,
+    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
+    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
+    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
     RED, ORANGE};
@@ -50,23 +56,27 @@ uint8_t scan_count = 0;
 
 int channelIdx(int channel)
 {
-  if (channel <= 14)
+  if (channel <= 14) // 2.4 GHz, channel 1-14
   {
     return channel - 1;
   }
-  if (channel <= 56)
+  if (channel <= 64) // 5 GHz, channel 32 - 64
   {
-    return 14 + ((channel - 34) / 2);
+    return 14 + ((channel - 32) / 2);
   }
-  if (channel <= 64)
+  if (channel == 68)
   {
-    return 26 + ((channel - 60) / 4);
+    return 31;
   }
-  if (channel <= 140)
+  if (channel == 96)
   {
-    return 31 + ((channel - 100) / 4);
+    return 33;
   }
-  return 42 + ((channel - 149) / 4);
+  if (channel <= 144)
+  {
+    return 34 + ((channel - 100) / 2); // channe;
+  }
+  return 58 + ((channel - 149) / 2);
 }
 
 void setup()
@@ -95,7 +105,7 @@ void setup()
   graph24_baseline = banner_height + graph_height + 10;
   graph50_baseline = graph24_baseline + graph_height + 30;
   channel24_width = w / 17;
-  channel50_width = w / 36;
+  channel50_width = w / 62;
 
   // init banner
   gfx->setTextSize(text_size);
@@ -109,9 +119,9 @@ void setup()
 
 void loop()
 {
-  uint8_t ap_count_list[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  int32_t peak_list[] = {RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR};
-  int peak_id_list[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 - 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+  uint8_t ap_count_list[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  int32_t peak_list[] = {RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR};
+  int peak_id_list[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
   int32_t channel;
   int idx;
   int32_t rssi;
@@ -248,7 +258,7 @@ void loop()
 
   // draw 5 GHz graph base axle
   gfx->drawFastHLine(0, graph50_baseline, 320, WHITE);
-  for (idx = 14; idx < 47; idx++)
+  for (idx = 14; idx < 71; idx++)
   {
     channel = channel_legend[idx];
     offset = (idx - 14 + 2) * channel50_width;
