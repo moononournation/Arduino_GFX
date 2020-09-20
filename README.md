@@ -9,11 +9,10 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 #### Simple Declaration
 (not require modify library header files)
 ```C
-#include <SPI.h>
-#include <Arduino_ESP32SPI.h>
 #include <Arduino_GFX.h>
-#include <Arduino_ILI9341.h>
-Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(16 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
+#include <Arduino_HWSPI.h>
+#include <Arduino_Display.h>
+Arduino_HWSPI *bus = new Arduino_HWSPI(16 /* DC */, 5 /* CS */);
 Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, 17 /* RST */);
 ```
 
@@ -100,8 +99,13 @@ This library is not putting speed at the first priority, but still paid much eff
 - Canvas_Indexed (for saving memory space)
 
 ## Tobe Support Display (Donation can make it happen)
-- LG4573 480x800
+- HX8347D 240x320 (first trial failed)
+- HX8357A 240x320 (first trial failed)
+- LG4573 480x800 (first trial failed)
+- ILI9806 480x800 (first trial failed)
+- R61529 320x480 (first trial failed)
 - ST7701 480x800
+- FastLED Martix supported by co-operate with Canvas
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas
 - ILI9486 320x480 (3 bit color) supported by co-operate with Canvas
