@@ -38,8 +38,8 @@ static spi_t _spi_bus_array[4] = {
     {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 3}};
 #endif // CONFIG_DISABLE_HAL_LOCKS
 
-Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */)
-    : _dc(dc), _spi_num(spi_num)
+Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */, bool enable_transaction /* = true */)
+    : _dc(dc), _spi_num(spi_num), _enable_transaction(enable_transaction)
 {
   if (sck == -1 && miso == -1 && mosi == -1 && cs == -1)
   {
@@ -188,7 +188,10 @@ void Arduino_ESP32SPI::beginWrite()
   data_buf_bit_idx = 0;
   data_buf[0] = 0;
 
-  spiTransaction(_spi, _div, _dataMode, _bitOrder);
+  if (_enable_transaction)
+  {
+    spiTransaction(_spi, _div, _dataMode, _bitOrder);
+  }
 
   if (_dc >= 0)
   {
@@ -389,6 +392,7 @@ void Arduino_ESP32SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
       ;
 
     DC_HIGH();
+
     _spi->dev->mosi_dlen.usr_mosi_dbitlen = 31;
     _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
     _spi->dev->data_buf[0] = (d1 >> 8) | ((d1 & 0xff) << 8) | ((d2 & 0xff00) << 8) | ((d2 & 0xff) << 24);
@@ -402,7 +406,10 @@ void Arduino_ESP32SPI::endWrite()
 {
   flush_data_buf();
 
-  spiEndTransaction(_spi);
+  if (_enable_transaction)
+  {
+    spiEndTransaction(_spi);
+  }
 
   CS_HIGH();
 }

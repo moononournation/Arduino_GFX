@@ -32,17 +32,14 @@ static uint8_t mySPCR;
 #endif
 
 #if defined(ESP32)
-Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */)
+Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, bool enable_transaction /* = true */)
+    : _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso), _enable_transaction(enable_transaction)
 {
-  _sck = sck;
-  _mosi = mosi;
-  _miso = miso;
 #else
 Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */)
+    : _dc(dc), _cs(cs), _enable_transaction(enable_transaction)
 {
 #endif
-  _dc = dc;
-  _cs = cs;
 }
 
 void Arduino_HWSPI::begin(int speed, int8_t dataMode)
@@ -209,7 +206,11 @@ void Arduino_HWSPI::begin(int speed, int8_t dataMode)
 
 void Arduino_HWSPI::beginWrite()
 {
-  SPI_BEGIN_TRANSACTION();
+  if (_enable_transaction)
+  {
+    SPI_BEGIN_TRANSACTION();
+  }
+
   DC_HIGH();
   CS_LOW();
 }
@@ -276,7 +277,11 @@ void Arduino_HWSPI::write32(uint32_t d)
 void Arduino_HWSPI::endWrite()
 {
   CS_HIGH();
-  SPI_END_TRANSACTION();
+
+  if (_enable_transaction)
+  {
+    SPI_END_TRANSACTION();
+  }
 }
 
 void Arduino_HWSPI::sendCommand(uint8_t c)

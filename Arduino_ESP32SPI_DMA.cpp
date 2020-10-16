@@ -6,8 +6,8 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_ESP32SPI_DMA.h"
 
-Arduino_ESP32SPI_DMA::Arduino_ESP32SPI_DMA(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */)
-    : _dc(dc), _spi_num(spi_num)
+Arduino_ESP32SPI_DMA::Arduino_ESP32SPI_DMA(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */, bool enable_transaction /* = true */)
+    : _dc(dc), _spi_num(spi_num), _enable_transaction(enable_transaction)
 {
   if (sck == -1 && miso == -1 && mosi == -1 && cs == -1)
   {
@@ -124,7 +124,10 @@ void Arduino_ESP32SPI_DMA::beginWrite()
   data_buf_bit_idx = 0;
   data_buf[0] = 0;
 
-  spi_device_acquire_bus(_handle, portMAX_DELAY);
+  if (_enable_transaction)
+  {
+    spi_device_acquire_bus(_handle, portMAX_DELAY);
+  }
 
   if (_dc >= 0)
   {
@@ -388,7 +391,10 @@ void Arduino_ESP32SPI_DMA::endWrite()
 {
   flush_data_buf();
 
-  spi_device_release_bus(_handle);
+  if (_enable_transaction)
+  {
+    spi_device_release_bus(_handle);
+  }
 
   CS_HIGH();
 }

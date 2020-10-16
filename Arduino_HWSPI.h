@@ -91,9 +91,9 @@ class Arduino_HWSPI : public Arduino_DataBus
 {
 public:
 #if defined(ESP32)
-  Arduino_HWSPI(int8_t dc, int8_t cs = -1, int8_t sck = -1, int8_t mosi = -1, int8_t miso = -1); // Constructor
+  Arduino_HWSPI(int8_t dc, int8_t cs = -1, int8_t sck = -1, int8_t mosi = -1, int8_t miso = -1, bool enable_transaction = true); // Constructor
 #else
-  Arduino_HWSPI(int8_t dc, int8_t cs = -1); // Constructor
+  Arduino_HWSPI(int8_t dc, int8_t cs = -1, bool enable_transaction = true); // Constructor
 #endif
 
   virtual void begin(int speed = 0, int8_t dataMode = -1);
@@ -126,6 +126,7 @@ private:
 #if defined(ESP32)
   int8_t _sck, _mosi, _miso;
 #endif
+  bool _enable_transaction;
 
   // CLASS INSTANCE VARIABLES --------------------------------------------
 
