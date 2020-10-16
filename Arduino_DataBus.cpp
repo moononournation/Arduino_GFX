@@ -25,6 +25,42 @@ void Arduino_DataBus::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   write16(d2);
 }
 
+void Arduino_DataBus::batchOperation(spi_operation_t batch[], uint8_t len)
+{
+  for (int i = 0; i < len; ++i)
+  {
+    switch (batch[i].type)
+    {
+    case BEGIN_WRITE:
+      beginWrite();
+      break;
+    case WRITE_COMMAND_8:
+      writeCommand(batch[i].value);
+      break;
+    case WRITE_COMMAND_16:
+      writeCommand16(batch[i].value);
+      break;
+    case WRITE_COMMAND_32:
+      break;
+    case WRITE_DATA_8:
+      write(batch[i].value);
+      break;
+    case WRITE_DATA_16:
+      write16(batch[i].value);
+      break;
+    case WRITE_DATA_32:
+      write32(batch[i].value);
+      break;
+    case END_WRITE:
+      endWrite();
+      break;
+    case DELAY:
+      delay(batch[i].value);
+      break;
+    }
+  }
+}
+
 #if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {

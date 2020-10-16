@@ -355,6 +355,23 @@ void Arduino_SWSPI::writeCommand16(uint16_t c)
   }
 }
 
+void Arduino_SWSPI::writeCommand32(uint32_t c)
+{
+  if (_dc < 0) // 9-bit SPI
+  {
+    write9bitCommand(c >> 24);
+    write9bitCommand(c >> 16);
+    write9bitCommand(c >> 8);
+    write9bitCommand(c);
+  }
+  else
+  {
+    DC_LOW();
+    write32(c);
+    DC_HIGH();
+  }
+}
+
 void Arduino_SWSPI::write(uint8_t d)
 {
   if (_dc < 0) // 9-bit SPI

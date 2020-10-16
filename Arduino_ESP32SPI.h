@@ -6,21 +6,8 @@
 #ifndef _ARDUINO_ESP32SPI_H_
 #define _ARDUINO_ESP32SPI_H_
 
-#include "esp32-hal-spi.h"
-#include "esp32-hal.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/semphr.h"
-#include "rom/ets_sys.h"
-#include "esp_attr.h"
-#include "esp_intr.h"
-#include "rom/gpio.h"
-#include "soc/spi_reg.h"
 #include "soc/spi_struct.h"
-#include "soc/io_mux_reg.h"
-#include "soc/gpio_sig_map.h"
 #include "soc/dport_reg.h"
-#include "soc/rtc.h"
 
 typedef volatile uint32_t *PORTreg_t; ///< PORT register type
 
@@ -40,16 +27,6 @@ typedef volatile uint32_t *PORTreg_t; ///< PORT register type
 #define SPI_INUM(u) (2)
 #define SPI_INTR_SOURCE(u) ((u == 0) ? ETS_SPI0_INTR_SOURCE : ((u == 1) ? ETS_SPI1_INTR_SOURCE : ((u == 2) ? ETS_SPI2_INTR_SOURCE : ((p == 3) ? ETS_SPI3_INTR_SOURCE : 0))))
 
-#define MSB_32_SET(var, val)                                  \
-  {                                                           \
-    uint8_t *v = (uint8_t *)&(val);                           \
-    (var) = v[3] | (v[2] << 8) | (v[1] << 16) | (v[0] << 24); \
-  }
-#define MSB_16_SET(var, val)                             \
-  {                                                      \
-    (var) = (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8); \
-  }
-
 class Arduino_ESP32SPI : public Arduino_DataBus
 {
 public:
@@ -59,6 +36,7 @@ public:
   virtual void beginWrite();
   virtual void writeCommand(uint8_t);
   virtual void writeCommand16(uint16_t);
+  virtual void writeCommand32(uint32_t);
   virtual void write(uint8_t);
   virtual void write16(uint16_t);
   virtual void write32(uint32_t);

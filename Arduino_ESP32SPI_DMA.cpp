@@ -177,7 +177,36 @@ void Arduino_ESP32SPI_DMA::writeCommand16(uint16_t c)
     spi_transaction_t ct;
     memset(&ct, 0, sizeof(ct));
     ct.length = 16;
-    ct.tx_data[0] = c;
+    MSB_16_SET(ct.tx_data[0], c);
+    ct.flags = SPI_TRANS_USE_TXDATA;
+
+    esp_err_t ret = spi_device_polling_transmit(_handle, &ct);
+    if (ret != ESP_OK)
+    {
+      log_e("spi_device_polling_transmit error: %d", ret);
+    }
+
+    DC_HIGH();
+  }
+}
+
+void Arduino_ESP32SPI_DMA::writeCommand32(uint32_t c)
+{
+  if (_dc < 0) // 9-bit SPI
+  {
+    write9bit(c >> 8);
+    write9bit(c & 0xff);
+  }
+  else
+  {
+    flush_data_buf();
+
+    DC_LOW();
+
+    spi_transaction_t ct;
+    memset(&ct, 0, sizeof(ct));
+    ct.length = 32;
+    MSB_32_SET(ct.tx_data[0], c);
     ct.flags = SPI_TRANS_USE_TXDATA;
 
     esp_err_t ret = spi_device_polling_transmit(_handle, &ct);

@@ -6,23 +6,7 @@
 #ifndef _ARDUINO_ESP32SPI_DMA_H_
 #define _ARDUINO_ESP32SPI_DMA_H_
 
-#include <esp_types.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/semphr.h"
-#include "freertos/queue.h"
-#include "freertos/xtensa_api.h"
-#include "unity.h"
-#include "driver/spi_master.h"
-#include "esp_heap_caps.h"
-#include "esp_log.h"
-#include "soc/spi_periph.h"
-#include "soc/gpio_periph.h"
-#include "soc/soc_memory_layout.h"
+#include <driver/spi_master.h>
 
 typedef volatile uint32_t *PORTreg_t; ///< PORT register type
 
@@ -44,20 +28,6 @@ typedef volatile uint32_t *PORTreg_t; ///< PORT register type
 #define SPI_INUM(u) (2)
 #define SPI_INTR_SOURCE(u) ((u == 0) ? ETS_SPI0_INTR_SOURCE : ((u == 1) ? ETS_SPI1_INTR_SOURCE : ((u == 2) ? ETS_SPI2_INTR_SOURCE : ((p == 3) ? ETS_SPI3_INTR_SOURCE : 0))))
 
-#define MSB_32_SET(var, val)                                  \
-  {                                                           \
-    uint8_t *v = (uint8_t *)&(val);                           \
-    (var) = v[3] | (v[2] << 8) | (v[1] << 16) | (v[0] << 24); \
-  }
-#define MSB_32_16_16_SET(var, v1, v2)                                                                                   \
-  {                                                                                                                     \
-    (var) = (((uint32_t)v2 & 0xff00) << 8) | (((uint32_t)v2 & 0xff) << 24) | ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8); \
-  }
-#define MSB_16_SET(var, val)                             \
-  {                                                      \
-    (var) = (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8); \
-  }
-
 class Arduino_ESP32SPI_DMA : public Arduino_DataBus
 {
 public:
@@ -67,6 +37,7 @@ public:
   virtual void beginWrite();
   virtual void writeCommand(uint8_t);
   virtual void writeCommand16(uint16_t);
+  virtual void writeCommand32(uint32_t);
   virtual void write(uint8_t);
   virtual void write16(uint16_t);
   virtual void write32(uint32_t);

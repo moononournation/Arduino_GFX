@@ -228,6 +228,13 @@ void Arduino_HWSPI::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
+void Arduino_HWSPI::writeCommand32(uint32_t c)
+{
+  DC_LOW();
+  write32(c);
+  DC_HIGH();
+}
+
 void Arduino_HWSPI::write(uint8_t c)
 {
 #if defined(SPI_HAS_TRANSACTION)
