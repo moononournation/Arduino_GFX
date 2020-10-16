@@ -194,7 +194,9 @@ void Arduino_ESP32SPI_DMA::writeCommand32(uint32_t c)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    write9bit(c >> 8);
+    write9bit(c >> 24);
+    write9bit((c >> 16) & 0xff);
+    write9bit((c >> 8) & 0xff);
     write9bit(c & 0xff);
   }
   else
@@ -542,7 +544,7 @@ void Arduino_ESP32SPI_DMA::writeBytes(uint8_t *data, uint32_t len)
   }
   else // 8-bit SPI
   {
-    uint16_t bufLen = (len < (MAX_TRANSFER_SZ / 8)) ? len : (MAX_TRANSFER_SZ / 8);
+    uint32_t bufLen = (len < (MAX_TRANSFER_SZ / 8)) ? len : (MAX_TRANSFER_SZ / 8);
 
     if (len >= bufLen)
     {
@@ -552,10 +554,10 @@ void Arduino_ESP32SPI_DMA::writeBytes(uint8_t *data, uint32_t len)
       t.length = bufLen << 3;
       t.tx_buffer = data_buf;
       uint32_t *p = (uint32_t *)data;
-      int l = bufLen >> 2;
+      uint32_t l = bufLen >> 2;
       while (len >= bufLen)
       {
-        for (int i = 0; i < l; i++)
+        for (uint32_t i = 0; i < l; i++)
         {
           data_buf32[i] = *p++;
         }
@@ -613,8 +615,8 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint
   {
     flush_data_buf();
 
-    uint16_t bufLen = (len < (MAX_TRANSFER_SZ / 16)) ? len : (MAX_TRANSFER_SZ / 16);
-    uint16_t xferLen, p;
+    uint32_t bufLen = (len < (MAX_TRANSFER_SZ / 16)) ? len : (MAX_TRANSFER_SZ / 16);
+    uint32_t xferLen, p;
 
     while (len) // While pixels remain
     {
@@ -622,7 +624,7 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint
 
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
-      t.length = xferLen * 16;
+      t.length = xferLen << 4;
       t.tx_buffer = data_buf;
       for (int i = 0; i < xferLen; i++)
       {
@@ -665,8 +667,9 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx
   {
     flush_data_buf();
 
-    uint16_t bufLen = (len < (MAX_TRANSFER_SZ / 16 / 2)) ? len : (MAX_TRANSFER_SZ / 16 / 2);
-    uint16_t xferLen, p;
+    uint32_t bufLen = (len < (MAX_TRANSFER_SZ / 16 / 2)) ? len : (MAX_TRANSFER_SZ / 16 / 2);
+    uint32_t xferLen;
+    uint16_t p;
 
     while (len) // While pixels remain
     {
@@ -674,7 +677,7 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx
 
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
-      t.length = xferLen * 16;
+      t.length = xferLen << 4;
       t.tx_buffer = data_buf;
       for (int i = 0; i < xferLen; i++)
       {
@@ -706,7 +709,7 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
   }
   else // 8-bit SPI
   {
-    uint16_t bufLen = (len < (MAX_TRANSFER_SZ / 16)) ? len : (MAX_TRANSFER_SZ / 16);
+    uint32_t bufLen = (len < (MAX_TRANSFER_SZ / 16)) ? len : (MAX_TRANSFER_SZ / 16);
     uint16_t p;
 
     if (len >= bufLen)
@@ -714,7 +717,7 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
       flush_data_buf();
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
-      t.length = bufLen * 16;
+      t.length = bufLen << 4;
       t.tx_buffer = data_buf;
       while (len >= bufLen)
       {
@@ -739,7 +742,7 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
       flush_data_buf();
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
-      t.length = len * 16;
+      t.length = len << 4;
       t.tx_buffer = data_buf;
       for (int i = 0; i < len; i++)
       {
