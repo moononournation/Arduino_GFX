@@ -45,31 +45,6 @@ void Arduino_Canvas_Indexed::writePixelPreclipped(int16_t x, int16_t y, uint16_t
     _framebuffer[((int32_t)y * _width) + x] = get_color_index(color);
 }
 
-void Arduino_Canvas_Indexed::writeFastVLine(int16_t x, int16_t y,
-                                            int16_t h, uint16_t color)
-{
-    uint8_t idx = get_color_index(color);
-
-    uint8_t *fb = _framebuffer + ((int32_t)y * _width) + x;
-    while (h--)
-    {
-        *fb = idx;
-        fb += _width;
-    }
-}
-
-void Arduino_Canvas_Indexed::writeFastHLine(int16_t x, int16_t y,
-                                            int16_t w, uint16_t color)
-{
-    uint8_t idx = get_color_index(color);
-
-    uint8_t *fb = _framebuffer + ((int32_t)y * _width) + x;
-    while (w--)
-    {
-        *(fb++) = idx;
-    }
-}
-
 void Arduino_Canvas_Indexed::flush()
 {
     _output->drawIndexedBitmap(_output_x, _output_y, _framebuffer, _color_index, _width, _height);

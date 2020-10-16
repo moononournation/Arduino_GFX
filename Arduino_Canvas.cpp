@@ -43,27 +43,6 @@ void Arduino_Canvas::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
     _framebuffer[((int32_t)y * _width) + x] = color;
 }
 
-void Arduino_Canvas::writeFastVLine(int16_t x, int16_t y,
-                                    int16_t h, uint16_t color)
-{
-    uint16_t *fb = _framebuffer + ((int32_t)y * _width) + x;
-    while (h--)
-    {
-        *fb = color;
-        fb += _width;
-    }
-}
-
-void Arduino_Canvas::writeFastHLine(int16_t x, int16_t y,
-                                    int16_t w, uint16_t color)
-{
-    uint16_t *fb = _framebuffer + ((int32_t)y * _width) + x;
-    while (w--)
-    {
-        *(fb++) = color;
-    }
-}
-
 void Arduino_Canvas::flush()
 {
     _output->draw16bitRGBBitmap(_output_x, _output_y, _framebuffer, _width, _height);
