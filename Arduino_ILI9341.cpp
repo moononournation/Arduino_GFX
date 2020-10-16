@@ -31,30 +31,37 @@ void Arduino_ILI9341::tftInit()
     delay(ILI9341_RST_DELAY);
   }
 
-  _bus->sendCommand(ILI9341_PWCTR1); // Power control VRH[5:0]
-  _bus->sendData(0x23);
-  _bus->sendCommand(ILI9341_PWCTR2); // Power control SAP[2:0];BT[3:0]
-  _bus->sendData(0x10);
-  _bus->sendCommand(ILI9341_VMCTR1); // VCM control
-  _bus->sendData(0x3e);
-  _bus->sendData(0x28);
-  _bus->sendCommand(ILI9341_VMCTR2); // VCM control2
-  _bus->sendData(0x86);
-  _bus->sendCommand(ILI9341_VSCRSADD); // Vertical scroll zero
-  _bus->sendData(0x00);
+  spi_operation_t ili9341_init_operations[] = {
+      {BEGIN_WRITE, 0},
+      {WRITE_COMMAND_8, ILI9341_PWCTR1}, // Power control VRH[5:0]
+      {WRITE_DATA_8, 0x23},
+      {WRITE_COMMAND_8, ILI9341_PWCTR2}, // Power control SAP[2:0];BT[3:0]
+      {WRITE_DATA_8, 0x10},
+      {WRITE_COMMAND_8, ILI9341_VMCTR1}, // VCM control
+      {WRITE_DATA_8, 0x3e},
+      {WRITE_DATA_8, 0x28},
+      {WRITE_COMMAND_8, ILI9341_VMCTR2}, // VCM control2
+      {WRITE_DATA_8, 0x86},
+      {WRITE_COMMAND_8, ILI9341_VSCRSADD}, // Vertical scroll zero
+      {WRITE_DATA_8, 0x00},
+      {WRITE_COMMAND_8, ILI9341_PIXFMT},
+      {WRITE_DATA_8, 0x55},
+      {WRITE_COMMAND_8, ILI9341_FRMCTR1},
+      {WRITE_DATA_8, 0x00},
+      {WRITE_DATA_8, 0x18},
+      {WRITE_COMMAND_8, ILI9341_DFUNCTR}, // Display Function Control
+      {WRITE_DATA_8, 0x08},
+      {WRITE_DATA_8, 0x82},
+      {WRITE_DATA_8, 0x27},
+      {WRITE_COMMAND_8, ILI9341_SLPOUT}, // Exit Sleep
+      {END_WRITE, 0},
+      {DELAY, ILI9341_SLPOUT_DELAY},
+      {BEGIN_WRITE, 0},
+      {WRITE_COMMAND_8, ILI9341_DISPON}, // Display on
+      {END_WRITE, 0}
+  };
 
-  _bus->sendCommand(ILI9341_PIXFMT);
-  _bus->sendData(0x55);
-  _bus->sendCommand(ILI9341_FRMCTR1);
-  _bus->sendData(0x00);
-  _bus->sendData(0x18);
-  _bus->sendCommand(ILI9341_DFUNCTR); // Display Function Control
-  _bus->sendData(0x08);
-  _bus->sendData(0x82);
-  _bus->sendData(0x27);
-  _bus->sendCommand(ILI9341_SLPOUT); // Exit Sleep
-  delay(ILI9341_SLPOUT_DELAY);
-  _bus->sendCommand(ILI9341_DISPON); // Display on
+  _bus->batchOperation(ili9341_init_operations, sizeof(ili9341_init_operations) / sizeof(ili9341_init_operations[0]));
 }
 
 void Arduino_ILI9341::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
