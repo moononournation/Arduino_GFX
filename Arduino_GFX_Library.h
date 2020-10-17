@@ -1,7 +1,13 @@
-/* This file is replaced by Arduino_GFX_Library.h */
-#ifndef _Arduino_DISPLAY_H_
-#define _Arduino_DISPLAY_H_
+#ifndef _ARDUINO_GFX_LIBRARIES_H_
+#define _ARDUINO_GFX_LIBRARIES_H_
 
+#include "Arduino_DataBus.h"
+#include "Arduino_SWSPI.h"
+#include "Arduino_HWSPI.h"
+#include "Arduino_ESP32SPI.h"
+#include "Arduino_ESP32PAR8.h"
+
+#include "Arduino_GFX.h"             // Core graphics library
 #include "Arduino_Canvas.h"          // Canvas (framebuffer) library
 #include "Arduino_Canvas_Indexed.h"  // Indexed Color Canvas (framebuffer) library
 #include "Arduino_GC9A01.h"          // Hardware-specific library for GC9A01
@@ -22,4 +28,4 @@
 #include "Arduino_ST7789.h"          // Hardware-specific library for ST7789
 #include "Arduino_ST7796.h"          // Hardware-specific library for ST7796
 
-#endif // _Arduino_DISPLAY_H_
+#endif // _ARDUINO_GFX_LIBRARIES_H_

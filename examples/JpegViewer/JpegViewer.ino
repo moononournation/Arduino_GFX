@@ -14,14 +14,13 @@
 /*******************************************************************************
  * Start of Arduino_GFX setting
  ******************************************************************************/
-#include "SPI.h"
-#include "Arduino_HWSPI.h"
-#include "Arduino_ESP32SPI.h"
-#include "Arduino_SWSPI.h"
-#include "Arduino_GFX.h"     // Core graphics library
-#include "Arduino_Display.h" // Various display driver
+#include "Arduino_GFX_Library.h"
 
-#if defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+#define TFT_BL LCD_BACKLIGHT
+Arduino_HWSPI *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);
+Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 2 /* rotation */);
+#elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define TFT_BL 32
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
 Arduino_ILI9341_M5STACK *gfx = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 /* rotation */);
@@ -70,6 +69,9 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // ESP32 hardware SPI, more customizable parameters
 // Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
 
+// ESP32 parallel 8-bit
+// Arduino_DataBus *bus = new Arduino_ESP32PAR8(TFT_DC, TFT_CS, 27 /* WR */, 13 /* RD */, 16 /* D0 */, 17 /* D1 */, 18 /* D2 */, 19 /* D3 */, 21 /* D4 */, 22 /* D5 */, 23 /* D6 */, 25 /* D7 */);
+
 /*
  * Step 2: Initize one driver for your display
 */
@@ -94,7 +96,7 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino_HX8357B *gfx = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // ILI9225 LCD 176x220
-// Arduino_ILI9225 *gfx = new Arduino_ILI9225(bus, TFT_RST, 0 /* rotation */);
+// Arduino_ILI9225 *gfx = new Arduino_ILI9225(bus, TFT_RST);
 
 // ILI9341 LCD 240x320
 Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
@@ -104,6 +106,9 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 
 // ILI9486 LCD 320x480
 // Arduino_ILI9486_18bit *gfx = new Arduino_ILI9486_18bit(bus, TFT_RST, 0 /* rotation */);
+
+// R61529 IPS LCD 320x480
+// Arduino_R61529 *gfx = new Arduino_R61529(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // SEPS525 OLED 160x128
 // Arduino_SEPS525 *gfx = new Arduino_SEPS525(bus, TFT_RST, 0 /* rotation */);

@@ -9,20 +9,18 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 #### Simple Declaration
 (not require modify library header files)
 ```C
-#include <Arduino_GFX.h>
-#include <Arduino_HWSPI.h>
-#include <Arduino_Display.h>
-Arduino_HWSPI *bus = new Arduino_HWSPI(16 /* DC */, 5 /* CS */);
-Arduino_ILI9341 *tft = new Arduino_ILI9341(bus, 17 /* RST */);
+#include "Arduino_GFX_Library.h"
+Arduino_DataBus *bus = new Arduino_HWSPI(16 /* DC */, 5 /* CS */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, 17 /* RST */);
 ```
 
 #### And Simple Usage
 ```
-tft->begin();
-tft->fillScreen(BLACK);
-tft->setCursor(10, 10);
-tft->setTextColor(RED);
-tft->println("Hello World!");
+gfx->begin();
+gfx->fillScreen(BLACK);
+gfx->setCursor(10, 10);
+gfx->setTextColor(RED);
+gfx->println("Hello World!");
 ```
 
 
@@ -64,7 +62,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - 8-bit parallel interface (ESP32PAR8)
 
 ## Tobe Support data bus (Donation can make it happen)
-- 16 bit parallel interface
+- 16-bit parallel interface
 
 ## Currently Supported Dev Device
 - M5Stack Core Family
@@ -76,12 +74,13 @@ This library is not putting speed at the first priority, but still paid much eff
 - GC9A01 round display 240x240 [[test video](https://youtu.be/kJrAFm20-zg)]
 - HX8347C 240x320 [[test video](https://youtu.be/25ymuV51YQM)]
 - HX8352C 240x400 [[test video](https://youtu.be/m2xWYbS3t7s)]
-- HX8357B 320x480 [[test video](https://youtu.be/pB6_LOCiUqg)]
+- HX8357B (9-bit SPI) 320x480 [[test video](https://youtu.be/pB6_LOCiUqg)]
 - ILI9225 176x220 [[test video](https://youtu.be/jm2UrCG27F4)]
 - ILI9341 240x320 [[test video](https://youtu.be/NtlEEL7MkQY)]
 - ILI9341 M5Stack 320x240 [[test video](https://youtu.be/UoPpIjVSO5Q)]
 - ILI9481 320x480 (18 bit color) [[test video](https://youtu.be/YxjuuCFhlqM)]
 - ILI9486 320x480 (18 bit color) [[test video](https://youtu.be/pZ6izDqmVds)]
+- R61529 (8-bit Parallel) 320x480 [[test video](https://youtu.be/s93gxjbIAT8)]
 - SEPS525 160x128 [[test video](https://youtu.be/tlmvFBHYv-k)]
 - SSD1283A 130x130 [[test video](https://youtu.be/OrIchaRikiQ)]
 - SSD1331 96x64 [[test video](https://youtu.be/v20b1A_KDcQ)]
@@ -103,7 +102,6 @@ This library is not putting speed at the first priority, but still paid much eff
 - HX8357A 240x320 (first trial failed)
 - LG4573 480x800 (first trial failed)
 - ILI9806 480x800 (first trial failed)
-- R61529 320x480 (first trial failed)
 - ST7701 480x800
 - FastLED Martix supported by co-operate with Canvas
 - Mono display supported by co-operate with Canvas

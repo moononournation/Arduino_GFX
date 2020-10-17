@@ -1,12 +1,7 @@
 /*******************************************************************************
  * Start of Arduino_GFX setting
  ******************************************************************************/
-#include "SPI.h"
-#include "Arduino_HWSPI.h"
-#include "Arduino_ESP32SPI.h"
-#include "Arduino_SWSPI.h"
-#include "Arduino_GFX.h"     // Core graphics library
-#include "Arduino_Display.h" // Various display driver
+#include "Arduino_GFX_Library.h"
 
 /* all display share same SPI Data Bus with individual CS and RST pins */
 #define TFT_DC 33
