@@ -102,6 +102,9 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST);
 // ILI9486 LCD 320x480
 // Arduino_ILI9486_18bit *gfx = new Arduino_ILI9486_18bit(bus, TFT_RST);
 
+// R61529 IPS LCD 320x480
+// Arduino_R61529 *gfx = new Arduino_R61529(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+
 // SEPS525 OLED 160x128
 // Arduino_SEPS525 *gfx = new Arduino_SEPS525(bus, TFT_RST);
 
@@ -252,7 +255,7 @@ void loop(void)
   uint32_t start = micros_start();
   gfx->flush();
   int32_t usecFlush = micros() - start;
-  serialOut(F("flush (Canvas only)\t"), usecFlush, 100);
+  serialOut(F("flush (Canvas only)\t"), usecFlush, 0, false);
 #endif
 
   Serial.println(F("Done!"));
