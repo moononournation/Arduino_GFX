@@ -177,7 +177,7 @@ void Arduino_ESP32PAR8::writeCommand32(uint32_t c)
   DC_HIGH();
 }
 
-inline void Arduino_ESP32PAR8::write(uint8_t d)
+void Arduino_ESP32PAR8::write(uint8_t d)
 {
   WRITE(d);
 }
@@ -358,28 +358,28 @@ void Arduino_ESP32PAR8::writePattern(uint8_t *data, uint8_t len, uint32_t repeat
 
 /******** low level bit twiddling **********/
 
-inline void Arduino_ESP32PAR8::WRITE(uint8_t d)
+INLINE void Arduino_ESP32PAR8::WRITE(uint8_t d)
 {
   *dataPortClr = dataClrMask;
   *dataPortSet = xset_mask[d];
 }
 
-inline void Arduino_ESP32PAR8::DC_HIGH(void)
+INLINE void Arduino_ESP32PAR8::DC_HIGH(void)
 {
   *dcPortSet = dcPinMask;
 }
 
-inline void Arduino_ESP32PAR8::DC_LOW(void)
+INLINE void Arduino_ESP32PAR8::DC_LOW(void)
 {
   *dcPortClr = dcPinMask;
 }
 
-inline void Arduino_ESP32PAR8::CS_HIGH(void)
+INLINE void Arduino_ESP32PAR8::CS_HIGH(void)
 {
   *csPortSet = csPinMask;
 }
 
-inline void Arduino_ESP32PAR8::CS_LOW(void)
+INLINE void Arduino_ESP32PAR8::CS_LOW(void)
 {
   *csPortClr = csPinMask;
 }

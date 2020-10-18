@@ -43,11 +43,11 @@ public:
 
 protected:
 private:
-  inline void WRITE(uint8_t d);
-  inline void DC_HIGH(void);
-  inline void DC_LOW(void);
-  inline void CS_HIGH(void);
-  inline void CS_LOW(void);
+  INLINE void WRITE(uint8_t d);
+  INLINE void DC_HIGH(void);
+  INLINE void DC_LOW(void);
+  INLINE void CS_HIGH(void);
+  INLINE void CS_LOW(void);
 
   int8_t _dc, _cs, _wr, _rd;
   int8_t _d0, _d1, _d2, _d3, _d4, _d5, _d6, _d7;
