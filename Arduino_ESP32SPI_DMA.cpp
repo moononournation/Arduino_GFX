@@ -140,11 +140,14 @@ void Arduino_ESP32SPI_DMA::writeCommand(uint8_t c)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    write9bit(c);
+    WRITE9BIT(c);
   }
   else
   {
-    flush_data_buf();
+    if (data_buf_bit_idx > 0)
+    {
+      flush_data_buf();
+    }
 
     DC_LOW();
 
@@ -168,12 +171,15 @@ void Arduino_ESP32SPI_DMA::writeCommand16(uint16_t c)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    write9bit(c >> 8);
-    write9bit(c & 0xff);
+    WRITE9BIT(c >> 8);
+    WRITE9BIT(c & 0xff);
   }
   else
   {
-    flush_data_buf();
+    if (data_buf_bit_idx > 0)
+    {
+      flush_data_buf();
+    }
 
     DC_LOW();
 
@@ -197,14 +203,17 @@ void Arduino_ESP32SPI_DMA::writeCommand32(uint32_t c)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    write9bit(c >> 24);
-    write9bit((c >> 16) & 0xff);
-    write9bit((c >> 8) & 0xff);
-    write9bit(c & 0xff);
+    WRITE9BIT(c >> 24);
+    WRITE9BIT((c >> 16) & 0xff);
+    WRITE9BIT((c >> 8) & 0xff);
+    WRITE9BIT(c & 0xff);
   }
   else
   {
-    flush_data_buf();
+    if (data_buf_bit_idx > 0)
+    {
+      flush_data_buf();
+    }
 
     DC_LOW();
 
@@ -228,44 +237,59 @@ void Arduino_ESP32SPI_DMA::write(uint8_t d)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    write9bit(0x100 | d);
+    WRITE9BIT(0x100 | d);
   }
   else
   {
-    int idx = data_buf_bit_idx >> 3;
-    data_buf[idx] = d;
-    data_buf_bit_idx += 8;
-    if (data_buf_bit_idx >= MAX_TRANSFER_SZ)
-    {
-      flush_data_buf();
-    }
+    WRITE8BIT(d);
   }
 }
 
 void Arduino_ESP32SPI_DMA::write16(uint16_t d)
 {
-  write(d >> 8);
-  write(d);
+  if (_dc < 0) // 9-bit SPI
+  {
+    WRITE9BIT(0x100 | (d >> 8));
+    WRITE9BIT(0x100 | (d & 0xff));
+  }
+  else
+  {
+    WRITE8BIT(d >> 8);
+    WRITE8BIT(d);
+  }
 }
 
 void Arduino_ESP32SPI_DMA::write32(uint32_t d)
 {
-  write(d >> 24);
-  write(d >> 16);
-  write(d >> 8);
-  write(d);
+  if (_dc < 0) // 9-bit SPI
+  {
+    WRITE9BIT(0x100 | (d >> 24));
+    WRITE9BIT(0x100 | ((d >> 16) & 0xff));
+    WRITE9BIT(0x100 | ((d >> 8) & 0xff));
+    WRITE9BIT(0x100 | (d & 0xff));
+  }
+  else
+  {
+    WRITE8BIT(d >> 24);
+    WRITE8BIT(d >> 16);
+    WRITE8BIT(d >> 8);
+    WRITE8BIT(d);
+  }
 }
 
 void Arduino_ESP32SPI_DMA::writeC8D8(uint8_t c, uint8_t d)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    write9bit(c);
-    write9bit(0x100 | d);
+    WRITE9BIT(c);
+    WRITE9BIT(0x100 | d);
   }
   else
   {
-    flush_data_buf();
+    if (data_buf_bit_idx > 0)
+    {
+      flush_data_buf();
+    }
 
     DC_LOW();
 
@@ -301,13 +325,16 @@ void Arduino_ESP32SPI_DMA::writeC8D16(uint8_t c, uint16_t d)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    write9bit(c);
-    write9bit(0x100 | (d >> 8));
-    write9bit(0x100 | (d & 0xff));
+    WRITE9BIT(c);
+    WRITE9BIT(0x100 | (d >> 8));
+    WRITE9BIT(0x100 | (d & 0xff));
   }
   else
   {
-    flush_data_buf();
+    if (data_buf_bit_idx > 0)
+    {
+      flush_data_buf();
+    }
 
     DC_LOW();
 
@@ -344,15 +371,18 @@ void Arduino_ESP32SPI_DMA::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    write9bit(c);
-    write9bit(0x100 | (d1 >> 8));
-    write9bit(0x100 | (d1 & 0xff));
-    write9bit(0x100 | (d2 >> 8));
-    write9bit(0x100 | (d2 & 0xff));
+    WRITE9BIT(c);
+    WRITE9BIT(0x100 | (d1 >> 8));
+    WRITE9BIT(0x100 | (d1 & 0xff));
+    WRITE9BIT(0x100 | (d2 >> 8));
+    WRITE9BIT(0x100 | (d2 & 0xff));
   }
   else
   {
-    flush_data_buf();
+    if (data_buf_bit_idx > 0)
+    {
+      flush_data_buf();
+    }
 
     DC_LOW();
 
@@ -389,7 +419,10 @@ void Arduino_ESP32SPI_DMA::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
 void Arduino_ESP32SPI_DMA::endWrite()
 {
-  flush_data_buf();
+  if (data_buf_bit_idx > 0)
+  {
+    flush_data_buf();
+  }
 
   if (_enable_transaction)
   {
@@ -455,7 +488,10 @@ void Arduino_ESP32SPI_DMA::sendData32(uint32_t d)
 
 void Arduino_ESP32SPI_DMA::writeRepeat(uint16_t p, uint32_t len)
 {
-  flush_data_buf();
+  if (data_buf_bit_idx > 0)
+  {
+    flush_data_buf();
+  }
 
   if (_dc < 0) // 9-bit SPI
   {
@@ -559,16 +595,20 @@ void Arduino_ESP32SPI_DMA::writeBytes(uint8_t *data, uint32_t len)
   }
   else // 8-bit SPI
   {
+    uint32_t *p = (uint32_t *)data;
     uint32_t bufLen = (len < (MAX_TRANSFER_SZ / 8)) ? len : (MAX_TRANSFER_SZ / 8);
 
     if (len >= bufLen)
     {
-      flush_data_buf();
+      if (data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
       t.length = bufLen << 3;
       t.tx_buffer = data_buf;
-      uint32_t *p = (uint32_t *)data;
       uint32_t l = bufLen >> 2;
       while (len >= bufLen)
       {
@@ -583,18 +623,20 @@ void Arduino_ESP32SPI_DMA::writeBytes(uint8_t *data, uint32_t len)
         }
 
         len -= bufLen;
-        data += bufLen;
       }
     }
 
     if ((len > 0) && ((len % 4) == 0))
     {
-      flush_data_buf();
+      if (data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
       t.length = len << 3;
       t.tx_buffer = data_buf;
-      uint32_t *p = (uint32_t *)data;
       int l = len >> 2;
       for (int i = 0; i < l; i++)
       {
@@ -628,7 +670,10 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint
   }
   else // 8-bit SPI
   {
-    flush_data_buf();
+    if (data_buf_bit_idx > 0)
+    {
+      flush_data_buf();
+    }
 
     uint32_t bufLen = (len < (MAX_TRANSFER_SZ / 16)) ? len : (MAX_TRANSFER_SZ / 16);
     uint32_t xferLen, p;
@@ -680,7 +725,10 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx
   }
   else // 8-bit SPI
   {
-    flush_data_buf();
+    if (data_buf_bit_idx > 0)
+    {
+      flush_data_buf();
+    }
 
     uint32_t bufLen = (len < (MAX_TRANSFER_SZ / 16 / 2)) ? len : (MAX_TRANSFER_SZ / 16 / 2);
     uint32_t xferLen;
@@ -729,7 +777,11 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
 
     if (len >= bufLen)
     {
-      flush_data_buf();
+      if (data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
       t.length = bufLen << 4;
@@ -754,7 +806,11 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
 
     if ((len > 0) && ((len % 2) == 0))
     {
-      flush_data_buf();
+      if (data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
       t.length = len << 4;
@@ -795,29 +851,34 @@ void Arduino_ESP32SPI_DMA::writePattern(uint8_t *data, uint8_t len, uint32_t rep
   }
 }
 
-/******** low level bit twiddling **********/
-
-inline void Arduino_ESP32SPI_DMA::DC_HIGH(void)
+void Arduino_ESP32SPI_DMA::flush_data_buf()
 {
-  *dcPortSet = dcPinMask;
+  spi_transaction_t t;
+  memset(&t, 0, sizeof(t));
+  t.length = data_buf_bit_idx;
+  t.tx_buffer = data_buf;
+
+  esp_err_t ret = spi_device_polling_transmit(_handle, &t);
+  if (ret != ESP_OK)
+  {
+    log_e("spi_device_polling_transmit error: %d", ret);
+  }
+
+  data_buf_bit_idx = 0;
 }
 
-inline void Arduino_ESP32SPI_DMA::DC_LOW(void)
+INLINE void Arduino_ESP32SPI_DMA::WRITE8BIT(uint8_t d)
 {
-  *dcPortClr = dcPinMask;
+  int idx = data_buf_bit_idx >> 3;
+  data_buf[idx] = d;
+  data_buf_bit_idx += 8;
+  if (data_buf_bit_idx >= MAX_TRANSFER_SZ)
+  {
+    flush_data_buf();
+  }
 }
 
-inline void Arduino_ESP32SPI_DMA::CS_HIGH(void)
-{
-  *csPortSet = csPinMask;
-}
-
-inline void Arduino_ESP32SPI_DMA::CS_LOW(void)
-{
-  *csPortClr = csPinMask;
-}
-
-inline void Arduino_ESP32SPI_DMA::write9bit(uint32_t d)
+INLINE void Arduino_ESP32SPI_DMA::WRITE9BIT(uint32_t d)
 {
   int idx = data_buf_bit_idx >> 3;
   int shift = (data_buf_bit_idx % 8);
@@ -838,22 +899,26 @@ inline void Arduino_ESP32SPI_DMA::write9bit(uint32_t d)
   }
 }
 
-void Arduino_ESP32SPI_DMA::flush_data_buf()
+/******** low level bit twiddling **********/
+
+INLINE void Arduino_ESP32SPI_DMA::DC_HIGH(void)
 {
-  if (data_buf_bit_idx > 0)
-  {
-    spi_transaction_t t;
-    memset(&t, 0, sizeof(t));
-    t.length = data_buf_bit_idx;
-    t.tx_buffer = data_buf;
-
-    esp_err_t ret = spi_device_polling_transmit(_handle, &t);
-    if (ret != ESP_OK)
-    {
-      log_e("spi_device_polling_transmit error: %d", ret);
-    }
-
-    data_buf_bit_idx = 0;
-  }
+  *dcPortSet = dcPinMask;
 }
+
+INLINE void Arduino_ESP32SPI_DMA::DC_LOW(void)
+{
+  *dcPortClr = dcPinMask;
+}
+
+INLINE void Arduino_ESP32SPI_DMA::CS_HIGH(void)
+{
+  *csPortSet = csPinMask;
+}
+
+INLINE void Arduino_ESP32SPI_DMA::CS_LOW(void)
+{
+  *csPortClr = csPinMask;
+}
+
 #endif

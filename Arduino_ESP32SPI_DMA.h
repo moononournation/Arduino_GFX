@@ -61,14 +61,15 @@ public:
   virtual void sendData32(uint32_t);
 
 protected:
-  virtual void write9bit(uint32_t c);
   virtual void flush_data_buf();
 
 private:
-  inline void CS_HIGH(void);
-  inline void CS_LOW(void);
-  inline void DC_HIGH(void);
-  inline void DC_LOW(void);
+  INLINE void WRITE8BIT(uint8_t c);
+  INLINE void WRITE9BIT(uint32_t c);
+  INLINE void CS_HIGH(void);
+  INLINE void CS_LOW(void);
+  INLINE void DC_HIGH(void);
+  INLINE void DC_LOW(void);
 
   int8_t _dc, _cs, _sck, _mosi, _miso;
   uint8_t _spi_num;
