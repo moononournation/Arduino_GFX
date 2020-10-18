@@ -97,17 +97,20 @@ public:
   virtual void sendData32(uint32_t);
 
 private:
-  inline void write9bitCommand(uint8_t c);
-  inline void write9bitData(uint8_t d);
-  inline void CS_HIGH(void);
-  inline void CS_LOW(void);
-  inline void DC_HIGH(void);
-  inline void DC_LOW(void);
-  inline void SPI_MOSI_HIGH(void);
-  inline void SPI_MOSI_LOW(void);
-  inline void SPI_SCK_HIGH(void);
-  inline void SPI_SCK_LOW(void);
-  inline bool SPI_MISO_READ(void);
+  INLINE void WRITE9BITCOMMAND(uint8_t c);
+  INLINE void WRITE9BITDATA(uint8_t d);
+  INLINE void WRITE(uint8_t d);
+  INLINE void WRITE16(uint16_t d);
+  INLINE void WRITE32(uint32_t d);
+  INLINE void CS_HIGH(void);
+  INLINE void CS_LOW(void);
+  INLINE void DC_HIGH(void);
+  INLINE void DC_LOW(void);
+  INLINE void SPI_MOSI_HIGH(void);
+  INLINE void SPI_MOSI_LOW(void);
+  INLINE void SPI_SCK_HIGH(void);
+  INLINE void SPI_SCK_LOW(void);
+  INLINE bool SPI_MISO_READ(void);
 
   int8_t _dc, _cs, _sck, _mosi, _miso;
 

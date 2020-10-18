@@ -11,6 +11,7 @@
 #include "WProgram.h"
 #endif
 
+#if defined(ESP32)
 #define MSB_32_SET(var, val)                                      \
     {                                                             \
         uint8_t *v = (uint8_t *)&(val);                           \
@@ -24,6 +25,10 @@
     {                                                        \
         (var) = (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8); \
     }
+#define INLINE __attribute__ ((always_inline)) inline
+#else
+#define INLINE inline
+#endif
 
 typedef enum
 {
