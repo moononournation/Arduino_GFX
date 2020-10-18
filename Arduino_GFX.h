@@ -93,7 +93,7 @@
 #define _in_range(v, a, b) ((a > b) ? _ordered_in_range(v, b, a) : _ordered_in_range(v, a, b))
 #endif
 
-inline GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
+INLINE GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
 {
 #ifdef __AVR__
   return &(((GFXglyph *)pgm_read_pointer(&gfxFont->glyph))[c]);
@@ -105,7 +105,7 @@ inline GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
 #endif //__AVR__
 }
 
-inline uint8_t *pgm_read_bitmap_ptr(const GFXfont *gfxFont)
+INLINE uint8_t *pgm_read_bitmap_ptr(const GFXfont *gfxFont)
 {
 #ifdef __AVR__
   return (uint8_t *)pgm_read_pointer(&gfxFont->bitmap);

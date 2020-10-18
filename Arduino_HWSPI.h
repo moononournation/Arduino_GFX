@@ -118,10 +118,10 @@ public:
   virtual void sendData32(uint32_t);
 
 private:
-  inline void CS_HIGH(void);
-  inline void CS_LOW(void);
-  inline void DC_HIGH(void);
-  inline void DC_LOW(void);
+  INLINE void CS_HIGH(void);
+  INLINE void CS_LOW(void);
+  INLINE void DC_HIGH(void);
+  INLINE void DC_LOW(void);
 
   int8_t _dc, _cs;
 #if defined(ESP32)

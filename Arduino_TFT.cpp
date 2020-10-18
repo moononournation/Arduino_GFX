@@ -60,12 +60,12 @@ void Arduino_TFT::begin(int speed)
   setAddrWindow(0, 0, _width, _height);
 }
 
-inline void Arduino_TFT::startWrite()
+INLINE void Arduino_TFT::startWrite()
 {
   _bus->beginWrite();
 }
 
-inline void Arduino_TFT::writeColor(uint16_t color)
+INLINE void Arduino_TFT::writeColor(uint16_t color)
 {
   _bus->write16(color);
 }
@@ -207,7 +207,7 @@ void Arduino_TFT::writeFillRectPreclipped(int16_t x, int16_t y,
   writeRepeat(color, (uint32_t)w * h);
 }
 
-inline void Arduino_TFT::endWrite()
+INLINE void Arduino_TFT::endWrite()
 {
   _bus->endWrite();
 }

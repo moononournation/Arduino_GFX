@@ -36,7 +36,7 @@ Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, int8_t sck /* = -1
     : _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso), _enable_transaction(enable_transaction)
 {
 #else
-Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */)
+Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, bool enable_transaction /* = true */)
     : _dc(dc), _cs(cs), _enable_transaction(enable_transaction)
 {
 #endif
@@ -439,7 +439,7 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 
 /******** low level bit twiddling **********/
 
-inline void Arduino_HWSPI::CS_HIGH(void)
+INLINE void Arduino_HWSPI::CS_HIGH(void)
 {
   if (_cs >= 0)
   {
@@ -459,7 +459,7 @@ inline void Arduino_HWSPI::CS_HIGH(void)
   }
 }
 
-inline void Arduino_HWSPI::CS_LOW(void)
+INLINE void Arduino_HWSPI::CS_LOW(void)
 {
   if (_cs >= 0)
   {
@@ -479,7 +479,7 @@ inline void Arduino_HWSPI::CS_LOW(void)
   }
 }
 
-inline void Arduino_HWSPI::DC_HIGH(void)
+INLINE void Arduino_HWSPI::DC_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -496,7 +496,7 @@ inline void Arduino_HWSPI::DC_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-inline void Arduino_HWSPI::DC_LOW(void)
+INLINE void Arduino_HWSPI::DC_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
