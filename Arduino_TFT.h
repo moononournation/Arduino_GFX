@@ -21,8 +21,8 @@ public:
   virtual void displayOff() = 0;
 
   virtual void begin(int speed = 0);
-  INLINE virtual void startWrite(void);
-  INLINE virtual void writeColor(uint16_t color);
+  virtual void startWrite(void);
+  virtual void writeColor(uint16_t color);
   virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
   virtual void writeRepeat(uint16_t color, uint32_t len);
   virtual void writePixels(uint16_t *data, uint32_t size);
@@ -30,7 +30,7 @@ public:
   virtual void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
   virtual void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
   virtual void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-  INLINE virtual void endWrite(void);
+  virtual void endWrite(void);
 
   virtual void setAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
   virtual void pushColor(uint16_t color);
