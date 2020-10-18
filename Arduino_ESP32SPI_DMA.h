@@ -55,6 +55,7 @@ public:
 
   virtual void sendCommand(uint8_t);
   virtual void sendCommand16(uint16_t);
+  virtual void sendCommand32(uint32_t);
   virtual void sendData(uint8_t);
   virtual void sendData16(uint16_t);
   virtual void sendData32(uint32_t);

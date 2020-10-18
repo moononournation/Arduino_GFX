@@ -417,6 +417,15 @@ void Arduino_ESP32SPI_DMA::sendCommand16(uint16_t c)
   endWrite();
 }
 
+void Arduino_ESP32SPI_DMA::sendCommand32(uint32_t c)
+{
+  beginWrite();
+
+  writeCommand32(c);
+
+  endWrite();
+}
+
 void Arduino_ESP32SPI_DMA::sendData(uint8_t d)
 {
   beginWrite();

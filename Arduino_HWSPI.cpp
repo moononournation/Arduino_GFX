@@ -306,6 +306,17 @@ void Arduino_HWSPI::sendCommand16(uint16_t c)
   SPI_END_TRANSACTION();
 }
 
+void Arduino_HWSPI::sendCommand32(uint32_t c)
+{
+  SPI_BEGIN_TRANSACTION();
+  CS_LOW();
+
+  writeCommand32(c);
+
+  CS_HIGH();
+  SPI_END_TRANSACTION();
+}
+
 void Arduino_HWSPI::sendData(uint8_t d)
 {
   SPI_BEGIN_TRANSACTION();

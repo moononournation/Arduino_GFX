@@ -62,19 +62,22 @@ void Arduino_ESP32PAR8::begin(int speed, int8_t dataMode)
     wrPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
 
-  pinMode(_rd, OUTPUT);
-  digitalWrite(_rd, HIGH);
-  if (_rd >= 32)
+  if (_rd >= 0)
   {
-    rdPinMask = digitalPinToBitMask(_rd);
-    rdPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    rdPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
-  }
-  else if (_rd >= 0)
-  {
-    rdPinMask = digitalPinToBitMask(_rd);
-    rdPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    rdPortClr = (PORTreg_t)&GPIO.out_w1tc;
+    pinMode(_rd, OUTPUT);
+    digitalWrite(_rd, HIGH);
+    if (_rd >= 32)
+    {
+      rdPinMask = digitalPinToBitMask(_rd);
+      rdPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+      rdPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+    }
+    else if (_rd >= 0)
+    {
+      rdPinMask = digitalPinToBitMask(_rd);
+      rdPortSet = (PORTreg_t)&GPIO.out_w1ts;
+      rdPortClr = (PORTreg_t)&GPIO.out_w1tc;
+    }
   }
 
   // TODO: check pin range 0-31
@@ -96,7 +99,7 @@ void Arduino_ESP32PAR8::begin(int speed, int8_t dataMode)
   digitalWrite(_d7, HIGH);
 
   // INIT 8-bit mask
-  dataClrMask = (1 << _wr) |(1 << _d0) | (1 << _d1) | (1 << _d2) | (1 << _d3) | (1 << _d4) | (1 << _d5) | (1 << _d6) | (1 << _d7);
+  dataClrMask = (1 << _wr) | (1 << _d0) | (1 << _d1) | (1 << _d2) | (1 << _d3) | (1 << _d4) | (1 << _d5) | (1 << _d6) | (1 << _d7);
   for (int32_t c = 0; c < 256; c++)
   {
     xset_mask[c] = (1 << _wr);
@@ -239,7 +242,11 @@ void Arduino_ESP32PAR8::sendCommand(uint8_t c)
 {
   CS_LOW();
 
-  writeCommand(c);
+  DC_LOW();
+
+  WRITE(c);
+
+  DC_HIGH();
 
   CS_HIGH();
 }
@@ -248,7 +255,28 @@ void Arduino_ESP32PAR8::sendCommand16(uint16_t c)
 {
   CS_LOW();
 
-  writeCommand16(c);
+  DC_LOW();
+
+  WRITE(c >> 8);
+  WRITE(c);
+
+  DC_HIGH();
+
+  CS_HIGH();
+}
+
+void Arduino_ESP32PAR8::sendCommand32(uint32_t c)
+{
+  CS_LOW();
+
+  DC_LOW();
+
+  WRITE(c >> 24);
+  WRITE(c >> 16);
+  WRITE(c >> 8);
+  WRITE(c);
+
+  DC_HIGH();
 
   CS_HIGH();
 }
@@ -286,12 +314,14 @@ void Arduino_ESP32PAR8::sendData32(uint32_t d)
 
 void Arduino_ESP32PAR8::writeRepeat(uint16_t p, uint32_t len)
 {
-  uint8_t hi = p >> 8;
-  uint8_t lo = p;
+  uint32_t hi = xset_mask[p >> 8];
+  uint32_t lo = xset_mask[p & 0xff];
   while (len--)
   {
-    WRITE(hi);
-    WRITE(lo);
+    *dataPortClr = dataClrMask;
+    *dataPortSet = hi;
+    *dataPortClr = dataClrMask;
+    *dataPortSet = lo;
   }
 }
 

@@ -477,6 +477,15 @@ void Arduino_SWSPI::sendCommand16(uint16_t c)
   CS_HIGH();
 }
 
+void Arduino_SWSPI::sendCommand32(uint32_t c)
+{
+  CS_LOW();
+
+  writeCommand32(c);
+
+  CS_HIGH();
+}
+
 void Arduino_SWSPI::sendData(uint8_t d)
 {
   CS_LOW();
