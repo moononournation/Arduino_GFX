@@ -5,6 +5,7 @@
 #include "Arduino_SWSPI.h"
 #include "Arduino_HWSPI.h"
 #include "Arduino_ESP32SPI.h"
+#include "Arduino_ESP32SPI_DMA.h"
 #include "Arduino_ESP32PAR8.h"
 
 #include "Arduino_GFX.h"             // Core graphics library
