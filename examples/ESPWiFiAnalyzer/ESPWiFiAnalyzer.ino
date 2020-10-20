@@ -13,24 +13,33 @@
  ******************************************************************************/
 #include "Arduino_GFX_Library.h"
 
+/* first check if selected specific hardware */
+/* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #define TFT_BL LCD_BACKLIGHT
 Arduino_HWSPI *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);
 Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 2 /* rotation */);
+
+/* M5Stack */
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define TFT_BL 32
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
 Arduino_ILI9341_M5STACK *gfx = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 /* rotation */);
+
+/* Odroid-Go */
 #elif defined(ARDUINO_ODROID_ESP32)
 #define TFT_BL 14
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
 Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 3 /* rotation */);
 // Arduino_ST7789 *gfx = new Arduino_ST7789(bus,  -1 /* RST */, 1 /* rotation */, true /* IPS */);
-#elif defined(ARDUINO_T) // TTGO T-Watch
+
+/* TTGO T-Watch */
+#elif defined(ARDUINO_T) || defined(ARDUINO_TWATCH_BASE) || defined(ARDUINO_TWATCH_2020_V1) || defined(ARDUINO_TWATCH_2020_V2)
 #define TFT_BL 12
 Arduino_ESP32SPI *bus = new Arduino_ESP32SPI(27 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
 Arduino_ST7789 *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true /* IPS */, 240, 240, 0, 80);
-#else /* not a specific hardware */
+
+#else /* not selected specific hardware */
 
 #if defined(ESP32)
 #define TFT_CS 5
@@ -153,7 +162,7 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 // 4" IPS LCD 320x480
 // Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
-#endif /* not a specific hardware */
+#endif /* not selected specific hardware */
 /*******************************************************************************
  * End of Arduino_GFX setting
  ******************************************************************************/
