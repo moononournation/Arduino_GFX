@@ -174,7 +174,7 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 #define log_i(format, ...) Serial.printf(format, ##__VA_ARGS__)
 #endif
 
-int w, h, text_size, banner_height, graph_baseline, graph_height, channel_width, signal_width;
+int16_t w, h, text_size, banner_height, graph_baseline, graph_height, channel_width, signal_width;
 
 // RSSI RANGE
 #define RSSI_CEILING -40
@@ -226,7 +226,7 @@ void setup()
 
 bool matchBssidPrefix(uint8_t *a, uint8_t *b)
 {
-  for (int i = 0; i < 5; i++)
+  for (uint8_t i = 0; i < 5; i++)
   { // only compare first 5 bytes
     if (a[i] != b[i])
     {
@@ -241,14 +241,14 @@ void loop()
   uint8_t ap_count_list[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   int32_t noise_list[] = {RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR};
   int32_t peak_list[] = {RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR};
-  int peak_id_list[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+  int16_t peak_id_list[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
   int32_t channel;
-  int idx;
+  int16_t idx;
   int32_t rssi;
   uint8_t *bssid;
   String ssid;
   uint16_t color;
-  int height, offset, text_width;
+  int16_t height, offset, text_width;
 
   // WiFi.scanNetworks will return the number of networks found
 #if defined(ESP32)

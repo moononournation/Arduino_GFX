@@ -637,8 +637,8 @@ void Arduino_ESP32SPI_DMA::writeBytes(uint8_t *data, uint32_t len)
       memset(&t, 0, sizeof(t));
       t.length = len << 3;
       t.tx_buffer = data_buf;
-      int l = len >> 2;
-      for (int i = 0; i < l; i++)
+      uint32_t l = len >> 2;
+      for (uint32_t i = 0; i < l; i++)
       {
         data_buf32[i] = *p++;
       }
@@ -686,7 +686,7 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint
       memset(&t, 0, sizeof(t));
       t.length = xferLen << 4;
       t.tx_buffer = data_buf;
-      for (int i = 0; i < xferLen; i++)
+      for (uint32_t i = 0; i < xferLen; i++)
       {
         p = idx[*(data++)];
         MSB_16_SET(p, p);
@@ -742,7 +742,7 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx
       memset(&t, 0, sizeof(t));
       t.length = xferLen << 4;
       t.tx_buffer = data_buf;
-      for (int i = 0; i < xferLen; i++)
+      for (uint32_t i = 0; i < xferLen; i++)
       {
         p = idx[*(data++)];
         MSB_16_SET(p, p);
@@ -788,7 +788,7 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
       t.tx_buffer = data_buf;
       while (len >= bufLen)
       {
-        for (int i = 0; i < bufLen; i++)
+        for (uint32_t i = 0; i < bufLen; i++)
         {
           p = *data++;
           MSB_16_SET(p, p);
@@ -815,7 +815,7 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
       memset(&t, 0, sizeof(t));
       t.length = len << 4;
       t.tx_buffer = data_buf;
-      for (int i = 0; i < len; i++)
+      for (uint32_t i = 0; i < len; i++)
       {
         p = *data++;
         MSB_16_SET(p, p);
@@ -869,7 +869,7 @@ void Arduino_ESP32SPI_DMA::flush_data_buf()
 
 INLINE void Arduino_ESP32SPI_DMA::WRITE8BIT(uint8_t d)
 {
-  int idx = data_buf_bit_idx >> 3;
+  uint16_t idx = data_buf_bit_idx >> 3;
   data_buf[idx] = d;
   data_buf_bit_idx += 8;
   if (data_buf_bit_idx >= MAX_TRANSFER_SZ)
@@ -880,8 +880,8 @@ INLINE void Arduino_ESP32SPI_DMA::WRITE8BIT(uint8_t d)
 
 INLINE void Arduino_ESP32SPI_DMA::WRITE9BIT(uint32_t d)
 {
-  int idx = data_buf_bit_idx >> 3;
-  int shift = (data_buf_bit_idx % 8);
+  uint16_t idx = data_buf_bit_idx >> 3;
+  uint8_t shift = (data_buf_bit_idx % 8);
   if (shift)
   {
     data_buf[idx++] |= d >> (shift + 1);

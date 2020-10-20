@@ -183,7 +183,7 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 #include "JpegDec.h"
 static JpegDec jpegDec;
 
-static int len, offset;
+static uint32_t len, offset;
 static unsigned long next_show_millis = 0;
 
 HTTPClient http;
@@ -308,7 +308,7 @@ static size_t http_stream_reader(JpegDec *jpegDec, size_t index, uint8_t *buf, s
   else
   {
     // Serial.printf("[HTTP] skip: %d\n", len);
-    int l = len;
+    size_t l = len;
     while ((--l) && (wait < 10))
     {
       if (http_stream->available())

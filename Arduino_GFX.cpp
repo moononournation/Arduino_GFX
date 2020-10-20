@@ -742,17 +742,17 @@ void Arduino_GFX::fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t
     float swidth = 0.5 / s_cos;
     float ewidth = -0.5 / e_cos;
     --iradius;
-    int ir2 = iradius * iradius + iradius;
-    int or2 = oradius * oradius + oradius;
+    int32_t ir2 = iradius * iradius + iradius;
+    int32_t or2 = oradius * oradius + oradius;
 
     bool start180 = !(start < 180);
     bool end180 = end < 180;
     bool reversed = start + 180 < end || (end < start && start < end + 180);
 
-    int xs = -oradius;
-    int y = -oradius;
-    int ye = oradius;
-    int xe = oradius + 1;
+    int32_t xs = -oradius;
+    int32_t y = -oradius;
+    int32_t ye = oradius;
+    int32_t xe = oradius + 1;
     if (!reversed)
     {
         if ((end >= 270 || end < 90) && (start >= 270 || start < 90))
@@ -774,8 +774,8 @@ void Arduino_GFX::fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t
     }
     do
     {
-        int y2 = y * y;
-        int x = xs;
+        int32_t y2 = y * y;
+        int32_t x = xs;
         if (x < 0)
         {
             while (x * x + y2 >= or2)
@@ -789,12 +789,12 @@ void Arduino_GFX::fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t
         }
         float ysslope = (y + swidth) * sslope;
         float yeslope = (y + ewidth) * eslope;
-        int len = 0;
+        int32_t len = 0;
         do
         {
             bool flg1 = start180 != (x <= ysslope);
             bool flg2 = end180 != (x <= yeslope);
-            int distance = x * x + y2;
+            int32_t distance = x * x + y2;
             if (distance >= ir2 && ((flg1 && flg2) || (reversed && (flg1 || flg2))) && x != xe && distance < or2)
             {
                 ++len;
@@ -2064,8 +2064,8 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
                 *x = 0;               // Reset x to zero,
                 *y += textsize_y * 8; // advance y one line
             }
-            int x2 = *x + textsize_x * 6 - 1, // Lower-right pixel of char
-                y2 = *y + textsize_y * 8 - 1;
+            int16_t x2 = *x + textsize_x * 6 - 1; // Lower-right pixel of char
+            int16_t y2 = *y + textsize_y * 8 - 1;
             if (x2 > *maxx)
             {
                 *maxx = x2; // Track max x, y

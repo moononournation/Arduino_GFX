@@ -158,7 +158,7 @@ void Arduino_Canvas_Indexed::raise_mask_level()
 {
     if ((_current_mask_level + 1) < MAXMASKLEVEL)
     {
-        int buffer_size = _width * _height;
+        int32_t buffer_size = _width * _height;
         uint8_t old_indexed_size = _indexed_size;
         uint8_t new_color;
         _indexed_size = 0;
@@ -170,7 +170,7 @@ void Arduino_Canvas_Indexed::raise_mask_level()
         for (uint8_t old_color = 0; old_color < old_indexed_size; old_color++)
         {
             new_color = get_color_index(_color_index[old_color]);
-            for (int i = 0; i < buffer_size; i++)
+            for (int32_t i = 0; i < buffer_size; i++)
             {
                 if (_framebuffer[i] == old_color)
                 {

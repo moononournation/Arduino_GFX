@@ -27,7 +27,7 @@ void Arduino_DataBus::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
 void Arduino_DataBus::batchOperation(spi_operation_t batch[], uint8_t len)
 {
-  for (int i = 0; i < len; ++i)
+  for (uint8_t i = 0; i < len; ++i)
   {
     switch (batch[i].type)
     {

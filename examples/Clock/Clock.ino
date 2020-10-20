@@ -191,7 +191,7 @@ static int16_t hh, mm, ss;
 static unsigned long targetTime; // next action time
 
 static int16_t *cached_points;
-static int cached_points_idx = 0;
+static uint16_t cached_points_idx = 0;
 static int16_t *last_cached_point;
 
 void setup(void)
@@ -293,7 +293,7 @@ void draw_round_clock_mark(int16_t innerR1, int16_t outerR1, int16_t innerR2, in
   int16_t x0, x1, y0, y1, innerR, outerR;
   uint16_t c;
 
-  for (int i = 0; i < 60; i++)
+  for (uint8_t i = 0; i < 60; i++)
   {
     if ((i % 15) == 0)
     {
@@ -332,7 +332,7 @@ void draw_square_clock_mark(int16_t innerR1, int16_t outerR1, int16_t innerR2, i
     int16_t x0, x1, y0, y1, innerR, outerR;
     uint16_t c;
 
-    for (int i = 0; i < 60; i++)
+    for (uint8_t i = 0; i < 60; i++)
     {
         if ((i % 15) == 0)
         {
@@ -476,7 +476,7 @@ void write_cache_pixel(int16_t x, int16_t y, int16_t color, bool cross_check_sec
     int16_t *cache = cached_points;
     if (cross_check_second)
     {
-        for (int i = 0; i <= sHandLen; i++)
+        for (uint16_t i = 0; i <= sHandLen; i++)
         {
             if ((x == *(cache++)) && (y == *(cache)))
             {
@@ -488,7 +488,7 @@ void write_cache_pixel(int16_t x, int16_t y, int16_t color, bool cross_check_sec
     if (cross_check_hour)
     {
         cache = cached_points + ((sHandLen + 1) * 2);
-        for (int i = 0; i <= hHandLen; i++)
+        for (uint16_t i = 0; i <= hHandLen; i++)
         {
             if ((x == *(cache++)) && (y == *(cache)))
             {

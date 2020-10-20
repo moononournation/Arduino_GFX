@@ -113,9 +113,9 @@ public:
         // Serial.printf("%d, %d, %d, %d\n", x, y, w, h);
         if (data)
         {
-            for (int i = 0; i < h; ++i)
+            for (uint16_t i = 0; i < h; ++i)
             {
-                for (int j = 0; j < w; ++j)
+                for (uint16_t j = 0; j < w; ++j)
                 {
                     framebuffer[(y + i) * jpegDec->output_width + x + j] = ((*(data++) & 0xF8) << 8) | ((*(data++) & 0xFC) << 3) | (*(data++) >> 3);
                 }
