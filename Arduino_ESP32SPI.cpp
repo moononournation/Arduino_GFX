@@ -73,7 +73,7 @@ static void _on_apb_change(void *arg, apb_change_ev_t ev_type, uint32_t old_apb,
   }
 }
 
-void Arduino_ESP32SPI::begin(int speed, int8_t dataMode)
+void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
 {
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
   _dataMode = dataMode;

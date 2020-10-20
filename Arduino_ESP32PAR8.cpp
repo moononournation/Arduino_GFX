@@ -15,7 +15,7 @@ Arduino_ESP32PAR8::Arduino_ESP32PAR8(
 {
 }
 
-void Arduino_ESP32PAR8::begin(int speed, int8_t dataMode)
+void Arduino_ESP32PAR8::begin(int32_t speed, int8_t dataMode)
 {
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode

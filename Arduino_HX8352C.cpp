@@ -13,7 +13,7 @@ Arduino_HX8352C::Arduino_HX8352C(
   _invert = ips;
 }
 
-void Arduino_HX8352C::begin(int speed)
+void Arduino_HX8352C::begin(int32_t speed)
 {
 #if defined(ESP8266) || defined(ESP32)
   if (speed == 0)

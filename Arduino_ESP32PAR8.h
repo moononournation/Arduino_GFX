@@ -17,7 +17,7 @@ public:
       int8_t dc, int8_t cs, int8_t wr, int8_t rd,
       int8_t d0, int8_t d1, int8_t d2, int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7); // Constructor
 
-  virtual void begin(int speed = 0, int8_t dataMode = 0);
+  virtual void begin(int32_t speed = 0, int8_t dataMode = 0);
   virtual void beginWrite();
   virtual void writeCommand(uint8_t);
   virtual void writeCommand16(uint16_t);

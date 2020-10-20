@@ -17,7 +17,7 @@ Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *
     _color_mask = mask_level_list[_current_mask_level];
 }
 
-void Arduino_Canvas_Indexed::begin(int speed)
+void Arduino_Canvas_Indexed::begin(int32_t speed)
 {
 #if defined(ESP32)
     if (psramFound())

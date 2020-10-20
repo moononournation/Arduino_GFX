@@ -42,7 +42,7 @@ Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, bool enable_transa
 #endif
 }
 
-void Arduino_HWSPI::begin(int speed, int8_t dataMode)
+void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 {
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
   _dataMode = dataMode;

@@ -25,7 +25,7 @@ Arduino_ESP32SPI_DMA::Arduino_ESP32SPI_DMA(int8_t dc /* = -1 */, int8_t cs /* = 
   }
 }
 
-void Arduino_ESP32SPI_DMA::begin(int speed, int8_t dataMode)
+void Arduino_ESP32SPI_DMA::begin(int32_t speed, int8_t dataMode)
 {
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
   _dataMode = dataMode;

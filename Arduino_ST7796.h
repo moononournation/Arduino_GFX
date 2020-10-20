@@ -62,7 +62,7 @@ public:
       bool ips = false, int16_t w = ST7796_TFTWIDTH, int16_t h = ST7796_TFTHEIGHT,
       uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
-  virtual void begin(int speed = 0);
+  virtual void begin(int32_t speed = 0);
   virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
   virtual void setRotation(uint8_t r);
   virtual void invertDisplay(bool);
