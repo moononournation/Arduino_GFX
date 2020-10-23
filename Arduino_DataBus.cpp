@@ -72,14 +72,18 @@ void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t 
 
 void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
-  uint32_t l = len;
   uint8_t *d = data;
   uint16_t p;
-  while (l--)
+  uint8_t hi, lo;
+  while (len--)
   {
     p = idx[*(d++)];
-    write16(p);
-    write16(p);
+    hi = p >> 8;
+    lo = p;
+    write(hi);
+    write(lo);
+    write(hi);
+    write(lo);
   }
 }
 #endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)

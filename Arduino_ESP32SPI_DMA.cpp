@@ -740,7 +740,7 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx
 
       spi_transaction_t t;
       memset(&t, 0, sizeof(t));
-      t.length = xferLen << 4;
+      t.length = xferLen << 5;
       t.tx_buffer = data_buf;
       for (uint32_t i = 0; i < xferLen; i++)
       {
