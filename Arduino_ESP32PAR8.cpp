@@ -32,8 +32,11 @@ void Arduino_ESP32PAR8::begin(int32_t speed, int8_t dataMode)
     dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
 
-  pinMode(_cs, OUTPUT);
-  digitalWrite(_cs, HIGH); // disable chip select
+  if (_cs >= 0)
+  {
+    pinMode(_cs, OUTPUT);
+    digitalWrite(_cs, HIGH); // disable chip select
+  }
   if (_cs >= 32)
   {
     csPinMask = digitalPinToBitMask(_cs);
@@ -45,6 +48,12 @@ void Arduino_ESP32PAR8::begin(int32_t speed, int8_t dataMode)
     csPinMask = digitalPinToBitMask(_cs);
     csPortSet = (PORTreg_t)&GPIO.out_w1ts;
     csPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+  else
+  {
+    csPinMask = 0;
+    csPortSet = dcPortSet;
+    csPortClr = dcPortClr;
   }
 
   pinMode(_wr, OUTPUT);

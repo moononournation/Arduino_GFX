@@ -70,6 +70,12 @@ void Arduino_ESP32SPI_DMA::begin(int32_t speed, int8_t dataMode)
     csPortSet = (PORTreg_t)&GPIO.out_w1ts;
     csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
+  else
+  {
+    csPinMask = 0;
+    csPortSet = dcPortSet;
+    csPortClr = dcPortClr;
+  }
 
   spi_bus_config_t buscfg = {
       .mosi_io_num = _mosi,

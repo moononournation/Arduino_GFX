@@ -118,6 +118,12 @@ void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     csPortSet = (PORTreg_t)&GPIO.out_w1ts;
     csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
+  else
+  {
+    csPinMask = 0;
+    csPortSet = dcPortSet;
+    csPortClr = dcPortClr;
+  }
 
   // SPI.begin(_sck, _miso, _mosi);
   // _spi = spiStartBus(_spi_num, _div, SPI_MODE0, SPI_MSBFIRST);
