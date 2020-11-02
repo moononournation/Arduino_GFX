@@ -48,11 +48,11 @@ void Arduino_TFT::begin(int32_t speed)
   {
     pinMode(_rst, OUTPUT);
     digitalWrite(_rst, HIGH);
-    delay(50);
+    delay(120);
     digitalWrite(_rst, LOW);
-    delay(50);
+    delay(120);
     digitalWrite(_rst, HIGH);
-    delay(50);
+    delay(120);
   }
 
   tftInit();
