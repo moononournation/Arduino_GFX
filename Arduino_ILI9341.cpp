@@ -58,7 +58,7 @@ void Arduino_ILI9341::tftInit()
       {DELAY, ILI9341_SLPOUT_DELAY},
       {BEGIN_WRITE, 0},
       {WRITE_COMMAND_8, ILI9341_DISPON}, // Display on
-      {END_WRITE, 0}
+      {END_WRITE, 0},
   };
 
   _bus->batchOperation(ili9341_init_operations, sizeof(ili9341_init_operations) / sizeof(ili9341_init_operations[0]));
@@ -108,10 +108,8 @@ void Arduino_ILI9341::setRotation(uint8_t r)
     r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
     break;
   }
-
   _bus->beginWrite();
-  _bus->writeCommand(ILI9341_MADCTL);
-  _bus->write(r);
+  _bus->writeC8D8(ILI9341_MADCTL, r);
   _bus->endWrite();
 }
 
