@@ -13,6 +13,7 @@
 #include "Arduino_Canvas_Indexed.h"  // Indexed Color Canvas (framebuffer) library
 #include "Arduino_GC9A01.h"          // Hardware-specific library for GC9A01
 #include "Arduino_HX8347C.h"         // Hardware-specific library for HX8347C
+#include "Arduino_HX8347D.h"         // Hardware-specific library for HX8347D
 #include "Arduino_HX8352C.h"         // Hardware-specific library for HX8352C
 #include "Arduino_HX8357B.h"         // Hardware-specific library for HX8357B
 #include "Arduino_ILI9225.h"         // Hardware-specific library for ILI9225

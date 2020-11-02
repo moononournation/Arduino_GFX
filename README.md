@@ -73,6 +73,7 @@ This library is not putting speed at the first priority, but still paid much eff
 ## Currently Supported Display
 - GC9A01 round display 240x240 [[test video](https://youtu.be/kJrAFm20-zg)]
 - HX8347C 240x320 [[test video](https://youtu.be/25ymuV51YQM)]
+- HX8347D 240x320 [[test video](https://youtu.be/sv6LGkLRZjI)]
 - HX8352C 240x400 [[test video](https://youtu.be/m2xWYbS3t7s)]
 - HX8357B (9-bit SPI) 320x480 [[test video](https://youtu.be/pB6_LOCiUqg)]
 - ILI9225 176x220 [[test video](https://youtu.be/jm2UrCG27F4)]
@@ -98,7 +99,6 @@ This library is not putting speed at the first priority, but still paid much eff
 - Canvas_Indexed (for saving memory space)
 
 ## Tobe Support Display (Donation can make it happen)
-- HX8347D 240x320 (first trial failed)
 - HX8357A 240x320 (first trial failed)
 - LG4573 480x800 (first trial failed)
 - ILI9806 480x800 (first trial failed)
