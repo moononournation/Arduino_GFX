@@ -21,6 +21,7 @@
 #include "Arduino_ILI9341_M5STACK.h" // Hardware-specific library for M5STACK
 #include "Arduino_ILI9481_18bit.h"   // Hardware-specific library for ILI9481
 #include "Arduino_ILI9486_18bit.h"   // Hardware-specific library for ILI9486
+#include "Arduino_ILI9488_18bit.h"   // Hardware-specific library for ILI9488
 #include "Arduino_R61529.h"          // Hardware-specific library for R61529
 #include "Arduino_SEPS525.h"         // Hardware-specific library for SEPS525
 #include "Arduino_SSD1283A.h"        // Hardware-specific library for SSD1283A

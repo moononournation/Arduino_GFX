@@ -81,6 +81,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - ILI9341 M5Stack 320x240 [[test video](https://youtu.be/UoPpIjVSO5Q)]
 - ILI9481 320x480 (18 bit color) [[test video](https://youtu.be/YxjuuCFhlqM)]
 - ILI9486 320x480 (18 bit color) [[test video](https://youtu.be/pZ6izDqmVds)]
+- ILI9488 320x480 (18 bit color) [[test video](https://youtu.be/NkE-LhtLHBQ)]
 - R61529 (8-bit Parallel) 320x480 [[test video](https://youtu.be/s93gxjbIAT8)]
 - SEPS525 160x128 [[test video](https://youtu.be/tlmvFBHYv-k)]
 - SSD1283A 130x130 [[test video](https://youtu.be/OrIchaRikiQ)]
