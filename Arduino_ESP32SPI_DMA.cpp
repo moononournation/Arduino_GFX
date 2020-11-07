@@ -695,8 +695,7 @@ void Arduino_ESP32SPI_DMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint
       for (uint32_t i = 0; i < xferLen; i++)
       {
         p = idx[*(data++)];
-        MSB_16_SET(p, p);
-        data_buf16[i] = p;
+        MSB_16_SET(data_buf16[i], p);
       }
 
       esp_err_t ret = spi_device_polling_transmit(_handle, &t);
@@ -797,8 +796,7 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
         for (uint32_t i = 0; i < bufLen; i++)
         {
           p = *data++;
-          MSB_16_SET(p, p);
-          data_buf16[i] = p;
+          MSB_16_SET(data_buf16[i], p);
         }
         esp_err_t ret = spi_device_polling_transmit(_handle, &t);
         if (ret != ESP_OK)
@@ -824,8 +822,7 @@ void Arduino_ESP32SPI_DMA::writePixels(uint16_t *data, uint32_t len)
       for (uint32_t i = 0; i < len; i++)
       {
         p = *data++;
-        MSB_16_SET(p, p);
-        data_buf16[i] = p;
+        MSB_16_SET(data_buf16[i], p);
       }
 
       esp_err_t ret = spi_device_polling_transmit(_handle, &t);
