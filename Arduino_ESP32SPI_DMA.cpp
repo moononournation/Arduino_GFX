@@ -6,8 +6,8 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_ESP32SPI_DMA.h"
 
-Arduino_ESP32SPI_DMA::Arduino_ESP32SPI_DMA(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */, bool enable_transaction /* = true */)
-    : _dc(dc), _spi_num(spi_num), _enable_transaction(enable_transaction)
+Arduino_ESP32SPI_DMA::Arduino_ESP32SPI_DMA(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */, bool is_shared_interface /* = true */)
+    : _dc(dc), _spi_num(spi_num), _is_shared_interface(is_shared_interface)
 {
   if (sck == -1 && miso == -1 && mosi == -1 && cs == -1)
   {
@@ -123,6 +123,11 @@ void Arduino_ESP32SPI_DMA::begin(int32_t speed, int8_t dataMode)
     data_buf16 = (uint16_t *)data_buf;
     data_buf32 = (uint32_t *)data_buf;
   }
+
+  if (!_is_shared_interface)
+  {
+    spi_device_acquire_bus(_handle, portMAX_DELAY);
+  }
 }
 
 void Arduino_ESP32SPI_DMA::beginWrite()
@@ -130,7 +135,7 @@ void Arduino_ESP32SPI_DMA::beginWrite()
   data_buf_bit_idx = 0;
   data_buf[0] = 0;
 
-  if (_enable_transaction)
+  if (_is_shared_interface)
   {
     spi_device_acquire_bus(_handle, portMAX_DELAY);
   }
@@ -430,7 +435,7 @@ void Arduino_ESP32SPI_DMA::endWrite()
     flush_data_buf();
   }
 
-  if (_enable_transaction)
+  if (_is_shared_interface)
   {
     spi_device_release_bus(_handle);
   }

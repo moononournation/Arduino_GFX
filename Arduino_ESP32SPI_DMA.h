@@ -31,7 +31,7 @@ typedef volatile uint32_t *PORTreg_t; ///< PORT register type
 class Arduino_ESP32SPI_DMA : public Arduino_DataBus
 {
 public:
-  Arduino_ESP32SPI_DMA(int8_t dc = -1, int8_t cs = -1, int8_t sck = -1, int8_t mosi = -1, int8_t miso = -1, uint8_t spi_num = VSPI, bool enable_transaction = true); // Constructor
+  Arduino_ESP32SPI_DMA(int8_t dc = -1, int8_t cs = -1, int8_t sck = -1, int8_t mosi = -1, int8_t miso = -1, uint8_t spi_num = VSPI, bool is_shared_interface = true); // Constructor
 
   virtual void begin(int32_t speed = 0, int8_t dataMode = SPI_MODE0);
   virtual void beginWrite();
@@ -73,7 +73,7 @@ private:
 
   int8_t _dc, _cs, _sck, _mosi, _miso;
   uint8_t _spi_num;
-  bool _enable_transaction;
+  bool _is_shared_interface;
   int32_t _speed;
   uint32_t _div = 0;
 

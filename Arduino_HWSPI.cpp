@@ -32,12 +32,12 @@ static uint8_t mySPCR;
 #endif
 
 #if defined(ESP32)
-Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, bool enable_transaction /* = true */)
-    : _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso), _enable_transaction(enable_transaction)
+Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, bool is_shared_interface /* = true */)
+    : _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso), _is_shared_interface(is_shared_interface)
 {
 #else
-Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, bool enable_transaction /* = true */)
-    : _dc(dc), _cs(cs), _enable_transaction(enable_transaction)
+Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, bool is_shared_interface /* = true */)
+    : _dc(dc), _cs(cs), _is_shared_interface(is_shared_interface)
 {
 #endif
 }
@@ -206,7 +206,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 
 void Arduino_HWSPI::beginWrite()
 {
-  if (_enable_transaction)
+  if (_is_shared_interface)
   {
     SPI_BEGIN_TRANSACTION();
   }
@@ -278,7 +278,7 @@ void Arduino_HWSPI::endWrite()
 {
   CS_HIGH();
 
-  if (_enable_transaction)
+  if (_is_shared_interface)
   {
     SPI_END_TRANSACTION();
   }

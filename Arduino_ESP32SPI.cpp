@@ -38,8 +38,8 @@ static spi_t _spi_bus_array[4] = {
     {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 3}};
 #endif // CONFIG_DISABLE_HAL_LOCKS
 
-Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */, bool enable_transaction /* = true */)
-    : _dc(dc), _spi_num(spi_num), _enable_transaction(enable_transaction)
+Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */, bool is_shared_interface /* = true */)
+    : _dc(dc), _spi_num(spi_num), _is_shared_interface(is_shared_interface)
 {
   if (sck == -1 && miso == -1 && mosi == -1 && cs == -1)
   {
@@ -186,6 +186,11 @@ void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
   }
 
   spiAttachMOSI(_spi, _mosi);
+
+  if (!_is_shared_interface)
+  {
+    spiTransaction(_spi, _div, _dataMode, _bitOrder);
+  }
 }
 
 void Arduino_ESP32SPI::beginWrite()
@@ -193,7 +198,7 @@ void Arduino_ESP32SPI::beginWrite()
   data_buf_bit_idx = 0;
   data_buf[0] = 0;
 
-  if (_enable_transaction)
+  if (_is_shared_interface)
   {
     spiTransaction(_spi, _div, _dataMode, _bitOrder);
   }
@@ -444,7 +449,7 @@ void Arduino_ESP32SPI::endWrite()
     flush_data_buf();
   }
 
-  if (_enable_transaction)
+  if (_is_shared_interface)
   {
     spiEndTransaction(_spi);
   }
