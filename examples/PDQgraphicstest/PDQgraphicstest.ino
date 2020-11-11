@@ -372,7 +372,7 @@ void printnice(const __FlashStringHelper *item, int32_t v)
   else
   {
     char str[32] = {0};
-    sprintf(str, "%lu", v);
+    sprintf(str, "%d", v);
     for (char *p = (str + strlen(str)) - 3; p > str; p -= 3)
     {
       memmove(p + 1, p, strlen(p) + 1);

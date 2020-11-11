@@ -648,7 +648,8 @@ void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
   writeAddrWindow(x, y, w, h);
   while (len--)
   {
-    writeColor(color565(pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++])));
+    writeColor(color565(pgm_read_byte(&bitmap[offset]), pgm_read_byte(&bitmap[offset + 1]), pgm_read_byte(&bitmap[offset + 2])));
+    offset += 3;
   }
   endWrite();
 }
@@ -682,7 +683,8 @@ void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
   writeAddrWindow(x, y, w, h);
   while (len--)
   {
-    writeColor(color565(bitmap[offset++], bitmap[offset++], bitmap[offset++]));
+    writeColor(color565(bitmap[offset], bitmap[offset + 1], bitmap[offset + 2]));
+    offset += 3;
   }
   endWrite();
 }
@@ -840,17 +842,11 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color
     int8_t xo = pgm_read_byte(&glyph->xOffset),
            yo = pgm_read_byte(&glyph->yOffset);
     uint8_t xx, yy, bits = 0, bit = 0;
-    int16_t xo16, yo16;
+    int16_t xo16 = xo, yo16 = yo;
 
     if (xAdvance < w)
     {
       xAdvance = w; // Don't know why it exists
-    }
-
-    if (textsize_x > 1 || textsize_y > 1)
-    {
-      xo16 = xo;
-      yo16 = yo;
     }
 
     block_w = xAdvance * textsize_x;

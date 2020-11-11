@@ -1551,7 +1551,8 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
     {
         for (int16_t i = 0; i < w; i++)
         {
-            writePixel(x + i, y, color565(pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++])));
+            writePixel(x + i, y, color565(pgm_read_byte(&bitmap[offset]), pgm_read_byte(&bitmap[offset + 1]), pgm_read_byte(&bitmap[offset + 2])));
+            offset += 3;
         }
     }
     endWrite();
@@ -1576,7 +1577,8 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
     {
         for (int16_t i = 0; i < w; i++)
         {
-            writePixel(x + i, y, color565(bitmap[offset++], bitmap[offset++], bitmap[offset++]));
+            writePixel(x + i, y, color565(bitmap[offset], bitmap[offset + 1], bitmap[offset + 2]));
+            offset += 3;
         }
     }
     endWrite();
@@ -1617,12 +1619,9 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
             }
             if (byte & 0x80)
             {
-                writePixel(x + i, y, color565(pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++]), pgm_read_byte(&bitmap[offset++])));
+                writePixel(x + i, y, color565(pgm_read_byte(&bitmap[offset]), pgm_read_byte(&bitmap[offset + 1]), pgm_read_byte(&bitmap[offset + 2])));
             }
-            else
-            {
-                offset += 3;
-            }
+            offset += 3;
         }
     }
     endWrite();
@@ -1662,12 +1661,9 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
             }
             if (byte & 0x80)
             {
-                writePixel(x + i, y, color565(bitmap[offset++], bitmap[offset++], bitmap[offset++]));
+                writePixel(x + i, y, color565(bitmap[offset], bitmap[offset + 1], bitmap[offset + 2]));
             }
-            else
-            {
-                offset += 3;
-            }
+            offset += 3;
         }
     }
     endWrite();
@@ -1773,17 +1769,11 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
         int8_t xo = pgm_read_byte(&glyph->xOffset),
                yo = pgm_read_byte(&glyph->yOffset);
         uint8_t xx, yy, bits = 0, bit = 0;
-        int16_t xo16, yo16;
+        int16_t xo16 = xo, yo16 = yo;
 
         if (xAdvance < w)
         {
             xAdvance = w; // Don't know why it exists
-        }
-
-        if (textsize_x > 1 || textsize_y > 1)
-        {
-            xo16 = xo;
-            yo16 = yo;
         }
 
         block_w = xAdvance * textsize_x;
@@ -1875,7 +1865,7 @@ size_t Arduino_GFX::write(uint8_t c)
             {
                 GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c - first);
                 uint8_t w = pgm_read_byte(&glyph->xAdvance);
-                int16_t xo = (int8_t)pgm_read_byte(&glyph->xOffset); // sic
+                // int16_t xo = (int8_t)pgm_read_byte(&glyph->xOffset); // sic
                 if (wrap && ((cursor_x + (textsize_x * w) - 1) > _max_x))
                 {
                     cursor_x = 0;

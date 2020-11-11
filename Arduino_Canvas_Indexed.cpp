@@ -137,7 +137,7 @@ uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)
             return i;
         }
     }
-    if (_indexed_size >= COLOR_IDX_SIZE) // overflowed
+    if (_indexed_size == (COLOR_IDX_SIZE - 1)) // overflowed
     {
         raise_mask_level();
     }
