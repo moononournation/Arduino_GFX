@@ -80,7 +80,7 @@ Arduino_ST7789 *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 Arduino_DataBus *bus = new Arduino_ESP32SPI_DMA(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
 
 // ESP32 parallel 8-bit
-// Arduino_DataBus *bus = new Arduino_ESP32PAR8(TFT_DC, TFT_CS, 27 /* WR */, 13 /* RD */, 16 /* D0 */, 17 /* D1 */, 18 /* D2 */, 19 /* D3 */, 21 /* D4 */, 22 /* D5 */, 23 /* D6 */, 25 /* D7 */);
+// Arduino_DataBus *bus = new Arduino_ESP32PAR8(TFT_DC, TFT_CS, 26 /* WR */, 13 /* RD */, 16 /* D0 */, 17 /* D1 */, 18 /* D2 */, 19 /* D3 */, 21 /* D4 */, 12 /* D5 */, 23 /* D6 */, 25 /* D7 */);
 
 /*
  * Step 2: Initize one driver for your display
