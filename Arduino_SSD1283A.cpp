@@ -86,7 +86,7 @@ void Arduino_SSD1283A::tftInit()
 
 void Arduino_SSD1283A::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
-  uint8_t v1, v2, v3, h1, h2, h3;
+  uint8_t v1 = 0, v2 = 0, v3 = 0, h1 = 0, h2 = 0, h3 = 0;
 
   // TODO: it works, but should have better way
   switch (_rotation)

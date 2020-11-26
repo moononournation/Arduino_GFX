@@ -327,7 +327,6 @@ void Arduino_TFT_18bit::draw24bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT_18bit::draw24bitRGBBitmap(int16_t x, int16_t y,
                                            uint8_t *bitmap, int16_t w, int16_t h)
 {
-  int16_t offset = 0;
   startWrite();
   writeAddrWindow(x, y, w, h);
   _bus->writeBytes(bitmap, w * h * 3);

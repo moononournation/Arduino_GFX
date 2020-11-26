@@ -75,18 +75,24 @@ void Arduino_ESP32PAR8::begin(int32_t speed, int8_t dataMode)
   {
     pinMode(_rd, OUTPUT);
     digitalWrite(_rd, HIGH);
-    if (_rd >= 32)
-    {
-      rdPinMask = digitalPinToBitMask(_rd);
-      rdPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-      rdPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
-    }
-    else if (_rd >= 0)
-    {
-      rdPinMask = digitalPinToBitMask(_rd);
-      rdPortSet = (PORTreg_t)&GPIO.out_w1ts;
-      rdPortClr = (PORTreg_t)&GPIO.out_w1tc;
-    }
+  }
+  if (_rd >= 32)
+  {
+    rdPinMask = digitalPinToBitMask(_rd);
+    rdPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    rdPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+  }
+  else if (_rd >= 0)
+  {
+    rdPinMask = digitalPinToBitMask(_rd);
+    rdPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    rdPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+  else
+  {
+    rdPinMask = 0;
+    rdPortSet = dcPortSet;
+    rdPortClr = dcPortClr;
   }
 
   // TODO: check pin range 0-31

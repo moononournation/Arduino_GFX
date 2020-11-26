@@ -508,7 +508,7 @@ void Arduino_ESP32SPI_DMA::writeRepeat(uint16_t p, uint32_t len)
   {
     uint32_t hi = 0x100 | (p >> 8);
     uint32_t lo = 0x100 | (p & 0xff);
-    uint32_t idx, shift, l;
+    uint32_t idx, shift;
     uint32_t bufLen = (len <= 28) ? len : 28;
     uint32_t xferLen;
     for (uint32_t t = 0; t < bufLen; t++)

@@ -165,7 +165,6 @@ void Arduino_SEPS525::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
 void Arduino_SEPS525::setRotation(uint8_t r)
 {
   Arduino_TFT::setRotation(r);
-  uint8_t startline = (_rotation < 2) ? HEIGHT : 0;
   switch (_rotation)
   {
   case 0:
