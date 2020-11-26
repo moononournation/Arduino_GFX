@@ -7,6 +7,7 @@
 #include "Arduino_ESP32SPI.h"
 #include "Arduino_ESP32SPI_DMA.h"
 #include "Arduino_ESP32PAR8.h"
+#include "Arduino_ESP32PAR16.h"
 
 #include "Arduino_GFX.h"             // Core graphics library
 #include "Arduino_Canvas.h"          // Canvas (framebuffer) library

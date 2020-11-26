@@ -60,9 +60,10 @@ This library is not putting speed at the first priority, but still paid much eff
 - 8-bit hardware SPI (HWSPI)
 - 8-bit and 9-bit software SPI (SWSPI)
 - 8-bit parallel interface (ESP32PAR8)
+- 16-bit parallel interface (ESP32PAR16)
 
 ## Tobe Support data bus (Donation can make it happen)
-- 16-bit parallel interface
+- FastLED
 
 ## Currently Supported Dev Device
 - M5Stack Core Family
