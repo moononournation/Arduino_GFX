@@ -20,6 +20,8 @@ void Arduino_ST7789::begin(int32_t speed)
   {
     speed = 40000000;
   }
+#endif
+#if defined(ESP32)
   _override_datamode = 3; // SPI_MODE3
 #endif
   Arduino_TFT::begin(speed);
