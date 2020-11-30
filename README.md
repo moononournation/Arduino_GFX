@@ -1,13 +1,17 @@
 # Arduino_GFX
 This library is developing aim for support various data bus interfaces and various displays.
 
-As I know, it should be the first Arduino display library that can support ESP32 9-bit hardware SPI. It is very important to support the displays (e.g. HX8357B, ST7701, ...) that only have 9-bit SPI interface.
-
 This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
+
+## Various dat bus interfaces
+
+Most tiny display in hobbiest electronics world support 8-bit SPI, but some require 9-bit SPI. As I know, it should be the first Arduino display library that can support ESP32 9-bit hardware SPI. It is very important to support the displays (e.g. HX8357B, ST7701, ...) that require 9-bit SPI interface.
+
+Larger display most likely not support standalone SPI since it is not fast enough to refresh the full screen details. Most of them can use 8-bit/16-bit Parallel interface.
 
 ## Ease of use
 #### Simple Declaration
-(not require modify library header files)
+(not require touch the header files in libraries folder)
 ```C
 #include "Arduino_GFX_Library.h"
 Arduino_DataBus *bus = new Arduino_HWSPI(16 /* DC */, 5 /* CS */);
@@ -63,6 +67,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - 16-bit parallel interface (ESP32PAR16)
 
 ## Tobe Support data bus (Donation can make it happen)
+- ESP32 I2S 8-bit/16-bit parallel interface
 - FastLED
 
 ## Currently Supported Dev Device
@@ -83,7 +88,8 @@ This library is not putting speed at the first priority, but still paid much eff
 - ILI9481 320x480 (18 bit color) [[test video](https://youtu.be/YxjuuCFhlqM)]
 - ILI9486 320x480 (18 bit color) [[test video](https://youtu.be/pZ6izDqmVds)]
 - ILI9488 320x480 (18 bit color) [[test video](https://youtu.be/NkE-LhtLHBQ)]
-- R61529 (8-bit Parallel) 320x480 [[test video](https://youtu.be/s93gxjbIAT8)]
+- JBT6K71 (8-bit Parallel) 240x320 [[test video](https://youtu.be/qid3F4Gb0mM)]
+- R61529 (8-bit/16-bit Parallel) 320x480 [[test video](https://youtu.be/s93gxjbIAT8)]
 - SEPS525 160x128 [[test video](https://youtu.be/tlmvFBHYv-k)]
 - SSD1283A 130x130 [[test video](https://youtu.be/OrIchaRikiQ)]
 - SSD1331 96x64 [[test video](https://youtu.be/v20b1A_KDcQ)]

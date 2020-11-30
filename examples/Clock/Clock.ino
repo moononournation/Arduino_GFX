@@ -122,6 +122,9 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 // ILI9488 LCD 320x480
 // Arduino_ILI9488_18bit *gfx = new Arduino_ILI9488_18bit(bus, TFT_RST, 0 /* rotation */);
 
+// JBT6K71 LCD 240x320
+// Arduino_JBT6K71 *gfx = new Arduino_JBT6K71(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 240, 320, 0, 0, 16, 0);
+
 // R61529 IPS LCD 320x480
 // Arduino_R61529 *gfx = new Arduino_R61529(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
