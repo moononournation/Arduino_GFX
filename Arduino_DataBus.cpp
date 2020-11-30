@@ -57,6 +57,23 @@ void Arduino_DataBus::batchOperation(spi_operation_t batch[], uint8_t len)
     case DELAY:
       delay(batch[i].value);
       break;
+    case SEND_COMMAND_8:
+      sendCommand(batch[i].value);
+      break;
+    case SEND_COMMAND_16:
+      sendCommand16(batch[i].value);
+      break;
+    case SEND_COMMAND_32:
+      break;
+    case SEND_DATA_8:
+      sendData(batch[i].value);
+      break;
+    case SEND_DATA_16:
+      sendData16(batch[i].value);
+      break;
+    case SEND_DATA_32:
+      sendData32(batch[i].value);
+      break;
     }
   }
 }

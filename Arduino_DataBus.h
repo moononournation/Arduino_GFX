@@ -40,7 +40,13 @@ typedef enum
     WRITE_DATA_16,
     WRITE_DATA_32,
     END_WRITE,
-    DELAY
+    DELAY,
+    SEND_COMMAND_8,
+    SEND_COMMAND_16,
+    SEND_COMMAND_32,
+    SEND_DATA_8,
+    SEND_DATA_16,
+    SEND_DATA_32,
 } spi_operation_type_t;
 
 struct spi_operation_t
