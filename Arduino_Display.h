@@ -20,6 +20,7 @@
 #include "Arduino_SSD1283A.h"        // Hardware-specific library for SSD1283A
 #include "Arduino_SSD1331.h"         // Hardware-specific library for SSD1331
 #include "Arduino_SSD1351.h"         // Hardware-specific library for SSD1351
+#include "Arduino_ST7701.h"          // Hardware-specific library for ST7701
 #include "Arduino_ST7735.h"          // Hardware-specific library for ST7735
 #include "Arduino_ST7789.h"          // Hardware-specific library for ST7789
 #include "Arduino_ST7796.h"          // Hardware-specific library for ST7796
