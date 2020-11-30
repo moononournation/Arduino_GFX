@@ -58,7 +58,7 @@ void Arduino_ILI9225::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
   {
     uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
-    if (_rotation & 0x01) // Portrait
+    if (_rotation & 0x01) // Landscape
     {
       cmd1 = ILI9225_VERTICAL_WINDOW_ADDR2;
       cmd2 = ILI9225_VERTICAL_WINDOW_ADDR1;
@@ -84,7 +84,7 @@ void Arduino_ILI9225::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
   {
     uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
-    if (_rotation & 0x01) // Portrait
+    if (_rotation & 0x01) // Landscape
     {
       cmd1 = ILI9225_HORIZONTAL_WINDOW_ADDR2;
       cmd2 = ILI9225_HORIZONTAL_WINDOW_ADDR1;
