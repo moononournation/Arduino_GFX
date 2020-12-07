@@ -411,8 +411,10 @@ void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
   uint8_t *d = (uint8_t *)data;
   while (len--)
   {
-    write(*d++);
-    write(*d++);
+    // swap bytes
+    write(*(d + 1));
+    write(*d);
+    d += 2;
   }
 #endif
 }
