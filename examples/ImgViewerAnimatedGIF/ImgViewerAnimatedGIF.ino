@@ -1,15 +1,24 @@
 /*******************************************************************************
- * JPEG Viewer
- * This is a simple JPEG image viewer exsample
- * Image Source: https://giphy.com/gifs/earth-4NPT1ipEUoiMo
- * 
+ * Animated GIF image Viewer
+ * This is a simple Animated GIF image viewer exsample
+ * Image Source: https://www.pexels.com/video/earth-rotating-video-856356/
+ * cropped: x: 598 y: 178 width: 720 height: 720 resized: 240x240
+ * optimized with ezgif.com
+ *
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
- * 2. upload SPIFFS data with ESP32 Sketch Data Upload:
- *    ESP8266: https://github.com/esp8266/arduino-esp8266fs-plugin
- *    ESP32: https://github.com/me-no-dev/arduino-esp32fs-plugin
+ * 2. Upload Animated GIF file
+ *   SPIFFS (ESP8266 / ESP32):
+ *     upload SPIFFS data with ESP32 Sketch Data Upload:
+ *     ESP8266: https://github.com/esp8266/arduino-esp8266fs-plugin
+ *     ESP32: https://github.com/me-no-dev/arduino-esp32fs-plugin
+ *   SD:
+ *     Most Arduino system built-in support SD file system.
+ *     Wio Terminal require extra dependant Libraries:
+ *     - Seeed_Arduino_FS: https://github.com/Seeed-Studio/Seeed_Arduino_FS.git
+ *     - Seeed_Arduino_SFUD: https://github.com/Seeed-Studio/Seeed_Arduino_SFUD.git
  ******************************************************************************/
-#define GIF_FILENAME "/earth.gif"
+#define GIF_FILENAME "/ezgif.com-optimize.gif"
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
@@ -17,11 +26,17 @@
 #include "Arduino_GFX_Library.h"
 
 /* first check if selected specific hardware */
+// #define ESP32_LCDKIT_SPI
+#if defined(ESP32_LCDKIT_SPI)
+#define TFT_BL 23
+Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 5 /* CS */, 22 /* SCK */, 21 /* MOSI */, 27 /* MISO */);
+Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
+
 /* Wio Terminal */
-#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+#elif defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #define TFT_BL LCD_BACKLIGHT
 Arduino_HWSPI *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);
-Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 2 /* rotation */);
+Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 3 /* rotation */);
 
 /* M5Stack */
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
@@ -73,11 +88,11 @@ Arduino_ST7789 *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 // Arduino_DataBus *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
 
 // General hardware SPI
-// Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
+Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 
 // ESP32 hardware SPI, more customizable parameters
 // Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
-Arduino_DataBus *bus = new Arduino_ESP32SPI_DMA(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
+// Arduino_DataBus *bus = new Arduino_ESP32SPI_DMA(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
 
 // ESP32 parallel 8-bit
 // Arduino_DataBus *bus = new Arduino_ESP32PAR8(TFT_DC, TFT_CS, 26 /* WR */, -1 /* RD */, 16 /* D0 */, 17 /* D1 */, 18 /* D2 */, 19 /* D3 */, 21 /* D4 */, 12 /* D5 */, 23 /* D6 */, 25 /* D7 */);
@@ -188,9 +203,15 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
  * End of Arduino_GFX setting
  ******************************************************************************/
 
-#ifdef ESP32
+/* Wio Terminal */
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+#include <Seeed_FS.h>
+#include <SD/Seeed_SD.h>
+#elif defined(ESP32)
 #include <SPIFFS.h>
+// #include <SD.h>
 #endif
+
 #include "gifdec.h"
 
 void setup()
@@ -206,15 +227,26 @@ void setup()
   digitalWrite(TFT_BL, HIGH);
 #endif
 
-  // Init SPIFFS
+/* Wio Terminal */
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+  // Init SPIFLASH
+  if (!SD.begin(SDCARD_SS_PIN, SDCARD_SPI, 4000000UL))
+#else
   if (!SPIFFS.begin())
+  // if (!SD.begin())
+#endif
   {
     Serial.println(F("ERROR: SPIFFS Mount Failed!"));
     gfx->println(F("ERROR: SPIFFS Mount Failed!"));
   }
   else
   {
-    File gifFile = SPIFFS.open(GIF_FILENAME);
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+    File gifFile = SD.open(GIF_FILENAME);
+#else
+    File gifFile = SPIFFS.open(GIF_FILENAME, "r");
+    // File gifFile = SD.open(GIF_FILENAME);
+#endif
     if (!gifFile || gifFile.isDirectory())
     {
       Serial.println(F("ERROR: open gifFile Failed!"));

@@ -2,8 +2,8 @@
  * rewrite from: https://github.com/BasementCat/arduino-tft-gif
 */
 #include "gifdec.h"
+
 #include <sys/types.h>
-#include <FS.h>
 
 #define MIN(A, B) ((A) < (B) ? (A) : (B))
 #define MAX(A, B) ((A) > (B) ? (A) : (B))

@@ -4,7 +4,12 @@
 #ifndef _GIFDEC_H_
 #define _GIFDEC_H_
 
+/* Wio Terminal */
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+#include <Seeed_FS.h>
+#else
 #include <FS.h>
+#endif
 
 #define GIF_BUF_SIZE 1024
 
@@ -56,7 +61,7 @@ typedef struct gd_GIF {
 
 gd_GIF *gd_open_gif(File* fd);
 static gd_Table * new_table();
-static void reset_table(gd_Table* table, int key_size);
+static void reset_table(gd_Table *table, int32_t key_size);
 // int32_t add_entry(gd_Table* table, int32_t length, uint16_t prefix, uint8_t suffix)
 int32_t gd_get_frame(gd_GIF *gif, uint8_t *frame);
 void gd_rewind(gd_GIF *gif);
