@@ -1,13 +1,23 @@
 /*******************************************************************************
  * JPEG Viewer
- * This is a simple JPEG image viewer exsample
+ * This is a simple JPEG image viewer example
  * Image Source: https://github.blog/2014-11-24-from-sticker-to-sculpture-the-making-of-the-octocat-figurine/
+ *
+ * Dependent libraries:
+ * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
  * 
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
- * 2. upload SPIFFS data with ESP32 Sketch Data Upload:
- *    ESP8266: https://github.com/esp8266/arduino-esp8266fs-plugin
- *    ESP32: https://github.com/me-no-dev/arduino-esp32fs-plugin
+ * 2. Upload JPEG file
+ *   SPIFFS (ESP8266 / ESP32):
+ *     upload SPIFFS data with ESP32 Sketch Data Upload:
+ *     ESP8266: https://github.com/esp8266/arduino-esp8266fs-plugin
+ *     ESP32: https://github.com/me-no-dev/arduino-esp32fs-plugin
+ *   SD:
+ *     Most Arduino system built-in support SD file system.
+ *     Wio Terminal require extra dependant Libraries:
+ *     - Seeed_Arduino_FS: https://github.com/Seeed-Studio/Seeed_Arduino_FS.git
+ *     - Seeed_Arduino_SFUD: https://github.com/Seeed-Studio/Seeed_Arduino_SFUD.git
  ******************************************************************************/
 #define JPEG_FILENAME "/octocat.jpg"
 
@@ -17,11 +27,17 @@
 #include "Arduino_GFX_Library.h"
 
 /* first check if selected specific hardware */
+// #define ESP32_LCDKIT_SPI
+#if defined(ESP32_LCDKIT_SPI)
+#define TFT_BL 23
+Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 5 /* CS */, 22 /* SCK */, 21 /* MOSI */, 27 /* MISO */);
+Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
+
 /* Wio Terminal */
-#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+#elif defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #define TFT_BL LCD_BACKLIGHT
 Arduino_HWSPI *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);
-Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 2 /* rotation */);
+Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 3 /* rotation */);
 
 /* M5Stack */
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
@@ -187,11 +203,24 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
  * End of Arduino_GFX setting
  ******************************************************************************/
 
-#ifdef ESP32
+/* Wio Terminal */
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+#include <Seeed_FS.h>
+#include <SD/Seeed_SD.h>
+#elif defined(ESP32)
 #include <SPIFFS.h>
+// #include <SD.h>
 #endif
-#include "JpegDec.h"
-static JpegDec jpegDec;
+
+#include "JpegClass.h"
+static JpegClass jpegClass;
+
+// pixel drawing callback
+static void jpegDrawCallback(JPEGDRAW *pDraw)
+{
+  // Serial.printf("Draw pos = %d,%d. size = %d x %d\n", pDraw->x, pDraw->y, pDraw->iWidth, pDraw->iHeight);
+  gfx->draw16bitBeRGBBitmap(pDraw->x, pDraw->y, pDraw->pPixels, pDraw->iWidth, pDraw->iHeight);
+}
 
 void setup()
 {
@@ -206,48 +235,34 @@ void setup()
   digitalWrite(TFT_BL, HIGH);
 #endif
 
-  // Init SPIFFS
+/* Wio Terminal */
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+  // Init SPIFLASH
+  if (!SD.begin(SDCARD_SS_PIN, SDCARD_SPI, 4000000UL))
+#else
   if (!SPIFFS.begin())
+  // if (!SD.begin())
+#endif
   {
     Serial.println(F("ERROR: SPIFFS Mount Failed!"));
     gfx->println(F("ERROR: SPIFFS Mount Failed!"));
   }
   else
   {
-    File jpegFile = SPIFFS.open(JPEG_FILENAME, "r");
-    if (!jpegFile)
-    {
-      Serial.println(F("ERROR: open jpegFile Failed!"));
-      gfx->println(F("ERROR: open jpegFile Failed!"));
-    }
-    else
-    {
-      // read JPEG file header
-      jpegDec.prepare(jpegDec.file_reader, &jpegFile);
+    unsigned long start = millis();
 
-      // scale to fit height
-      jpg_scale_t scale;
-      float ratio = (float)jpegDec.height / gfx->height();
-      if (ratio <= 1)
-      {
-        scale = JPG_SCALE_NONE;
-      }
-      else if (ratio <= 2)
-      {
-        scale = JPG_SCALE_2X;
-      }
-      else if (ratio <= 4)
-      {
-        scale = JPG_SCALE_4X;
-      }
-      else
-      {
-        scale = JPG_SCALE_8X;
-      }
+    // read JPEG file header
+    jpegClass.draw(
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+        &SD,
+#else
+        &SPIFFS,
+        // &SD,
+#endif
+        (char *)JPEG_FILENAME, jpegDrawCallback, true,
+        0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
 
-      // decode and output
-      jpegDec.decode(scale, jpegDec.gfx_writer, gfx);
-    }
+    Serial.printf("Time used: %lu\n", millis() - start);
   }
 }
 
