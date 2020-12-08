@@ -10,8 +10,14 @@
 #include "Arduino_GFX_Library.h"
 
 /* first check if selected specific hardware */
+// #define ESP32_LCDKIT_SPI
+#if defined(ESP32_LCDKIT_SPI)
+#define TFT_BL 23
+Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 5 /* CS */, 22 /* SCK */, 21 /* MOSI */, 27 /* MISO */);
+Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
+
 /* Wio Terminal */
-#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+#elif defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #define TFT_BL LCD_BACKLIGHT
 Arduino_HWSPI *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);
 Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 2 /* rotation */);
