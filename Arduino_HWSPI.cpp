@@ -393,30 +393,32 @@ void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
 {
 #if defined(ESP8266) || defined(ESP32)
   HWSPI.writeBytes(data, len);
-#else
-  while (len--)
-  {
-    write(*data++);
-  }
-#endif
+#else  // !(defined(ESP8266) || defined(ESP32))
+  HWSPI.transfer(data, len);
+#endif // !(defined(ESP8266) || defined(ESP32))
 }
 
 void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 {
-#ifdef ESP32
-  HWSPI.writePixels(data, len * 2); // don't know why len require *2
-#elif defined(ESP8266)
-  HWSPI.writePattern((uint8_t *)data, len * 2, 1);
-#else
+#if defined(ESP32)
+  // don't know why require double len
+  HWSPI.writePixels(data, len * 2);
+#else // !defined(ESP32)
+  len *= 2;
   uint8_t *d = (uint8_t *)data;
-  while (len--)
+  uint8_t t;
+  for (uint32_t i = 0; i < len; i += 2)
   {
-    // swap bytes
-    write(*(d + 1));
-    write(*d);
-    d += 2;
+    t = d[i];
+    d[i] = d[i + 1];
+    d[i + 1] = t;
   }
-#endif
+#if defined(ESP8266)
+  HWSPI.writeBytes(d, len);
+#else  // !defined(ESP8266)
+  HWSPI.transfer(d, len);
+#endif // !defined(ESP8266)
+#endif // !defined(ESP32)
 }
 
 /**
