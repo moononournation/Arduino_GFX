@@ -621,6 +621,36 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
+   @brief   Draw a RAM-resident 16-bit Big Endian image (RGB 5/6/5) at the specified (x,y) position.
+   For 16-bit display devices; no color reduction performed.
+    @param    x   Top left corner x coordinate
+    @param    y   Top left corner y coordinate
+    @param    bitmap  byte array with 16-bit color bitmap
+    @param    w   Width of bitmap in pixels
+    @param    h   Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_TFT::draw16bitBeRGBBitmap(int16_t x, int16_t y,
+                                       uint16_t *bitmap, int16_t w, int16_t h)
+{
+  if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    return;
+  }
+
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  _bus->writeBytes((uint8_t *)bitmap, (uint32_t)w * h * 2);
+  endWrite();
+}
+
+/**************************************************************************/
+/*!
    @brief   Draw a PROGMEM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate

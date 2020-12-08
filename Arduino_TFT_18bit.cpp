@@ -210,20 +210,20 @@ void Arduino_TFT_18bit::drawGrayscaleBitmap(int16_t x, int16_t y,
 */
 /**************************************************************************/
 void Arduino_TFT_18bit::drawIndexedBitmap(int16_t x, int16_t y,
-uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
+                                          uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
 {
-    uint16_t d;
-    uint32_t len = w * h;
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    while (len--)
-    {
-      d = color_index[*(bitmap++)];
-      _bus->write((d & 0xF800) >> 8);
-      _bus->write((d & 0x07E0) >> 3);
-      _bus->write((d & 0x001F) << 3);
-    }
-    endWrite();
+  uint16_t d;
+  uint32_t len = w * h;
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  while (len--)
+  {
+    d = color_index[*(bitmap++)];
+    _bus->write((d & 0xF800) >> 8);
+    _bus->write((d & 0x07E0) >> 3);
+    _bus->write((d & 0x001F) << 3);
+  }
+  endWrite();
 }
 
 /**************************************************************************/
@@ -281,6 +281,36 @@ void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
       _bus->write((d & 0xF800) >> 8);
       _bus->write((d & 0x07E0) >> 3);
       _bus->write((d & 0x001F) << 3);
+    }
+  }
+  endWrite();
+}
+
+/**************************************************************************/
+/*!
+   @brief   Draw a RAM-resident 16-bit Big Endian image (RGB 5/6/5) at the specified (x,y) position.
+   For 16-bit display devices; no color reduction performed.
+    @param    x   Top left corner x coordinate
+    @param    y   Top left corner y coordinate
+    @param    bitmap  byte array with 16-bit color bitmap
+    @param    w   Width of bitmap in pixels
+    @param    h   Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_TFT_18bit::draw16bitBeRGBBitmap(int16_t x, int16_t y,
+                                             uint16_t *bitmap, int16_t w, int16_t h)
+{
+  uint16_t d;
+  startWrite();
+  writeAddrWindow(x, y, w, h);
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
+    {
+      d = bitmap[j * w + i];
+      _bus->write((d & 0x00F8));
+      _bus->write(((d & 0xE000) >> 11) | (d & 0x0007) << 5);
+      _bus->write((d & 0x1F00) >> 5);
     }
   }
   endWrite();
