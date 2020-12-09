@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * JPEGDEC Wrapper Class
+ * 
+ * Dependent libraries:
+ * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
+ ******************************************************************************/
 #ifndef _JPEGCLASS_H_
 #define _JPEGCLASS_H_
 

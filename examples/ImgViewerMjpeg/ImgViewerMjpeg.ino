@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Motion JPEG Viewer
+ * Motion JPEG Image Viewer
  * This is a simple Motion JPEG image viewer example
  * Image Source: https://www.pexels.com/video/earth-rotating-video-856356/
  * cropped: x: 598 y: 178 width: 720 height: 720 resized: 240x240

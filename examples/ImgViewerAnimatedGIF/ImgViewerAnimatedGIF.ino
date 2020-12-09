@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Animated GIF image Viewer
+ * Animated GIF Image Viewer
  * This is a simple Animated GIF image viewer exsample
  * Image Source: https://www.pexels.com/video/earth-rotating-video-856356/
  * cropped: x: 598 y: 178 width: 720 height: 720 resized: 240x240
@@ -212,7 +212,8 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 // #include <SD.h>
 #endif
 
-#include "gifdec.h"
+#include "gifClass.h"
+static GifClass gifClass;
 
 void setup()
 {
@@ -255,7 +256,7 @@ void setup()
     else
     {
       // read GIF file header
-      gd_GIF *gif = gd_open_gif(&gifFile);
+      gd_GIF *gif = gifClass.gd_open_gif(&gifFile);
       if (!gif)
       {
         Serial.println(F("gd_open_gif() failed!"));
@@ -278,7 +279,7 @@ void setup()
           {
             t_fstart = millis();
             t_delay = gif->gce.delay * 10;
-            res = gd_get_frame(gif, buf);
+            res = gifClass.gd_get_frame(gif, buf);
             if (res < 0)
             {
               Serial.println(F("ERROR: gd_get_frame() failed!"));
@@ -289,7 +290,7 @@ void setup()
               Serial.printf("rewind, duration: %d, remain: %d (%0.1f %%)\n", duration, remain, 100.0 * remain / duration);
               duration = 0;
               remain = 0;
-              gd_rewind(gif);
+              gifClass.gd_rewind(gif);
               continue;
             }
 
@@ -308,7 +309,7 @@ void setup()
           }
           Serial.println(F("GIF video end"));
           Serial.printf("duration: %d, remain: %d (%0.1f %%)\n", duration, remain, 100.0 * remain / duration);
-          gd_close_gif(gif);
+          gifClass.gd_close_gif(gif);
         }
       }
     }

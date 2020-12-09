@@ -1,5 +1,5 @@
 /*******************************************************************************
- * JPEG Viewer
+ * JPEG Image Viewer
  * This is a simple JPEG image viewer example
  * Image Source: https://github.blog/2014-11-24-from-sticker-to-sculpture-the-making-of-the-octocat-figurine/
  *
