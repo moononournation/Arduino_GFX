@@ -171,7 +171,7 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 
 // ST7789 LCD
 // 2.4" LCD 240x320
-// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */;
+// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */);
 // 2.4" IPS LCD 240x320
 // Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // 1.3"/1.5" square IPS LCD 240x240
