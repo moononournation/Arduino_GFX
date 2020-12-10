@@ -18,7 +18,10 @@
  *     - Seeed_Arduino_FS: https://github.com/Seeed-Studio/Seeed_Arduino_FS.git
  *     - Seeed_Arduino_SFUD: https://github.com/Seeed-Studio/Seeed_Arduino_SFUD.git
  ******************************************************************************/
-#ifdef ESP32
+/* Wio Terminal */
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+#define GIF_FILENAME "/ezgif.com-optimize.gif"
+#elif defined(ESP32)
 #define GIF_FILENAME "/ezgif.com-optimize.gif"
 #else
 #define GIF_FILENAME "/ezgif.com-resize.gif"
@@ -214,9 +217,14 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 #elif defined(ESP32)
 #include <SPIFFS.h>
 // #include <SD.h>
+#elif defined(ESP8266)
+#include <FS.h>
+// #include <SD.h>
+#else
+#include <SD.h>
 #endif
 
-#include "gifClass.h"
+#include "GifClass.h"
 static GifClass gifClass;
 
 void setup()
@@ -234,23 +242,27 @@ void setup()
 
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-  // Init SPIFLASH
   if (!SD.begin(SDCARD_SS_PIN, SDCARD_SPI, 4000000UL))
-#else
+#elif defined(ESP32) || defined(ESP8266)
   if (!SPIFFS.begin())
   // if (!SD.begin())
+#else
+  if (!SD.begin())
 #endif
   {
-    Serial.println(F("ERROR: SPIFFS Mount Failed!"));
-    gfx->println(F("ERROR: SPIFFS Mount Failed!"));
+    Serial.println(F("ERROR: File System Mount Failed!"));
+    gfx->println(F("ERROR: File System Mount Failed!"));
   }
   else
   {
+/* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
     File gifFile = SD.open(GIF_FILENAME);
-#else
+#elif defined(ESP32) || defined(ESP8266)
     File gifFile = SPIFFS.open(GIF_FILENAME, "r");
     // File gifFile = SD.open(GIF_FILENAME);
+#else
+    File gifFile = SD.open(GIF_FILENAME);
 #endif
     if (!gifFile || gifFile.isDirectory())
     {
@@ -291,7 +303,13 @@ void setup()
             }
             else if (res == 0)
             {
-              Serial.printf("rewind, duration: %d, remain: %d (%0.1f %%)\n", duration, remain, 100.0 * remain / duration);
+              Serial.print(F("rewind, duration: "));
+              Serial.print(duration);
+              Serial.print(F(", remain: "));
+              Serial.print(remain);
+              Serial.print(F(" ("));
+              Serial.print(100.0 * remain / duration);
+              Serial.println(F("%)"));
               duration = 0;
               remain = 0;
               gifClass.gd_rewind(gif);
@@ -312,8 +330,16 @@ void setup()
             } while (millis() < delay_until);
           }
           Serial.println(F("GIF video end"));
-          Serial.printf("duration: %d, remain: %d (%0.1f %%)\n", duration, remain, 100.0 * remain / duration);
+          Serial.print(F("duration: "));
+          Serial.print(duration);
+          Serial.print(F(", remain: "));
+          Serial.print(remain);
+          Serial.print(F(" ("));
+          Serial.print(100.0 * remain / duration);
+          Serial.println(F("%)"));
+
           gifClass.gd_close_gif(gif);
+          free(buf);
         }
       }
     }
