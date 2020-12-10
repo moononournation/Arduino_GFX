@@ -18,7 +18,11 @@
  *     - Seeed_Arduino_FS: https://github.com/Seeed-Studio/Seeed_Arduino_FS.git
  *     - Seeed_Arduino_SFUD: https://github.com/Seeed-Studio/Seeed_Arduino_SFUD.git
  ******************************************************************************/
+#ifdef ESP32
 #define GIF_FILENAME "/ezgif.com-optimize.gif"
+#else
+#define GIF_FILENAME "/ezgif.com-resize.gif"
+#endif
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
