@@ -60,10 +60,10 @@ Arduino_ST7789 *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 #define TFT_RST -1
 // #define TFT_BL 4
 #else
-#define TFT_CS 20
-#define TFT_DC 19
-#define TFT_RST 18
-#define TFT_BL 10
+#define TFT_CS 9
+#define TFT_DC 8
+#define TFT_RST 7
+#define TFT_BL 6
 #endif
 
 /*
