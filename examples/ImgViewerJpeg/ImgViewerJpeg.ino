@@ -268,7 +268,7 @@ void setup()
 #else
         &SD,
 #endif
-        (char *)JPEG_FILENAME, jpegDrawCallback, true,
+        (char *)JPEG_FILENAME, jpegDrawCallback, true /* useBigEndian */,
         0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
 
     Serial.printf("Time used: %lu\n", millis() - start);
