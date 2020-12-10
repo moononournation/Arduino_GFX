@@ -20,6 +20,9 @@ void Arduino_HX8347D::begin(int32_t speed)
     speed = 40000000;
   }
 #endif
+#if defined(__AVR__)
+  _override_datamode = 0; // SPI_MODE0
+#endif
   Arduino_TFT::begin(speed);
 }
 
