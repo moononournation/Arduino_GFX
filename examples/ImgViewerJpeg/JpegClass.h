@@ -22,11 +22,11 @@ class JpegClass
 {
 public:
     void draw(
-        FS *fs, char *filename, JPEG_DRAW_CALLBACK *jpegDrawCsllback, bool useBigEndian,
+        FS *fs, char *filename, JPEG_DRAW_CALLBACK *jpegDrawCallback, bool useBigEndian,
         int x, int y, int widthLimit, int heightLimit)
     {
         _fs = fs;
-        _jpeg.open(filename, JPGOpenFile, JPGCloseFile, JPGReadFile, JPGSeekFile, jpegDrawCsllback);
+        _jpeg.open(filename, JPGOpenFile, JPGCloseFile, JPGReadFile, JPGSeekFile, jpegDrawCallback);
 
         // scale to fit height
         int iMaxMCUs;
