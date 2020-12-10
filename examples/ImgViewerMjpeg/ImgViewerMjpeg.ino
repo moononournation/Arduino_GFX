@@ -213,6 +213,11 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 #elif defined(ESP32)
 #include <SPIFFS.h>
 // #include <SD.h>
+#elif defined(ESP8266)
+#include <FS.h>
+// #include <SD.h>
+#else
+#include <SD.h>
 #endif
 
 #include "MjpegClass.h"
@@ -256,19 +261,19 @@ void setup()
   // if (!SD.begin())
 #endif
   {
-    Serial.println(F("ERROR: SPIFFS Mount Failed!"));
-    gfx->println(F("ERROR: SPIFFS Mount Failed!"));
+    Serial.println(F("ERROR: File System Mount Failed!"));
+    gfx->println(F("ERROR: File System Mount Failed!"));
   }
   else
   {
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-    File vFile = SD.open(MJPEG_FILENAME, "r");
+    File mjpegFile = SD.open(MJPEG_FILENAME, "r");
 #else
-    File vFile = SPIFFS.open(MJPEG_FILENAME, "r");
-    // File vFile = SD.open(MJPEG_FILENAME, "r");
+    File mjpegFile = SPIFFS.open(MJPEG_FILENAME, "r");
+    // File mjpegFile = SD.open(MJPEG_FILENAME, "r");
 #endif
 
-    if (!vFile || vFile.isDirectory())
+    if (!mjpegFile || mjpegFile.isDirectory())
     {
       Serial.println(F("ERROR: Failed to open " MJPEG_FILENAME " file for reading"));
       gfx->println(F("ERROR: Failed to open " MJPEG_FILENAME " file for reading"));
@@ -287,10 +292,10 @@ void setup()
         start_ms = millis();
         curr_ms = millis();
         mjpeg.setup(
-            &vFile, mjpeg_buf, jpegDrawCallback, true /* useBigEndian */,
+            &mjpegFile, mjpeg_buf, jpegDrawCallback, true /* useBigEndian */,
             0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
 
-        while (vFile.available())
+        while (mjpegFile.available())
         {
           // Read video
           mjpeg.readMjpegBuf();
@@ -306,7 +311,7 @@ void setup()
         }
         int time_used = millis() - start_ms;
         Serial.println(F("MJPEG end"));
-        vFile.close();
+        mjpegFile.close();
         float fps = 1000.0 * total_frames / time_used;
         total_decode_video -= total_show_video;
         Serial.printf("Total frames: %d\n", total_frames);

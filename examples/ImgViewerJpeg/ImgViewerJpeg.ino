@@ -210,6 +210,11 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 #elif defined(ESP32)
 #include <SPIFFS.h>
 // #include <SD.h>
+#elif defined(ESP8266)
+#include <FS.h>
+// #include <SD.h>
+#else
+#include <SD.h>
 #endif
 
 #include "JpegClass.h"
@@ -237,15 +242,16 @@ void setup()
 
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-  // Init SPIFLASH
   if (!SD.begin(SDCARD_SS_PIN, SDCARD_SPI, 4000000UL))
-#else
+#elif defined(ESP32) || defined(ESP8266)
   if (!SPIFFS.begin())
   // if (!SD.begin())
+#else
+  if (!SD.begin())
 #endif
   {
-    Serial.println(F("ERROR: SPIFFS Mount Failed!"));
-    gfx->println(F("ERROR: SPIFFS Mount Failed!"));
+    Serial.println(F("ERROR: File System Mount Failed!"));
+    gfx->println(F("ERROR: File System Mount Failed!"));
   }
   else
   {
@@ -253,11 +259,14 @@ void setup()
 
     // read JPEG file header
     jpegClass.draw(
+/* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
         &SD,
-#else
+#elif defined(ESP32) || defined(ESP8266)
         &SPIFFS,
         // &SD,
+#else
+        &SD,
 #endif
         (char *)JPEG_FILENAME, jpegDrawCallback, true,
         0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);

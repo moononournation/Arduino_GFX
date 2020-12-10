@@ -254,7 +254,6 @@ void setup()
 
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-  // Init SPIFLASH
   if (!SD.begin(SDCARD_SS_PIN, SDCARD_SPI, 4000000UL))
 #elif defined(ESP32) || defined(ESP8266)
   if (!SPIFFS.begin())
@@ -263,24 +262,24 @@ void setup()
   if (!SD.begin())
 #endif
   {
-    Serial.println(F("ERROR: SPIFFS Mount Failed!"));
-    gfx->println(F("ERROR: SPIFFS Mount Failed!"));
+    Serial.println(F("ERROR: File System Mount Failed!"));
+    gfx->println(F("ERROR: File System Mount Failed!"));
   }
   else
   {
     unsigned long start = millis();
 
-    // open PNG file
+/* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-    File file = SD.open(PNG_FILENAME, "r");
+    File pngFile = SD.open(PNG_FILENAME, "r");
 #elif defined(ESP32) || defined(ESP8266)
-    File file = SPIFFS.open(PNG_FILENAME, "r");
-    // File file = SD.open(PNG_FILENAME, "r");
+    File pngFile = SPIFFS.open(PNG_FILENAME, "r");
+    // File pngFile = SD.open(PNG_FILENAME, "r");
 #else
-    File file = SD.open(PNG_FILENAME, "r");
+    File pngFile = SD.open(PNG_FILENAME, "r");
 #endif
 
-    if (!file || file.isDirectory())
+    if (!pngFile || pngFile.isDirectory())
     {
       Serial.println(F("ERROR: Failed to open " PNG_FILENAME " file for reading"));
       gfx->println(F("ERROR: Failed to open " PNG_FILENAME " file for reading"));
@@ -294,7 +293,7 @@ void setup()
       int remain = 0;
       int len;
       gfx->fillScreen(PINK); // transprant background color
-      while ((len = file.readBytes(buf + remain, sizeof(buf) - remain)) > 0)
+      while ((len = pngFile.readBytes(buf + remain, sizeof(buf) - remain)) > 0)
       {
         int fed = pngle_feed(pngle, buf, remain + len);
         if (fed < 0)
@@ -311,7 +310,7 @@ void setup()
       }
 
       pngle_destroy(pngle);
-      file.close();
+      pngFile.close();
 
       Serial.printf("Time used: %lu\n", millis() - start);
     }

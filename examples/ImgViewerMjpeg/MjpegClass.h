@@ -13,8 +13,10 @@
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #include <Seeed_FS.h>
-#else
+#elif defined(ESP32) || defined(ESP8266)
 #include <FS.h>
+#else
+#include <SD.h>
 #endif
 
 #include <JPEGDEC.h>
