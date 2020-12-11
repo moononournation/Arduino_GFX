@@ -8,7 +8,7 @@
 /*******************************************************************************
  * Start of Arduino_GFX setting
  ******************************************************************************/
-#include "Arduino_GFX_Library.h"
+#include <Arduino_GFX_Library.h>
 
 #define TFT_BL LCD_BACKLIGHT
 Arduino_HWSPI *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);

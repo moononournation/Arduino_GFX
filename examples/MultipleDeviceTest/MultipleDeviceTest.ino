@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Start of Arduino_GFX setting
  ******************************************************************************/
-#include "Arduino_GFX_Library.h"
+#include <Arduino_GFX_Library.h>
 
 /* all display share same SPI Data Bus with individual CS and RST pins */
 #define TFT_DC 33

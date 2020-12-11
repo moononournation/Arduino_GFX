@@ -6,7 +6,7 @@
 /*******************************************************************************
  * Start of Arduino_GFX setting
  ******************************************************************************/
-#include "Arduino_GFX_Library.h"
+#include <Arduino_GFX_Library.h>
 
 /* first check if selected specific hardware */
 /* Wio Terminal */

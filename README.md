@@ -14,7 +14,7 @@ Larger display most likely not support standalone SPI since it is not fast enoug
 #### Simple Declaration
 (not require touch the header files in libraries folder)
 ```C
-#include "Arduino_GFX_Library.h"
+#include <Arduino_GFX_Library.h>
 Arduino_DataBus *bus = new Arduino_HWSPI(16 /* DC */, 5 /* CS */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, 17 /* RST */);
 ```
