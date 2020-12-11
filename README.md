@@ -1,5 +1,6 @@
 # Arduino_GFX
-This library is developing aim for support various data bus interfaces and various displays.
+
+Arduino_GFX is a Arduino graphics library supporting various displays with various data bus interfaces.
 
 This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 
