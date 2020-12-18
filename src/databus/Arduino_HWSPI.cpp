@@ -170,6 +170,14 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
     _dataMode = SPI_MODE0;
   }
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
+// Teensy 4.x
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+  HWSPI.begin();
+  if (_dataMode < 0)
+  {
+    _dataMode = SPI_MODE0;
+  }
+  mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(SPI_HAS_TRANSACTION)
   HWSPI.begin();
   if (_dataMode < 0)

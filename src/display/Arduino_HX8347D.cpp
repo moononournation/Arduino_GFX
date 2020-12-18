@@ -14,12 +14,6 @@ Arduino_HX8347D::Arduino_HX8347D(
 
 void Arduino_HX8347D::begin(int32_t speed)
 {
-#if defined(ESP8266) || defined(ESP32)
-  if (speed == 0)
-  {
-    speed = 40000000;
-  }
-#endif
 #if defined(__AVR__)
   _override_datamode = 0; // SPI_MODE0
 #endif

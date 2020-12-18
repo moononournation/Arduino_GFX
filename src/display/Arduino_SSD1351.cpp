@@ -20,6 +20,12 @@ void Arduino_SSD1351::begin(int32_t speed)
   {
     speed = 16000000;
   }
+// Teensy 4.x
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+  if (speed == 0)
+  {
+    speed = 16000000;
+  }
 #endif
   _override_datamode = 0; // SPI_MODE0
   Arduino_TFT::begin(speed);

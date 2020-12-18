@@ -16,6 +16,12 @@ void Arduino_ILI9481_18bit::begin(int32_t speed)
   {
     speed = 12000000;
   }
+// Teensy 4.x
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+  if (speed == 0)
+  {
+    speed = 12000000;
+  }
 #endif
   Arduino_TFT::begin(speed);
 }

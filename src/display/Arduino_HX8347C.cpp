@@ -15,12 +15,6 @@ Arduino_HX8347C::Arduino_HX8347C(
 
 void Arduino_HX8347C::begin(int32_t speed)
 {
-#if defined(ESP8266) || defined(ESP32)
-  if (speed == 0)
-  {
-    speed = 40000000;
-  }
-#endif
   Arduino_TFT::begin(speed);
 }
 

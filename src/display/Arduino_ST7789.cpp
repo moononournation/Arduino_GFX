@@ -15,12 +15,6 @@ Arduino_ST7789::Arduino_ST7789(
 
 void Arduino_ST7789::begin(int32_t speed)
 {
-#if defined(ESP8266) || defined(ESP32)
-  if (speed == 0)
-  {
-    speed = 40000000;
-  }
-#endif
 #if defined(ESP32)
   _override_datamode = 3; // SPI_MODE3
 #endif

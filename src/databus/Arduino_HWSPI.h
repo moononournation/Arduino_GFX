@@ -75,6 +75,9 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t; ///< PORT register type
 // Teensy 3.0, 3.1/3.2, 3.5, 3.6
 #elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__)
 #define SPI_DEFAULT_FREQ 40000000
+// Teensy 4.x
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+#define SPI_DEFAULT_FREQ 40000000
 #elif defined(__AVR__) || defined(TEENSYDUINO)
 #define SPI_DEFAULT_FREQ 8000000
 #elif defined(ESP8266) || defined(ESP32)

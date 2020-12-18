@@ -20,6 +20,12 @@ void Arduino_SSD1283A::begin(int32_t speed)
   {
     speed = 27000000;
   }
+// Teensy 4.x
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+  if (speed == 0)
+  {
+    speed = 27000000;
+  }
 #endif
   Arduino_TFT::begin(speed);
 }

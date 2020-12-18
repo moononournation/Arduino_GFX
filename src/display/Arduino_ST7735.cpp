@@ -21,6 +21,12 @@ void Arduino_ST7735::begin(int32_t speed)
   {
     speed = 27000000; // ST7735 Maximum supported speed
   }
+// Teensy 4.x
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+  if (speed == 0)
+  {
+    speed = 27000000; // ST7735 Maximum supported speed
+  }
 #endif
   Arduino_TFT::begin(speed);
 }

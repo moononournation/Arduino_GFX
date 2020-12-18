@@ -15,12 +15,6 @@ Arduino_JBT6K71::Arduino_JBT6K71(
 
 void Arduino_JBT6K71::begin(int32_t speed)
 {
-#if defined(ESP8266) || defined(ESP32)
-  if (speed == 0)
-  {
-    speed = 40000000;
-  }
-#endif
   Arduino_TFT::begin(speed);
 }
 
