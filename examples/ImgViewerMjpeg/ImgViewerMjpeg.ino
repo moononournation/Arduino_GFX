@@ -231,7 +231,7 @@ static unsigned long total_show_video = 0;
 static unsigned long start_ms, curr_ms;
 
 // pixel drawing callback
-static void jpegDrawCallback(JPEGDRAW *pDraw)
+static int jpegDrawCallback(JPEGDRAW *pDraw)
 {
   // Serial.printf("Draw pos = %d,%d. size = %d x %d\n", pDraw->x, pDraw->y, pDraw->iWidth, pDraw->iHeight);
   unsigned long start = millis();
