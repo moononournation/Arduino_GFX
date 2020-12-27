@@ -57,29 +57,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
-#if defined(CORE_TEENSY)
-#if !defined(KINETISK)
-  dcPinMask = digitalPinToBitMask(_dc);
-#endif
-  dcPortSet = portSetRegister(_dc);
-  dcPortClr = portClearRegister(_dc);
-  if (_cs >= 0)
-  {
-#if !defined(KINETISK)
-    csPinMask = digitalPinToBitMask(_cs);
-#endif
-    csPortSet = portSetRegister(_cs);
-    csPortClr = portClearRegister(_cs);
-  }
-  else
-  {
-#if !defined(KINETISK)
-    csPinMask = 0;
-#endif
-    csPortSet = dcPortSet;
-    csPortClr = dcPortClr;
-  }
-#elif defined(ESP32)
+#if defined(ESP32)
   dcPinMask = digitalPinToBitMask(_dc);
   if (_dc >= 32)
   {
@@ -112,6 +90,28 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
     csPortSet = (PORTreg_t)dcPortSet;
     csPortClr = (PORTreg_t)dcPortClr;
     csPinMask = 0;
+  }
+#elif defined(CORE_TEENSY)
+#if !defined(KINETISK)
+  dcPinMask = digitalPinToBitMask(_dc);
+#endif
+  dcPortSet = portSetRegister(_dc);
+  dcPortClr = portClearRegister(_dc);
+  if (_cs >= 0)
+  {
+#if !defined(KINETISK)
+    csPinMask = digitalPinToBitMask(_cs);
+#endif
+    csPortSet = portSetRegister(_cs);
+    csPortClr = portClearRegister(_cs);
+  }
+  else
+  {
+#if !defined(KINETISK)
+    csPinMask = 0;
+#endif
+    csPortSet = dcPortSet;
+    csPortClr = dcPortClr;
   }
 #else  // !CORE_TEENSY
   dcPinMask = digitalPinToBitMask(_dc);
@@ -438,7 +438,7 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
 #if defined(ESP8266) || defined(ESP32)
   HWSPI.writePattern(data, len, repeat);
-#else
+#else // !(defined(ESP8266) || defined(ESP32))
   while (repeat--)
   {
     for (uint8_t i = 0; i < len; i++)
@@ -446,7 +446,7 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
       write(data[i]);
     }
   }
-#endif
+#endif // !(defined(ESP8266) || defined(ESP32))
 }
 
 /******** low level bit twiddling **********/

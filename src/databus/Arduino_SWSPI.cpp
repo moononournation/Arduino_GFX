@@ -6,12 +6,8 @@
 #include "Arduino_SWSPI.h"
 
 Arduino_SWSPI::Arduino_SWSPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8_t miso /* = -1 */)
+    : _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso)
 {
-  _dc = dc;
-  _cs = cs;
-  _sck = sck;
-  _mosi = mosi;
-  _miso = miso;
 }
 
 void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
@@ -37,7 +33,84 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
 
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
-#if defined(CORE_TEENSY)
+#if defined(ESP32)
+  sckPinMask = digitalPinToBitMask(_sck);
+  mosiPinMask = digitalPinToBitMask(_mosi);
+  if (_sck >= 32)
+  {
+    sckPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    sckPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+  }
+  else
+  {
+    sckPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    sckPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+  if (_mosi >= 32)
+  {
+    mosiPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    mosiPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+  }
+  else
+  {
+    mosiPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    mosiPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+  dcPinMask = digitalPinToBitMask(_dc);
+  if (_dc >= 32)
+  {
+    dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+  }
+  else
+  {
+    dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+  if (_cs >= 32)
+  {
+    csPinMask = digitalPinToBitMask(_cs);
+    csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+  }
+  else if (_cs >= 0)
+  {
+    csPinMask = digitalPinToBitMask(_cs);
+    csPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    csPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+  else
+  {
+    // No chip-select line defined; might be permanently tied to GND.
+    // Assign a valid GPIO register (though not used for CS), and an
+    // empty pin bitmask...the nonsense bit-twiddling might be faster
+    // than checking _cs and possibly branching.
+    csPortSet = (PORTreg_t)dcPortSet;
+    csPortClr = (PORTreg_t)dcPortClr;
+    csPinMask = 0;
+  }
+  if (_miso >= 0)
+  {
+    misoPort = portInputRegister(_miso);
+#if !defined(KINETISK)
+    misoPinMask = digitalPinToBitMask(_miso);
+#endif
+  }
+  else
+  {
+    misoPort = portInputRegister(_miso);
+  }
+  if (_miso >= 0)
+  {
+    misoPinMask = digitalPinToBitMask(_miso);
+    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
+  }
+  else
+  {
+    misoPinMask = 0;
+    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_sck));
+  }
+#elif defined(CORE_TEENSY)
 #if !defined(KINETISK)
   sckPinMask = digitalPinToBitMask(_sck);
   mosiPinMask = digitalPinToBitMask(_mosi);
@@ -78,95 +151,7 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
     csPortSet = sckPortSet;
     csPortClr = sckPortClr;
   }
-  if (_miso >= 0)
-  {
-    misoPort = portInputRegister(_miso);
-#if !defined(KINETISK)
-    misoPinMask = digitalPinToBitMask(_miso);
-#endif
-  }
-  else
-  {
-    misoPort = portInputRegister(_miso);
-  }
-#elif defined(ESP32)
-  sckPinMask = digitalPinToBitMask(_sck);
-  mosiPinMask = digitalPinToBitMask(_mosi);
-  if (_sck >= 32)
-  {
-    sckPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    sckPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
-  }
-  else
-  {
-    sckPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    sckPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  }
-  if (_mosi >= 32)
-  {
-    mosiPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    mosiPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
-  }
-  else
-  {
-    mosiPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    mosiPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  }
-  if (_dc >= 32)
-  {
-    dcPinMask = digitalPinToBitMask(_dc);
-    dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
-  }
-  else if (_dc >= 0)
-  {
-    dcPinMask = digitalPinToBitMask(_dc);
-    dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  }
-  else
-  {
-    // No D/C line defined; 9-bit SPI.
-    // Assign a valid GPIO register (though not used for DC), and an
-    // empty pin bitmask...the nonsense bit-twiddling might be faster
-    // than checking _dc and possibly branching.
-    dcPinMask = 0;
-    dcPortSet = (PORTreg_t)sckPortSet;
-    dcPortClr = (PORTreg_t)sckPortClr;
-  }
-  if (_cs >= 32)
-  {
-    csPinMask = digitalPinToBitMask(_cs);
-    csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
-  }
-  else if (_cs >= 0)
-  {
-    csPinMask = digitalPinToBitMask(_cs);
-    csPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    csPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  }
-  else
-  {
-    // No chip-select line defined; might be permanently tied to GND.
-    // Assign a valid GPIO register (though not used for CS), and an
-    // empty pin bitmask...the nonsense bit-twiddling might be faster
-    // than checking _cs and possibly branching.
-    csPinMask = 0;
-    csPortSet = (PORTreg_t)sckPortSet;
-    csPortClr = (PORTreg_t)sckPortClr;
-  }
-  if (_miso >= 0)
-  {
-    misoPinMask = digitalPinToBitMask(_miso);
-    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
-  }
-  else
-  {
-    misoPinMask = 0;
-    misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_sck));
-  }
-#else  // !CORE_TEENSY and !ESP32
+#else  // !CORE_TEENSY
   sckPinMask = digitalPinToBitMask(_sck);
   mosiPinMask = digitalPinToBitMask(_mosi);
   sckPortSet = &(PORT->Group[g_APinDescription[_sck].ulPort].OUTSET.reg);
@@ -217,8 +202,6 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
   }
 #endif // end !CORE_TEENSY
 #else  // !HAS_PORT_SET_CLR
-  dcPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_dc));
-  dcPinMaskSet = digitalPinToBitMask(_dc);
   sckPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_sck));
   sckPinMaskSet = digitalPinToBitMask(_sck);
   mosiPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_mosi));
@@ -427,53 +410,32 @@ void Arduino_SWSPI::writeRepeat(uint16_t p, uint32_t len)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    if (p == 0xffff) // no need to set MOSI level while filling white
+// ESP8266 avoid trigger watchdog
+#if defined(ESP8266)
+    while (len > (ESP8266SAFEBATCHBITSIZE / 9))
     {
-      SPI_MOSI_HIGH();
-      len *= 18; // 9-bit * 2
-      while (len--)
-      {
-        SPI_SCK_HIGH();
-        SPI_SCK_LOW();
-      }
+      WRITE9BITREPEAT(p, ESP8266SAFEBATCHBITSIZE / 9);
+      len -= ESP8266SAFEBATCHBITSIZE / 9;
+      yield();
     }
-    else
-    {
-      uint8_t hi = p >> 8;
-      uint8_t lo = p;
-      while (len--)
-      {
-        WRITE9BITDATA(hi);
-        WRITE9BITDATA(lo);
-      }
-    }
+    WRITE9BITREPEAT(p, len);
+#else
+    WRITE9BITREPEAT(p, len);
+#endif
   }
   else
   {
-    if ((p == 0x0000) || (p == 0xffff)) // no need to set MOSI level while filling black or white
+#if defined(ESP8266)
+    while (len > (ESP8266SAFEBATCHBITSIZE / 8))
     {
-      if (p)
-      {
-        SPI_MOSI_HIGH();
-      }
-      else
-      {
-        SPI_MOSI_LOW();
-      }
-      len *= 16;
-      while (len--)
-      {
-        SPI_SCK_HIGH();
-        SPI_SCK_LOW();
-      }
+      WRITEREPEAT(p, ESP8266SAFEBATCHBITSIZE / 8);
+      len -=  ESP8266SAFEBATCHBITSIZE / 8;
+      yield();
     }
-    else
-    {
-      while (len--)
-      {
-        WRITE16(p);
-      }
-    }
+    WRITEREPEAT(p, len);
+#else
+    WRITEREPEAT(p, len);
+#endif
   }
 }
 
@@ -578,8 +540,7 @@ INLINE void Arduino_SWSPI::WRITE(uint8_t d)
 
 INLINE void Arduino_SWSPI::WRITE16(uint16_t d)
 {
-  uint16_t bit;
-  bit = 0x8000;
+  uint16_t bit = 0x8000;
   while (bit)
   {
     if (d & bit)
@@ -615,6 +576,57 @@ INLINE void Arduino_SWSPI::WRITE32(uint32_t d)
   }
 }
 
+INLINE void Arduino_SWSPI::WRITE9BITREPEAT(uint16_t p, uint32_t len)
+{
+  if (p == 0xffff) // no need to set MOSI level while filling white
+  {
+    SPI_MOSI_HIGH();
+    len *= 18; // 9-bit * 2
+    while (len--)
+    {
+      SPI_SCK_HIGH();
+      SPI_SCK_LOW();
+    }
+  }
+  else
+  {
+    uint8_t hi = p >> 8;
+    uint8_t lo = p;
+    while (len--)
+    {
+      WRITE9BITDATA(hi);
+      WRITE9BITDATA(lo);
+    }
+  }
+}
+
+INLINE void Arduino_SWSPI::WRITEREPEAT(uint16_t p, uint32_t len)
+{
+  if ((p == 0x0000) || (p == 0xffff)) // no need to set MOSI level while filling black or white
+  {
+    if (p)
+    {
+      SPI_MOSI_HIGH();
+    }
+    else
+    {
+      SPI_MOSI_LOW();
+    }
+    len *= 16;
+    while (len--)
+    {
+      SPI_SCK_HIGH();
+      SPI_SCK_LOW();
+    }
+  }
+  else
+  {
+    while (len--)
+    {
+      WRITE16(p);
+    }
+  }
+}
 /******** low level bit twiddling **********/
 
 INLINE void Arduino_SWSPI::CS_HIGH(void)

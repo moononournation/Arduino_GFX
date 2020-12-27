@@ -8,51 +8,54 @@
 // HARDWARE CONFIG ---------------------------------------------------------
 
 #if defined(__AVR__)
-typedef uint8_t ARDUINOGFX_PORT_t;   ///< PORT values are 8-bit
-#define USE_FAST_PINIO               ///< Use direct PORT register access
-#elif defined(ARDUINO_STM32_FEATHER) // WICED
-typedef class HardwareSPI SPIClass; ///< SPI is a bit odd on WICED
-typedef uint32_t ARDUINOGFX_PORT_t; ///< PORT values are 32-bit
+typedef uint8_t ARDUINOGFX_PORT_t;
+#define USE_FAST_PINIO ///< Use direct PORT register access
+#elif defined(ESP32)
+typedef uint32_t ARDUINOGFX_PORT_t;
+#define USE_FAST_PINIO   ///< Use direct PORT register access
+#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
+#elif defined(ESP8266)
+#define ESP8266SAFEBATCHBITSIZE (2048 * 8 * 9)
+typedef uint32_t ARDUINOGFX_PORT_t;
+#define USE_FAST_PINIO ///< Use direct PORT register access
+#elif defined(ARDUINO_STM32_FEATHER)
+typedef uint32_t ARDUINOGFX_PORT_t;
 #elif defined(__arm__)
 #if defined(ARDUINO_ARCH_SAMD)
 // Adafruit M0, M4
-typedef uint32_t ARDUINOGFX_PORT_t; ///< PORT values are 32-bit
+typedef uint32_t ARDUINOGFX_PORT_t;
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
 #elif defined(CORE_TEENSY)
+#if defined(__IMXRT1052__) || defined(__IMXRT1062__)
 // PJRC Teensy 4.x
-#if defined(__IMXRT1052__) || defined(__IMXRT1062__) // Teensy 4.x
-typedef uint32_t ARDUINOGFX_PORT_t; ///< PORT values are 32-bit
-                                    // PJRC Teensy 3.x
+typedef uint32_t ARDUINOGFX_PORT_t;
 #else
-typedef uint8_t ARDUINOGFX_PORT_t; ///< PORT values are 8-bit
+// PJRC Teensy 3.x
+typedef uint8_t ARDUINOGFX_PORT_t;
 #endif
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
 #else
 // Arduino Due?
-typedef uint32_t ARDUINOGFX_PORT_t; ///< PORT values are 32-bit
-                                    // USE_FAST_PINIO not available here (yet)...Due has a totally different
-                                    // GPIO register set and will require some changes elsewhere (e.g. in
-                                    // constructors especially).
-#endif
-#elif defined(ESP32)
 typedef uint32_t ARDUINOGFX_PORT_t;
-#define USE_FAST_PINIO                         ///< Use direct PORT register access
-#define HAS_PORT_SET_CLR                       ///< PORTs have set & clear registers
-#else                                          // !ARM
-// Probably ESP8266. USE_FAST_PINIO is not available here (yet)
+// USE_FAST_PINIO not available here (yet)...Due has a totally different
+// GPIO register set and will require some changes elsewhere (e.g. in
+// constructors especially).
+#endif
+#else  // !ARM
+// Unknow architecture, USE_FAST_PINIO is not available here (yet)
 // but don't worry about it too much...the digitalWrite() implementation
 // on these platforms is reasonably efficient and already RAM-resident,
 // only gotcha then is no parallel connection support for now.
-typedef uint32_t ARDUINOGFX_PORT_t; ///< PORT values are 32-bit
-#endif                                         // end !ARM
-typedef volatile ARDUINOGFX_PORT_t *PORTreg_t; ///< PORT register type
+typedef uint32_t ARDUINOGFX_PORT_t;
+#endif // end !ARM
+typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 
 #if defined(ADAFRUIT_PYPORTAL) || defined(ADAFRUIT_PYBADGE_M4_EXPRESS) || defined(ADAFRUIT_PYGAMER_M4_EXPRESS) || defined(ADAFRUIT_HALLOWING_M4_EXPRESS)
 #define USE_SPI_DMA ///< Auto DMA if using PyPortal
 #else
-                                    //#define USE_SPI_DMA               ///< If set, use DMA if available
+//#define USE_SPI_DMA               ///< If set, use DMA if available
 #endif
 // Another "oops" name -- this now also handles parallel DMA.
 // If DMA is enabled, Arduino sketch MUST #include <Adafruit_ZeroDMA.h>
@@ -102,6 +105,8 @@ private:
   INLINE void WRITE(uint8_t d);
   INLINE void WRITE16(uint16_t d);
   INLINE void WRITE32(uint32_t d);
+  INLINE void WRITE9BITREPEAT(uint16_t p, uint32_t len);
+  INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
   INLINE void CS_HIGH(void);
   INLINE void CS_LOW(void);
   INLINE void DC_HIGH(void);
@@ -112,7 +117,8 @@ private:
   INLINE void SPI_SCK_LOW(void);
   INLINE bool SPI_MISO_READ(void);
 
-  int8_t _dc, _cs, _sck, _mosi, _miso;
+  int8_t _dc, _cs;
+  int8_t _sck, _mosi, _miso;
 
   // CLASS INSTANCE VARIABLES --------------------------------------------
 
