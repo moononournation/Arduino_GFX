@@ -528,66 +528,86 @@ int32_t testLines()
   uint32_t start;
   int32_t x1, y1, x2, y2;
 
-  x1 = y1 = 0;
-  y2 = h - 1;
-
   start = micros_start();
 
+  x1 = y1 = 0;
+  y2 = h - 1;
   for (x2 = 0; x2 < w; x2 += 6)
   {
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
+#ifdef ESP8266
+    yield(); // avoid long run triggered ESP8266 WDT restart
+#endif
 
   x2 = w - 1;
-
   for (y2 = 0; y2 < h; y2 += 6)
   {
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
+#ifdef ESP8266
+    yield(); // avoid long run triggered ESP8266 WDT restart
+#endif
 
   x1 = w - 1;
   y1 = 0;
   y2 = h - 1;
-
   for (x2 = 0; x2 < w; x2 += 6)
   {
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
+#ifdef ESP8266
+    yield(); // avoid long run triggered ESP8266 WDT restart
+#endif
 
   x2 = 0;
   for (y2 = 0; y2 < h; y2 += 6)
   {
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
+#ifdef ESP8266
+    yield(); // avoid long run triggered ESP8266 WDT restart
+#endif
 
   x1 = 0;
   y1 = h - 1;
   y2 = 0;
-
   for (x2 = 0; x2 < w; x2 += 6)
   {
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
+#ifdef ESP8266
+    yield(); // avoid long run triggered ESP8266 WDT restart
+#endif
+
   x2 = w - 1;
   for (y2 = 0; y2 < h; y2 += 6)
   {
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
+#ifdef ESP8266
+    yield(); // avoid long run triggered ESP8266 WDT restart
+#endif
 
   x1 = w - 1;
   y1 = h - 1;
   y2 = 0;
-
   for (x2 = 0; x2 < w; x2 += 6)
   {
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
+#ifdef ESP8266
+    yield(); // avoid long run triggered ESP8266 WDT restart
+#endif
 
   x2 = 0;
   for (y2 = 0; y2 < h; y2 += 6)
   {
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
+#ifdef ESP8266
+    yield(); // avoid long run triggered ESP8266 WDT restart
+#endif
 
   return micros() - start;
 }
