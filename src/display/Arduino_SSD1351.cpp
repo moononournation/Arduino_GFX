@@ -27,7 +27,7 @@ void Arduino_SSD1351::begin(int32_t speed)
     speed = 16000000;
   }
 #endif
-  _override_datamode = 0; // SPI_MODE0
+  _override_datamode = SPI_MODE0; // always SPI_MODE0
   Arduino_TFT::begin(speed);
 }
 

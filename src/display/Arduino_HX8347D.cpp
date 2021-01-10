@@ -3,6 +3,7 @@
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
 #include "Arduino_HX8347D.h"
+#include "SPI.h"
 
 Arduino_HX8347D::Arduino_HX8347D(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
@@ -15,7 +16,7 @@ Arduino_HX8347D::Arduino_HX8347D(
 void Arduino_HX8347D::begin(int32_t speed)
 {
 #if defined(__AVR__)
-  _override_datamode = 0; // SPI_MODE0
+  _override_datamode = SPI_MODE0;
 #endif
   Arduino_TFT::begin(speed);
 }
