@@ -193,7 +193,7 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
  * End of Arduino_GFX setting
  ******************************************************************************/
 
-uint32_t w, h, n, n1, cx, cy, cx1, cy1, cn, cn1;
+int32_t w, h, n, n1, cx, cy, cx1, cy1, cn, cn1;
 uint8_t tsa, tsb, tsc, ds;
 
 void setup()
@@ -395,7 +395,7 @@ void printnice(const __FlashStringHelper *item, int32_t v)
   else
   {
     char str[32] = {0};
-    sprintf(str, "%lu", v);
+    sprintf(str, "%d", v);
     for (char *p = (str + strlen(str)) - 3; p > str; p -= 3)
     {
       memmove(p + 1, p, strlen(p) + 1);
