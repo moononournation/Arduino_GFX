@@ -277,7 +277,7 @@ void setup()
     File bmpFile = LittleFS.open(BMP_FILENAME, "r");
     // File bmpFile = SD.open(BMP_FILENAME, "r");
 #else
-    File bmpFile = SD.open(BMP_FILENAME, FILE_READ);
+    File bmpFile = SD.open(BMP_FILENAME, "r");
 #endif
 
     // read JPEG file header

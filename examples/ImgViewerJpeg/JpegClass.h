@@ -23,7 +23,7 @@ public:
         FS *fs, char *filename, JPEG_DRAW_CALLBACK *jpegDrawCallback, bool useBigEndian,
         int x, int y, int widthLimit, int heightLimit)
     {
-        File f = fs->open(filename);
+        File f = fs->open(filename, "r");
         _jpeg.open(f, jpegDrawCallback);
 
         // scale to fit height

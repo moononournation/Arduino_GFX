@@ -266,12 +266,12 @@ void setup()
   {
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-    File gifFile = SD.open(GIF_FILENAME);
+    File gifFile = SD.open(GIF_FILENAME, "r");
 #elif defined(ESP32) || defined(ESP8266)
     File gifFile = SPIFFS.open(GIF_FILENAME, "r");
-    // File gifFile = SD.open(GIF_FILENAME);
+    // File gifFile = SD.open(GIF_FILENAME, "r");
 #else
-    File gifFile = SD.open(GIF_FILENAME);
+    File gifFile = SD.open(GIF_FILENAME, "r");
 #endif
     if (!gifFile || gifFile.isDirectory())
     {
