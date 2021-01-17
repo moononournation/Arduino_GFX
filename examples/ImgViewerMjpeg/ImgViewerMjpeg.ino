@@ -4,6 +4,7 @@
  * Image Source: https://www.pexels.com/video/earth-rotating-video-856356/
  * cropped: x: 598 y: 178 width: 720 height: 720 resized: 240x240
  * ffmpeg -i "Pexels Videos 3931.mp4" -ss 0 -t 20.4s -vf "reverse,setpts=0.5*PTS,fps=10,vflip,hflip,rotate=90,crop=720:720:178:598,scale=240:240:flags=lanczos" -pix_fmt yuv420p -q:v 9 earth.mjpeg
+ * ffmpeg -i "Pexels Videos 3931.mp4" -ss 0 -t 20.4s -vf "reverse,setpts=0.5*PTS,fps=10,vflip,hflip,rotate=90,crop=720:720:178:598,scale=128:128:flags=lanczos" -pix_fmt yuv420p -q:v 9 earth_resized.mjpeg
  *
  * Dependent libraries:
  * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
@@ -11,10 +12,12 @@
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
  * 2. Upload Motion JPEG file
- *   SPIFFS (ESP8266 / ESP32):
+ *   SPIFFS (ESP32):
  *     upload SPIFFS data with ESP32 Sketch Data Upload:
- *     ESP8266: https://github.com/esp8266/arduino-esp8266fs-plugin
  *     ESP32: https://github.com/me-no-dev/arduino-esp32fs-plugin
+ *   LittleFS (ESP8266):
+ *     upload LittleFS data with ESP8266 LittleFS Data Upload:
+ *     ESP8266: https://github.com/earlephilhower/arduino-esp8266littlefs-plugin
  *   SD:
  *     Most Arduino system built-in support SD file system.
  *     Wio Terminal require extra dependant Libraries:
@@ -218,10 +221,10 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 #include <SD/Seeed_SD.h>
 #elif defined(ESP32)
 #include <SPIFFS.h>
-// #include <SD.h>
+#include <SD.h>
 #elif defined(ESP8266)
-#include <FS.h>
-// #include <SD.h>
+#include <LittleFS.h>
+#include <SD.h>
 #else
 #include <SD.h>
 #endif
@@ -262,9 +265,14 @@ void setup()
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
   // Init SPIFLASH
   if (!SD.begin(SDCARD_SS_PIN, SDCARD_SPI, 4000000UL))
-#else
+#elif defined(ESP32)
   if (!SPIFFS.begin())
-  // if (!SD.begin())
+  // if (!SD.begin(SS))
+#elif defined(ESP8266)
+  if (!LittleFS.begin())
+  // if (!SD.begin(SS))
+#else
+  if (!SD.begin())
 #endif
   {
     Serial.println(F("ERROR: File System Mount Failed!"));
@@ -274,9 +282,14 @@ void setup()
   {
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
     File mjpegFile = SD.open(MJPEG_FILENAME, "r");
-#else
+#elif defined(ESP32)
     File mjpegFile = SPIFFS.open(MJPEG_FILENAME, "r");
     // File mjpegFile = SD.open(MJPEG_FILENAME, "r");
+#elif defined(ESP8266)
+    File mjpegFile = LittleFS.open(MJPEG_FILENAME, "r");
+    // File mjpegFile = SD.open(MJPEG_FILENAME, "r");
+#else
+    File mjpegFile = SD.open(MJPEG_FILENAME, "r");
 #endif
 
     if (!mjpegFile || mjpegFile.isDirectory())

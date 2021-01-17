@@ -8,10 +8,12 @@
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
  * 2. Upload Animated GIF file
- *   SPIFFS (ESP8266 / ESP32):
+ *   SPIFFS (ESP32):
  *     upload SPIFFS data with ESP32 Sketch Data Upload:
- *     ESP8266: https://github.com/esp8266/arduino-esp8266fs-plugin
  *     ESP32: https://github.com/me-no-dev/arduino-esp32fs-plugin
+ *   LittleFS (ESP8266):
+ *     upload LittleFS data with ESP8266 LittleFS Data Upload:
+ *     ESP8266: https://github.com/earlephilhower/arduino-esp8266littlefs-plugin
  *   SD:
  *     Most Arduino system built-in support SD file system.
  *     Wio Terminal require extra dependant Libraries:
@@ -227,8 +229,8 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 #include <SPIFFS.h>
 // #include <SD.h>
 #elif defined(ESP8266)
-#include <FS.h>
-// #include <SD.h>
+#include <LittleFS.h>
+#include <SD.h>
 #else
 #include <SD.h>
 #endif
@@ -252,9 +254,12 @@ void setup()
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
   if (!SD.begin(SDCARD_SS_PIN, SDCARD_SPI, 4000000UL))
-#elif defined(ESP32) || defined(ESP8266)
+#elif defined(ESP32)
   if (!SPIFFS.begin())
-  // if (!SD.begin())
+  // if (!SD.begin(SS))
+#elif defined(ESP8266)
+  if (!LittleFS.begin())
+  // if (!SD.begin(SS))
 #else
   if (!SD.begin())
 #endif
@@ -267,8 +272,11 @@ void setup()
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
     File gifFile = SD.open(GIF_FILENAME, "r");
-#elif defined(ESP32) || defined(ESP8266)
+#elif defined(ESP32)
     File gifFile = SPIFFS.open(GIF_FILENAME, "r");
+    // File gifFile = SD.open(GIF_FILENAME, "r");
+#elif defined(ESP8266)
+    File gifFile = LittleFS.open(GIF_FILENAME, "r");
     // File gifFile = SD.open(GIF_FILENAME, "r");
 #else
     File gifFile = SD.open(GIF_FILENAME, "r");
