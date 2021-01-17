@@ -215,10 +215,11 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 #include <SD/Seeed_SD.h>
 #elif defined(ESP32)
 #include <SPIFFS.h>
-// #include <SD.h>
+#include <SD.h>
 #elif defined(ESP8266)
 #include <FS.h>
-// #include <SD.h>
+#include <SD.h>
+#include <SDFS.h>
 #else
 #include <SD.h>
 #endif
@@ -230,7 +231,20 @@ static JpegClass jpegClass;
 static int jpegDrawCallback(JPEGDRAW *pDraw)
 {
   // Serial.printf("Draw pos = %d,%d. size = %d x %d\n", pDraw->x, pDraw->y, pDraw->iWidth, pDraw->iHeight);
-  gfx->draw16bitBeRGBBitmap(pDraw->x, pDraw->y, pDraw->pPixels, pDraw->iWidth, pDraw->iHeight);
+
+  if (pDraw->y <= gfx->height())
+  {
+    int16_t h = pDraw->iHeight;
+    if ((pDraw->y + h) >= gfx->height())
+    {
+      h = gfx->height() - pDraw->y;
+    }
+    gfx->draw16bitBeRGBBitmap(pDraw->x, pDraw->y, pDraw->pPixels, pDraw->iWidth, h);
+
+    return 1;
+  }
+
+  return 0;
 }
 
 void setup()
@@ -251,7 +265,7 @@ void setup()
   if (!SD.begin(SDCARD_SS_PIN, SDCARD_SPI, 4000000UL))
 #elif defined(ESP32) || defined(ESP8266)
   if (!SPIFFS.begin())
-  // if (!SD.begin())
+  // if (!SD.begin(SS))
 #else
   if (!SD.begin())
 #endif
@@ -268,9 +282,12 @@ void setup()
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
         &SD,
-#elif defined(ESP32) || defined(ESP8266)
+#elif defined(ESP32)
         &SPIFFS,
         // &SD,
+#elif defined(ESP8266)
+        &SPIFFS,
+        // &SDFS,
 #else
         &SD,
 #endif
