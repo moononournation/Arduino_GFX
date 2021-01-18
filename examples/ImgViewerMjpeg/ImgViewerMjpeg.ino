@@ -34,11 +34,17 @@
 
 /* first check if selected specific hardware */
 // #define ESP32_LCDKIT_SPI
+// #define TTGO_T_DISPLAY
 // #define WT32_SC01
 #if defined(ESP32_LCDKIT_SPI)
 #define TFT_BL 23
 Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 5 /* CS */, 22 /* SCK */, 21 /* MOSI */, 27 /* MISO */);
 Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
+
+#elif defined(TTGO_T_DISPLAY)
+#define TFT_BL 4
+Arduino_DataBus *bus = new Arduino_ESP32SPI(16 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
+Arduino_ST7789 *gfx = new Arduino_ST7789(bus, 23 /* RST */, 1 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
 
 #elif defined(WT32_SC01)
 #define TFT_BL 23
