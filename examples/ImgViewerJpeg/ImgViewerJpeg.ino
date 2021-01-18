@@ -40,7 +40,7 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
 #elif defined(TTGO_T_DISPLAY)
 #define TFT_BL 4
 Arduino_DataBus *bus = new Arduino_ESP32SPI(16 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
-Arduino_ST7789 *gfx = new Arduino_ST7789(bus, 23 /* RST */, 1 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
+Arduino_ST7789 *gfx = new Arduino_ST7789(bus, 23 /* RST */, 2 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
 
 #elif defined(WT32_SC01)
 #define TFT_BL 23
@@ -239,20 +239,8 @@ static JpegClass jpegClass;
 static int jpegDrawCallback(JPEGDRAW *pDraw)
 {
   // Serial.printf("Draw pos = %d,%d. size = %d x %d\n", pDraw->x, pDraw->y, pDraw->iWidth, pDraw->iHeight);
-
-  if (pDraw->y <= gfx->height())
-  {
-    int16_t h = pDraw->iHeight;
-    if ((pDraw->y + h) >= gfx->height())
-    {
-      h = gfx->height() - pDraw->y;
-    }
-    gfx->draw16bitBeRGBBitmap(pDraw->x, pDraw->y, pDraw->pPixels, pDraw->iWidth, h);
-
-    return 1;
-  }
-
-  return 0;
+  gfx->draw16bitBeRGBBitmap(pDraw->x, pDraw->y, pDraw->pPixels, pDraw->iWidth, pDraw->iHeight);
+  return 1;
 }
 
 void setup()
@@ -295,10 +283,10 @@ void setup()
         &SD,
 #elif defined(ESP32)
         &SPIFFS,
-        // &SD,
+    // &SD,
 #elif defined(ESP8266)
         &LittleFS,
-        // &SDFS,
+    // &SDFS,
 #else
         &SD,
 #endif
