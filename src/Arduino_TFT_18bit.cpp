@@ -72,31 +72,52 @@ void Arduino_TFT_18bit::drawBitmap(int16_t x, int16_t y,
                                    const uint8_t bitmap[], int16_t w, int16_t h,
                                    uint16_t color, uint16_t bg)
 {
-  uint16_t d;
-  int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
-  uint8_t byte = 0;
-
-  startWrite();
-  writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      if (i & 7)
-      {
-        byte <<= 1;
-      }
-      else
-      {
-        byte = pgm_read_byte(&bitmap[j * byteWidth + i / 8]);
-      }
-      d = (byte & 0x80) ? color : bg;
-      _bus->write((d & 0xF800) >> 8);
-      _bus->write((d & 0x07E0) >> 3);
-      _bus->write((d & 0x001F) << 3);
-    }
+    return;
   }
-  endWrite();
+  else if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    Arduino_GFX::drawBitmap(x, y, bitmap, w, h, color, bg);
+  }
+  else
+  {
+    uint16_t d;
+    int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+    uint8_t byte = 0;
+
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+      for (int16_t i = 0; i < w; i++)
+      {
+        if (i & 7)
+        {
+          byte <<= 1;
+        }
+        else
+        {
+          byte = pgm_read_byte(&bitmap[j * byteWidth + i / 8]);
+        }
+        d = (byte & 0x80) ? color : bg;
+        _bus->write((d & 0xF800) >> 8);
+        _bus->write((d & 0x07E0) >> 3);
+        _bus->write((d & 0x001F) << 3);
+      }
+    }
+    endWrite();
+  }
 }
 
 /**************************************************************************/
@@ -114,31 +135,52 @@ void Arduino_TFT_18bit::drawBitmap(int16_t x, int16_t y,
 void Arduino_TFT_18bit::drawBitmap(int16_t x, int16_t y,
                                    uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
-  uint16_t d;
-  int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
-  uint8_t byte = 0;
-
-  startWrite();
-  writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      if (i & 7)
-      {
-        byte <<= 1;
-      }
-      else
-      {
-        byte = bitmap[j * byteWidth + i / 8];
-      }
-      d = (byte & 0x80) ? color : bg;
-      _bus->write((d & 0xF800) >> 8);
-      _bus->write((d & 0x07E0) >> 3);
-      _bus->write((d & 0x001F) << 3);
-    }
+    return;
   }
-  endWrite();
+  else if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    Arduino_GFX::drawBitmap(x, y, bitmap, w, h, color, bg);
+  }
+  else
+  {
+    uint16_t d;
+    int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+    uint8_t byte = 0;
+
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+      for (int16_t i = 0; i < w; i++)
+      {
+        if (i & 7)
+        {
+          byte <<= 1;
+        }
+        else
+        {
+          byte = bitmap[j * byteWidth + i / 8];
+        }
+        d = (byte & 0x80) ? color : bg;
+        _bus->write((d & 0xF800) >> 8);
+        _bus->write((d & 0x07E0) >> 3);
+        _bus->write((d & 0x001F) << 3);
+      }
+    }
+    endWrite();
+  }
 }
 
 /**************************************************************************/
@@ -154,20 +196,41 @@ void Arduino_TFT_18bit::drawBitmap(int16_t x, int16_t y,
 void Arduino_TFT_18bit::drawGrayscaleBitmap(int16_t x, int16_t y,
                                             const uint8_t bitmap[], int16_t w, int16_t h)
 {
-  uint8_t v;
-  startWrite();
-  writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      v = (uint8_t)pgm_read_byte(&bitmap[j * w + i]);
-      _bus->write(v);
-      _bus->write(v);
-      _bus->write(v);
-    }
+    return;
   }
-  endWrite();
+  else if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    Arduino_GFX::drawGrayscaleBitmap(x, y, bitmap, w, h);
+  }
+  else
+  {
+    uint8_t v;
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+      for (int16_t i = 0; i < w; i++)
+      {
+        v = (uint8_t)pgm_read_byte(&bitmap[j * w + i]);
+        _bus->write(v);
+        _bus->write(v);
+        _bus->write(v);
+      }
+    }
+    endWrite();
+  }
 }
 
 /**************************************************************************/
@@ -183,20 +246,41 @@ void Arduino_TFT_18bit::drawGrayscaleBitmap(int16_t x, int16_t y,
 void Arduino_TFT_18bit::drawGrayscaleBitmap(int16_t x, int16_t y,
                                             uint8_t *bitmap, int16_t w, int16_t h)
 {
-  uint8_t v;
-  startWrite();
-  writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      v = bitmap[j * w + i];
-      _bus->write(v);
-      _bus->write(v);
-      _bus->write(v);
-    }
+    return;
   }
-  endWrite();
+  else if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    Arduino_GFX::drawGrayscaleBitmap(x, y, bitmap, w, h);
+  }
+  else
+  {
+    uint8_t v;
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+      for (int16_t i = 0; i < w; i++)
+      {
+        v = bitmap[j * w + i];
+        _bus->write(v);
+        _bus->write(v);
+        _bus->write(v);
+      }
+    }
+    endWrite();
+  }
 }
 
 /**************************************************************************/
@@ -212,18 +296,39 @@ void Arduino_TFT_18bit::drawGrayscaleBitmap(int16_t x, int16_t y,
 void Arduino_TFT_18bit::drawIndexedBitmap(int16_t x, int16_t y,
                                           uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
 {
-  uint16_t d;
-  uint32_t len = w * h;
-  startWrite();
-  writeAddrWindow(x, y, w, h);
-  while (len--)
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
   {
-    d = color_index[*(bitmap++)];
-    _bus->write((d & 0xF800) >> 8);
-    _bus->write((d & 0x07E0) >> 3);
-    _bus->write((d & 0x001F) << 3);
+    return;
   }
-  endWrite();
+  else if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, w, h);
+  }
+  else
+  {
+    uint16_t d;
+    uint32_t len = w * h;
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    while (len--)
+    {
+      d = color_index[*(bitmap++)];
+      _bus->write((d & 0xF800) >> 8);
+      _bus->write((d & 0x07E0) >> 3);
+      _bus->write((d & 0x001F) << 3);
+    }
+    endWrite();
+  }
 }
 
 /**************************************************************************/
@@ -240,20 +345,41 @@ void Arduino_TFT_18bit::drawIndexedBitmap(int16_t x, int16_t y,
 void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
                                            const uint16_t bitmap[], int16_t w, int16_t h)
 {
-  uint16_t d;
-  startWrite();
-  writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      d = pgm_read_word(&bitmap[j * w + i]);
-      _bus->write((d & 0xF800) >> 8);
-      _bus->write((d & 0x07E0) >> 3);
-      _bus->write((d & 0x001F) << 3);
-    }
+    return;
   }
-  endWrite();
+  else if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    Arduino_GFX::draw16bitRGBBitmap(x, y, bitmap, w, h);
+  }
+  else
+  {
+    uint16_t d;
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+      for (int16_t i = 0; i < w; i++)
+      {
+        d = pgm_read_word(&bitmap[j * w + i]);
+        _bus->write((d & 0xF800) >> 8);
+        _bus->write((d & 0x07E0) >> 3);
+        _bus->write((d & 0x001F) << 3);
+      }
+    }
+    endWrite();
+  }
 }
 
 /**************************************************************************/
@@ -270,20 +396,41 @@ void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
                                            uint16_t *bitmap, int16_t w, int16_t h)
 {
-  uint16_t d;
-  startWrite();
-  writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      d = bitmap[j * w + i];
-      _bus->write((d & 0xF800) >> 8);
-      _bus->write((d & 0x07E0) >> 3);
-      _bus->write((d & 0x001F) << 3);
-    }
+    return;
   }
-  endWrite();
+  else if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    Arduino_GFX::draw16bitRGBBitmap(x, y, bitmap, w, h);
+  }
+  else
+  {
+    uint16_t d;
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+      for (int16_t i = 0; i < w; i++)
+      {
+        d = bitmap[j * w + i];
+        _bus->write((d & 0xF800) >> 8);
+        _bus->write((d & 0x07E0) >> 3);
+        _bus->write((d & 0x001F) << 3);
+      }
+    }
+    endWrite();
+  }
 }
 
 /**************************************************************************/
@@ -300,20 +447,41 @@ void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT_18bit::draw16bitBeRGBBitmap(int16_t x, int16_t y,
                                              uint16_t *bitmap, int16_t w, int16_t h)
 {
-  uint16_t d;
-  startWrite();
-  writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      d = bitmap[j * w + i];
-      _bus->write((d & 0x00F8));
-      _bus->write(((d & 0xE000) >> 11) | (d & 0x0007) << 5);
-      _bus->write((d & 0x1F00) >> 5);
-    }
+    return;
   }
-  endWrite();
+  else if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    Arduino_GFX::draw16bitBeRGBBitmap(x, y, bitmap, w, h);
+  }
+  else
+  {
+    uint16_t d;
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+      for (int16_t i = 0; i < w; i++)
+      {
+        d = bitmap[j * w + i];
+        _bus->write((d & 0x00F8));
+        _bus->write(((d & 0xE000) >> 11) | (d & 0x0007) << 5);
+        _bus->write((d & 0x1F00) >> 5);
+      }
+    }
+    endWrite();
+  }
 }
 
 /**************************************************************************/
@@ -329,19 +497,40 @@ void Arduino_TFT_18bit::draw16bitBeRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT_18bit::draw24bitRGBBitmap(int16_t x, int16_t y,
                                            const uint8_t bitmap[], int16_t w, int16_t h)
 {
-  int16_t offset = 0;
-  startWrite();
-  writeAddrWindow(x, y, w, h);
-  for (int16_t j = 0; j < h; j++, y++)
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
   {
-    for (int16_t i = 0; i < w; i++)
-    {
-      _bus->write(pgm_read_byte(&bitmap[offset++]));
-      _bus->write(pgm_read_byte(&bitmap[offset++]));
-      _bus->write(pgm_read_byte(&bitmap[offset++]));
-    }
+    return;
   }
-  endWrite();
+  else if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    Arduino_GFX::draw24bitRGBBitmap(x, y, bitmap, w, h);
+  }
+  else
+  {
+    int16_t offset = 0;
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+      for (int16_t i = 0; i < w; i++)
+      {
+        _bus->write(pgm_read_byte(&bitmap[offset++]));
+        _bus->write(pgm_read_byte(&bitmap[offset++]));
+        _bus->write(pgm_read_byte(&bitmap[offset++]));
+      }
+    }
+    endWrite();
+  }
 }
 
 /**************************************************************************/
@@ -357,10 +546,31 @@ void Arduino_TFT_18bit::draw24bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_TFT_18bit::draw24bitRGBBitmap(int16_t x, int16_t y,
                                            uint8_t *bitmap, int16_t w, int16_t h)
 {
-  startWrite();
-  writeAddrWindow(x, y, w, h);
-  _bus->writeBytes(bitmap, w * h * 3);
-  endWrite();
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
+  {
+    return;
+  }
+  else if (
+      (x < 0) ||                // Clip left
+      (y < 0) ||                // Clip top
+      ((x + w - 1) > _max_x) || // Clip right
+      ((y + h - 1) > _max_y)    // Clip bottom
+  )
+  {
+    Arduino_GFX::draw24bitRGBBitmap(x, y, bitmap, w, h);
+  }
+  else
+  {
+    startWrite();
+    writeAddrWindow(x, y, w, h);
+    _bus->writeBytes(bitmap, w * h * 3);
+    endWrite();
+  }
 }
 
 #endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
