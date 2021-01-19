@@ -4,7 +4,6 @@
  * Image Source: https://www.pexels.com/video/earth-rotating-video-856356/
  * cropped: x: 598 y: 178 width: 720 height: 720 resized: 240x240
  * ffmpeg -i "Pexels Videos 3931.mp4" -ss 0 -t 20.4s -vf "reverse,setpts=0.5*PTS,fps=10,vflip,hflip,rotate=90,crop=720:720:178:598,scale=240:240:flags=lanczos" -pix_fmt yuv420p -q:v 9 earth.mjpeg
- * ffmpeg -i "Pexels Videos 3931.mp4" -ss 0 -t 20.4s -vf "reverse,setpts=0.5*PTS,fps=10,vflip,hflip,rotate=90,crop=720:720:178:598,scale=128:128:flags=lanczos" -pix_fmt yuv420p -q:v 9 earth_resized.mjpeg
  *
  * Dependent libraries:
  * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
@@ -252,6 +251,7 @@ static int jpegDrawCallback(JPEGDRAW *pDraw)
   unsigned long start = millis();
   gfx->draw16bitBeRGBBitmap(pDraw->x, pDraw->y, pDraw->pPixels, pDraw->iWidth, pDraw->iHeight);
   total_show_video += millis() - start;
+  return 1;
 }
 
 void setup()
