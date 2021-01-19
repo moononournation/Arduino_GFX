@@ -1,6 +1,16 @@
 /*
  * Wio WiFi Analyzer
  * Require Wio Terminal.
+ * 
+ * Libraries:
+ * https://github.com/Seeed-Studio/Seeed_Arduino_FS/releases/tag/v2.0.2
+ * https://github.com/Seeed-Studio/Seeed_Arduino_SFUD/releases/tag/v2.0.1
+ * https://github.com/Seeed-Studio/Seeed_Arduino_mbedtls/archive/d1ca0175e24768120781bf4a43a1fb2c39fce85f.zip
+ * https://github.com/Seeed-Studio/Seeed_Arduino_rpcUnified/releases/tag/v2.1.1
+ * https://github.com/Seeed-Studio/Seeed_Arduino_rpcWiFi/releases/tag/v1.0.2
+ * 
+ * Firmware:
+ * https://github.com/Seeed-Studio/seeed-ambd-firmware/releases/tag/v2.1.1
  */
 
 #define SCAN_INTERVAL 1000
@@ -14,7 +24,7 @@
 Arduino_HWSPI *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);
 Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 3 /* rotation */);
 
-#include "AtWiFi.h"
+#include "rpcWiFi.h"
 
 int16_t w, h, text_size, banner_height, graph24_baseline, graph50_baseline, graph_baseline, graph_height, channel24_width, channel50_width, channel_width, signal_width;
 
