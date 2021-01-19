@@ -7,7 +7,7 @@
  */
 #include "Arduino_DataBus.h"
 #include "Arduino_GFX.h"
-#include "font/glcdfont.c"
+#include "font/glcdfont.h"
 #include "float.h"
 #ifdef __AVR__
 #include <avr/pgmspace.h>
@@ -1458,7 +1458,7 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
 */
 /**************************************************************************/
 void Arduino_GFX::draw16bitBeRGBBitmap(int16_t x, int16_t y,
-                                     uint16_t *bitmap, int16_t w, int16_t h)
+                                       uint16_t *bitmap, int16_t w, int16_t h)
 {
     int32_t offset = 0;
     uint16_t bEpixel;
@@ -2212,4 +2212,5 @@ void Arduino_GFX::getTextBounds(const __FlashStringHelper *str,
 void Arduino_GFX::invertDisplay(bool i)
 {
     // Do nothing, must be subclassed if supported by hardware
+    UNUSED(i);
 }

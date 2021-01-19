@@ -145,6 +145,7 @@ void Arduino_ILI9225::setRotation(uint8_t r)
 void Arduino_ILI9225::invertDisplay(bool i)
 {
   // Not Implemented
+  UNUSED(i);
 }
 
 void Arduino_ILI9225::displayOn(void)

@@ -5,7 +5,7 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_GFX.h"
 #include "Arduino_TFT.h"
-#include "font/glcdfont.c"
+#include "font/glcdfont.h"
 
 // TODO: temp move drawSlashLine() variables to static to avoid enable PSRAM performamce issue
 static int16_t dx;
@@ -647,7 +647,7 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
     uint32_t len = (uint32_t)w * h;
     startWrite();
     writeAddrWindow(x, y, w, h);
-    for (int16_t i = 0; i < len; i++)
+    for (uint32_t i = 0; i < len; i++)
     {
       writeColor(pgm_read_word(&bitmap[i]));
     }

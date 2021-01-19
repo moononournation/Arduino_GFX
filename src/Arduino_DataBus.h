@@ -11,6 +11,8 @@
 #include "WProgram.h"
 #endif
 
+#define UNUSED(x) (void)(x)
+
 #if defined(ESP32)
 #define MSB_32_SET(var, val)                                      \
     {                                                             \

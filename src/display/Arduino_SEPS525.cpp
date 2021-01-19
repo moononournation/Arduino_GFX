@@ -191,6 +191,7 @@ void Arduino_SEPS525::setRotation(uint8_t r)
 void Arduino_SEPS525::invertDisplay(bool i)
 {
   // Not Implemented
+  UNUSED(i);
 }
 
 void Arduino_SEPS525::displayOn(void)

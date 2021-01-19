@@ -12,6 +12,9 @@ Arduino_SWSPI::Arduino_SWSPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8
 
 void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
 {
+  UNUSED(speed);
+  UNUSED(dataMode);
+
   if (_dc >= 0)
   {
     pinMode(_dc, OUTPUT);

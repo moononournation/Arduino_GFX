@@ -231,7 +231,7 @@ void Arduino_JBT6K71::setRotation(uint8_t r)
     output_control = 0x0127; //SS=1
     entry_mode = 0x0030;
     break;
-  case 3:
+  default: // 3
     output_control = 0x0027; //SS=0
     entry_mode = 0x0038;
     break;
@@ -246,12 +246,16 @@ void Arduino_JBT6K71::setRotation(uint8_t r)
 
 void Arduino_JBT6K71::invertDisplay(bool i)
 {
+  // Not Implemented
+  UNUSED(i);
 }
 
 void Arduino_JBT6K71::displayOn(void)
 {
+  // Not Implemented
 }
 
 void Arduino_JBT6K71::displayOff(void)
 {
+  // Not Implemented
 }
