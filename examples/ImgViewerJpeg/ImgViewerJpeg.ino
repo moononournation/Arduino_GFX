@@ -86,7 +86,7 @@ Arduino_ST7789 *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 #elif defined(ESP8266)
 #define TFT_CS 15
 #define TFT_DC 5
-#define TFT_RST -1
+#define TFT_RST 16
 // #define TFT_BL 4
 #else
 #define TFT_CS 9
@@ -201,6 +201,8 @@ Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 // Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */);
 // 2.4" IPS LCD 240x320
 // Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+// 1.69" IPS round corner LCD 240x280
+// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 240 /* width */, 280 /* height */, 0 /* col offset 1 */, 20 /* row offset 1 */, 0 /* col offset 2 */, 20 /* row offset 2 */);
 // 1.3"/1.5" square IPS LCD 240x240
 // Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
 // 1.14" IPS LCD 135x240 TTGO T-Display

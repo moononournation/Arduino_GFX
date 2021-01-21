@@ -102,6 +102,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - ST7789 TTGO T-Display 135x240 [[test video](https://youtu.be/Zk81_T8c20E)]
 - ST7789 240x240 [[test video](https://youtu.be/Z27zYg5uAsk)]
 - ST7789 TTGO T-Watch 240x240 [[test video](https://youtu.be/9AqsXMB8Qbk)]
+- ST7789 round corner display 240x280 [[test video](https://youtu.be/KzDC02wg8z0)]
 - ST7789 240x320 [[test video](https://youtu.be/ZEvc1LkuVuQ)]
 - ST7796 320x480 [[test video](https://youtu.be/hUL-RuG4MAQ)]
 - Canvas (framebuffer)
