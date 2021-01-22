@@ -228,6 +228,7 @@ static JpegDec jpegDec;
 static uint32_t len, offset;
 static unsigned long next_show_millis = 0;
 
+WiFiClient client;
 HTTPClient http;
 char url[1024];
 
@@ -275,7 +276,7 @@ void loop()
   {
     next_show_millis = ((millis() / 60000L) + 1) * 60000L; // next minute
     Serial.print("[HTTP] begin...\n");
-    http.begin(url);
+    http.begin(client, url);
     http.setTimeout(HTTP_TIMEOUT);
     Serial.print("[HTTP] GET...\n");
     int httpCode = http.GET();
