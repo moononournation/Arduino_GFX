@@ -295,7 +295,7 @@ void setup()
     File mjpegFile = LittleFS.open(MJPEG_FILENAME, "r");
     // File mjpegFile = SD.open(MJPEG_FILENAME, "r");
 #else
-    File mjpegFile = SD.open(MJPEG_FILENAME, "r");
+    File mjpegFile = SD.open(MJPEG_FILENAME, FILE_READ);
 #endif
 
     if (!mjpegFile || mjpegFile.isDirectory())

@@ -70,7 +70,16 @@ public:
         _x_bound = _x + widthLimit - 1;
         _y_bound = _y + heightLimit - 1;
 
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
         File f = fs->open(filename, "r");
+#elif defined(ESP32)
+        File f = fs->open(filename, "r");
+#elif defined(ESP8266)
+        File f = fs->open(filename, "r");
+#else
+        File f = fs->open(filename, FILE_READ);
+#endif
+
         _jpeg.open(f, jpegDrawCallback);
 
         // scale to fit height

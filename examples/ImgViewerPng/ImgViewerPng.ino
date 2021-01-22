@@ -298,7 +298,7 @@ void setup()
     File pngFile = LittleFS.open(PNG_FILENAME, "r");
     // File pngFile = SD.open(PNG_FILENAME, "r");
 #else
-    File pngFile = SD.open(PNG_FILENAME, "r");
+    File pngFile = SD.open(PNG_FILENAME, FILE_READ);
 #endif
 
     if (!pngFile || pngFile.isDirectory())

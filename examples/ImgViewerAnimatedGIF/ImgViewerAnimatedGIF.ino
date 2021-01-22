@@ -287,7 +287,7 @@ void setup()
     File gifFile = LittleFS.open(GIF_FILENAME, "r");
     // File gifFile = SD.open(GIF_FILENAME, "r");
 #else
-    File gifFile = SD.open(GIF_FILENAME, "r");
+    File gifFile = SD.open(GIF_FILENAME, FILE_READ);
 #endif
     if (!gifFile || gifFile.isDirectory())
     {
