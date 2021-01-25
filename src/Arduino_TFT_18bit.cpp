@@ -92,29 +92,26 @@ void Arduino_TFT_18bit::drawBitmap(int16_t x, int16_t y,
   }
   else
   {
-    uint16_t d;
-    int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+    uint16_t c;
+    int32_t pixels = w * h;
     uint8_t byte = 0;
-
+    uint16_t idx = 0;
     startWrite();
     writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++, y++)
+    for (int32_t i = 0; i < pixels; i++)
     {
-      for (int16_t i = 0; i < w; i++)
+      if (i & 7)
       {
-        if (i & 7)
-        {
-          byte <<= 1;
-        }
-        else
-        {
-          byte = pgm_read_byte(&bitmap[j * byteWidth + i / 8]);
-        }
-        d = (byte & 0x80) ? color : bg;
-        _bus->write((d & 0xF800) >> 8);
-        _bus->write((d & 0x07E0) >> 3);
-        _bus->write((d & 0x001F) << 3);
+        byte <<= 1;
       }
+      else
+      {
+        byte = pgm_read_byte(&bitmap[idx++]);
+      }
+      c = (byte & 0x80) ? color : bg;
+      _bus->write((c & 0xF800) >> 8);
+      _bus->write((c & 0x07E0) >> 3);
+      _bus->write((c & 0x001F) << 3);
     }
     endWrite();
   }
@@ -155,29 +152,25 @@ void Arduino_TFT_18bit::drawBitmap(int16_t x, int16_t y,
   }
   else
   {
-    uint16_t d;
-    int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+    uint16_t c;
+    int32_t pixels = w * h;
     uint8_t byte = 0;
-
     startWrite();
     writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++, y++)
+    for (int32_t i = 0; i < pixels; i++)
     {
-      for (int16_t i = 0; i < w; i++)
+      if (i & 7)
       {
-        if (i & 7)
-        {
-          byte <<= 1;
-        }
-        else
-        {
-          byte = bitmap[j * byteWidth + i / 8];
-        }
-        d = (byte & 0x80) ? color : bg;
-        _bus->write((d & 0xF800) >> 8);
-        _bus->write((d & 0x07E0) >> 3);
-        _bus->write((d & 0x001F) << 3);
+        byte <<= 1;
       }
+      else
+      {
+        byte = *(bitmap++);
+      }
+      c = (byte & 0x80) ? color : bg;
+      _bus->write((c & 0xF800) >> 8);
+      _bus->write((c & 0x07E0) >> 3);
+      _bus->write((c & 0x001F) << 3);
     }
     endWrite();
   }

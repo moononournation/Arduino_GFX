@@ -1,7 +1,3 @@
-/*
- * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
- */
 #ifndef _Arduino_CANVAS_H_
 #define _Arduino_CANVAS_H_
 

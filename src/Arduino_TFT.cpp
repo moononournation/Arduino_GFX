@@ -365,25 +365,22 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
   }
   else
   {
-    int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+    int32_t pixels = w * h;
     uint8_t byte = 0;
-
+    uint16_t idx = 0;
     startWrite();
     writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++)
+    for (int32_t i = 0; i < pixels; i++)
     {
-      for (int16_t i = 0; i < w; i++)
+      if (i & 7)
       {
-        if (i & 7)
-        {
-          byte <<= 1;
-        }
-        else
-        {
-          byte = pgm_read_byte(&bitmap[j * byteWidth + i / 8]);
-        }
-        writeColor((byte & 0x80) ? color : bg);
+        byte <<= 1;
       }
+      else
+      {
+        byte = pgm_read_byte(&bitmap[idx++]);
+      }
+      writeColor((byte & 0x80) ? color : bg);
     }
     endWrite();
   }
@@ -424,25 +421,21 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
   }
   else
   {
-    int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+    int32_t pixels = w * h;
     uint8_t byte = 0;
-
     startWrite();
     writeAddrWindow(x, y, w, h);
-    for (int16_t j = 0; j < h; j++)
+    for (int32_t i = 0; i < pixels; i++)
     {
-      for (int16_t i = 0; i < w; i++)
+      if (i & 7)
       {
-        if (i & 7)
-        {
-          byte <<= 1;
-        }
-        else
-        {
-          byte = bitmap[j * byteWidth + i / 8];
-        }
-        writeColor((byte & 0x80) ? color : bg);
+        byte <<= 1;
       }
+      else
+      {
+        byte = *(bitmap++);
+      }
+      writeColor((byte & 0x80) ? color : bg);
     }
     endWrite();
   }

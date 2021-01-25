@@ -106,7 +106,8 @@ This library is not putting speed at the first priority, but still paid much eff
 - ST7789 240x320 [[test video](https://youtu.be/ZEvc1LkuVuQ)]
 - ST7796 320x480 [[test video](https://youtu.be/hUL-RuG4MAQ)]
 - Canvas (framebuffer)
-- Canvas_Indexed (for saving memory space)
+- Canvas_Indexed (half memory space framebuffer)
+- Canvas_Mono (1/16 memory space framebuffer)
 
 ## Tobe Support Display (Donation can make it happen)
 - HX8357A 240x320 (first trial failed)

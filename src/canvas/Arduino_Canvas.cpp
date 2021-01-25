@@ -1,7 +1,3 @@
-/*
- * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
- */
 #include "../Arduino_GFX.h"
 #include "Arduino_Canvas.h"
 
@@ -12,17 +8,19 @@ Arduino_Canvas::Arduino_Canvas(int16_t w, int16_t h, Arduino_G *output, int16_t 
 
 void Arduino_Canvas::begin(int32_t speed)
 {
+    size_t s = _width * _height * 2;
 #if defined(ESP32)
     if (psramFound())
     {
-        _framebuffer = (uint16_t *)ps_malloc(_width * _height * 2);
+        _framebuffer = (uint16_t *)ps_malloc(s);
     }
     else
     {
-        // _framebuffer = (uint16_t *)malloc(_width * _height * 2);
+        // _framebuffer = (uint16_t *)malloc(s);
         // hack for allocate memory over 63,360 pixels
-        _framebuffer = (uint16_t *)malloc(_width * _height);
-        uint16_t *tmp = (uint16_t *)malloc(_width * _height);
+        s /= 2;
+        _framebuffer = (uint16_t *)malloc(s);
+        uint16_t *tmp = (uint16_t *)malloc(s);
         log_v("_framebuffer delta: %d", tmp - _framebuffer);
     }
 #else

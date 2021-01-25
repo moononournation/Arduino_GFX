@@ -1,7 +1,3 @@
-/*
- * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
- */
 #include "../Arduino_GFX.h"
 #include "Arduino_Canvas_Indexed.h"
 
@@ -18,17 +14,18 @@ Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *
 
 void Arduino_Canvas_Indexed::begin(int32_t speed)
 {
+    size_t s = _width * _height;
 #if defined(ESP32)
     if (psramFound())
     {
-        _framebuffer = (uint8_t *)ps_malloc(_width * _height);
+        _framebuffer = (uint8_t *)ps_malloc(s);
     }
     else
     {
-        _framebuffer = (uint8_t *)malloc(_width * _height);
+        _framebuffer = (uint8_t *)malloc(s);
     }
 #else
-    _framebuffer = (uint8_t *)malloc(_width * _height);
+    _framebuffer = (uint8_t *)malloc(s);
 #endif
     if (!_framebuffer)
     {

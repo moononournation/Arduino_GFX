@@ -9,9 +9,10 @@
 #include "databus/Arduino_ESP32PAR8.h"
 #include "databus/Arduino_ESP32PAR16.h"
 
-#include "Arduino_GFX.h"             // Core graphics library
-#include "canvas/Arduino_Canvas.h"          // Canvas (framebuffer) library
-#include "canvas/Arduino_Canvas_Indexed.h"  // Indexed Color Canvas (framebuffer) library
+#include "Arduino_GFX.h"                     // Core graphics library
+#include "canvas/Arduino_Canvas.h"           // Canvas (framebuffer) library
+#include "canvas/Arduino_Canvas_Indexed.h"   // Indexed Color Canvas (framebuffer) library
+#include "canvas/Arduino_Canvas_Mono.h"      // Mono Color Canvas (framebuffer) library
 #include "display/Arduino_GC9A01.h"          // Hardware-specific library for GC9A01
 #include "display/Arduino_HX8347C.h"         // Hardware-specific library for HX8347C
 #include "display/Arduino_HX8347D.h"         // Hardware-specific library for HX8347D
