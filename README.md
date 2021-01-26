@@ -107,6 +107,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - ST7796 320x480 [[test video](https://youtu.be/hUL-RuG4MAQ)]
 - Canvas (framebuffer)
 - Canvas_Indexed (half memory space framebuffer)
+- Canvas_3bit (1/4 memory space framebuffer)
 - Canvas_Mono (1/16 memory space framebuffer)
 
 ## Tobe Support Display (Donation can make it happen)

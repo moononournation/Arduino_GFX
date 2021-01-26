@@ -1399,6 +1399,47 @@ void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
+    @brief  Draw a RAM-resident 3-bit image (RGB 1/1/1) at the specified (x,y) position.
+    @param  x       Top left corner x coordinate
+    @param  y       Top left corner y coordinate
+    @param  bitmap  byte array with 3-bit color bitmap
+    @param  w       Width of bitmap in pixels
+    @param  h       Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_GFX::draw3bitRGBBitmap(int16_t x, int16_t y,
+                                    uint8_t *bitmap, int16_t w, int16_t h)
+{
+    int32_t offset = 0, idx = 0;
+    uint8_t c = 0;
+    uint16_t d;
+    startWrite();
+    for (int16_t j = 0; j < h; j++, y++)
+    {
+        for (int16_t i = 0; i < w; i++)
+        {
+            if (offset & 1)
+            {
+                d = (((c & 0b100) ? RED : 0) |
+                     ((c & 0b010) ? GREEN : 0) |
+                     ((c & 0b001) ? BLUE : 0));
+            }
+            else
+            {
+                c = bitmap[idx++];
+                d = (((c & 0b100000) ? RED : 0) |
+                     ((c & 0b010000) ? GREEN : 0) |
+                     ((c & 0b001000) ? BLUE : 0));
+            }
+            writePixel(x + i, y, d);
+            offset++;
+        }
+    }
+    endWrite();
+}
+
+/**************************************************************************/
+/*!
     @brief  Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
     @param  x       Top left corner x coordinate
     @param  y       Top left corner y coordinate

@@ -109,6 +109,8 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino_Canvas *gfx = new Arduino_Canvas(240 /* width */, 320 /* height */, output_display);
 // Indexed color Canvas, mask_level: 0-2, larger mask level mean less color variation but can have faster index mapping
 // Arduino_Canvas_Indexed *gfx = new Arduino_Canvas_Indexed(240 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */, MAXMASKLEVEL /* mask_level */);
+// 3-bit color Canvas, R1G1B1, 8 colors
+// Arduino_Canvas_3bit *gfx = new Arduino_Canvas_3bit(240 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */);
 // Mono color Canvas
 // Arduino_Canvas_Mono *gfx = new Arduino_Canvas_Mono(240 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */);
 
