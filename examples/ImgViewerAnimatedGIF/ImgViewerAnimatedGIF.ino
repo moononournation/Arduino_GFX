@@ -318,8 +318,9 @@ void setup()
         {
           Serial.println(F("GIF video start"));
           gfx->setAddrWindow((gfx->width() - gif->width) / 2, (gfx->height() - gif->height) / 2, gif->width, gif->height);
-          int t_fstart, t_delay = 0, t_real_delay, res, delay_until;
-          int duration = 0, remain = 0;
+          uint32_t t_fstart, t_delay = 0, t_real_delay, delay_until;
+          int32_t res;
+          uint32_t duration = 0, remain = 0;
           while (1)
           {
             t_fstart = millis();

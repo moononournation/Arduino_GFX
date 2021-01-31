@@ -24,7 +24,7 @@
 
 typedef struct gd_Palette
 {
-    int size;
+    uint8_t size;
     uint16_t colors[256];
 } gd_Palette;
 
@@ -33,8 +33,8 @@ typedef struct gd_GCE
     uint16_t delay;
     uint8_t tindex;
     uint8_t disposal;
-    int input;
-    int transparency;
+    uint8_t input;
+    uint8_t transparency;
 } gd_GCE;
 
 typedef struct gd_Entry
@@ -46,8 +46,8 @@ typedef struct gd_Entry
 
 typedef struct gd_Table
 {
-    int bulk;
-    int nentries;
+    int16_t bulk;
+    int16_t nentries;
     gd_Entry *entries;
 } gd_Table;
 
@@ -194,7 +194,7 @@ public:
     }
 
 private:
-    bool gif_buf_seek(File *fd, int len)
+    bool gif_buf_seek(File *fd, int16_t len)
     {
         if (len > (gif_buf_last_idx - gif_buf_idx))
         {
@@ -216,7 +216,7 @@ private:
         return true;
     }
 
-    int gif_buf_read(File *fd, uint8_t *dest, int len)
+    int16_t gif_buf_read(File *fd, uint8_t *dest, int16_t len)
     {
         while (len--)
         {
@@ -279,7 +279,6 @@ private:
         {
             uint16_t tx, ty, tw, th;
             uint8_t cw, ch, fg, bg;
-            off_t sub_block;
             gif_buf_seek(gif->fd, 1); /* block size = 12 */
             tx = gif_buf_read16(gif->fd);
             ty = gif_buf_read16(gif->fd);
@@ -383,8 +382,8 @@ private:
 
     gd_Table *new_table()
     {
-        // int key;
-        // int init_bulk = MAX(1 << (key_size + 1), 0x100);
+        // int16_t key;
+        // int16_t init_bulk = MAX(1 << (key_size + 1), 0x100);
         // Table *table = (Table*) malloc(sizeof(*table) + sizeof(Entry) * init_bulk);
         // if (table) {
         //     table->bulk = init_bulk;
@@ -394,7 +393,7 @@ private:
         //         table->entries[key] = (Entry) {1, 0xFFF, key};
         // }
         // return table;
-        int s = sizeof(gd_Table) + (sizeof(gd_Entry) * 4096);
+        int16_t s = sizeof(gd_Table) + (sizeof(gd_Entry) * 4096);
         gd_Table *table = (gd_Table *)malloc(s);
         if (table)
         {
@@ -410,7 +409,7 @@ private:
         return table;
     }
 
-    void reset_table(gd_Table *table, int32_t key_size)
+    void reset_table(gd_Table *table, uint8_t key_size)
     {
         table->nentries = (1 << key_size) + 2;
         for (int32_t key = 0; key < (1 << key_size); key++)
@@ -440,12 +439,12 @@ private:
         return 0;
     }
 
-    uint16_t get_key(gd_GIF *gif, int key_size, uint8_t *sub_len, uint8_t *shift, uint8_t *byte)
+    uint8_t get_key(gd_GIF *gif, uint8_t key_size, uint8_t *sub_len, uint8_t *shift, uint8_t *byte)
     {
-        int bits_read;
-        int rpad;
-        int frag_size;
-        uint16_t key;
+        int16_t bits_read;
+        int16_t rpad;
+        int16_t frag_size;
+        uint8_t key;
 
         key = 0;
         for (bits_read = 0; bits_read < key_size; bits_read += frag_size)
@@ -469,9 +468,9 @@ private:
     }
 
     /* Compute output index of y-th input line, in frame of height h. */
-    int interlaced_line_index(int h, int y)
+    int16_t interlaced_line_index(int16_t h, int16_t y)
     {
-        int p; /* number of lines in current pass */
+        int16_t p; /* number of lines in current pass */
 
         p = (h - 1) / 8 + 1;
         if (y < p) /* pass 1 */
@@ -491,19 +490,18 @@ private:
 
     /* Decompress image pixels.
  * Return 0 on success or -1 on out-of-memory (w.r.t. LZW code table). */
-    int32_t read_image_data(gd_GIF *gif, int interlace, uint8_t *frame)
+    int32_t read_image_data(gd_GIF *gif, int16_t interlace, uint8_t *frame)
     {
         uint8_t sub_len, shift, byte;
-        int init_key_size, key_size, table_is_full;
-        int frm_off, str_len, p, x, y;
+        int16_t init_key_size, key_size, table_is_full = 0;
+        int16_t frm_off, str_len = 0, p, x, y;
         uint16_t key, clear, stop;
         int32_t ret;
-        gd_Entry entry;
-        off_t start, end;
+        gd_Entry entry = {0, 0, 0};
 
         // Serial.println("Read key size");
         gif_buf_read(gif->fd, &byte, 1);
-        key_size = (int)byte;
+        key_size = (int16_t)byte;
         // Serial.println("Set pos, discard sub blocks");
         // start = gif->fd->position();
         // discard_sub_blocks(gif);
@@ -565,7 +563,7 @@ private:
                 y = p / gif->fw;
                 if (interlace)
                 {
-                    y = interlaced_line_index((int)gif->fh, y);
+                    y = interlaced_line_index((int16_t)gif->fh, y);
                 }
                 if (tindex != entry.suffix)
                 {
@@ -592,7 +590,7 @@ private:
     int32_t read_image(gd_GIF *gif, uint8_t *frame)
     {
         uint8_t fisrz;
-        int interlace;
+        int16_t interlace;
 
         /* Image Descriptor. */
         // Serial.println("Read image descriptor");
@@ -623,8 +621,8 @@ private:
 
     void render_frame_rect(gd_GIF *gif, uint16_t *buffer, uint8_t *frame)
     {
-        int i, j, k;
-        uint8_t index, *color;
+        int16_t i, j, k;
+        uint8_t index;
         i = gif->fy * gif->width + gif->fx;
         for (j = 0; j < gif->fh; j++)
         {
@@ -640,7 +638,7 @@ private:
         }
     }
 
-    int gif_buf_last_idx, gif_buf_idx, file_pos;
+    int16_t gif_buf_last_idx, gif_buf_idx, file_pos;
     uint8_t gif_buf[GIF_BUF_SIZE];
 };
 
