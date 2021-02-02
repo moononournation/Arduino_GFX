@@ -7,14 +7,6 @@
 #include "Arduino_TFT.h"
 #include "font/glcdfont.h"
 
-// TODO: temp move drawSlashLine() variables to static to avoid enable PSRAM performamce issue
-static int16_t dx;
-static int16_t dy;
-static int16_t err;
-static int16_t xs;
-static int16_t step;
-static int16_t len;
-
 Arduino_TFT::Arduino_TFT(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
     bool ips, int16_t w, int16_t h,
@@ -284,6 +276,13 @@ void Arduino_TFT::setRotation(uint8_t r)
 void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
                                  uint16_t color)
 {
+  int16_t dx;
+  int16_t dy;
+  int16_t err;
+  int16_t xs;
+  int16_t step;
+  int16_t len;
+
   bool steep = _diff(y1, y0) > _diff(x1, x0);
   if (steep)
   {

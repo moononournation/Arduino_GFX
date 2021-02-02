@@ -21,6 +21,7 @@ void Arduino_Canvas::begin(int32_t speed)
         s /= 2;
         _framebuffer = (uint16_t *)malloc(s);
         uint16_t *tmp = (uint16_t *)malloc(s);
+        UNUSED(tmp);
         log_v("_framebuffer delta: %d", tmp - _framebuffer);
     }
 #else
