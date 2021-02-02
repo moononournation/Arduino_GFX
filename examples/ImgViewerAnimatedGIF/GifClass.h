@@ -382,7 +382,7 @@ private:
 
     gd_Table *new_table()
     {
-        // int16_t key;
+        // uint16_t key;
         // int16_t init_bulk = MAX(1 << (key_size + 1), 0x100);
         // Table *table = (Table*) malloc(sizeof(*table) + sizeof(Entry) * init_bulk);
         // if (table) {
@@ -393,7 +393,7 @@ private:
         //         table->entries[key] = (Entry) {1, 0xFFF, key};
         // }
         // return table;
-        int16_t s = sizeof(gd_Table) + (sizeof(gd_Entry) * 4096);
+        int32_t s = sizeof(gd_Table) + (sizeof(gd_Entry) * 4096);
         gd_Table *table = (gd_Table *)malloc(s);
         if (table)
         {
@@ -409,12 +409,12 @@ private:
         return table;
     }
 
-    void reset_table(gd_Table *table, uint8_t key_size)
+    void reset_table(gd_Table *table, uint16_t key_size)
     {
         table->nentries = (1 << key_size) + 2;
-        for (int32_t key = 0; key < (1 << key_size); key++)
+        for (uint16_t key = 0; key < (1 << key_size); key++)
         {
-            table->entries[key] = (gd_Entry){1, 0xFFF, key};
+            table->entries[key] = (gd_Entry){1, 0xFFF, (uint8_t)key};
         }
     }
 
@@ -439,12 +439,12 @@ private:
         return 0;
     }
 
-    uint8_t get_key(gd_GIF *gif, uint8_t key_size, uint8_t *sub_len, uint8_t *shift, uint8_t *byte)
+    uint16_t get_key(gd_GIF *gif, uint16_t key_size, uint8_t *sub_len, uint8_t *shift, uint8_t *byte)
     {
         int16_t bits_read;
         int16_t rpad;
         int16_t frag_size;
-        uint8_t key;
+        uint16_t key;
 
         key = 0;
         for (bits_read = 0; bits_read < key_size; bits_read += frag_size)
@@ -490,10 +490,10 @@ private:
 
     /* Decompress image pixels.
  * Return 0 on success or -1 on out-of-memory (w.r.t. LZW code table). */
-    int32_t read_image_data(gd_GIF *gif, int16_t interlace, uint8_t *frame)
+    int8_t read_image_data(gd_GIF *gif, int16_t interlace, uint8_t *frame)
     {
-        uint8_t sub_len, shift, byte;
-        int16_t init_key_size, key_size, table_is_full = 0;
+        uint8_t sub_len, shift, byte, table_is_full = 0;
+        uint16_t init_key_size, key_size;
         int16_t frm_off, str_len = 0, p, x, y;
         uint16_t key, clear, stop;
         int32_t ret;
@@ -501,7 +501,7 @@ private:
 
         // Serial.println("Read key size");
         gif_buf_read(gif->fd, &byte, 1);
-        key_size = (int16_t)byte;
+        key_size = (uint16_t)byte;
         // Serial.println("Set pos, discard sub blocks");
         // start = gif->fd->position();
         // discard_sub_blocks(gif);
@@ -587,7 +587,7 @@ private:
 
     /* Read image.
  * Return 0 on success or -1 on out-of-memory (w.r.t. LZW code table). */
-    int32_t read_image(gd_GIF *gif, uint8_t *frame)
+    int8_t read_image(gd_GIF *gif, uint8_t *frame)
     {
         uint8_t fisrz;
         int16_t interlace;

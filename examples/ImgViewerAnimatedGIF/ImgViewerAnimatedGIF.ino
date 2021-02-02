@@ -308,16 +308,17 @@ void setup()
       }
       else
       {
-        int32_t s = gif->width * gif->height;
-        uint8_t *buf = (uint8_t *)malloc(s);
+        uint8_t *buf = (uint8_t *)malloc(gif->width * gif->height);
         if (!buf)
         {
           Serial.println(F("buf malloc failed!"));
         }
         else
         {
+          int16_t x = (gfx->width() - gif->width) / 2;
+          int16_t y = (gfx->height() - gif->height) / 2;
+
           Serial.println(F("GIF video start"));
-          gfx->setAddrWindow((gfx->width() - gif->width) / 2, (gfx->height() - gif->height) / 2, gif->width, gif->height);
           uint32_t t_fstart, t_delay = 0, t_real_delay, delay_until;
           int32_t res;
           uint32_t duration = 0, remain = 0;
@@ -346,9 +347,7 @@ void setup()
               continue;
             }
 
-            gfx->startWrite();
-            gfx->writeIndexedPixels(buf, gif->palette->colors, s);
-            gfx->endWrite();
+            gfx->drawIndexedBitmap(x, y, buf, gif->palette->colors, gif->width, gif->height);
 
             t_real_delay = t_delay - (millis() - t_fstart);
             duration += t_delay;
