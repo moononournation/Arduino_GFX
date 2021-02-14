@@ -61,8 +61,8 @@ protected:
   uint8_t COL_OFFSET1, ROW_OFFSET1;
   uint8_t COL_OFFSET2, ROW_OFFSET2;
   uint8_t _xStart, _yStart;
-  uint16_t _currentX = 0xFFFF, _currentY = 0xFFFF;
-  uint16_t _currentW = 0xFFFF, _currentH = 0xFFFF;
+  uint16_t _currentX, _currentY;
+  uint16_t _currentW, _currentH;
   virtual void tftInit() = 0;
   bool _ips;
   int8_t _override_datamode = -1;

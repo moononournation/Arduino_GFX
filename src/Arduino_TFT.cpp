@@ -258,6 +258,10 @@ void Arduino_TFT::setRotation(uint8_t r)
     _yStart = COL_OFFSET1;
     break;
   }
+  _currentX = 0xFFFF;
+  _currentY = 0xFFFF;
+  _currentW = 0xFFFF;
+  _currentH = 0xFFFF;
 }
 
 // TFT optimization code, too big for ATMEL family
