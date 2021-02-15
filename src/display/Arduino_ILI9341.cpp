@@ -92,16 +92,16 @@ void Arduino_ILI9341::setRotation(uint8_t r)
   switch (_rotation)
   {
   case 0:
-    r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_BGR);
-    break;
-  case 1:
-    r = (ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
-    break;
-  case 2:
     r = (ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
     break;
-  case 3:
+  case 1:
     r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
+    break;
+  case 2:
+    r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_BGR);
+    break;
+  case 3:
+    r = (ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
     break;
   }
   _bus->beginWrite();
