@@ -278,7 +278,7 @@ void Arduino_GC9A01::setRotation(uint8_t r)
   switch (_rotation)
   {
   case 0:
-    r = 0x68;
+    r = 0xC8;
     break;
 
   case 1:
@@ -290,7 +290,7 @@ void Arduino_GC9A01::setRotation(uint8_t r)
     break;
 
   case 3:
-    r = 0xC8;
+    r = 0x68;
     break;
   }
 
