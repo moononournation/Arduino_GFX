@@ -494,7 +494,7 @@ private:
     {
         uint8_t sub_len, shift, byte, table_is_full = 0;
         uint16_t init_key_size, key_size;
-        int16_t frm_off, str_len = 0, p, x, y;
+        int32_t frm_off, str_len = 0, p, x, y;
         uint16_t key, clear, stop;
         int32_t ret;
         gd_Entry entry = {0, 0, 0};
