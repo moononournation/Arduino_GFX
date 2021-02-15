@@ -1753,8 +1753,8 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                            uint16_t color, uint16_t bg)
 {
-    uint16_t block_w;
-    uint16_t block_h;
+    int16_t block_w;
+    int16_t block_h;
 
     if (!gfxFont) // 'Classic' built-in font
     {
