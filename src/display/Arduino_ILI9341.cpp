@@ -4,6 +4,7 @@
  * https://github.com/adafruit/Adafruit_ILI9341.git
  */
 #include "Arduino_ILI9341.h"
+#include "SPI.h"
 
 Arduino_ILI9341::Arduino_ILI9341(Arduino_DataBus *bus, int8_t rst, uint8_t r)
     : Arduino_TFT(bus, rst, r, false, ILI9341_TFTWIDTH, ILI9341_TFTHEIGHT, 0, 0, 0, 0)
@@ -12,6 +13,7 @@ Arduino_ILI9341::Arduino_ILI9341(Arduino_DataBus *bus, int8_t rst, uint8_t r)
 
 void Arduino_ILI9341::begin(int32_t speed)
 {
+  _override_datamode = SPI_MODE0; // always use SPI_MODE0
   Arduino_TFT::begin(speed);
 }
 
