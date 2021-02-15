@@ -276,29 +276,31 @@ void loop(void)
   int32_t usecRects = testRects();
   serialOut(F("Rectangles (outline)\t"), usecRects, 100, true);
 
-  int32_t usecFilledCircles = testFilledCircles(10);
-  serialOut(F("Circles (filled)\t"), usecFilledCircles, 100, false);
-
-  int32_t usecCircles = testCircles(10);
-  serialOut(F("Circles (outline)\t"), usecCircles, 100, true);
-
-  int32_t usecFilledArcs = testFillArcs();
-  serialOut(F("Arcs (filled)\t"), usecFilledArcs, 100, false);
-
-  int32_t usecArcs = testArcs();
-  serialOut(F("Arcs (outline)\t"), usecArcs, 100, true);
-
   int32_t usecFilledTrangles = testFilledTriangles();
   serialOut(F("Triangles (filled)\t"), usecFilledTrangles, 100, false);
 
   int32_t usecTriangles = testTriangles();
   serialOut(F("Triangles (outline)\t"), usecTriangles, 100, true);
 
+  int32_t usecFilledCircles = testFilledCircles(10);
+  serialOut(F("Circles (filled)\t"), usecFilledCircles, 100, false);
+
+  int32_t usecCircles = testCircles(10);
+  serialOut(F("Circles (outline)\t"), usecCircles, 100, true);
+
+#ifndef __AVR__
+  int32_t usecFilledArcs = testFillArcs();
+  serialOut(F("Arcs (filled)\t"), usecFilledArcs, 100, false);
+
+  int32_t usecArcs = testArcs();
+  serialOut(F("Arcs (outline)\t"), usecArcs, 100, true);
+
   int32_t usecFilledRoundRects = testFilledRoundRects();
   serialOut(F("Rounded rects (filled)\t"), usecFilledRoundRects, 100, false);
 
   int32_t usecRoundRects = testRoundRects();
   serialOut(F("Rounded rects (outline)\t"), usecRoundRects, 100, true);
+#endif
 
 #ifdef CANVAS
   uint32_t start = micros_start();
@@ -348,14 +350,16 @@ void loop(void)
   printnice(F("H/V Lines   "), usecFastLines);
   printnice(F("Rectangles F"), usecFilledRects);
   printnice(F("Rectangles  "), usecRects);
-  printnice(F("Circles F   "), usecFilledCircles);
-  printnice(F("Circles     "), usecCircles);
-  printnice(F("Arcs F      "), usecFilledArcs);
-  printnice(F("Arcs        "), usecArcs);
   printnice(F("Triangles F "), usecFilledTrangles);
   printnice(F("Triangles   "), usecTriangles);
+  printnice(F("Circles F   "), usecFilledCircles);
+  printnice(F("Circles     "), usecCircles);
+#ifndef __AVR__
+  printnice(F("Arcs F      "), usecFilledArcs);
+  printnice(F("Arcs        "), usecArcs);
   printnice(F("RoundRects F"), usecFilledRoundRects);
   printnice(F("RoundRects  "), usecRoundRects);
+#endif
 
   if ((h > w) || (h > 240))
   {
