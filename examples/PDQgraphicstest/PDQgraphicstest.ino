@@ -396,7 +396,7 @@ void serialOut(const __FlashStringHelper *item, int32_t v, uint32_t d, bool clea
   }
 }
 
-void printnice(const __FlashStringHelper *item, int32_t v)
+void printnice(const __FlashStringHelper *item, long int v)
 {
   gfx->setTextSize(tsb);
   gfx->setTextColor(CYAN);
