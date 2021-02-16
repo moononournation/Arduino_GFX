@@ -93,12 +93,12 @@ void Arduino_SEPS525::tftInit()
   _bus->sendData(0x01);
 }
 
-void Arduino_SEPS525::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_SEPS525::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   uint8_t cmd1, cmd2, cmd3;
   if ((x != _currentX) || (w != _currentW))
   {
-    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    int16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
     if (_rotation & 0x01) // Portrait
     {
       cmd1 = SEPS525_MY1_ADDR;
@@ -123,7 +123,7 @@ void Arduino_SEPS525::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
   }
   if ((y != _currentY) || (h != _currentH))
   {
-    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
+    int16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
     if (_rotation & 0x01) // Portrait
     {
       cmd1 = SEPS525_MX1_ADDR;

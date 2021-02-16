@@ -253,7 +253,7 @@ void Arduino_R61529::tftInit()
   _bus->batchOperation(r61529_init_operations, sizeof(r61529_init_operations) / sizeof(r61529_init_operations[0]));
 }
 
-void Arduino_R61529::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_R61529::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW))
   {

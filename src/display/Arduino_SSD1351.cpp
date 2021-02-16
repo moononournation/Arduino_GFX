@@ -46,7 +46,7 @@ void Arduino_SSD1351::tftInit()
   _bus->sendCommand(SSD1351_DISPLAYON);     // Main screen turn on
 }
 
-void Arduino_SSD1351::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_SSD1351::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   uint8_t cmd;
   if ((x != _currentX) || (w != _currentW))

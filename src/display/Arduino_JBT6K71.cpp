@@ -123,13 +123,13 @@ void Arduino_JBT6K71::tftInit()
   _bus->batchOperation(jbt6k71_init_operations, sizeof(jbt6k71_init_operations) / sizeof(jbt6k71_init_operations[0]));
 }
 
-void Arduino_JBT6K71::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_JBT6K71::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   uint16_t cmd1, cmd2, cmd3;
 
   if ((x != _currentX) || (w != _currentW))
   {
-    uint16_t x_start, x_end, x_pos;
+    int16_t x_start, x_end, x_pos;
 
     if (_rotation & 0x01) // Landscape
     {
@@ -167,7 +167,7 @@ void Arduino_JBT6K71::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
   }
   if ((y != _currentY) || (h != _currentH))
   {
-    uint16_t y_start, y_end, y_pos;
+    int16_t y_start, y_end, y_pos;
 
     if (_rotation & 0x01) // Portrait
     {

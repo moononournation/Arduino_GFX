@@ -59,7 +59,7 @@ void Arduino_SSD1331::tftInit()
   _bus->sendCommand(SSD1331_DISPLAYON); //--turn on oled panel
 }
 
-void Arduino_SSD1331::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_SSD1331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW))
   {

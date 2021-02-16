@@ -18,7 +18,7 @@ public:
 
   // This MUST be defined by the subclass:
   // and also protected function: tftInit()
-  virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) = 0;
+  virtual void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) = 0;
   virtual void invertDisplay(bool) = 0;
   virtual void displayOn() = 0;
   virtual void displayOff() = 0;
@@ -34,7 +34,7 @@ public:
   virtual void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
   virtual void endWrite(void);
 
-  virtual void setAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+  virtual void setAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
   virtual void pushColor(uint16_t color);
 
 // TFT optimization code, too big for ATMEL family
@@ -62,7 +62,7 @@ protected:
   uint8_t COL_OFFSET1, ROW_OFFSET1;
   uint8_t COL_OFFSET2, ROW_OFFSET2;
   uint8_t _xStart, _yStart;
-  uint16_t _currentX, _currentY;
+  int16_t _currentX, _currentY;
   uint16_t _currentW, _currentH;
   virtual void tftInit() = 0;
   bool _ips;

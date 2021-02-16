@@ -17,7 +17,7 @@ typedef enum
 
 typedef class JpegDec JpegDec;
 typedef size_t (*jpg_reader_cb)(JpegDec *jpegDec, size_t index, uint8_t *buf, size_t len);
-typedef bool (*jpg_writer_cb)(JpegDec *jpegDec, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t *data);
+typedef bool (*jpg_writer_cb)(JpegDec *jpegDec, int16_t x, int16_t y, uint16_t w, uint16_t h, uint8_t *data);
 
 class JpegDec
 {
@@ -96,7 +96,7 @@ public:
         return len; // Returns number of bytes read
     }
 
-    static bool gfx_writer(JpegDec *jpegDec, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t *data)
+    static bool gfx_writer(JpegDec *jpegDec, int16_t x, int16_t y, uint16_t w, uint16_t h, uint8_t *data)
     {
         Arduino_GFX *gfx = (Arduino_GFX *)jpegDec->output;
         if (data)
@@ -107,7 +107,7 @@ public:
         return true; // Continue to decompression
     }
 
-    static bool framebuffer_writer(JpegDec *jpegDec, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t *data)
+    static bool framebuffer_writer(JpegDec *jpegDec, int16_t x, int16_t y, uint16_t w, uint16_t h, uint8_t *data)
     {
         uint16_t *framebuffer = (uint16_t *)jpegDec->output;
         // Serial.printf("%d, %d, %d, %d\n", x, y, w, h);
@@ -140,8 +140,8 @@ private:
 
     static uint32_t _jpg_write(lgfxJdec *decoder, void *bitmap, JRECT *rect)
     {
-        uint16_t x = rect->left;
-        uint16_t y = rect->top;
+        int16_t x = rect->left;
+        int16_t y = rect->top;
         uint16_t w = rect->right + 1 - x;
         uint16_t h = rect->bottom + 1 - y;
         uint8_t *data = (uint8_t *)bitmap;

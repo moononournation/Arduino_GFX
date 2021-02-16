@@ -90,7 +90,7 @@ void Arduino_SSD1283A::tftInit()
   _bus->endWrite();
 }
 
-void Arduino_SSD1283A::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_SSD1283A::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   uint8_t v1 = 0, v2 = 0, v3 = 0, h1 = 0, h2 = 0, h3 = 0;
 

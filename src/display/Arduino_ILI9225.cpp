@@ -44,13 +44,13 @@ void Arduino_ILI9225::tftInit()
   _bus->sendData16(0x1017);
 }
 
-void Arduino_ILI9225::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_ILI9225::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   uint8_t cmd1, cmd2, cmd3;
 
   if ((x != _currentX) || (w != _currentW))
   {
-    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    int16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
     if (_rotation & 0x01) // Landscape
     {
@@ -76,7 +76,7 @@ void Arduino_ILI9225::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
   }
   if ((y != _currentY) || (h != _currentH))
   {
-    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
+    int16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
     if (_rotation & 0x01) // Landscape
     {

@@ -140,11 +140,11 @@ void Arduino_HX8347D::tftInit()
   }
 }
 
-void Arduino_HX8347D::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_HX8347D::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW))
   {
-    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    int16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
     _bus->writeC8D8(0x02, x_start >> 8);
     _bus->writeC8D8(0x03, x_start & 0xFF);
     _bus->writeC8D8(0x04, x_end >> 8);
@@ -155,7 +155,7 @@ void Arduino_HX8347D::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
   }
   if ((y != _currentY) || (h != _currentH))
   {
-    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
+    int16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
     _bus->writeC8D8(0x06, y_start >> 8);
     _bus->writeC8D8(0x07, y_start & 0xFF);
     _bus->writeC8D8(0x08, y_end >> 8);

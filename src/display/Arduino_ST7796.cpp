@@ -63,7 +63,7 @@ void Arduino_ST7796::tftInit()
   _bus->endWrite();
 }
 
-void Arduino_ST7796::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_ST7796::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW))
   {

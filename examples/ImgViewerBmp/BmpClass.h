@@ -95,7 +95,7 @@ private:
     {
         byte bmbitmask;
         int16_t i, ystart, bmppb, p, d;
-        uint16_t x, y;
+        int16_t x, y;
         uint16_t c;
         bmbpl = ((bmbpp * bmwidth + 31) / 32) * 4; //bytes per line
         bmppb = 8 / bmbpp;                         //pixels/byte

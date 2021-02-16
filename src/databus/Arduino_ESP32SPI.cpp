@@ -526,7 +526,7 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
     uint8_t shift;
     uint32_t l;
     uint16_t bufLen = (len <= 28) ? len : 28;
-    uint16_t xferLen;
+    int16_t xferLen;
     for (uint32_t t = 0; t < bufLen; t++)
     {
       idx = data_buf_bit_idx >> 3;
@@ -591,7 +591,7 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
   else // 8-bit SPI
   {
     uint16_t bufLen = (len < 32) ? len : 32;
-    uint16_t xferLen, l;
+    int16_t xferLen, l;
     uint32_t c32;
     MSB_32_16_16_SET(c32, p, p);
 

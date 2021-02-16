@@ -251,7 +251,7 @@ void Arduino_GC9A01::tftInit()
   delay(20);
 }
 
-void Arduino_GC9A01::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_GC9A01::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW) || (y != _currentY) || (h != _currentH))
   {

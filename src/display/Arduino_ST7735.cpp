@@ -54,11 +54,11 @@ void Arduino_ST7735::tftInit()
   _bus->sendCommand(ST7735_DISPON); // 5: Main screen turn on, no args, w/delay
 }
 
-void Arduino_ST7735::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_ST7735::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW))
   {
-    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    int16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
     _bus->writeCommand(ST7735_CASET); // Column addr set
     _bus->write(x_start >> 8);
@@ -71,7 +71,7 @@ void Arduino_ST7735::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_
   }
   if ((y != _currentY) || (h != _currentH))
   {
-    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
+    int16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
     _bus->writeCommand(ST7735_RASET); // Row addr set
     _bus->write(y_start >> 8);

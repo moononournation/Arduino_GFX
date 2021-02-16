@@ -199,7 +199,7 @@ void Arduino_TFT::endWrite()
   _bus->endWrite();
 }
 
-void Arduino_TFT::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t w,
+void Arduino_TFT::setAddrWindow(int16_t x0, int16_t y0, uint16_t w,
                                 uint16_t h)
 {
   startWrite();

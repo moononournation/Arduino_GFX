@@ -374,9 +374,9 @@ uint32_t testPixels()
 {
   uint32_t start = micros_start();
 
-  for (uint16_t y = 0; y < h; y++)
+  for (int16_t y = 0; y < h; y++)
   {
-    for (uint16_t x = 0; x < w; x++)
+    for (int16_t x = 0; x < w; x++)
     {
       gfx->drawPixel(x, y, gfx->color565(x << 3, y << 3, x * y));
     }

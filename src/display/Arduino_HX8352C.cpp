@@ -313,11 +313,11 @@ void Arduino_HX8352C::tftInit()
   _bus->sendCommand(0x22); //Start GRAM write
 }
 
-void Arduino_HX8352C::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_HX8352C::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW))
   {
-    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    int16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
     _bus->writeCommand(0x02);
     _bus->write(x_start >> 8);
     _bus->writeCommand(0x03);
@@ -332,7 +332,7 @@ void Arduino_HX8352C::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16
   }
   if ((y != _currentY) || (h != _currentH))
   {
-    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
+    int16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
     _bus->writeCommand(0x06);
     _bus->write(y_start >> 8);
     _bus->writeCommand(0x07);

@@ -113,11 +113,11 @@ void Arduino_ILI9488_18bit::tftInit()
   _bus->batchOperation(ili9488_init_operations, sizeof(ili9488_init_operations) / sizeof(ili9488_init_operations[0]));
 }
 
-void Arduino_ILI9488_18bit::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void Arduino_ILI9488_18bit::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW))
   {
-    uint16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
+    int16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
 
     _bus->writeCommand(ILI9488_CASET); // Column addr set
     _bus->write(x_start >> 8);
@@ -130,7 +130,7 @@ void Arduino_ILI9488_18bit::writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, 
   }
   if ((y != _currentY) || (h != _currentH))
   {
-    uint16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
+    int16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
 
     _bus->writeCommand(ILI9488_PASET); // Row addr set
     _bus->write(y_start >> 8);
