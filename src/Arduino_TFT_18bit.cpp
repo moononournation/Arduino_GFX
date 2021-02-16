@@ -18,7 +18,15 @@ void Arduino_TFT_18bit::writeColor(uint16_t color)
 {
   _bus->write((color & 0xF800) >> 8);
   _bus->write((color & 0x07E0) >> 3);
-  _bus->write((color & 0x001F) << 3);
+  _bus->write(color << 3);
+}
+
+void Arduino_TFT_18bit::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
+{
+  writeAddrWindow(x, y, 1, 1);
+  _bus->write((color & 0xF800) >> 8);
+  _bus->write((color & 0x07E0) >> 3);
+  _bus->write(color << 3);
 }
 
 void Arduino_TFT_18bit::writeRepeat(uint16_t color, uint32_t len)
@@ -47,14 +55,78 @@ void Arduino_TFT_18bit::writePixels(uint16_t *data, uint32_t len)
     d = *data++;
     _bus->write((d & 0xF800) >> 8);
     _bus->write((d & 0x07E0) >> 3);
-    _bus->write((d & 0x001F) << 3);
+    _bus->write(d << 3);
   }
+}
+
+/**************************************************************************/
+/*!
+   @brief    Push a pixel, overwrite in subclasses if startWrite is defined!
+   @param    color 16-bit 5-6-5 Color to fill with
+*/
+/**************************************************************************/
+void Arduino_TFT_18bit::pushColor(uint16_t color)
+{
+  _bus->beginWrite();
+  _bus->write((color & 0xF800) >> 8);
+  _bus->write((color & 0x07E0) >> 3);
+  _bus->write(color << 3);
+  _bus->endWrite();
 }
 
 // TFT optimization code, too big for ATMEL family
 #if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
 // TFT tuned BITMAP / XBITMAP / GRAYSCALE / RGB BITMAP FUNCTIONS ---------------------
+
+/**************************************************************************/
+/*!
+    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  bitmap      byte array of Indexed color bitmap
+    @param  color_index byte array of 16-bit color index
+    @param  w           Width of bitmap in pixels
+    @param  h           Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_TFT_18bit::writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
+{
+  uint16_t d;
+  while (len--)
+  {
+    d = color_index[*(bitmap++)];
+    _bus->write((d & 0xF800) >> 8);
+    _bus->write((d & 0x07E0) >> 3);
+    _bus->write(d << 3);
+  }
+}
+
+/**************************************************************************/
+/*!
+    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  bitmap      byte array of Indexed color bitmap
+    @param  color_index byte array of 16-bit color index
+    @param  w           Width of bitmap in pixels
+    @param  h           Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_TFT_18bit::writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
+{
+  uint8_t r, g, b;
+  uint16_t d;
+  while (len--)
+  {
+    d = color_index[*(bitmap++)];
+    r = (d & 0xF800) >> 8;
+    g = (d & 0x07E0) >> 3;
+    b = d << 3;
+    _bus->write(r);
+    _bus->write(g);
+    _bus->write(b);
+    _bus->write(r);
+    _bus->write(g);
+    _bus->write(b);
+  }
+}
 
 /**************************************************************************/
 /*!
@@ -309,17 +381,9 @@ void Arduino_TFT_18bit::drawIndexedBitmap(int16_t x, int16_t y,
   }
   else
   {
-    uint16_t d;
-    uint32_t len = w * h;
     startWrite();
     writeAddrWindow(x, y, w, h);
-    while (len--)
-    {
-      d = color_index[*(bitmap++)];
-      _bus->write((d & 0xF800) >> 8);
-      _bus->write((d & 0x07E0) >> 3);
-      _bus->write((d & 0x001F) << 3);
-    }
+    writeIndexedPixels(bitmap, color_index, w * h);
     endWrite();
   }
 }
@@ -368,7 +432,7 @@ void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
         d = pgm_read_word(&bitmap[j * w + i]);
         _bus->write((d & 0xF800) >> 8);
         _bus->write((d & 0x07E0) >> 3);
-        _bus->write((d & 0x001F) << 3);
+        _bus->write(d << 3);
       }
     }
     endWrite();
@@ -419,7 +483,7 @@ void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
         d = bitmap[j * w + i];
         _bus->write((d & 0xF800) >> 8);
         _bus->write((d & 0x07E0) >> 3);
-        _bus->write((d & 0x001F) << 3);
+        _bus->write(d << 3);
       }
     }
     endWrite();

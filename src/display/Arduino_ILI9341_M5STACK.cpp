@@ -10,6 +10,37 @@ Arduino_ILI9341_M5STACK::Arduino_ILI9341_M5STACK(Arduino_DataBus *bus, int8_t rs
 {
 }
 
+/**************************************************************************/
+/*!
+    @brief   Set origin of (0,0) and orientation of TFT display
+    @param   m  The index for rotation, from 0-3 inclusive
+*/
+/**************************************************************************/
+void Arduino_ILI9341_M5STACK::setRotation(uint8_t r)
+{
+  Arduino_TFT::setRotation(r);
+  switch (_rotation)
+  {
+  case 0:
+    r = (ILI9341_MADCTL_MV | ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
+    break;
+  case 1:
+    r = (ILI9341_MADCTL_BGR);
+    break;
+  case 2:
+    r = (ILI9341_MADCTL_MV | ILI9341_MADCTL_MX | ILI9341_MADCTL_BGR);
+    break;
+  case 3:
+    r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
+    break;
+  }
+
+  _bus->beginWrite();
+  _bus->writeCommand(ILI9341_MADCTL);
+  _bus->write(r);
+  _bus->endWrite();
+}
+
 // Companion code to the above tables.  Reads and issues
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ILI9341_M5STACK::tftInit()
@@ -121,35 +152,4 @@ void Arduino_ILI9341_M5STACK::tftInit()
   delay(ILI9341_SLPOUT_DELAY);
   _bus->sendCommand(ILI9341_DISPON); // Display on
   delay(150);
-}
-
-/**************************************************************************/
-/*!
-    @brief   Set origin of (0,0) and orientation of TFT display
-    @param   m  The index for rotation, from 0-3 inclusive
-*/
-/**************************************************************************/
-void Arduino_ILI9341_M5STACK::setRotation(uint8_t r)
-{
-  Arduino_TFT::setRotation(r);
-  switch (_rotation)
-  {
-  case 0:
-    r = (ILI9341_MADCTL_MV | ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
-    break;
-  case 1:
-    r = (ILI9341_MADCTL_BGR);
-    break;
-  case 2:
-    r = (ILI9341_MADCTL_MV | ILI9341_MADCTL_MX | ILI9341_MADCTL_BGR);
-    break;
-  case 3:
-    r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
-    break;
-  }
-
-  _bus->beginWrite();
-  _bus->writeCommand(ILI9341_MADCTL);
-  _bus->write(r);
-  _bus->endWrite();
 }

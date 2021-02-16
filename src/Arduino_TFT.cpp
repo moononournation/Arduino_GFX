@@ -65,7 +65,7 @@ void Arduino_TFT::writeColor(uint16_t color)
 void Arduino_TFT::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
   writeAddrWindow(x, y, 1, 1);
-  writeColor(color);
+  _bus->write16(color);
 }
 
 void Arduino_TFT::writeRepeat(uint16_t color, uint32_t len)
@@ -76,11 +76,6 @@ void Arduino_TFT::writeRepeat(uint16_t color, uint32_t len)
 void Arduino_TFT::writePixels(uint16_t *data, uint32_t len)
 {
   _bus->writePixels(data, len);
-}
-
-void Arduino_TFT::writeBytes(uint8_t *data, uint32_t len)
-{
-  _bus->writeBytes(data, len);
 }
 
 /*!
@@ -204,6 +199,16 @@ void Arduino_TFT::endWrite()
   _bus->endWrite();
 }
 
+void Arduino_TFT::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t w,
+                                uint16_t h)
+{
+  startWrite();
+
+  writeAddrWindow(x0, y0, w, h);
+
+  endWrite();
+}
+
 /**************************************************************************/
 /*!
    @brief    Push a pixel, overwrite in subclasses if startWrite is defined!
@@ -213,18 +218,8 @@ void Arduino_TFT::endWrite()
 void Arduino_TFT::pushColor(uint16_t color)
 {
   _bus->beginWrite();
-  writeColor(color);
+  _bus->write16(color);
   _bus->endWrite();
-}
-
-void Arduino_TFT::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t w,
-                                uint16_t h)
-{
-  startWrite();
-
-  writeAddrWindow(x0, y0, w, h);
-
-  endWrite();
 }
 
 /**************************************************************************/
@@ -334,6 +329,34 @@ void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 
 /**************************************************************************/
 /*!
+    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  bitmap      byte array of Indexed color bitmap
+    @param  color_index byte array of 16-bit color index
+    @param  w           Width of bitmap in pixels
+    @param  h           Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_TFT::writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
+{
+  _bus->writeIndexedPixels(bitmap, color_index, len);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+    @param  bitmap      byte array of Indexed color bitmap
+    @param  color_index byte array of 16-bit color index
+    @param  w           Width of bitmap in pixels
+    @param  h           Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_TFT::writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
+{
+  _bus->writeIndexedPixelsDouble(bitmap, color_index, len);
+}
+
+/**************************************************************************/
+/*!
    @brief      Draw a PROGMEM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
     @param    x   Top left corner x coordinate
     @param    y   Top left corner y coordinate
@@ -383,7 +406,7 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
       {
         byte = pgm_read_byte(&bitmap[idx++]);
       }
-      writeColor((byte & 0x80) ? color : bg);
+      _bus->write16((byte & 0x80) ? color : bg);
     }
     endWrite();
   }
@@ -438,7 +461,7 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
       {
         byte = *(bitmap++);
       }
-      writeColor((byte & 0x80) ? color : bg);
+      _bus->write16((byte & 0x80) ? color : bg);
     }
     endWrite();
   }
@@ -484,7 +507,7 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
     for (uint32_t i = 0; i < len; i++)
     {
       v = (uint8_t)pgm_read_byte(&bitmap[i]);
-      writeColor(color565(v, v, v));
+      _bus->write16(color565(v, v, v));
     }
     endWrite();
   }
@@ -530,38 +553,10 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
     while (len--)
     {
       v = *(bitmap++);
-      writeColor(color565(v, v, v));
+      _bus->write16(color565(v, v, v));
     }
     endWrite();
   }
-}
-
-/**************************************************************************/
-/*!
-    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param  bitmap      byte array of Indexed color bitmap
-    @param  color_index byte array of 16-bit color index
-    @param  w           Width of bitmap in pixels
-    @param  h           Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT::writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
-{
-  _bus->writeIndexedPixels(bitmap, color_index, len);
-}
-
-/**************************************************************************/
-/*!
-    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param  bitmap      byte array of Indexed color bitmap
-    @param  color_index byte array of 16-bit color index
-    @param  w           Width of bitmap in pixels
-    @param  h           Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT::writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
-{
-  _bus->writeIndexedPixelsDouble(bitmap, color_index, len);
 }
 
 /**************************************************************************/
@@ -645,7 +640,7 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
     writeAddrWindow(x, y, w, h);
     for (uint32_t i = 0; i < len; i++)
     {
-      writeColor(pgm_read_word(&bitmap[i]));
+      _bus->write16(pgm_read_word(&bitmap[i]));
     }
     endWrite();
   }
@@ -772,7 +767,7 @@ void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
     writeAddrWindow(x, y, w, h);
     while (len--)
     {
-      writeColor(color565(pgm_read_byte(&bitmap[offset]), pgm_read_byte(&bitmap[offset + 1]), pgm_read_byte(&bitmap[offset + 2])));
+      _bus->write16(color565(pgm_read_byte(&bitmap[offset]), pgm_read_byte(&bitmap[offset + 1]), pgm_read_byte(&bitmap[offset + 2])));
       offset += 3;
     }
     endWrite();
@@ -818,7 +813,7 @@ void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
     writeAddrWindow(x, y, w, h);
     while (len--)
     {
-      writeColor(color565(bitmap[offset], bitmap[offset + 1], bitmap[offset + 2]));
+      _bus->write16(color565(bitmap[offset], bitmap[offset + 1], bitmap[offset + 2]));
       offset += 3;
     }
     endWrite();

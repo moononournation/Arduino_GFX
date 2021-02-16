@@ -13,6 +13,9 @@ class Arduino_TFT : public Arduino_GFX
 public:
   Arduino_TFT(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips, int16_t w, int16_t h, uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2);
 
+  // This SHOULD be defined by the subclass:
+  virtual void setRotation(uint8_t r);
+
   // This MUST be defined by the subclass:
   // and also protected function: tftInit()
   virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) = 0;
@@ -26,7 +29,6 @@ public:
   virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
   virtual void writeRepeat(uint16_t color, uint32_t len);
   virtual void writePixels(uint16_t *data, uint32_t size);
-  virtual void writeBytes(uint8_t *data, uint32_t size);
   virtual void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
   virtual void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
   virtual void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
@@ -35,13 +37,12 @@ public:
   virtual void setAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
   virtual void pushColor(uint16_t color);
 
-  virtual void setRotation(uint8_t r);
-
 // TFT optimization code, too big for ATMEL family
 #if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
+  virtual void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
   virtual void writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len);
   virtual void writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len);
-  virtual void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
+
   virtual void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg);
   virtual void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg);
   virtual void drawGrayscaleBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);

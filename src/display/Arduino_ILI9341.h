@@ -88,11 +88,15 @@ public:
   Arduino_ILI9341(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0);
 
   virtual void begin(int32_t speed = 0);
-  virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+
   virtual void setRotation(uint8_t r);
+
+  virtual void writeAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
   virtual void invertDisplay(bool);
   virtual void displayOn();
   virtual void displayOff();
+
+  virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
 
 protected:
   virtual void tftInit();
