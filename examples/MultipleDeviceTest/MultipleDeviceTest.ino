@@ -29,12 +29,8 @@ uint8_t tsa, tsb, tsc, ds;
 void setup()
 {
   Serial.begin(115200);
-  while (!Serial)
-  {
-    // wait and do nothing
-  }
 
-  Serial.println("Arduino_GFX library Test!");
+  Serial.println("Arduino_GFX library Multiple Device Test!");
 
   gfx1->begin();
   gfx1->fillScreen(RED);

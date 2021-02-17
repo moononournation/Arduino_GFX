@@ -211,10 +211,6 @@ uint8_t tsa, tsb, tsc, ds;
 void setup()
 {
   Serial.begin(115200);
-  while (!Serial)
-  {
-    // wait and do nothing
-  }
 
   Serial.println("Arduino_GFX library Test!");
 
