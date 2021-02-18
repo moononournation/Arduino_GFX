@@ -4,6 +4,7 @@
  * https://github.com/ananevilya/Arduino-ST7789-Library.git
  */
 #include "Arduino_ST7789.h"
+#include "SPI.h"
 
 Arduino_ST7789::Arduino_ST7789(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
@@ -16,7 +17,7 @@ Arduino_ST7789::Arduino_ST7789(
 void Arduino_ST7789::begin(int32_t speed)
 {
 #if defined(ESP32)
-  _override_datamode = 3; // SPI_MODE3
+  _override_datamode = SPI_MODE3;
 #endif
   Arduino_TFT::begin(speed);
 }
