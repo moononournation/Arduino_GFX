@@ -840,4 +840,4 @@ INLINE void Arduino_ESP32SPI::CS_LOW(void)
   *csPortClr = csPinMask;
 }
 
-#endif
+#endif // #ifdef ESP32
