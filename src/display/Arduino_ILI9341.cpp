@@ -67,23 +67,6 @@ void Arduino_ILI9341::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
   _bus->writeCommand(ILI9341_RAMWR); // write to RAM
 }
 
-void Arduino_ILI9341::invertDisplay(bool i)
-{
-  _bus->sendCommand(i ? ILI9341_INVON : ILI9341_INVOFF);
-}
-
-void Arduino_ILI9341::displayOn(void)
-{
-  _bus->sendCommand(ILI9341_SLPOUT);
-  delay(ILI9341_SLPOUT_DELAY);
-}
-
-void Arduino_ILI9341::displayOff(void)
-{
-  _bus->sendCommand(ILI9341_SLPIN);
-  delay(ILI9341_SLPIN_DELAY);
-}
-
 void Arduino_ILI9341::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
   if ((x != _currentX) || (1 != _currentW))
@@ -103,6 +86,23 @@ void Arduino_ILI9341::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
   }
 
   _bus->writeC8D16(ILI9341_RAMWR, color); // write to RAM
+}
+
+void Arduino_ILI9341::invertDisplay(bool i)
+{
+  _bus->sendCommand(i ? ILI9341_INVON : ILI9341_INVOFF);
+}
+
+void Arduino_ILI9341::displayOn(void)
+{
+  _bus->sendCommand(ILI9341_SLPOUT);
+  delay(ILI9341_SLPOUT_DELAY);
+}
+
+void Arduino_ILI9341::displayOff(void)
+{
+  _bus->sendCommand(ILI9341_SLPIN);
+  delay(ILI9341_SLPIN_DELAY);
 }
 
 // Companion code to the above tables.  Reads and issues

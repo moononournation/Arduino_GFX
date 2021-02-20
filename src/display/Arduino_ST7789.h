@@ -62,8 +62,12 @@ public:
       uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
   virtual void begin(int32_t speed = 0);
-  virtual void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
+
   virtual void setRotation(uint8_t r);
+
+  virtual void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
+  virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
+
   virtual void invertDisplay(bool);
   virtual void displayOn();
   virtual void displayOff();
