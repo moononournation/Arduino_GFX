@@ -12,7 +12,6 @@ typedef volatile uint32_t *PORTreg_t; ///< PORT register type
 
 #include "Arduino_DataBus.h"
 
-#define SPI_DEFAULT_FREQ 40000000
 #define MAX_TRANSFER_SZ (480 * 2 * 9) // size should able divisible by 32
 #define DMA_CHANNEL 2
 

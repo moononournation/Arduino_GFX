@@ -6,6 +6,8 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_ESP32SPI_DMA.h"
 
+#define SPI_DEFAULT_FREQ 40000000
+
 Arduino_ESP32SPI_DMA::Arduino_ESP32SPI_DMA(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI */, bool is_shared_interface /* = true */)
     : _dc(dc), _spi_num(spi_num), _is_shared_interface(is_shared_interface)
 {
