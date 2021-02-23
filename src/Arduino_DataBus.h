@@ -13,6 +13,11 @@
 
 #define UNUSED(x) (void)(x)
 
+#define MSB_16_SET(var, val)                                 \
+    {                                                        \
+        (var) = (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8); \
+    }
+
 #if defined(ESP32)
 #define MSB_32_SET(var, val)                                      \
     {                                                             \
@@ -23,11 +28,7 @@
     {                                                                                                                       \
         (var) = (((uint32_t)v2 & 0xff00) << 8) | (((uint32_t)v2 & 0xff) << 24) | ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8); \
     }
-#define MSB_16_SET(var, val)                                 \
-    {                                                        \
-        (var) = (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8); \
-    }
-#define INLINE __attribute__ ((always_inline)) inline
+#define INLINE __attribute__((always_inline)) inline
 #else
 #define INLINE inline
 #endif
