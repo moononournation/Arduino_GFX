@@ -71,6 +71,20 @@ This library is not putting speed at the first priority, but still paid much eff
 - ESP32 I2S 8-bit/16-bit parallel interface
 - FastLED
 
+## Currently Supported Dev Board
+- Arduino Nano
+- Arduino Nano BLE 33
+- Arduino Pro Micro
+- ESP8266 Series
+- ESP32 Series
+
+## Tobe Support Dev Board
+- Arduino ATMega2560
+- ESP32-S2 Series
+- ESP32-S3 Series
+- Raspberry Pi Pico
+- RTL8720
+
 ## Currently Supported Dev Device
 - M5Stack Core Family
 - Odroid Go
