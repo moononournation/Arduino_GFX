@@ -17,8 +17,6 @@
     {                                                        \
         (var) = (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8); \
     }
-
-#if defined(ESP32)
 #define MSB_32_SET(var, val)                                      \
     {                                                             \
         uint8_t *v = (uint8_t *)&(val);                           \
@@ -28,6 +26,8 @@
     {                                                                                                                       \
         (var) = (((uint32_t)v2 & 0xff00) << 8) | (((uint32_t)v2 & 0xff) << 24) | ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8); \
     }
+
+#if defined(ESP32)
 #define INLINE __attribute__((always_inline)) inline
 #else
 #define INLINE inline
