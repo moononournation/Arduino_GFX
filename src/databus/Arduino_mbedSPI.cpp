@@ -4,8 +4,6 @@
  */
 #ifdef ARDUINO_ARCH_NRF52840
 
-#include <SPI.h>
-
 #include "Arduino_mbedSPI.h"
 
 #define SPI_DEFAULT_FREQ 8000000
