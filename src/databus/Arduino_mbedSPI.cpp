@@ -20,12 +20,20 @@ void Arduino_mbedSPI::begin(int32_t speed, int8_t dataMode)
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
   _dataMode = dataMode;
 
-  _dcGpio = new mbed::DigitalInOut(digitalPinToPinName((pin_size_t)_dc), PIN_OUTPUT, PullNone, HIGH);
-  _dcGpio->write(HIGH); // Data mode
+  uint32_t pin = digitalPinToPinName((pin_size_t)_dc);
+  NRF_GPIO_Type *reg = nrf_gpio_pin_port_decode(&pin);
+  nrf_gpio_cfg_output(pin);
+  _dcPortSet = &reg->OUTSET;
+  _dcPortClr = &reg->OUTCLR;
+  _dcPinMask = 1UL << pin;
   if (_cs >= 0)
   {
-    _csGpio = new mbed::DigitalInOut(digitalPinToPinName((pin_size_t)_cs), PIN_OUTPUT, PullNone, HIGH);
-    _csGpio->write(HIGH); // Deselect
+    pin = digitalPinToPinName((pin_size_t)_cs);
+    reg = nrf_gpio_pin_port_decode(&pin);
+    nrf_gpio_cfg_output(pin);
+    _csPortSet = &reg->OUTSET;
+    _csPortClr = &reg->OUTCLR;
+    _csPinMask = 1UL << pin;
   }
 
   if (_dataMode < 0)
@@ -295,7 +303,7 @@ INLINE void Arduino_mbedSPI::CS_HIGH(void)
 {
   if (_cs >= 0)
   {
-    _csGpio->write(HIGH);
+    *_csPortSet = _csPinMask;
   }
 }
 
@@ -303,18 +311,18 @@ INLINE void Arduino_mbedSPI::CS_LOW(void)
 {
   if (_cs >= 0)
   {
-    _csGpio->write(LOW);
+    *_csPortClr = _csPinMask;
   }
 }
 
 INLINE void Arduino_mbedSPI::DC_HIGH(void)
 {
-  _dcGpio->write(HIGH);
+  *_dcPortSet = _dcPinMask;
 }
 
 INLINE void Arduino_mbedSPI::DC_LOW(void)
 {
-  _dcGpio->write(LOW);
+  *_dcPortClr = _dcPinMask;
 }
 
 #endif // #ifdef ARDUINO_ARCH_NRF52840

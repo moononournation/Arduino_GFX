@@ -54,7 +54,10 @@ private:
 
   int8_t _dc, _cs;
   mbed::SPI *_dev;
-  mbed::DigitalInOut *_dcGpio, *_csGpio;
+  volatile uint32_t *_csPortSet, *_csPortClr;
+  volatile uint32_t *_dcPortSet, *_dcPortClr;
+  volatile uint32_t _dcPinMask;
+  volatile uint32_t _csPinMask;
 
   union
   {

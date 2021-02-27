@@ -5,13 +5,17 @@
 #ifndef _ARDUINO_HWSPI_H_
 #define _ARDUINO_HWSPI_H_
 
+#include "Arduino_DataBus.h"
+
 // HARDWARE CONFIG ---------------------------------------------------------
 
 #if defined(__AVR__)
 #define USE_FAST_PINIO ///< Use direct PORT register access
 typedef uint8_t ARDUINOGFX_PORT_t;
 #elif defined(ARDUINO_ARCH_NRF52840)
-// TODO: mbed fast pin IO
+#define USE_FAST_PINIO   ///< Use direct PORT register access
+#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
+typedef uint32_t ARDUINOGFX_PORT_t;
 #elif defined(ESP32)
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
@@ -48,13 +52,11 @@ typedef uint8_t ARDUINOGFX_PORT_t;
 // but don't worry about it too much...the digitalWrite() implementation
 // on these platforms is reasonably efficient and already RAM-resident,
 // only gotcha then is no parallel connection support for now.
-#endif // end !ARM
+#endif // !ARM
 
 #ifdef USE_FAST_PINIO
 typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #endif
-
-#include "Arduino_DataBus.h"
 
 #if defined(ARDUINO_ARCH_ARC32) || defined(ARDUINO_MAXIM)
 #define SPI_DEFAULT_FREQ 16000000
@@ -130,26 +132,23 @@ private:
 
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
-  PORTreg_t csPortSet; ///< PORT register for chip select SET
-  PORTreg_t csPortClr; ///< PORT register for chip select CLEAR
-  PORTreg_t dcPortSet; ///< PORT register for data/command SET
-  PORTreg_t dcPortClr; ///< PORT register for data/command CLEAR
+  PORTreg_t _csPortSet; ///< PORT register for chip select SET
+  PORTreg_t _csPortClr; ///< PORT register for chip select CLEAR
+  PORTreg_t _dcPortSet; ///< PORT register for data/command SET
+  PORTreg_t _dcPortClr; ///< PORT register for data/command CLEAR
 #if !defined(KINETISK)
-  ARDUINOGFX_PORT_t csPinMask; ///< Bitmask for chip select
-  ARDUINOGFX_PORT_t dcPinMask; ///< Bitmask for data/command
-#endif                         // end !KINETISK
+  ARDUINOGFX_PORT_t _csPinMask; ///< Bitmask for chip select
+  ARDUINOGFX_PORT_t _dcPinMask; ///< Bitmask for data/command
+#endif                         // !KINETISK
 #else                          // !HAS_PORT_SET_CLR
-  PORTreg_t csPort;               ///< PORT register for chip select
-  PORTreg_t dcPort;               ///< PORT register for data/command
-  ARDUINOGFX_PORT_t csPinMaskSet; ///< Bitmask for chip select SET (OR)
-  ARDUINOGFX_PORT_t csPinMaskClr; ///< Bitmask for chip select CLEAR (AND)
-  ARDUINOGFX_PORT_t dcPinMaskSet; ///< Bitmask for data/command SET (OR)
-  ARDUINOGFX_PORT_t dcPinMaskClr; ///< Bitmask for data/command CLEAR (AND)
-#endif                         // end HAS_PORT_SET_CLR
-#elif defined(ARDUINO_ARCH_NRF52840)
-  mbed::DigitalInOut *_csGpio;
-  mbed::DigitalInOut *_dcGpio;
-#endif // !defined(USE_FAST_PINIO)
+  PORTreg_t _csPort;               ///< PORT register for chip select
+  PORTreg_t _dcPort;               ///< PORT register for data/command
+  ARDUINOGFX_PORT_t _csPinMaskSet; ///< Bitmask for chip select SET (OR)
+  ARDUINOGFX_PORT_t _csPinMaskClr; ///< Bitmask for chip select CLEAR (AND)
+  ARDUINOGFX_PORT_t _dcPinMaskSet; ///< Bitmask for data/command SET (OR)
+  ARDUINOGFX_PORT_t _dcPinMaskClr; ///< Bitmask for data/command CLEAR (AND)
+#endif                         // HAS_PORT_SET_CLR
+#endif                         // !defined(USE_FAST_PINIO)
 };
 
 #endif // _ARDUINO_HWSPI_H_

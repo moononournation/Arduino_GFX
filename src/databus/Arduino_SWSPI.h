@@ -5,13 +5,17 @@
 #ifndef _ARDUINO_SWSPI_H_
 #define _ARDUINO_SWSPI_H_
 
+#include "Arduino_DataBus.h"
+
 // HARDWARE CONFIG ---------------------------------------------------------
 
 #if defined(__AVR__)
 #define USE_FAST_PINIO ///< Use direct PORT register access
 typedef uint8_t ARDUINOGFX_PORT_t;
 #elif defined(ARDUINO_ARCH_NRF52840)
-// TODO: fast pin IO?
+#define USE_FAST_PINIO   ///< Use direct PORT register access
+#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
+typedef uint32_t ARDUINOGFX_PORT_t;
 #elif defined(ESP32)
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
@@ -49,13 +53,11 @@ typedef uint8_t ARDUINOGFX_PORT_t;
 // but don't worry about it too much...the digitalWrite() implementation
 // on these platforms is reasonably efficient and already RAM-resident,
 // only gotcha then is no parallel connection support for now.
-#endif // end !ARM
+#endif // !ARM
 
 #ifdef USE_FAST_PINIO
 typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #endif
-
-#include "Arduino_DataBus.h"
 
 class Arduino_SWSPI : public Arduino_DataBus
 {
@@ -114,45 +116,39 @@ private:
 
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
-  PORTreg_t csPortSet;   ///< PORT register for chip select SET
-  PORTreg_t csPortClr;   ///< PORT register for chip select CLEAR
-  PORTreg_t dcPortSet;   ///< PORT register for data/command SET
-  PORTreg_t dcPortClr;   ///< PORT register for data/command CLEAR
-  PORTreg_t mosiPortSet; ///< PORT register for MOSI SET
-  PORTreg_t mosiPortClr; ///< PORT register for MOSI CLEAR
-  PORTreg_t sckPortSet;  ///< PORT register for SCK SET
-  PORTreg_t sckPortClr;  ///< PORT register for SCK CLEAR
+  PORTreg_t _csPortSet;   ///< PORT register for chip select SET
+  PORTreg_t _csPortClr;   ///< PORT register for chip select CLEAR
+  PORTreg_t _dcPortSet;   ///< PORT register for data/command SET
+  PORTreg_t _dcPortClr;   ///< PORT register for data/command CLEAR
+  PORTreg_t _mosiPortSet; ///< PORT register for MOSI SET
+  PORTreg_t _mosiPortClr; ///< PORT register for MOSI CLEAR
+  PORTreg_t _sckPortSet;  ///< PORT register for SCK SET
+  PORTreg_t _sckPortClr;  ///< PORT register for SCK CLEAR
 #if !defined(KINETISK)
-  ARDUINOGFX_PORT_t csPinMask;   ///< Bitmask for chip select
-  ARDUINOGFX_PORT_t dcPinMask;   ///< Bitmask for data/command
-  ARDUINOGFX_PORT_t mosiPinMask; ///< Bitmask for MOSI
-  ARDUINOGFX_PORT_t sckPinMask;  ///< Bitmask for SCK
-#endif                           // end !KINETISK
-#else                            // !HAS_PORT_SET_CLR
-  PORTreg_t mosiPort;               ///< PORT register for MOSI
-  PORTreg_t sckPort;                ///< PORT register for SCK
-  PORTreg_t csPort;                 ///< PORT register for chip select
-  PORTreg_t dcPort;                 ///< PORT register for data/command
-  ARDUINOGFX_PORT_t csPinMaskSet;   ///< Bitmask for chip select SET (OR)
-  ARDUINOGFX_PORT_t csPinMaskClr;   ///< Bitmask for chip select CLEAR (AND)
-  ARDUINOGFX_PORT_t dcPinMaskSet;   ///< Bitmask for data/command SET (OR)
-  ARDUINOGFX_PORT_t dcPinMaskClr;   ///< Bitmask for data/command CLEAR (AND)
-  ARDUINOGFX_PORT_t mosiPinMaskSet; ///< Bitmask for MOSI SET (OR)
-  ARDUINOGFX_PORT_t mosiPinMaskClr; ///< Bitmask for MOSI CLEAR (AND)
-  ARDUINOGFX_PORT_t sckPinMaskSet;  ///< Bitmask for SCK SET (OR bitmask)
-  ARDUINOGFX_PORT_t sckPinMaskClr;  ///< Bitmask for SCK CLEAR (AND)
-#endif                           // end HAS_PORT_SET_CLR
-  PORTreg_t misoPort;            ///< PORT (PIN) register for MISO
+  ARDUINOGFX_PORT_t _csPinMask;   ///< Bitmask for chip select
+  ARDUINOGFX_PORT_t _dcPinMask;   ///< Bitmask for data/command
+  ARDUINOGFX_PORT_t _mosiPinMask; ///< Bitmask for MOSI
+  ARDUINOGFX_PORT_t _sckPinMask;  ///< Bitmask for SCK
+#endif                            // !KINETISK
+#else                             // !HAS_PORT_SET_CLR
+  PORTreg_t _mosiPort;               ///< PORT register for MOSI
+  PORTreg_t _sckPort;                ///< PORT register for SCK
+  PORTreg_t _csPort;                 ///< PORT register for chip select
+  PORTreg_t _dcPort;                 ///< PORT register for data/command
+  ARDUINOGFX_PORT_t _csPinMaskSet;   ///< Bitmask for chip select SET (OR)
+  ARDUINOGFX_PORT_t _csPinMaskClr;   ///< Bitmask for chip select CLEAR (AND)
+  ARDUINOGFX_PORT_t _dcPinMaskSet;   ///< Bitmask for data/command SET (OR)
+  ARDUINOGFX_PORT_t _dcPinMaskClr;   ///< Bitmask for data/command CLEAR (AND)
+  ARDUINOGFX_PORT_t _mosiPinMaskSet; ///< Bitmask for MOSI SET (OR)
+  ARDUINOGFX_PORT_t _mosiPinMaskClr; ///< Bitmask for MOSI CLEAR (AND)
+  ARDUINOGFX_PORT_t _sckPinMaskSet;  ///< Bitmask for SCK SET (OR bitmask)
+  ARDUINOGFX_PORT_t _sckPinMaskClr;  ///< Bitmask for SCK CLEAR (AND)
+#endif                            // HAS_PORT_SET_CLR
+  PORTreg_t _misoPort;            ///< PORT (PIN) register for MISO
 #if !defined(KINETISK)
-  ARDUINOGFX_PORT_t misoPinMask; ///< Bitmask for MISO
-#endif                           // end !KINETISK
-#elif defined(ARDUINO_ARCH_NRF52840)
-  mbed::DigitalInOut *_csGpio;
-  mbed::DigitalInOut *_dcGpio;
-  mbed::DigitalInOut *_sckGpio;
-  mbed::DigitalInOut *_mosiGpio;
-  mbed::DigitalInOut *_misoGpio;
-#endif // !defined(USE_FAST_PINIO)
+  ARDUINOGFX_PORT_t _misoPinMask; ///< Bitmask for MISO
+#endif                            // !KINETISK
+#endif                            // defined(USE_FAST_PINIO)
 };
 
 #endif // _ARDUINO_SWSPI_H_
