@@ -3,7 +3,6 @@
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
 #include <SPI.h>
-#include "Arduino_DataBus.h"
 #include "Arduino_HWSPI.h"
 
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
