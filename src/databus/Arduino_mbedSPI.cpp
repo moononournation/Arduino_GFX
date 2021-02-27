@@ -6,7 +6,6 @@
 
 #include <SPI.h>
 
-#include "Arduino_DataBus.h"
 #include "Arduino_mbedSPI.h"
 
 #define SPI_DEFAULT_FREQ 8000000
@@ -223,7 +222,15 @@ void Arduino_mbedSPI::writePixels(uint16_t *data, uint32_t len)
 {
   uint32_t xferLen;
   uint8_t *p;
-  union { uint16_t val; struct { uint8_t lsb; uint8_t msb; }; } t;
+  union
+  {
+    uint16_t val;
+    struct
+    {
+      uint8_t lsb;
+      uint8_t msb;
+    };
+  } t;
   while (len)
   {
     xferLen = (len < SPI_MAX_PIXELS_AT_ONCE) ? len : SPI_MAX_PIXELS_AT_ONCE;
