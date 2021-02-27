@@ -15,6 +15,26 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
   UNUSED(speed);
   UNUSED(dataMode);
 
+#ifdef ARDUINO_ARCH_NRF52840
+  if (_dc >= 0)
+  {
+    _dcGpio = new mbed::DigitalInOut(digitalPinToPinName((pin_size_t)_dc), PIN_OUTPUT, PullNone, HIGH);
+    _dcGpio->write(HIGH); // Data mode
+  }
+  if (_cs >= 0)
+  {
+    _csGpio = new mbed::DigitalInOut(digitalPinToPinName((pin_size_t)_cs), PIN_OUTPUT, PullNone, HIGH);
+    _csGpio->write(HIGH); // Deselect
+  }
+  _mosiGpio = new mbed::DigitalInOut(digitalPinToPinName((pin_size_t)_mosi), PIN_OUTPUT, PullNone, LOW);
+  _mosiGpio->write(LOW);
+  _sckGpio = new mbed::DigitalInOut(digitalPinToPinName((pin_size_t)_sck), PIN_OUTPUT, PullNone, LOW);
+  _sckGpio->write(LOW);
+  if (_miso >= 0)
+  {
+    _misoGpio = new mbed::DigitalInOut(digitalPinToPinName((pin_size_t)_mosi), PIN_INPUT, PullNone, LOW);
+  }
+#else // !ARDUINO_ARCH_NRF52840
   if (_dc >= 0)
   {
     pinMode(_dc, OUTPUT);
@@ -251,8 +271,9 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
   dcPinMaskClr = ~dcPinMaskSet;
   sckPinMaskClr = ~sckPinMaskSet;
   mosiPinMaskClr = ~mosiPinMaskSet;
-#endif // !end HAS_PORT_SET_CLR
-#endif // end USE_FAST_PINIO
+#endif // !HAS_PORT_SET_CLR
+#endif // USE_FAST_PINIO
+#endif // !ARDUINO_ARCH_NRF52840
 }
 
 void Arduino_SWSPI::beginWrite()
@@ -432,7 +453,7 @@ void Arduino_SWSPI::writeRepeat(uint16_t p, uint32_t len)
     while (len > (ESP8266SAFEBATCHBITSIZE / 8))
     {
       WRITEREPEAT(p, ESP8266SAFEBATCHBITSIZE / 8);
-      len -=  ESP8266SAFEBATCHBITSIZE / 8;
+      len -= ESP8266SAFEBATCHBITSIZE / 8;
       yield();
     }
     WRITEREPEAT(p, len);
@@ -646,6 +667,8 @@ INLINE void Arduino_SWSPI::CS_HIGH(void)
 #else  // !HAS_PORT_SET_CLR
     *csPort |= csPinMaskSet;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+    _csGpio->write(HIGH);
 #else  // !USE_FAST_PINIO
     digitalWrite(_cs, HIGH);
 #endif // end !USE_FAST_PINIO
@@ -666,6 +689,8 @@ INLINE void Arduino_SWSPI::CS_LOW(void)
 #else  // !HAS_PORT_SET_CLR
     *csPort &= csPinMaskClr;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+    _csGpio->write(LOW);
 #else  // !USE_FAST_PINIO
     digitalWrite(_cs, LOW);
 #endif // end !USE_FAST_PINIO
@@ -684,6 +709,8 @@ INLINE void Arduino_SWSPI::DC_HIGH(void)
 #else  // !HAS_PORT_SET_CLR
   *dcPort |= dcPinMaskSet;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+  _dcGpio->write(HIGH);
 #else  // !USE_FAST_PINIO
   digitalWrite(_dc, HIGH);
 #endif // end !USE_FAST_PINIO
@@ -701,6 +728,8 @@ INLINE void Arduino_SWSPI::DC_LOW(void)
 #else  // !HAS_PORT_SET_CLR
   *dcPort &= dcPinMaskClr;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+  _dcGpio->write(LOW);
 #else  // !USE_FAST_PINIO
   digitalWrite(_dc, LOW);
 #endif // end !USE_FAST_PINIO
@@ -721,6 +750,8 @@ INLINE void Arduino_SWSPI::SPI_MOSI_HIGH(void)
 #else  // !HAS_PORT_SET_CLR
   *mosiPort |= mosiPinMaskSet;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+  _mosiGpio->write(HIGH);
 #else  // !USE_FAST_PINIO
   digitalWrite(_mosi, HIGH);
 #endif // end !USE_FAST_PINIO
@@ -741,6 +772,8 @@ INLINE void Arduino_SWSPI::SPI_MOSI_LOW(void)
 #else  // !HAS_PORT_SET_CLR
   *mosiPort &= mosiPinMaskClr;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+  _mosiGpio->write(LOW);
 #else  // !USE_FAST_PINIO
   digitalWrite(_mosi, LOW);
 #endif // end !USE_FAST_PINIO
@@ -765,6 +798,8 @@ INLINE void Arduino_SWSPI::SPI_SCK_HIGH(void)
 #else  // !HAS_PORT_SET_CLR
   *sckPort |= sckPinMaskSet;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+  _sckGpio->write(HIGH);
 #else  // !USE_FAST_PINIO
   digitalWrite(_sck, HIGH);
 #endif // end !USE_FAST_PINIO
@@ -789,6 +824,8 @@ INLINE void Arduino_SWSPI::SPI_SCK_LOW(void)
 #else  // !HAS_PORT_SET_CLR
   *sckPort &= sckPinMaskClr;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+  _sckGpio->write(LOW);
 #else  // !USE_FAST_PINIO
   digitalWrite(_sck, LOW);
 #endif // end !USE_FAST_PINIO
@@ -806,6 +843,8 @@ INLINE bool Arduino_SWSPI::SPI_MISO_READ(void)
 #else  // !KINETISK
   return *misoPort & misoPinMask;
 #endif // end !KINETISK
+#elif defined(ARDUINO_ARCH_NRF52840)
+  return _misoGpio->read();
 #else  // !USE_FAST_PINIO
   return digitalRead(_miso);
 #endif // end !USE_FAST_PINIO

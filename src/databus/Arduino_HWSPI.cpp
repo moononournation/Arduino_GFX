@@ -47,6 +47,15 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
   _dataMode = dataMode;
 
+#ifdef ARDUINO_ARCH_NRF52840
+  _dcGpio = new mbed::DigitalInOut(digitalPinToPinName((pin_size_t)_dc), PIN_OUTPUT, PullNone, HIGH);
+  _dcGpio->write(HIGH); // Data mode
+  if (_cs >= 0)
+  {
+    _csGpio = new mbed::DigitalInOut(digitalPinToPinName((pin_size_t)_cs), PIN_OUTPUT, PullNone, HIGH);
+    _csGpio->write(HIGH); // Deselect
+  }
+#else // !ARDUINO_ARCH_NRF52840
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
   if (_cs >= 0)
@@ -153,8 +162,9 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
   }
   csPinMaskClr = ~csPinMaskSet;
   dcPinMaskClr = ~dcPinMaskSet;
-#endif // !end HAS_PORT_SET_CLR
-#endif // end USE_FAST_PINIO
+#endif // !HAS_PORT_SET_CLR
+#endif // USE_FAST_PINIO
+#endif // !ARDUINO_ARCH_NRF52840
 
 #if defined(ESP32)
   HWSPI.begin(_sck, _miso, _mosi);
@@ -438,7 +448,7 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
 #if defined(ESP8266) || defined(ESP32)
   HWSPI.writePattern(data, len, repeat);
-#else // !(defined(ESP8266) || defined(ESP32))
+#else  // !(defined(ESP8266) || defined(ESP32))
   while (repeat--)
   {
     for (uint8_t i = 0; i < len; i++)
@@ -465,6 +475,8 @@ INLINE void Arduino_HWSPI::CS_HIGH(void)
 #else  // !HAS_PORT_SET_CLR
     *csPort |= csPinMaskSet;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+    _csGpio->write(HIGH);
 #else  // !USE_FAST_PINIO
     digitalWrite(_cs, HIGH);
 #endif // end !USE_FAST_PINIO
@@ -485,6 +497,8 @@ INLINE void Arduino_HWSPI::CS_LOW(void)
 #else  // !HAS_PORT_SET_CLR
     *csPort &= csPinMaskClr;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+    _csGpio->write(LOW);
 #else  // !USE_FAST_PINIO
     digitalWrite(_cs, LOW);
 #endif // end !USE_FAST_PINIO
@@ -503,6 +517,8 @@ INLINE void Arduino_HWSPI::DC_HIGH(void)
 #else  // !HAS_PORT_SET_CLR
   *dcPort |= dcPinMaskSet;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+  _dcGpio->write(HIGH);
 #else  // !USE_FAST_PINIO
   digitalWrite(_dc, HIGH);
 #endif // end !USE_FAST_PINIO
@@ -520,6 +536,8 @@ INLINE void Arduino_HWSPI::DC_LOW(void)
 #else  // !HAS_PORT_SET_CLR
   *dcPort &= dcPinMaskClr;
 #endif // end !HAS_PORT_SET_CLR
+#elif defined(ARDUINO_ARCH_NRF52840)
+  _dcGpio->write(LOW);
 #else  // !USE_FAST_PINIO
   digitalWrite(_dc, LOW);
 #endif // end !USE_FAST_PINIO
