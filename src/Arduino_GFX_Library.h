@@ -9,6 +9,7 @@
 #include "databus/Arduino_ESP32PAR8.h"
 #include "databus/Arduino_ESP32PAR16.h"
 #include "databus/Arduino_mbedSPI.h"
+#include "databus/Arduino_NRFXSPI.h"
 
 #include "Arduino_GFX.h"                     // Core graphics library
 #include "canvas/Arduino_Canvas.h"           // Canvas (framebuffer) library

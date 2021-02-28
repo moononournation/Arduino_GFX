@@ -79,7 +79,8 @@ Arduino_ST7789 *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, tr
 
 // hardware SPI
 #if defined(ARDUINO_ARCH_NRF52840)
-Arduino_DataBus *bus = new Arduino_mbedSPI(TFT_DC, TFT_CS);
+// Arduino_DataBus *bus = new Arduino_mbedSPI(TFT_DC, TFT_CS);
+Arduino_DataBus *bus = new Arduino_NRFXSPI(TFT_DC, TFT_CS, 13 /* SCK */, 11 /* MOSI */, 12 /* MISO */);
 #elif defined(ESP32)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
 #else
