@@ -34,15 +34,26 @@ void Arduino_NRFXSPI::begin(int32_t speed, int8_t dataMode)
     _csPinMask = 1UL << pin;
   }
 
-  if (_dataMode < 0)
-  {
-    _dataMode = SPI_MODE0;
-  }
   _nrfxSpiConfig.sck_pin = digitalPinToPinName((pin_size_t)_sck);
   _nrfxSpiConfig.mosi_pin = digitalPinToPinName((pin_size_t)_mosi);
   _nrfxSpiConfig.miso_pin = digitalPinToPinName((pin_size_t)_miso);
   _nrfxSpiConfig.frequency = NRF_SPI_FREQ_8M;
-  _nrfxSpiConfig.mode = NRF_SPI_MODE_3;
+  if (_dataMode < 0)
+  {
+    _dataMode = SPI_MODE0;
+  }
+  else if (_dataMode == SPI_MODE1)
+  {
+    _nrfxSpiConfig.mode = NRF_SPI_MODE_1;
+  }
+  else if (_dataMode == SPI_MODE2)
+  {
+    _nrfxSpiConfig.mode = NRF_SPI_MODE_2;
+  }
+  else if (_dataMode == SPI_MODE3)
+  {
+    _nrfxSpiConfig.mode = NRF_SPI_MODE_3;
+  }
   nrfx_spi_init(&_nrfxSpi, &_nrfxSpiConfig, NULL, NULL);
 }
 
