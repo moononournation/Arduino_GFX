@@ -16,7 +16,7 @@ Arduino_ST7789::Arduino_ST7789(
 
 void Arduino_ST7789::begin(int32_t speed)
 {
-#if defined(ESP32)
+#if defined(ESP32) || defined(ARDUINO_ARCH_NRF52840)
   _override_datamode = SPI_MODE3;
 #endif
   Arduino_TFT::begin(speed);
