@@ -412,7 +412,11 @@ void printnice(const __FlashStringHelper *item, long int v)
   else
   {
     char str[32] = {0};
+#ifdef BOARD_RTL8721D
+    sprintf(str, "%d", v);
+#else
     sprintf(str, "%ld", v);
+#endif
     for (char *p = (str + strlen(str)) - 3; p > str; p -= 3)
     {
       memmove(p + 1, p, strlen(p) + 1);
