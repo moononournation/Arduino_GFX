@@ -6,8 +6,6 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_ESP32SPI.h"
 
-#define SPI_DEFAULT_FREQ 40000000
-
 struct spi_struct_t
 {
   spi_dev_t *dev;
