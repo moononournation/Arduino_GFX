@@ -6,8 +6,6 @@
 
 #include "Arduino_mbedSPI.h"
 
-#define SPI_DEFAULT_FREQ 8000000
-
 Arduino_mbedSPI::Arduino_mbedSPI(int8_t dc, int8_t cs /* = -1 */)
     : _dc(dc), _cs(cs)
 {

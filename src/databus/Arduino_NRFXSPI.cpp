@@ -6,8 +6,6 @@
 
 #include "Arduino_NRFXSPI.h"
 
-#define SPI_DEFAULT_FREQ 8000000
-
 Arduino_NRFXSPI::Arduino_NRFXSPI(int8_t dc, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */)
     : _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso)
 {
@@ -273,9 +271,6 @@ void Arduino_NRFXSPI::writePixels(uint16_t *data, uint32_t len)
  */
 void Arduino_NRFXSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
-#if defined(ESP8266) || defined(ESP32)
-  HWSPI.writePattern(data, len, repeat);
-#else  // !(defined(ESP8266) || defined(ESP32))
   while (repeat--)
   {
     for (uint8_t i = 0; i < len; i++)
@@ -283,7 +278,6 @@ void Arduino_NRFXSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
       write(data[i]);
     }
   }
-#endif // !(defined(ESP8266) || defined(ESP32))
 }
 
 INLINE void Arduino_NRFXSPI::WRITE(uint8_t d)

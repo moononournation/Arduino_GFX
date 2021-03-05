@@ -11,6 +11,77 @@
 #include "WProgram.h"
 #endif
 
+#if defined(__AVR__)
+#define USE_FAST_PINIO ///< Use direct PORT register access
+typedef uint8_t ARDUINOGFX_PORT_t;
+#elif defined(ARDUINO_ARCH_NRF52840)
+#define USE_FAST_PINIO   ///< Use direct PORT register access
+#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
+typedef uint32_t ARDUINOGFX_PORT_t;
+#elif defined(ESP32)
+#define USE_FAST_PINIO   ///< Use direct PORT register access
+#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
+typedef uint32_t ARDUINOGFX_PORT_t;
+#elif defined(ESP8266)
+#define USE_FAST_PINIO ///< Use direct PORT register access
+typedef uint32_t ARDUINOGFX_PORT_t;
+#elif defined(ARDUINO_STM32_FEATHER)
+// TODO: fast pin IO?
+#elif defined(__arm__)
+#if defined(ARDUINO_ARCH_SAMD)
+// Adafruit M0, M4
+#define USE_FAST_PINIO   ///< Use direct PORT register access
+#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
+typedef uint32_t ARDUINOGFX_PORT_t;
+#elif defined(CORE_TEENSY)
+#define USE_FAST_PINIO   ///< Use direct PORT register access
+#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
+#if defined(__IMXRT1052__) || defined(__IMXRT1062__)
+// PJRC Teensy 4.x
+typedef uint32_t ARDUINOGFX_PORT_t;
+#else
+// PJRC Teensy 3.x
+typedef uint8_t ARDUINOGFX_PORT_t;
+#endif
+#else
+// Arduino Due?
+// USE_FAST_PINIO not available here (yet)...Due has a totally different
+// GPIO register set and will require some changes elsewhere (e.g. in
+// constructors especially).
+#endif
+#else  // !ARM
+// Unknow architecture, USE_FAST_PINIO is not available here (yet)
+// but don't worry about it too much...the digitalWrite() implementation
+// on these platforms is reasonably efficient and already RAM-resident,
+// only gotcha then is no parallel connection support for now.
+#endif // !ARM
+
+#ifdef USE_FAST_PINIO
+typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
+#endif
+
+#if defined(ARDUINO_ARCH_ARC32) || defined(ARDUINO_MAXIM)
+#define SPI_DEFAULT_FREQ 16000000
+// Teensy 3.0, 3.1/3.2, 3.5, 3.6
+#elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__)
+#define SPI_DEFAULT_FREQ 40000000
+// Teensy 4.x
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+#define SPI_DEFAULT_FREQ 40000000
+#elif defined(__AVR__) || defined(TEENSYDUINO)
+#define SPI_DEFAULT_FREQ 8000000
+#elif defined(ARDUINO_ARCH_NRF52840)
+#define SPI_DEFAULT_FREQ 8000000
+#elif defined(ESP8266) || defined(ESP32)
+#define SPI_DEFAULT_FREQ 40000000
+#elif defined(RASPI)
+#define SPI_DEFAULT_FREQ 80000000
+#elif defined(ARDUINO_ARCH_STM32F1)
+#define SPI_DEFAULT_FREQ 36000000
+#else
+#define SPI_DEFAULT_FREQ 24000000 ///< Default SPI data clock frequency
+#endif
+
 #define UNUSED(x) (void)(x)
 
 #define MSB_16_SET(var, val)                                 \
@@ -26,6 +97,7 @@
     {                                                                                                                       \
         (var) = (((uint32_t)v2 & 0xff00) << 8) | (((uint32_t)v2 & 0xff) << 24) | ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8); \
     }
+#define MSB_32_8_ARRAY_SET(var, a) ((uint32_t)a[0] << 8 | a[1] | a[2] << 24 | a[3] << 16)
 
 #if defined(ESP32)
 #define INLINE __attribute__((always_inline)) inline

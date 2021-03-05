@@ -55,10 +55,12 @@ private:
   int8_t _dc, _cs;
   int8_t _sck, _mosi, _miso;
 
-  volatile uint32_t *_csPortSet, *_csPortClr;
-  volatile uint32_t *_dcPortSet, *_dcPortClr;
-  volatile uint32_t _dcPinMask;
-  volatile uint32_t _csPinMask;
+  PORTreg_t _csPortSet; ///< PORT register for chip select SET
+  PORTreg_t _csPortClr; ///< PORT register for chip select CLEAR
+  PORTreg_t _dcPortSet; ///< PORT register for data/command SET
+  PORTreg_t _dcPortClr; ///< PORT register for data/command CLEAR
+  ARDUINOGFX_PORT_t _csPinMask; ///< Bitmask for chip select
+  ARDUINOGFX_PORT_t _dcPinMask; ///< Bitmask for data/command
 
   nrfx_spi_config_t _nrfxSpiConfig = NRFX_SPI_DEFAULT_CONFIG;
   nrfx_spi_t _nrfxSpi = NRFX_SPI_INSTANCE(0);
