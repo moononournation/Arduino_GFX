@@ -231,7 +231,7 @@ void setup(void)
 void loop()
 {
     gfx->setCursor(random(gfx->width()), random(gfx->height()));
-    gfx->setTextColor(random(0xffff), random(0xffff));
+    gfx->setTextColor(random(0xffff));
     uint8_t textSize = random(2);
     switch (textSize)
     {

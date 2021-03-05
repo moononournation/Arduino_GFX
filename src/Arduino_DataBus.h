@@ -97,7 +97,10 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
     {                                                                                                                       \
         (var) = (((uint32_t)v2 & 0xff00) << 8) | (((uint32_t)v2 & 0xff) << 24) | ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8); \
     }
-#define MSB_32_8_ARRAY_SET(var, a) ((uint32_t)a[0] << 8 | a[1] | a[2] << 24 | a[3] << 16)
+#define MSB_32_8_ARRAY_SET(var, a)                                      \
+    {                                                                   \
+        (var) = ((uint32_t)a[0] << 8 | a[1] | a[2] << 24 | a[3] << 16); \
+    }
 
 #if defined(ESP32)
 #define INLINE __attribute__((always_inline)) inline

@@ -8,6 +8,7 @@
 #include "databus/Arduino_ESP32SPI_DMA.h"
 #include "databus/Arduino_ESP32PAR8.h"
 #include "databus/Arduino_ESP32PAR16.h"
+#include "databus/Arduino_ESP8266SPI.h"
 #include "databus/Arduino_mbedSPI.h"
 #include "databus/Arduino_NRFXSPI.h"
 
