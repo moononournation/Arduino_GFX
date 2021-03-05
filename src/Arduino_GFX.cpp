@@ -1789,7 +1789,16 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                     }
                     else
                     {
-                        writeFillRect(x + i * textsize_x, y + j * textsize_y, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
+                        if (text_pixel_margin > 0)
+                        {
+                            writeFillRect(x + (i * textsize_x), y + j * textsize_y, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
+                            writeFillRect(x + ((i + 1) * textsize_x) - text_pixel_margin, y + j * textsize_y, text_pixel_margin, textsize_y, bg);
+                            writeFillRect(x + (i * textsize_x), y + ((j + 1) * textsize_y) - text_pixel_margin, textsize_x - text_pixel_margin, text_pixel_margin, bg);
+                        }
+                        else
+                        {
+                            writeFillRect(x + i * textsize_x, y + j * textsize_y, textsize_x, textsize_y, color);
+                        }
                     }
                 }
                 else if (bg != color)
@@ -1800,7 +1809,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                     }
                     else
                     {
-                        writeFillRect(x + i * textsize_x, y + j * textsize_y, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, bg);
+                        writeFillRect(x + i * textsize_x, y + j * textsize_y, textsize_x, textsize_y, bg);
                     }
                 }
             }
