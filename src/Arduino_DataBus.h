@@ -140,6 +140,7 @@ public:
 
     virtual void begin(int32_t speed, int8_t dataMode = -1) = 0;
     virtual void beginWrite() = 0;
+    virtual void endWrite() = 0;
     virtual void writeCommand(uint8_t c) = 0;
     virtual void writeCommand16(uint16_t c) = 0;
     virtual void writeCommand32(uint32_t c) = 0;
@@ -153,8 +154,6 @@ public:
     virtual void writeBytes(uint8_t *data, uint32_t len) = 0;
     virtual void writePixels(uint16_t *data, uint32_t len) = 0;
     virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) = 0;
-    virtual void endWrite() = 0;
-    virtual void batchOperation(spi_operation_t batch[], uint8_t len);
 
 #if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
     virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
@@ -167,6 +166,8 @@ public:
     virtual void sendData(uint8_t d) = 0;
     virtual void sendData16(uint16_t d) = 0;
     virtual void sendData32(uint32_t d) = 0;
+
+    virtual void batchOperation(spi_operation_t batch[], uint8_t len);
 
 protected:
     int32_t _speed;

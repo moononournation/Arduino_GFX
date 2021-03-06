@@ -25,6 +25,33 @@ void Arduino_DataBus::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   write16(d2);
 }
 
+#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
+void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  while (len--)
+  {
+    write16(idx[*(data++)]);
+  }
+}
+
+void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  uint8_t *d = data;
+  uint16_t p;
+  uint8_t hi, lo;
+  while (len--)
+  {
+    p = idx[*(d++)];
+    hi = p >> 8;
+    lo = p;
+    write(hi);
+    write(lo);
+    write(hi);
+    write(lo);
+  }
+}
+#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
+
 void Arduino_DataBus::batchOperation(spi_operation_t batch[], uint8_t len)
 {
   for (uint8_t i = 0; i < len; ++i)
@@ -77,30 +104,3 @@ void Arduino_DataBus::batchOperation(spi_operation_t batch[], uint8_t len)
     }
   }
 }
-
-#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
-void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
-{
-  while (len--)
-  {
-    write16(idx[*(data++)]);
-  }
-}
-
-void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
-{
-  uint8_t *d = data;
-  uint16_t p;
-  uint8_t hi, lo;
-  while (len--)
-  {
-    p = idx[*(d++)];
-    hi = p >> 8;
-    lo = p;
-    write(hi);
-    write(lo);
-    write(hi);
-    write(lo);
-  }
-}
-#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)

@@ -63,6 +63,11 @@ void Arduino_ESP8266SPI::beginWrite()
   CS_LOW();
 }
 
+void Arduino_ESP8266SPI::endWrite()
+{
+  CS_HIGH();
+}
+
 void Arduino_ESP8266SPI::writeCommand(uint8_t c)
 {
   DC_LOW();
@@ -143,81 +148,6 @@ void Arduino_ESP8266SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   uint32_t d;
   MSB_32_16_16_SET(d, d1, d2);
   WRITE32(d);
-}
-
-void Arduino_ESP8266SPI::endWrite()
-{
-  CS_HIGH();
-}
-
-void Arduino_ESP8266SPI::sendCommand(uint8_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  WRITE(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_ESP8266SPI::sendCommand16(uint16_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  MSB_16_SET(c, c);
-  WRITE16(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_ESP8266SPI::sendCommand32(uint32_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  MSB_32_SET(c, c);
-  WRITE32(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_ESP8266SPI::sendData(uint8_t d)
-{
-  CS_LOW();
-
-  WRITE(d);
-
-  CS_HIGH();
-}
-
-void Arduino_ESP8266SPI::sendData16(uint16_t d)
-{
-  CS_LOW();
-
-  MSB_16_SET(d, d);
-  WRITE16(d);
-
-  CS_HIGH();
-}
-
-void Arduino_ESP8266SPI::sendData32(uint32_t d)
-{
-  CS_LOW();
-
-  MSB_32_SET(d, d);
-  WRITE32(d);
-
-  CS_HIGH();
 }
 
 void Arduino_ESP8266SPI::writeRepeat(uint16_t p, uint32_t len)
@@ -426,6 +356,76 @@ void Arduino_ESP8266SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, 
   }
 
   WAIT_SPI_NOT_BUSY;
+}
+
+void Arduino_ESP8266SPI::sendCommand(uint8_t c)
+{
+  CS_LOW();
+
+  DC_LOW();
+
+  WRITE(c);
+
+  DC_HIGH();
+
+  CS_HIGH();
+}
+
+void Arduino_ESP8266SPI::sendCommand16(uint16_t c)
+{
+  CS_LOW();
+
+  DC_LOW();
+
+  MSB_16_SET(c, c);
+  WRITE16(c);
+
+  DC_HIGH();
+
+  CS_HIGH();
+}
+
+void Arduino_ESP8266SPI::sendCommand32(uint32_t c)
+{
+  CS_LOW();
+
+  DC_LOW();
+
+  MSB_32_SET(c, c);
+  WRITE32(c);
+
+  DC_HIGH();
+
+  CS_HIGH();
+}
+
+void Arduino_ESP8266SPI::sendData(uint8_t d)
+{
+  CS_LOW();
+
+  WRITE(d);
+
+  CS_HIGH();
+}
+
+void Arduino_ESP8266SPI::sendData16(uint16_t d)
+{
+  CS_LOW();
+
+  MSB_16_SET(d, d);
+  WRITE16(d);
+
+  CS_HIGH();
+}
+
+void Arduino_ESP8266SPI::sendData32(uint32_t d)
+{
+  CS_LOW();
+
+  MSB_32_SET(d, d);
+  WRITE32(d);
+
+  CS_HIGH();
 }
 
 INLINE void Arduino_ESP8266SPI::WRITE(uint8_t d)

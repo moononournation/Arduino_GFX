@@ -18,6 +18,7 @@ public:
 
   virtual void begin(int32_t speed = 0, int8_t dataMode = -1);
   virtual void beginWrite();
+  virtual void endWrite();
   virtual void writeCommand(uint8_t);
   virtual void writeCommand16(uint16_t);
   virtual void writeCommand32(uint32_t);
@@ -31,8 +32,7 @@ public:
   virtual void writeBytes(uint8_t *data, uint32_t len);
   virtual void writePixels(uint16_t *data, uint32_t len);
   virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat);
-  virtual void endWrite();
-
+  
   virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
   virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
 
