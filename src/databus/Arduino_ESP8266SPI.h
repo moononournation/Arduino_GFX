@@ -9,9 +9,6 @@
 
 #include "Arduino_DataBus.h"
 
-typedef uint32_t ARDUINOGFX_PORT_t;
-typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
-
 #define SPI_MAX_PIXELS_AT_ONCE 32
 
 class Arduino_ESP8266SPI : public Arduino_DataBus
