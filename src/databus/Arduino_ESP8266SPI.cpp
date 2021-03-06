@@ -229,56 +229,7 @@ void Arduino_ESP8266SPI::writeRepeat(uint16_t p, uint32_t len)
 
 void Arduino_ESP8266SPI::writeBytes(uint8_t *data, uint32_t len)
 {
-  uint32_t color[8];
-
-  SPI1U1 = (255 << SPILMOSI) | (255 << SPILMISO);
-
-  while (len > 15)
-  {
-    memcpy(color, data, 32);
-    data += 16;
-
-    len -= 16;
-
-    // ESP8266 wait time here at 40MHz SPI is ~5.45us
-    while (SPI1CMD & SPIBUSY)
-    {
-    }
-    SPI1W0 = color[0];
-    SPI1W1 = color[1];
-    SPI1W2 = color[2];
-    SPI1W3 = color[3];
-    SPI1W4 = color[4];
-    SPI1W5 = color[5];
-    SPI1W6 = color[6];
-    SPI1W7 = color[7];
-    SPI1CMD |= SPIBUSY;
-  }
-
-  if (len)
-  {
-    uint32_t bits = (len * 16 - 1); // bits left to shift - 1
-
-    memcpy(color, data, len << 1);
-
-    while (SPI1CMD & SPIBUSY)
-    {
-    }
-    SPI1U1 = (bits << SPILMOSI) | (bits << SPILMISO);
-    SPI1W0 = color[0];
-    SPI1W1 = color[1];
-    SPI1W2 = color[2];
-    SPI1W3 = color[3];
-    SPI1W4 = color[4];
-    SPI1W5 = color[5];
-    SPI1W6 = color[6];
-    SPI1W7 = color[7];
-    SPI1CMD |= SPIBUSY;
-  }
-
-  while (SPI1CMD & SPIBUSY)
-  {
-  }
+  SPI.writeBytes(data, len);
 }
 
 void Arduino_ESP8266SPI::writePixels(uint16_t *data, uint32_t len)
@@ -302,8 +253,7 @@ void Arduino_ESP8266SPI::writePixels(uint16_t *data, uint32_t len)
 
     // ESP8266 wait time here at 40MHz SPI is ~5.45us
     while (SPI1CMD & SPIBUSY)
-    {
-    }
+      ;
     SPI1W0 = color[0];
     SPI1W1 = color[1];
     SPI1W2 = color[2];
@@ -327,8 +277,7 @@ void Arduino_ESP8266SPI::writePixels(uint16_t *data, uint32_t len)
     }
 
     while (SPI1CMD & SPIBUSY)
-    {
-    }
+      ;
     SPI1U1 = (bits << SPILMOSI) | (bits << SPILMISO);
     SPI1W0 = color[0];
     SPI1W1 = color[1];
@@ -342,8 +291,7 @@ void Arduino_ESP8266SPI::writePixels(uint16_t *data, uint32_t len)
   }
 
   while (SPI1CMD & SPIBUSY)
-  {
-  }
+    ;
 }
 
 /**
