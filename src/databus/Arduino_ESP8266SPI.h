@@ -36,6 +36,9 @@ public:
   virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat);
   virtual void endWrite();
 
+  virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
+  virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
+
   virtual void sendCommand(uint8_t);
   virtual void sendCommand16(uint16_t);
   virtual void sendCommand32(uint32_t);
@@ -60,6 +63,9 @@ private:
   ARDUINOGFX_PORT_t _csPinMaskClr; ///< Bitmask for chip select CLEAR (AND)
   ARDUINOGFX_PORT_t _dcPinMaskSet; ///< Bitmask for data/command SET (OR)
   ARDUINOGFX_PORT_t _dcPinMaskClr; ///< Bitmask for data/command CLEAR (AND)
+
+  uint32_t twoPixelBuf[16];
+  volatile uint32_t *spi1Reg32 = (volatile uint32_t *)(0x60000000+0x140); // address of SPI1W0
 };
 
 #endif // _ARDUINO_ESP8266SPI_H_
