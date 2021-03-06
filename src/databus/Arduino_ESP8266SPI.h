@@ -9,8 +9,6 @@
 
 #include "Arduino_DataBus.h"
 
-#define SPI_MAX_PIXELS_AT_ONCE 32
-
 class Arduino_ESP8266SPI : public Arduino_DataBus
 {
 public:

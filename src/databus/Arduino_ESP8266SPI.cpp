@@ -6,7 +6,6 @@
 #include <SPI.h>
 #include "Arduino_ESP8266SPI.h"
 
-#define SPI_MAX_PIXELS_AT_ONCE 32
 #define WAIT_SPI_NOT_BUSY while (SPI1CMD & SPIBUSY)
 
 Arduino_ESP8266SPI::Arduino_ESP8266SPI(int8_t dc, int8_t cs /* = -1 */)
