@@ -6,6 +6,8 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_ESP32SPI.h"
 
+#define WAIT_SPI_NOT_BUSY while (_spi->dev->cmd.usr)
+
 struct spi_struct_t
 {
   spi_dev_t *dev;
@@ -63,8 +65,7 @@ static void _on_apb_change(void *arg, apb_change_ev_t ev_type, uint32_t old_apb,
   if (ev_type == APB_BEFORE_CHANGE)
   {
     SPI_MUTEX_LOCK();
-    while (_spi->dev->cmd.usr)
-      ;
+    WAIT_SPI_NOT_BUSY;
   }
   else
   {
@@ -75,54 +76,57 @@ static void _on_apb_change(void *arg, apb_change_ev_t ev_type, uint32_t old_apb,
 
 void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
 {
+  // set SPI parameters
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
   _dataMode = dataMode;
-
   if (!_div)
   {
     _div = spiFrequencyToClockDiv(_speed);
   }
 
+  // set pin mode
   if (_dc >= 0)
   {
     pinMode(_dc, OUTPUT);
     digitalWrite(_dc, HIGH); // Data mode
   }
-  if (_dc >= 32)
-  {
-    dcPinMask = digitalPinToBitMask(_dc);
-    dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
-  }
-  else if (_dc >= 0)
-  {
-    dcPinMask = digitalPinToBitMask(_dc);
-    dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  }
-
   if (_cs >= 0)
   {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH); // disable chip select
   }
+
+  // set fastIO variables
+  if (_dc >= 32)
+  {
+    _dcPinMask = digitalPinToBitMask(_dc);
+    _dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    _dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+  }
+  else if (_dc >= 0)
+  {
+    _dcPinMask = digitalPinToBitMask(_dc);
+    _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    _dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+
   if (_cs >= 32)
   {
-    csPinMask = digitalPinToBitMask(_cs);
-    csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+    _csPinMask = digitalPinToBitMask(_cs);
+    _csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    _csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
   else if (_cs >= 0)
   {
-    csPinMask = digitalPinToBitMask(_cs);
-    csPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    csPortClr = (PORTreg_t)&GPIO.out_w1tc;
+    _csPinMask = digitalPinToBitMask(_cs);
+    _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    _csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
   else
   {
-    csPinMask = 0;
-    csPortSet = dcPortSet;
-    csPortClr = dcPortClr;
+    _csPinMask = 0;
+    _csPortSet = _dcPortSet;
+    _csPortClr = _dcPortClr;
   }
 
   // SPI.begin(_sck, _miso, _mosi);
@@ -195,8 +199,8 @@ void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
 
 void Arduino_ESP32SPI::beginWrite()
 {
-  data_buf_bit_idx = 0;
-  data_buf[0] = 0;
+  _data_buf_bit_idx = 0;
+  _buffer[0] = 0;
 
   if (_is_shared_interface)
   {
@@ -210,6 +214,21 @@ void Arduino_ESP32SPI::beginWrite()
   CS_LOW();
 }
 
+void Arduino_ESP32SPI::endWrite()
+{
+  if (_data_buf_bit_idx > 0)
+  {
+    flush_data_buf();
+  }
+
+  if (_is_shared_interface)
+  {
+    spiEndTransaction(_spi);
+  }
+
+  CS_HIGH();
+}
+
 void Arduino_ESP32SPI::writeCommand(uint8_t c)
 {
   if (_dc < 0) // 9-bit SPI
@@ -218,7 +237,7 @@ void Arduino_ESP32SPI::writeCommand(uint8_t c)
   }
   else
   {
-    if (data_buf_bit_idx > 0)
+    if (_data_buf_bit_idx > 0)
     {
       flush_data_buf();
     }
@@ -229,8 +248,7 @@ void Arduino_ESP32SPI::writeCommand(uint8_t c)
     _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
     _spi->dev->data_buf[0] = c;
     _spi->dev->cmd.usr = 1;
-    while (_spi->dev->cmd.usr)
-      ;
+    WAIT_SPI_NOT_BUSY;
 
     DC_HIGH();
   }
@@ -245,7 +263,7 @@ void Arduino_ESP32SPI::writeCommand16(uint16_t c)
   }
   else
   {
-    if (data_buf_bit_idx > 0)
+    if (_data_buf_bit_idx > 0)
     {
       flush_data_buf();
     }
@@ -256,8 +274,7 @@ void Arduino_ESP32SPI::writeCommand16(uint16_t c)
     _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
     MSB_16_SET(_spi->dev->data_buf[0], c);
     _spi->dev->cmd.usr = 1;
-    while (_spi->dev->cmd.usr)
-      ;
+    WAIT_SPI_NOT_BUSY;
 
     DC_HIGH();
   }
@@ -274,7 +291,7 @@ void Arduino_ESP32SPI::writeCommand32(uint32_t c)
   }
   else
   {
-    if (data_buf_bit_idx > 0)
+    if (_data_buf_bit_idx > 0)
     {
       flush_data_buf();
     }
@@ -285,8 +302,7 @@ void Arduino_ESP32SPI::writeCommand32(uint32_t c)
     _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
     MSB_32_SET(_spi->dev->data_buf[0], c);
     _spi->dev->cmd.usr = 1;
-    while (_spi->dev->cmd.usr)
-      ;
+    WAIT_SPI_NOT_BUSY;
 
     DC_HIGH();
   }
@@ -345,7 +361,7 @@ void Arduino_ESP32SPI::writeC8D8(uint8_t c, uint8_t d)
   }
   else
   {
-    if (data_buf_bit_idx > 0)
+    if (_data_buf_bit_idx > 0)
     {
       flush_data_buf();
     }
@@ -356,8 +372,7 @@ void Arduino_ESP32SPI::writeC8D8(uint8_t c, uint8_t d)
     _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
     _spi->dev->data_buf[0] = c;
     _spi->dev->cmd.usr = 1;
-    while (_spi->dev->cmd.usr)
-      ;
+    WAIT_SPI_NOT_BUSY;
 
     DC_HIGH();
 
@@ -365,8 +380,7 @@ void Arduino_ESP32SPI::writeC8D8(uint8_t c, uint8_t d)
     _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
     _spi->dev->data_buf[0] = d;
     _spi->dev->cmd.usr = 1;
-    while (_spi->dev->cmd.usr)
-      ;
+    WAIT_SPI_NOT_BUSY;
   }
 }
 
@@ -380,7 +394,7 @@ void Arduino_ESP32SPI::writeC8D16(uint8_t c, uint16_t d)
   }
   else
   {
-    if (data_buf_bit_idx > 0)
+    if (_data_buf_bit_idx > 0)
     {
       flush_data_buf();
     }
@@ -391,17 +405,15 @@ void Arduino_ESP32SPI::writeC8D16(uint8_t c, uint16_t d)
     _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
     _spi->dev->data_buf[0] = c;
     _spi->dev->cmd.usr = 1;
-    while (_spi->dev->cmd.usr)
-      ;
+    WAIT_SPI_NOT_BUSY;
 
     DC_HIGH();
 
     _spi->dev->mosi_dlen.usr_mosi_dbitlen = 15;
     _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-    _spi->dev->data_buf[0] = (d >> 8) | ((d & 0xff) << 8);
+    MSB_16_SET(_spi->dev->data_buf[0], d);
     _spi->dev->cmd.usr = 1;
-    while (_spi->dev->cmd.usr)
-      ;
+    WAIT_SPI_NOT_BUSY;
   }
 }
 
@@ -417,7 +429,7 @@ void Arduino_ESP32SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   }
   else
   {
-    if (data_buf_bit_idx > 0)
+    if (_data_buf_bit_idx > 0)
     {
       flush_data_buf();
     }
@@ -428,33 +440,405 @@ void Arduino_ESP32SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
     _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
     _spi->dev->data_buf[0] = c;
     _spi->dev->cmd.usr = 1;
-    while (_spi->dev->cmd.usr)
-      ;
+    WAIT_SPI_NOT_BUSY;
 
     DC_HIGH();
 
     _spi->dev->mosi_dlen.usr_mosi_dbitlen = 31;
     _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-    _spi->dev->data_buf[0] = (d1 >> 8) | ((d1 & 0xff) << 8) | ((d2 & 0xff00) << 8) | ((d2 & 0xff) << 24);
+    MSB_32_16_16_SET(_spi->dev->data_buf[0], d1, d2);
     _spi->dev->cmd.usr = 1;
-    while (_spi->dev->cmd.usr)
-      ;
+    WAIT_SPI_NOT_BUSY;
   }
 }
 
-void Arduino_ESP32SPI::endWrite()
+void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
 {
-  if (data_buf_bit_idx > 0)
+  if (_data_buf_bit_idx > 0)
   {
     flush_data_buf();
   }
 
-  if (_is_shared_interface)
+  if (_dc < 0) // 9-bit SPI
   {
-    spiEndTransaction(_spi);
+    uint32_t hi = 0x100 | (p >> 8);
+    uint32_t lo = 0x100 | (p & 0xff);
+    uint16_t idx;
+    uint8_t shift;
+    uint32_t l;
+    uint16_t bufLen = (len <= 28) ? len : 28;
+    int16_t xferLen;
+    for (uint32_t t = 0; t < bufLen; t++)
+    {
+      idx = _data_buf_bit_idx >> 3;
+      shift = (_data_buf_bit_idx % 8);
+      if (shift)
+      {
+        _buffer[idx++] |= hi >> (shift + 1);
+        _buffer[idx] = hi << (7 - shift);
+      }
+      else
+      {
+        _buffer[idx++] = hi >> 1;
+        _buffer[idx] = hi << 7;
+      }
+      _data_buf_bit_idx += 9;
+
+      idx = _data_buf_bit_idx >> 3;
+      shift = (_data_buf_bit_idx % 8);
+      if (shift)
+      {
+        _buffer[idx++] |= lo >> (shift + 1);
+        _buffer[idx] = lo << (7 - shift);
+      }
+      else
+      {
+        _buffer[idx++] = lo >> 1;
+        _buffer[idx] = lo << 7;
+      }
+      _data_buf_bit_idx += 9;
+    }
+
+    if (_miso < 0)
+    {
+      l = (_data_buf_bit_idx + 31) / 32;
+      for (uint32_t i = 0; i < l; i++)
+      {
+        _spi->dev->data_buf[i] = _buffer32[i];
+      }
+    }
+
+    // Issue pixels in blocks from temp buffer
+    while (len) // While pixels remain
+    {
+      xferLen = (bufLen < len) ? bufLen : len; // How many this pass?
+      _data_buf_bit_idx = xferLen * 18;
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = _data_buf_bit_idx - 1;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      if (_miso >= 0)
+      {
+        l = (_data_buf_bit_idx + 31) / 32;
+        for (uint32_t i = 0; i < l; i++)
+        {
+          _spi->dev->data_buf[i] = _buffer32[i];
+        }
+      }
+      _spi->dev->cmd.usr = 1;
+      WAIT_SPI_NOT_BUSY;
+
+      len -= xferLen;
+    }
+  }
+  else // 8-bit SPI
+  {
+    uint16_t bufLen = (len < 32) ? len : 32;
+    int16_t xferLen, l;
+    uint32_t c32;
+    MSB_32_16_16_SET(c32, p, p);
+
+    if (_miso < 0)
+    {
+      l = (bufLen + 1) / 2;
+      for (uint32_t i = 0; i < l; i++)
+      {
+        _spi->dev->data_buf[i] = c32;
+      }
+    }
+
+    // Issue pixels in blocks from temp buffer
+    while (len) // While pixels remain
+    {
+      xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = (xferLen * 16) - 1;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      if (_miso >= 0)
+      {
+        l = (xferLen + 1) / 2;
+        for (uint32_t i = 0; i < l; i++)
+        {
+          _spi->dev->data_buf[i] = c32;
+        }
+      }
+      _spi->dev->cmd.usr = 1;
+      WAIT_SPI_NOT_BUSY;
+
+      len -= xferLen;
+    }
   }
 
-  CS_HIGH();
+  _data_buf_bit_idx = 0;
+}
+
+void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
+{
+  if (_dc < 0) // 9-bit SPI
+  {
+    while (len--)
+    {
+      write(*data++);
+    }
+  }
+  else // 8-bit SPI
+  {
+    uint32_t *p = (uint32_t *)data;
+    if (len >= 64)
+    {
+      if (_data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = 511;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      while (len >= 64)
+      {
+        for (uint32_t i = 0; i < 16; i++)
+        {
+          _spi->dev->data_buf[i] = *p++;
+        }
+        _spi->dev->cmd.usr = 1;
+        WAIT_SPI_NOT_BUSY;
+
+        len -= 64;
+      }
+    }
+
+    if ((len > 0) && ((len % 4) == 0))
+    {
+      if (_data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = (len * 8) - 1;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      len >>= 2; // 4 bytes to a 32-bit data
+      for (uint32_t i = 0; i < len; i++)
+      {
+        _spi->dev->data_buf[i] = *p++;
+      }
+      _spi->dev->cmd.usr = 1;
+      WAIT_SPI_NOT_BUSY;
+    }
+    else
+    {
+      while (len--)
+      {
+        write(*data++);
+      }
+    }
+  }
+}
+
+void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
+{
+  if (_dc < 0) // 9-bit SPI
+  {
+    while (len--)
+    {
+      write16(*data++);
+    }
+  }
+  else // 8-bit SPI
+  {
+    uint16_t p1, p2;
+    if (len >= 32)
+    {
+      if (_data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = 511;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      while (len >= 32)
+      {
+        for (uint8_t i = 0; i < 16; i++)
+        {
+          p1 = *data++;
+          p2 = *data++;
+          MSB_32_16_16_SET(_spi->dev->data_buf[i], p1, p2);
+        }
+        _spi->dev->cmd.usr = 1;
+        WAIT_SPI_NOT_BUSY;
+
+        len -= 32;
+      }
+    }
+
+    if ((len > 0) && ((len % 2) == 0))
+    {
+      if (_data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = (len * 16) - 1;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      len >>= 1; // 2 pixels to a 32-bit data
+      for (uint32_t i = 0; i < len; i++)
+      {
+        p1 = *data++;
+        p2 = *data++;
+        MSB_32_16_16_SET(_spi->dev->data_buf[i], p1, p2);
+      }
+      _spi->dev->cmd.usr = 1;
+      WAIT_SPI_NOT_BUSY;
+    }
+    else
+    {
+      while (len--)
+      {
+        write16(*data++);
+      }
+    }
+  }
+}
+
+/**
+ * @param data uint8_t *
+ * @param len uint8_t
+ * @param repeat uint32_t
+ */
+void Arduino_ESP32SPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
+{
+  while (repeat--)
+  {
+    writeBytes(data, len);
+  }
+}
+
+void Arduino_ESP32SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  if (_dc < 0) // 9-bit SPI
+  {
+    while (len--)
+    {
+      write16(idx[*data++]);
+    }
+  }
+  else // 8-bit SPI
+  {
+    uint16_t p1, p2;
+    if (len >= 32)
+    {
+      if (_data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = 511;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      while (len >= 32)
+      {
+        for (uint8_t i = 0; i < 16; i++)
+        {
+          p1 = idx[*data++];
+          p2 = idx[*data++];
+          MSB_32_16_16_SET(_spi->dev->data_buf[i], p1, p2);
+        }
+        _spi->dev->cmd.usr = 1;
+        WAIT_SPI_NOT_BUSY;
+
+        len -= 32;
+      }
+    }
+
+    if ((len > 0) && ((len % 2) == 0))
+    {
+      if (_data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = (len * 16) - 1;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      len >>= 1; // 2 pixels to a 32-bit data
+      for (uint32_t i = 0; i < len; i++)
+      {
+        p1 = *data++;
+        p2 = *data++;
+        MSB_32_16_16_SET(_spi->dev->data_buf[i], p1, p2);
+      }
+      _spi->dev->cmd.usr = 1;
+      WAIT_SPI_NOT_BUSY;
+    }
+    else
+    {
+      while (len--)
+      {
+        write16(*data++);
+      }
+    }
+  }
+}
+
+void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  uint16_t p;
+  if (_dc < 0) // 9-bit SPI
+  {
+    p = idx[*data++];
+    uint8_t hi, lo;
+    while (len--)
+    {
+      hi = p >> 8;
+      lo = p;
+      write(hi);
+      write(lo);
+      write(hi);
+      write(lo);
+    }
+  }
+  else // 8-bit SPI
+  {
+    if (len >= 16)
+    {
+      if (_data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = 511;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      while (len >= 16)
+      {
+        for (uint8_t i = 0; i < 16; i++)
+        {
+          p = idx[*data++];
+          MSB_32_16_16_SET(_spi->dev->data_buf[i], p, p);
+        }
+        _spi->dev->cmd.usr = 1;
+        WAIT_SPI_NOT_BUSY;
+
+        len -= 16;
+      }
+    }
+
+    if ((len > 0) && ((len % 2) == 0))
+    {
+      if (_data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
+      _spi->dev->mosi_dlen.usr_mosi_dbitlen = (len * 16) - 1;
+      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
+      for (uint32_t i = 0; i < len; i++)
+      {
+        p = idx[*data++];
+        MSB_32_16_16_SET(_spi->dev->data_buf[i], p, p);
+      }
+      _spi->dev->cmd.usr = 1;
+      WAIT_SPI_NOT_BUSY;
+    }
+    else
+    {
+      while (len--)
+      {
+        write16(*data++);
+      }
+    }
+  }
 }
 
 void Arduino_ESP32SPI::sendCommand(uint8_t c)
@@ -511,287 +895,27 @@ void Arduino_ESP32SPI::sendData32(uint32_t d)
   endWrite();
 }
 
-void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
-{
-  if (data_buf_bit_idx > 0)
-  {
-    flush_data_buf();
-  }
-
-  if (_dc < 0) // 9-bit SPI
-  {
-    uint32_t hi = 0x100 | (p >> 8);
-    uint32_t lo = 0x100 | (p & 0xff);
-    uint16_t idx;
-    uint8_t shift;
-    uint32_t l;
-    uint16_t bufLen = (len <= 28) ? len : 28;
-    int16_t xferLen;
-    for (uint32_t t = 0; t < bufLen; t++)
-    {
-      idx = data_buf_bit_idx >> 3;
-      shift = (data_buf_bit_idx % 8);
-      if (shift)
-      {
-        data_buf[idx++] |= hi >> (shift + 1);
-        data_buf[idx] = hi << (7 - shift);
-      }
-      else
-      {
-        data_buf[idx++] = hi >> 1;
-        data_buf[idx] = hi << 7;
-      }
-      data_buf_bit_idx += 9;
-
-      idx = data_buf_bit_idx >> 3;
-      shift = (data_buf_bit_idx % 8);
-      if (shift)
-      {
-        data_buf[idx++] |= lo >> (shift + 1);
-        data_buf[idx] = lo << (7 - shift);
-      }
-      else
-      {
-        data_buf[idx++] = lo >> 1;
-        data_buf[idx] = lo << 7;
-      }
-      data_buf_bit_idx += 9;
-    }
-
-    if (_miso < 0)
-    {
-      l = (data_buf_bit_idx + 31) / 32;
-      for (uint32_t i = 0; i < l; i++)
-      {
-        _spi->dev->data_buf[i] = data_buf32[i];
-      }
-    }
-
-    // Issue pixels in blocks from temp buffer
-    while (len)
-    {                                          // While pixels remain
-      xferLen = (bufLen < len) ? bufLen : len; // How many this pass?
-      data_buf_bit_idx = xferLen * 18;
-      _spi->dev->mosi_dlen.usr_mosi_dbitlen = data_buf_bit_idx - 1;
-      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-      if (_miso >= 0)
-      {
-        l = (data_buf_bit_idx + 31) / 32;
-        for (uint32_t i = 0; i < l; i++)
-        {
-          _spi->dev->data_buf[i] = data_buf32[i];
-        }
-      }
-      _spi->dev->cmd.usr = 1;
-      while (_spi->dev->cmd.usr)
-        ;
-      len -= xferLen;
-    }
-  }
-  else // 8-bit SPI
-  {
-    uint16_t bufLen = (len < 32) ? len : 32;
-    int16_t xferLen, l;
-    uint32_t c32;
-    MSB_32_16_16_SET(c32, p, p);
-
-    if (_miso < 0)
-    {
-      l = (bufLen + 1) / 2;
-      for (uint32_t i = 0; i < l; i++)
-      {
-        _spi->dev->data_buf[i] = c32;
-      }
-    }
-
-    // Issue pixels in blocks from temp buffer
-    while (len)
-    {                                           // While pixels remain
-      xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
-      _spi->dev->mosi_dlen.usr_mosi_dbitlen = (xferLen * 16) - 1;
-      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-      if (_miso >= 0)
-      {
-        l = (xferLen + 1) / 2;
-        for (uint32_t i = 0; i < l; i++)
-        {
-          _spi->dev->data_buf[i] = c32;
-        }
-      }
-      _spi->dev->cmd.usr = 1;
-      while (_spi->dev->cmd.usr)
-        ;
-      len -= xferLen;
-    }
-  }
-
-  data_buf_bit_idx = 0;
-}
-
-void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
-{
-  if (_dc < 0) // 9-bit SPI
-  {
-    while (len--)
-    {
-      write(*data++);
-    }
-  }
-  else // 8-bit SPI
-  {
-    uint32_t *p = (uint32_t *)data;
-    if (len >= 64)
-    {
-      if (data_buf_bit_idx > 0)
-      {
-        flush_data_buf();
-      }
-      _spi->dev->mosi_dlen.usr_mosi_dbitlen = 511;
-      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-      while (len >= 64)
-      {
-        for (uint32_t i = 0; i < 16; i++)
-        {
-          _spi->dev->data_buf[i] = *p++;
-        }
-        _spi->dev->cmd.usr = 1;
-        while (_spi->dev->cmd.usr)
-          ;
-
-        len -= 64;
-      }
-    }
-
-    if ((len > 0) && ((len % 4) == 0))
-    {
-      if (data_buf_bit_idx > 0)
-      {
-        flush_data_buf();
-      }
-
-      _spi->dev->mosi_dlen.usr_mosi_dbitlen = (len * 8) - 1;
-      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-      len >>= 2; // 4 bytes to a 32-bit data
-      for (uint32_t i = 0; i < len; i++)
-      {
-        _spi->dev->data_buf[i] = *p++;
-      }
-      _spi->dev->cmd.usr = 1;
-      while (_spi->dev->cmd.usr)
-        ;
-    }
-    else
-    {
-      while (len--)
-      {
-        write(*data++);
-      }
-    }
-  }
-}
-
-void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
-{
-  if (_dc < 0) // 9-bit SPI
-  {
-    while (len--)
-    {
-      write16(*data++);
-    }
-  }
-  else // 8-bit SPI
-  {
-    if (len >= 32)
-    {
-      if (data_buf_bit_idx > 0)
-      {
-        flush_data_buf();
-      }
-
-      _spi->dev->mosi_dlen.usr_mosi_dbitlen = 511;
-      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-      uint32_t v1, v2;
-      while (len >= 32)
-      {
-        for (uint8_t i = 0; i < 16; i++)
-        {
-          v1 = *data++;
-          v2 = *data++;
-          _spi->dev->data_buf[i] = ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8) | ((v2 & 0xff00) << 8) | ((v2 & 0xff) << 24);
-        }
-        _spi->dev->cmd.usr = 1;
-        while (_spi->dev->cmd.usr)
-          ;
-
-        len -= 32;
-      }
-    }
-
-    if ((len > 0) && ((len % 2) == 0))
-    {
-      if (data_buf_bit_idx > 0)
-      {
-        flush_data_buf();
-      }
-
-      _spi->dev->mosi_dlen.usr_mosi_dbitlen = (len * 16) - 1;
-      _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-      uint32_t v1, v2;
-      len >>= 1; // 2 pixels to a 32-bit data
-      for (uint32_t i = 0; i < len; i++)
-      {
-        v1 = *data++;
-        v2 = *data++;
-        _spi->dev->data_buf[i] = ((v1 & 0xff00) >> 8) | ((v1 & 0xff) << 8) | ((v2 & 0xff00) << 8) | ((v2 & 0xff) << 24);
-      }
-      _spi->dev->cmd.usr = 1;
-      while (_spi->dev->cmd.usr)
-        ;
-    }
-    else
-    {
-      while (len--)
-      {
-        write16(*data++);
-      }
-    }
-  }
-}
-
-/**
- * @param data uint8_t *
- * @param len uint8_t
- * @param repeat uint32_t
- */
-void Arduino_ESP32SPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
-{
-  while (repeat--)
-  {
-    writeBytes(data, len);
-  }
-}
-
 void Arduino_ESP32SPI::flush_data_buf()
 {
-  _spi->dev->mosi_dlen.usr_mosi_dbitlen = data_buf_bit_idx - 1;
+  _spi->dev->mosi_dlen.usr_mosi_dbitlen = _data_buf_bit_idx - 1;
   _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-  uint32_t len = (data_buf_bit_idx + 31) / 32;
+  uint32_t len = (_data_buf_bit_idx + 31) / 32;
   for (uint32_t i = 0; i < len; i++)
   {
-    _spi->dev->data_buf[i] = data_buf32[i];
+    _spi->dev->data_buf[i] = _buffer32[i];
   }
   _spi->dev->cmd.usr = 1;
-  while (_spi->dev->cmd.usr)
-    ;
-  data_buf_bit_idx = 0;
+  WAIT_SPI_NOT_BUSY;
+
+  _data_buf_bit_idx = 0;
 }
 
 INLINE void Arduino_ESP32SPI::WRITE8BIT(uint8_t d)
 {
-  uint16_t idx = data_buf_bit_idx >> 3;
-  data_buf[idx] = d;
-  data_buf_bit_idx += 8;
-  if (data_buf_bit_idx >= 512)
+  uint16_t idx = _data_buf_bit_idx >> 3;
+  _buffer[idx] = d;
+  _data_buf_bit_idx += 8;
+  if (_data_buf_bit_idx >= 512)
   {
     flush_data_buf();
   }
@@ -799,20 +923,20 @@ INLINE void Arduino_ESP32SPI::WRITE8BIT(uint8_t d)
 
 INLINE void Arduino_ESP32SPI::WRITE9BIT(uint32_t d)
 {
-  uint16_t idx = data_buf_bit_idx >> 3;
-  uint8_t shift = (data_buf_bit_idx % 8);
+  uint16_t idx = _data_buf_bit_idx >> 3;
+  uint8_t shift = (_data_buf_bit_idx % 8);
   if (shift)
   {
-    data_buf[idx++] |= d >> (shift + 1);
-    data_buf[idx] = d << (7 - shift);
+    _buffer[idx++] |= d >> (shift + 1);
+    _buffer[idx] = d << (7 - shift);
   }
   else
   {
-    data_buf[idx++] = d >> 1;
-    data_buf[idx] = d << 7;
+    _buffer[idx++] = d >> 1;
+    _buffer[idx] = d << 7;
   }
-  data_buf_bit_idx += 9;
-  if (data_buf_bit_idx >= 504) // 56 bytes * 9 bits
+  _data_buf_bit_idx += 9;
+  if (_data_buf_bit_idx >= 504) // 56 bytes * 9 bits
   {
     flush_data_buf();
   }
@@ -822,22 +946,22 @@ INLINE void Arduino_ESP32SPI::WRITE9BIT(uint32_t d)
 
 INLINE void Arduino_ESP32SPI::DC_HIGH(void)
 {
-  *dcPortSet = dcPinMask;
+  *_dcPortSet = _dcPinMask;
 }
 
 INLINE void Arduino_ESP32SPI::DC_LOW(void)
 {
-  *dcPortClr = dcPinMask;
+  *_dcPortClr = _dcPinMask;
 }
 
 INLINE void Arduino_ESP32SPI::CS_HIGH(void)
 {
-  *csPortSet = csPinMask;
+  *_csPortSet = _csPinMask;
 }
 
 INLINE void Arduino_ESP32SPI::CS_LOW(void)
 {
-  *csPortClr = csPinMask;
+  *_csPortClr = _csPinMask;
 }
 
 #endif // #ifdef ESP32
