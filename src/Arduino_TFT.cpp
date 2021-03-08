@@ -73,6 +73,11 @@ void Arduino_TFT::writeRepeat(uint16_t color, uint32_t len)
   _bus->writeRepeat(color, len);
 }
 
+void Arduino_TFT::writeBytes(uint8_t *data, uint32_t len)
+{
+  _bus->writeBytes(data, len);
+}
+
 void Arduino_TFT::writePixels(uint16_t *data, uint32_t len)
 {
   _bus->writePixels(data, len);
