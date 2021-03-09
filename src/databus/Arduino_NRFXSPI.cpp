@@ -16,6 +16,7 @@ void Arduino_NRFXSPI::begin(int32_t speed, int8_t dataMode)
   _speed = speed ? speed : SPI_DEFAULT_FREQ;
   _dataMode = dataMode;
 
+  // init pin mask
   uint32_t pin = digitalPinToPinName((pin_size_t)_dc);
   NRF_GPIO_Type *reg = nrf_gpio_pin_port_decode(&pin);
   nrf_gpio_cfg_output(pin);
@@ -32,13 +33,53 @@ void Arduino_NRFXSPI::begin(int32_t speed, int8_t dataMode)
     _csPinMask = 1UL << pin;
   }
 
+  // init SPI pins
   _nrfxSpiConfig.sck_pin = digitalPinToPinName((pin_size_t)_sck);
   _nrfxSpiConfig.mosi_pin = digitalPinToPinName((pin_size_t)_mosi);
-  _nrfxSpiConfig.miso_pin = digitalPinToPinName((pin_size_t)_miso);
-  _nrfxSpiConfig.frequency = NRF_SPI_FREQ_8M;
+  if (_miso > 0)
+  {
+    _nrfxSpiConfig.miso_pin = digitalPinToPinName((pin_size_t)_miso);
+  }
+  else
+  {
+    _nrfxSpiConfig.miso_pin = NRFX_SPI_PIN_NOT_USED;
+  }
+
+  // init speed
+  if (_speed >= 8000000)
+  {
+    _nrfxSpiConfig.frequency = NRF_SPI_FREQ_8M;
+  }
+  else if (_speed >= 4000000)
+  {
+    _nrfxSpiConfig.frequency = NRF_SPI_FREQ_4M;
+  }
+  else if (_speed >= 2000000)
+  {
+    _nrfxSpiConfig.frequency = NRF_SPI_FREQ_2M;
+  }
+  else if (_speed >= 1000000)
+  {
+    _nrfxSpiConfig.frequency = NRF_SPI_FREQ_1M;
+  }
+  else if (_speed >= 500000)
+  {
+    _nrfxSpiConfig.frequency = NRF_SPI_FREQ_500K;
+  }
+  else if (_speed >= 250000)
+  {
+    _nrfxSpiConfig.frequency = NRF_SPI_FREQ_250K;
+  }
+  else if (_speed >= 125000)
+  {
+    _nrfxSpiConfig.frequency = NRF_SPI_FREQ_125K;
+  }
+
+  // init data mode
   if (_dataMode < 0)
   {
     _dataMode = SPI_MODE0;
+    _nrfxSpiConfig.mode = NRF_SPI_MODE_0;
   }
   else if (_dataMode == SPI_MODE1)
   {
@@ -52,6 +93,8 @@ void Arduino_NRFXSPI::begin(int32_t speed, int8_t dataMode)
   {
     _nrfxSpiConfig.mode = NRF_SPI_MODE_3;
   }
+
+  // init SPI
   nrfx_spi_init(&_nrfxSpi, &_nrfxSpiConfig, NULL, NULL);
 }
 
