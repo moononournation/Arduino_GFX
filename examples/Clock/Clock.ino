@@ -5,169 +5,30 @@
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
+ * 
+ * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
+ * Or you can define the display dev kit not in the board list
+ * Defalult pin list for non display dev kit:
+ * ESP32 various dev board     : TFT_CS:  5, TFT_DC: 27, TFT_RST: 33, TFT_BL: 22
+ * ESP8266 various dev board   : TFT_CS: 15, TFT_DC:  5, TFT_RST: 16, TFT_BL:  4
+ * Arduino Nano, Micro and more: TFT_CS:  9, TFT_DC:  8, TFT_RST:  7, TFT_BL:  6
  ******************************************************************************/
-#include <Arduino_GFX_Library.h>
-
-/* first check if selected specific hardware */
 // #define ESP32_LCDKIT_SPI
 // #define TTGO_T_DISPLAY
 // #define WT32_SC01
-#if defined(ESP32_LCDKIT_SPI) || defined(TTGO_T_DISPLAY) || defined(WT32_SC01) || (defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)) || defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE) || defined(ARDUINO_ODROID_ESP32) || defined(ARDUINO_T) || defined(ARDUINO_TWATCH_BASE) || defined(ARDUINO_TWATCH_2020_V1) || defined(ARDUINO_TWATCH_2020_V2)
-#include <Arduino_GFX_auto_dev_device.h>
-#else /* not selected specific hardware */
+#include <Arduino_GFX_Library.h>
 
-#if defined(ESP32)
-#define TFT_CS 5
-// #define TFT_CS -1 // for display without CS pin
-// #define TFT_DC 16
-#define TFT_DC 27
-// #define TFT_DC -1 // for display without DC pin (9-bit SPI)
-// #define TFT_RST 17
-#define TFT_RST 33
-#define TFT_BL 22
-#elif defined(ESP8266)
-#define TFT_CS 15
-#define TFT_DC 5
-#define TFT_RST 16
-// #define TFT_BL 4
-#else
-#define TFT_CS 9
-#define TFT_DC 8
-#define TFT_RST 7
-#define TFT_BL 6
-#endif
+#if defined(DISPLAY_DEV_KIT)
+Arduino_GFX *gfx = create_default_Arduino_GFX();
+#else /* !defined(DISPLAY_DEV_KIT) */
 
-/*
- * Step 1: Initize one databus for your display
-*/
+/* More data bus class: https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class */
+Arduino_DataBus *bus = create_default_Arduino_DataBus();
 
-// General software SPI
-// Arduino_DataBus *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */);
+/* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 
-// hardware SPI
-#if defined(ARDUINO_ARCH_NRF52840)
-// Arduino_DataBus *bus = new Arduino_mbedSPI(TFT_DC, TFT_CS);
-Arduino_DataBus *bus = new Arduino_NRFXSPI(TFT_DC, TFT_CS, 13 /* SCK */, 11 /* MOSI */, 12 /* MISO */);
-#elif defined(ESP32)
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
-#elif defined(ESP8266)
-Arduino_DataBus *bus = new Arduino_ESP8266SPI(TFT_DC, TFT_CS);
-#else
-// General hardware SPI
-Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
-#endif
-
-// ESP32 parallel 8-bit
-// Arduino_DataBus *bus = new Arduino_ESP32PAR8(TFT_DC, TFT_CS, 26 /* WR */, -1 /* RD */, 16 /* D0 */, 17 /* D1 */, 18 /* D2 */, 19 /* D3 */, 21 /* D4 */, 12 /* D5 */, 23 /* D6 */, 25 /* D7 */);
-
-// ESP32 parallel 16-bit
-// Almost all GPIO 0-31 used up for 16-bit and WR, disable PSRAM to gain 16 and 17 but still no GPIOs remain for CS and RD.
-// CS connect to GND (enable); RD connect to Vcc (disable).
-// Arduino_DataBus *bus = new Arduino_ESP32PAR16(
-//     32 /* DC */, -1 /* CS */, 21 /* WR */, -1 /* RD */,
-//     19 /* D0 */, 23 /* D1 */, 18 /* D2 */, 5 /* D3 */, 17 /* D4 */, 16 /* D5 */, 25 /* D6 */, 26 /* D7 */,
-//     27 /* D8 */, 14 /* D9 */, 12 /* D10 */, 13 /* D11 */, 15 /* D12 */, 2 /* D13 */, 0 /* D14 */, 4 /* D15 */);
-
-/*
- * Step 2: Initize one driver for your display
-*/
-
-// Canvas (framebuffer)
-// Arduino_ST7789 *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-// 16-bit color Canvas (240x320 resolution only works for ESP32 with PSRAM)
-// Arduino_Canvas *gfx = new Arduino_Canvas(240 /* width */, 320 /* height */, output_display);
-// Indexed color Canvas, mask_level: 0-2, larger mask level mean less color variation but can have faster index mapping
-// Arduino_Canvas_Indexed *gfx = new Arduino_Canvas_Indexed(240 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */, MAXMASKLEVEL /* mask_level */);
-// 3-bit color Canvas, R1G1B1, 8 colors
-// Arduino_Canvas_3bit *gfx = new Arduino_Canvas_3bit(240 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */);
-// Mono color Canvas
-// Arduino_Canvas_Mono *gfx = new Arduino_Canvas_Mono(240 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */);
-
-// GC9A01 IPS LCD 240x240
-// Arduino_GC9A01 *gfx = new Arduino_GC9A01(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-
-// HX8347C IPS LCD 240x320
-// Arduino_HX8347C *gfx = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-
-// HX8347D IPS LCD 240x320
-// Arduino_HX8347D *gfx = new Arduino_HX8347D(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-
-// HX8352C IPS LCD 240x400
-// Arduino_HX8352C *gfx = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-
-// HX8357B IPS LCD 320x480
-// Arduino_HX8357B *gfx = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-
-// ILI9225 LCD 176x220
-// Arduino_ILI9225 *gfx = new Arduino_ILI9225(bus, TFT_RST);
-
-// ILI9341 LCD 240x320
-Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
-
-// ILI9481 LCD 320x480
-// Arduino_ILI9481_18bit *gfx = new Arduino_ILI9481_18bit(bus, TFT_RST, 0 /* rotation */);
-
-// ILI9486 LCD 320x480
-// Arduino_ILI9486_18bit *gfx = new Arduino_ILI9486_18bit(bus, TFT_RST, 0 /* rotation */);
-
-// ILI9488 LCD 320x480
-// Arduino_ILI9488_18bit *gfx = new Arduino_ILI9488_18bit(bus, TFT_RST, 0 /* rotation */);
-
-// JBT6K71 LCD 240x320
-// Arduino_JBT6K71 *gfx = new Arduino_JBT6K71(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 240, 320, 0, 0, 16, 0);
-
-// R61529 IPS LCD 320x480
-// Arduino_R61529 *gfx = new Arduino_R61529(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-
-// SEPS525 OLED 160x128
-// Arduino_SEPS525 *gfx = new Arduino_SEPS525(bus, TFT_RST, 0 /* rotation */);
-
-// SSD1283A OLED 130x130
-// Arduino_SSD1283A *gfx = new Arduino_SSD1283A(bus, TFT_RST, 0 /* rotation */);
-
-// SSD1331 OLED 96x64
-// Arduino_SSD1331 *gfx = new Arduino_SSD1331(bus, TFT_RST, 0 /* rotation */);
-
-// SSD1351 OLED 128x128
-// Arduino_SSD1351 *gfx = new Arduino_SSD1351(bus, TFT_RST, 0 /* rotation */);
-
-// ST7735 LCD
-// 1.8" REDTAB 128x160
-// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */);
-// 1.8" BLACKTAB 128x160
-// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 1 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */, false /* BGR */);
-// 1.8" GREENTAB A 128x160
-// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 1 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
-// 1.8" GREENTAB B 128x160
-// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 2 /* col offset 1 */, 3 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
-// 1.8" Wide angle LCD 128x160
-// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 160 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */, false /* BGR */);
-// 1.5" GREENTAB B 128x128
-// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 2 /* col offset 1 */, 3 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
-// 1.5" GREENTAB C 128x128
-// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 0 /* col offset 1 */, 32 /* row offset 1 */);
-// 0.96" IPS LCD 80x160
-// Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 3 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
-
-// ST7789 LCD
-// 2.4" LCD 240x320
-// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */);
-// 2.4" IPS LCD 240x320
-// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-// 1.69" IPS round corner LCD 240x280
-// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 240 /* width */, 280 /* height */, 0 /* col offset 1 */, 20 /* row offset 1 */, 0 /* col offset 2 */, 20 /* row offset 2 */);
-// 1.3"/1.5" square IPS LCD 240x240
-// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 80 /* row offset 1 */);
-// 1.14" IPS LCD 135x240 TTGO T-Display
-// Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
-
-// ST7796 LCD
-// 4" LCD 320x480
-// Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */);
-// 4" IPS LCD 320x480
-// Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
-
-#endif /* not selected specific hardware */
+#endif /* !defined(DISPLAY_DEV_KIT) */
 /*******************************************************************************
  * End of Arduino_GFX setting
  ******************************************************************************/

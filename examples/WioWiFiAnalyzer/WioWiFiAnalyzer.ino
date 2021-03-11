@@ -15,14 +15,8 @@
 
 #define SCAN_INTERVAL 1000
 
-/*******************************************************************************
- * Start of Arduino_GFX setting
- ******************************************************************************/
 #include <Arduino_GFX_Library.h>
-
-#define TFT_BL LCD_BACKLIGHT
-Arduino_HWSPI *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);
-Arduino_ILI9341 *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 3 /* rotation */);
+Arduino_ILI9341 *gfx = create_default_Arduino_GFX();
 
 #include "rpcWiFi.h"
 

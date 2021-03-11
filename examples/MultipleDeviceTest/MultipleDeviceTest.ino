@@ -4,11 +4,6 @@
 #include <Arduino_GFX_Library.h>
 
 /* all display share same SPI Data Bus with individual CS and RST pins */
-#define TFT_DC 33
-#define TFT_SCK 18
-#define TFT_MOSI 23
-#define TFT_MISO -1
-
 Arduino_DataBus *bus1 = new Arduino_ESP32SPI(TFT_DC, 5 /* CS */, TFT_SCK, TFT_MOSI, TFT_MISO, VSPI /* spi_num */);
 Arduino_ST7735 *gfx1 = new Arduino_ST7735(bus1, 26 /* RST */, 3 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
 
