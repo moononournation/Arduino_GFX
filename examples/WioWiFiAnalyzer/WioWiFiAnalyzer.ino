@@ -16,7 +16,7 @@
 #define SCAN_INTERVAL 1000
 
 #include <Arduino_GFX_Library.h>
-Arduino_ILI9341 *gfx = create_default_Arduino_GFX();
+Arduino_GFX *gfx = create_default_Arduino_GFX();
 
 #include "rpcWiFi.h"
 
