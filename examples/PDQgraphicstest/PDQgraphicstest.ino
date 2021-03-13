@@ -69,7 +69,12 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 #define TFT_CS 15
 #define TFT_DC 5
 #define TFT_RST 16
-// #define TFT_BL 4
+#define TFT_BL 4
+#elif defined(RTL8722DM)
+#define TFT_CS 22
+#define TFT_DC 17
+#define TFT_RST 23
+#define TFT_BL 16
 #else
 #define TFT_CS 9
 #define TFT_DC 8
@@ -415,7 +420,7 @@ void printnice(const __FlashStringHelper *item, long int v)
   else
   {
     char str[32] = {0};
-#ifdef BOARD_RTL8721D
+#ifdef RTL8722DM
     sprintf(str, "%d", v);
 #else
     sprintf(str, "%ld", v);

@@ -31,6 +31,7 @@
  * Defalult pin list for non display dev kit:
  * ESP32 various dev board     : TFT_CS:  5, TFT_DC: 27, TFT_RST: 33, TFT_BL: 22
  * ESP8266 various dev board   : TFT_CS: 15, TFT_DC:  5, TFT_RST: 16, TFT_BL:  4
+ * RTL872x various dev board   : TFT_CS: 22, TFT_DC: 17, TFT_RST: 23, TFT_BL: 16
  * Arduino Nano, Micro and more: TFT_CS:  9, TFT_DC:  8, TFT_RST:  7, TFT_BL:  6
  ******************************************************************************/
 // #define ESP32_LCDKIT_SPI

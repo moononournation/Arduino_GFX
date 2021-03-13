@@ -7,7 +7,7 @@
 
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #define HWSPI LCD_SPI
-#elif defined(BOARD_RTL8721D)
+#elif defined(RTL8722DM)
 #define HWSPI SPI1
 #else
 #define HWSPI SPI
