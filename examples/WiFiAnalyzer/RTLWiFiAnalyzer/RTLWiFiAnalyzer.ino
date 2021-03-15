@@ -23,7 +23,8 @@
 #include <Arduino_GFX_Library.h>
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 1 /* rotation */);
+Arduino_GFX *output_display = new Arduino_ILI9341(bus, TFT_RST, 1 /* rotation */);
+Arduino_GFX *gfx = new Arduino_Canvas(320 /* width */, 220 /* height */, output_display, 0 /* output_x*/, 20 /* output_y */);
 
 static int16_t w, h, text_size, banner_height, graph24_baseline, graph50_baseline, graph_baseline, graph_height, channel24_width, channel50_width, channel_width, signal_width;
 
@@ -154,23 +155,23 @@ void setup()
   w = gfx->width();
   h = gfx->height();
   text_size = (h < 200) ? 1 : 2;
-  banner_height = (text_size * 8) + 4;
+  banner_height = 0; //(text_size * 8) + 4;
   graph_height = ((gfx->height() - banner_height) / 2) - 30;
   graph24_baseline = banner_height + graph_height + 10;
   graph50_baseline = graph24_baseline + graph_height + 30;
   channel24_width = w / 17;
   channel50_width = w / 62;
 
-  // init banner
-  gfx->setTextSize(text_size);
-  gfx->fillScreen(BLACK);
-  gfx->setTextColor(GREEN);
-  gfx->setCursor(2, 2);
-  gfx->print("RTL");
-  gfx->setTextColor(YELLOW);
-  gfx->print("872x");
-  gfx->setTextColor(WHITE);
-  gfx->print(" WiFi Analyzer");
+  // direct draw banner to output display
+  output_display->setTextSize(text_size);
+  output_display->fillScreen(BLACK);
+  output_display->setTextColor(GREEN);
+  output_display->setCursor(2, 2);
+  output_display->print("RTL");
+  output_display->setTextColor(YELLOW);
+  output_display->print("872x");
+  output_display->setTextColor(WHITE);
+  output_display->print(" WiFi Analyzer");
 }
 
 void loop()
@@ -328,6 +329,7 @@ void loop()
       gfx->print(ap_count_list[idx]);
     }
   }
+  gfx->flush(); // flush Canvas to output display
 
   // Wait a bit before scanning again
   delay(SCAN_INTERVAL);
