@@ -243,38 +243,31 @@ void Arduino_HWSPI::beginWrite()
 void Arduino_HWSPI::writeCommand(uint8_t c)
 {
   DC_LOW();
-  write(c);
+  WRITE(c);
   DC_HIGH();
 }
 
 void Arduino_HWSPI::writeCommand16(uint16_t c)
 {
   DC_LOW();
-  write16(c);
+  WRITE(c >> 8);
+  WRITE(c);
   DC_HIGH();
 }
 
 void Arduino_HWSPI::writeCommand32(uint32_t c)
 {
   DC_LOW();
-  write32(c);
+  WRITE(c >> 24);
+  WRITE(c >> 16);
+  WRITE(c >> 8);
+  WRITE(c);
   DC_HIGH();
 }
 
-void Arduino_HWSPI::write(uint8_t c)
+void Arduino_HWSPI::write(uint8_t d)
 {
-#if defined(SPI_HAS_TRANSACTION)
-  HWSPI.transfer(c);
-#elif defined(__AVR__) || defined(CORE_TEENSY)
-  SPCRbackup = SPCR;
-  SPCR = mySPCR;
-  HWSPI.transfer(c);
-  SPCR = SPCRbackup;
-#elif defined(__arm__)
-  HWSPI.setClockDivider(21); //4MHz
-  HWSPI.setDataMode(_dataMode);
-  HWSPI.transfer(c);
-#endif
+  WRITE(d);
 }
 
 void Arduino_HWSPI::write16(uint16_t d)
@@ -282,8 +275,8 @@ void Arduino_HWSPI::write16(uint16_t d)
 #if defined(ESP8266) || defined(ESP32)
   HWSPI.write16(d);
 #else
-  write(d >> 8);
-  write(d);
+  WRITE(d >> 8);
+  WRITE(d);
 #endif
 }
 
@@ -292,10 +285,10 @@ void Arduino_HWSPI::write32(uint32_t d)
 #if defined(ESP8266) || defined(ESP32)
   HWSPI.write32(d);
 #else
-  write(d >> 24);
-  write(d >> 16);
-  write(d >> 8);
-  write(d);
+  WRITE(d >> 24);
+  WRITE(d >> 16);
+  WRITE(d >> 8);
+  WRITE(d);
 #endif
 }
 
@@ -428,21 +421,18 @@ void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 #if defined(ESP32)
   // don't know why require double len
   HWSPI.writePixels(data, len * 2);
-#else // !defined(ESP32)
-  len *= 2;
-  uint8_t *d = (uint8_t *)data;
-  uint8_t t;
-  for (uint32_t i = 0; i < len; i += 2)
+#else  // !defined(ESP32)
+  union
   {
-    t = d[i];
-    d[i] = d[i + 1];
-    d[i + 1] = t;
+    uint16_t pixel;
+    uint8_t twoBytes[2];
+  };
+  while (len--)
+  {
+    pixel = *data++;
+    WRITE(twoBytes[0]);
+    WRITE(twoBytes[1]);
   }
-#if defined(ESP8266)
-  HWSPI.writeBytes(d, len);
-#else  // !defined(ESP8266)
-  HWSPI.transfer(d, len);
-#endif // !defined(ESP8266)
 #endif // !defined(ESP32)
 }
 
@@ -464,6 +454,22 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
     }
   }
 #endif // !(defined(ESP8266) || defined(ESP32))
+}
+
+INLINE void Arduino_HWSPI::WRITE(uint8_t d)
+{
+#if defined(SPI_HAS_TRANSACTION)
+  HWSPI.transfer(d);
+#elif defined(__AVR__) || defined(CORE_TEENSY)
+  SPCRbackup = SPCR;
+  SPCR = mySPCR;
+  HWSPI.transfer(c);
+  SPCR = SPCRbackup;
+#elif defined(__arm__)
+  HWSPI.setClockDivider(21); //4MHz
+  HWSPI.setDataMode(_dataMode);
+  HWSPI.transfer(c);
+#endif
 }
 
 /******** low level bit twiddling **********/

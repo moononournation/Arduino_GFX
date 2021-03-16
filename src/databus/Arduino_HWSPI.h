@@ -40,6 +40,7 @@ public:
   virtual void sendData32(uint32_t);
 
 private:
+  INLINE void WRITE(uint8_t d);
   INLINE void CS_HIGH(void);
   INLINE void CS_LOW(void);
   INLINE void DC_HIGH(void);
