@@ -33,6 +33,9 @@ typedef uint32_t ARDUINOGFX_PORT_t;
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
 typedef uint32_t ARDUINOGFX_PORT_t;
+#elif defined(RTL8722DM)
+#define USE_FAST_PINIO   ///< Use direct PORT register access
+typedef uint32_t ARDUINOGFX_PORT_t;
 #elif defined(CORE_TEENSY)
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
@@ -74,6 +77,8 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #define SPI_DEFAULT_FREQ 8000000
 #elif defined(ESP8266) || defined(ESP32)
 #define SPI_DEFAULT_FREQ 40000000
+#elif defined(RTL8722DM)
+#define SPI_DEFAULT_FREQ 20000000
 #elif defined(RASPI)
 #define SPI_DEFAULT_FREQ 80000000
 #elif defined(ARDUINO_ARCH_STM32F1)
