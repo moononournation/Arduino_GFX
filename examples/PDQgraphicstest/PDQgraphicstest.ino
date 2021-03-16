@@ -421,7 +421,7 @@ void printnice(const __FlashStringHelper *item, long int v)
   {
     char str[32] = {0};
 #ifdef RTL8722DM
-    sprintf(str, "%d", v);
+    sprintf(str, "%d", (int)v);
 #else
     sprintf(str, "%ld", v);
 #endif
