@@ -7,58 +7,6 @@
 
 #include "Arduino_DataBus.h"
 
-// HARDWARE CONFIG ---------------------------------------------------------
-
-#if defined(__AVR__)
-#define USE_FAST_PINIO ///< Use direct PORT register access
-typedef uint8_t ARDUINOGFX_PORT_t;
-#elif defined(ARDUINO_ARCH_NRF52840)
-#define USE_FAST_PINIO   ///< Use direct PORT register access
-#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
-typedef uint32_t ARDUINOGFX_PORT_t;
-#elif defined(ESP32)
-#define USE_FAST_PINIO   ///< Use direct PORT register access
-#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
-typedef uint32_t ARDUINOGFX_PORT_t;
-#elif defined(ESP8266)
-#define USE_FAST_PINIO ///< Use direct PORT register access
-typedef uint32_t ARDUINOGFX_PORT_t;
-#define ESP8266SAFEBATCHBITSIZE (2048 * 8 * 9)
-#elif defined(ARDUINO_STM32_FEATHER)
-// TODO: fast pin IO?
-#elif defined(__arm__)
-#if defined(ARDUINO_ARCH_SAMD)
-// Adafruit M0, M4
-#define USE_FAST_PINIO   ///< Use direct PORT register access
-#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
-typedef uint32_t ARDUINOGFX_PORT_t;
-#elif defined(CORE_TEENSY)
-#define USE_FAST_PINIO   ///< Use direct PORT register access
-#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
-#if defined(__IMXRT1052__) || defined(__IMXRT1062__)
-// PJRC Teensy 4.x
-typedef uint32_t ARDUINOGFX_PORT_t;
-#else
-// PJRC Teensy 3.x
-typedef uint8_t ARDUINOGFX_PORT_t;
-#endif
-#else
-// Arduino Due?
-// USE_FAST_PINIO not available here (yet)...Due has a totally different
-// GPIO register set and will require some changes elsewhere (e.g. in
-// constructors especially).
-#endif
-#else  // !ARM
-// Unknow architecture, USE_FAST_PINIO is not available here (yet)
-// but don't worry about it too much...the digitalWrite() implementation
-// on these platforms is reasonably efficient and already RAM-resident,
-// only gotcha then is no parallel connection support for now.
-#endif // !ARM
-
-#ifdef USE_FAST_PINIO
-typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
-#endif
-
 class Arduino_SWSPI : public Arduino_DataBus
 {
 public:
