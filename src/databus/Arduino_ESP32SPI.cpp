@@ -813,51 +813,6 @@ void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, ui
   }
 }
 
-void Arduino_ESP32SPI::sendCommand(uint8_t c)
-{
-  beginWrite();
-
-  writeCommand(c);
-
-  endWrite();
-}
-
-void Arduino_ESP32SPI::sendCommand16(uint16_t c)
-{
-  beginWrite();
-
-  writeCommand16(c);
-
-  endWrite();
-}
-
-void Arduino_ESP32SPI::sendData(uint8_t d)
-{
-  beginWrite();
-
-  write(d);
-
-  endWrite();
-}
-
-void Arduino_ESP32SPI::sendData16(uint16_t d)
-{
-  beginWrite();
-
-  write16(d);
-
-  endWrite();
-}
-
-void Arduino_ESP32SPI::sendData32(uint32_t d)
-{
-  beginWrite();
-
-  write32(d);
-
-  endWrite();
-}
-
 void Arduino_ESP32SPI::flush_data_buf()
 {
   _spi->dev->mosi_dlen.usr_mosi_dbitlen = _data_buf_bit_idx - 1;

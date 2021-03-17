@@ -43,12 +43,6 @@ public:
   virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
   virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
 
-  virtual void sendCommand(uint8_t);
-  virtual void sendCommand16(uint16_t);
-  virtual void sendData(uint8_t);
-  virtual void sendData16(uint16_t);
-  virtual void sendData32(uint32_t);
-
 protected:
   virtual void flush_data_buf();
 

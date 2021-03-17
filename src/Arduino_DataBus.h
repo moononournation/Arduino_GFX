@@ -164,11 +164,11 @@ public:
     virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
 #endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
-    virtual void sendCommand(uint8_t c) = 0;
-    virtual void sendCommand16(uint16_t c) = 0;
-    virtual void sendData(uint8_t d) = 0;
-    virtual void sendData16(uint16_t d) = 0;
-    virtual void sendData32(uint32_t d) = 0;
+    void sendCommand(uint8_t c);
+    void sendCommand16(uint16_t c);
+    void sendData(uint8_t d);
+    void sendData16(uint16_t d);
+    void sendData32(uint32_t d);
 
     virtual void batchOperation(spi_operation_t batch[], uint8_t len);
 

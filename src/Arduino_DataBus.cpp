@@ -52,6 +52,41 @@ void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uin
 }
 #endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
+void Arduino_DataBus::sendCommand(uint8_t c)
+{
+  beginWrite();
+  writeCommand(c);
+  endWrite();
+}
+
+void Arduino_DataBus::sendCommand16(uint16_t c)
+{
+  beginWrite();
+  writeCommand16(c);
+  endWrite();
+}
+
+void Arduino_DataBus::sendData(uint8_t d)
+{
+  beginWrite();
+  write(d);
+  endWrite();
+}
+
+void Arduino_DataBus::sendData16(uint16_t d)
+{
+  beginWrite();
+  write16(d);
+  endWrite();
+}
+
+void Arduino_DataBus::sendData32(uint32_t d)
+{
+  beginWrite();
+  write32(d);
+  endWrite();
+}
+
 void Arduino_DataBus::batchOperation(spi_operation_t batch[], uint8_t len)
 {
   for (uint8_t i = 0; i < len; ++i)

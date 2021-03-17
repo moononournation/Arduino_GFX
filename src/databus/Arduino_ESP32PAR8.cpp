@@ -247,64 +247,6 @@ void Arduino_ESP32PAR8::endWrite()
   CS_HIGH();
 }
 
-void Arduino_ESP32PAR8::sendCommand(uint8_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  WRITE(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_ESP32PAR8::sendCommand16(uint16_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  WRITE(c >> 8);
-  WRITE(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_ESP32PAR8::sendData(uint8_t d)
-{
-  CS_LOW();
-
-  WRITE(d);
-
-  CS_HIGH();
-}
-
-void Arduino_ESP32PAR8::sendData16(uint16_t d)
-{
-  CS_LOW();
-
-  WRITE(d >> 8);
-  WRITE(d);
-
-  CS_HIGH();
-}
-
-void Arduino_ESP32PAR8::sendData32(uint32_t d)
-{
-  CS_LOW();
-
-  WRITE(d >> 24);
-  WRITE(d >> 16);
-  WRITE(d >> 8);
-  WRITE(d);
-
-  CS_HIGH();
-}
-
 void Arduino_ESP32PAR8::writeRepeat(uint16_t p, uint32_t len)
 {
   uint32_t hi = xset_mask[p >> 8];

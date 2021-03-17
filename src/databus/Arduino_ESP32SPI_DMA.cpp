@@ -409,51 +409,6 @@ void Arduino_ESP32SPI_DMA::endWrite()
   CS_HIGH();
 }
 
-void Arduino_ESP32SPI_DMA::sendCommand(uint8_t c)
-{
-  beginWrite();
-
-  writeCommand(c);
-
-  endWrite();
-}
-
-void Arduino_ESP32SPI_DMA::sendCommand16(uint16_t c)
-{
-  beginWrite();
-
-  writeCommand16(c);
-
-  endWrite();
-}
-
-void Arduino_ESP32SPI_DMA::sendData(uint8_t d)
-{
-  beginWrite();
-
-  write(d);
-
-  endWrite();
-}
-
-void Arduino_ESP32SPI_DMA::sendData16(uint16_t d)
-{
-  beginWrite();
-
-  write16(d);
-
-  endWrite();
-}
-
-void Arduino_ESP32SPI_DMA::sendData32(uint32_t d)
-{
-  beginWrite();
-
-  write32(d);
-
-  endWrite();
-}
-
 void Arduino_ESP32SPI_DMA::writeRepeat(uint16_t p, uint32_t len)
 {
   if (data_buf_bit_idx > 0)

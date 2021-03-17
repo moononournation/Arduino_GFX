@@ -31,12 +31,6 @@ public:
   virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat);
   virtual void endWrite();
 
-  virtual void sendCommand(uint8_t);
-  virtual void sendCommand16(uint16_t);
-  virtual void sendData(uint8_t);
-  virtual void sendData16(uint16_t);
-  virtual void sendData32(uint32_t);
-
 private:
   INLINE void WRITE(uint8_t d);
   INLINE void CS_HIGH(void);

@@ -180,59 +180,6 @@ void Arduino_NRFXSPI::endWrite()
   CS_HIGH();
 }
 
-void Arduino_NRFXSPI::sendCommand(uint8_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  WRITE(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_NRFXSPI::sendCommand16(uint16_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  WRITE16(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_NRFXSPI::sendData(uint8_t d)
-{
-  CS_LOW();
-
-  WRITE(d);
-
-  CS_HIGH();
-}
-
-void Arduino_NRFXSPI::sendData16(uint16_t d)
-{
-  CS_LOW();
-
-  WRITE16(d);
-
-  CS_HIGH();
-}
-
-void Arduino_NRFXSPI::sendData32(uint32_t d)
-{
-  CS_LOW();
-
-  WRITE32(d);
-
-  CS_HIGH();
-}
-
 void Arduino_NRFXSPI::writeRepeat(uint16_t p, uint32_t len)
 {
   MSB_16_SET(p, p);

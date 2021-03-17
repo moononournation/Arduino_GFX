@@ -124,59 +124,6 @@ void Arduino_mbedSPI::endWrite()
   _dev->unlock();
 }
 
-void Arduino_mbedSPI::sendCommand(uint8_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  WRITE(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_mbedSPI::sendCommand16(uint16_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  WRITE16(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_mbedSPI::sendData(uint8_t d)
-{
-  CS_LOW();
-
-  WRITE(d);
-
-  CS_HIGH();
-}
-
-void Arduino_mbedSPI::sendData16(uint16_t d)
-{
-  CS_LOW();
-
-  WRITE16(d);
-
-  CS_HIGH();
-}
-
-void Arduino_mbedSPI::sendData32(uint32_t d)
-{
-  CS_LOW();
-
-  WRITE32(d);
-
-  CS_HIGH();
-}
-
 void Arduino_mbedSPI::writeRepeat(uint16_t p, uint32_t len)
 {
   MSB_16_SET(p, p);

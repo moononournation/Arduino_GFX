@@ -374,51 +374,6 @@ void Arduino_SWSPI::endWrite()
   CS_HIGH();
 }
 
-void Arduino_SWSPI::sendCommand(uint8_t c)
-{
-  CS_LOW();
-
-  writeCommand(c);
-
-  CS_HIGH();
-}
-
-void Arduino_SWSPI::sendCommand16(uint16_t c)
-{
-  CS_LOW();
-
-  writeCommand16(c);
-
-  CS_HIGH();
-}
-
-void Arduino_SWSPI::sendData(uint8_t d)
-{
-  CS_LOW();
-
-  WRITE(d);
-
-  CS_HIGH();
-}
-
-void Arduino_SWSPI::sendData16(uint16_t d)
-{
-  CS_LOW();
-
-  WRITE16(d);
-
-  CS_HIGH();
-}
-
-void Arduino_SWSPI::sendData32(uint32_t d)
-{
-  CS_LOW();
-
-  WRITE32(d);
-
-  CS_HIGH();
-}
-
 void Arduino_SWSPI::writeRepeat(uint16_t p, uint32_t len)
 {
   if (_dc < 0) // 9-bit SPI

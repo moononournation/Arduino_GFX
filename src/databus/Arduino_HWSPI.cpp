@@ -292,61 +292,6 @@ void Arduino_HWSPI::endWrite()
   }
 }
 
-void Arduino_HWSPI::sendCommand(uint8_t c)
-{
-  SPI_BEGIN_TRANSACTION();
-  CS_LOW();
-
-  writeCommand(c);
-
-  CS_HIGH();
-  SPI_END_TRANSACTION();
-}
-
-void Arduino_HWSPI::sendCommand16(uint16_t c)
-{
-  SPI_BEGIN_TRANSACTION();
-  CS_LOW();
-
-  writeCommand16(c);
-
-  CS_HIGH();
-  SPI_END_TRANSACTION();
-}
-
-void Arduino_HWSPI::sendData(uint8_t d)
-{
-  SPI_BEGIN_TRANSACTION();
-  CS_LOW();
-
-  write(d);
-
-  CS_HIGH();
-  SPI_END_TRANSACTION();
-}
-
-void Arduino_HWSPI::sendData16(uint16_t d)
-{
-  SPI_BEGIN_TRANSACTION();
-  CS_LOW();
-
-  write16(d);
-
-  CS_HIGH();
-  SPI_END_TRANSACTION();
-}
-
-void Arduino_HWSPI::sendData32(uint32_t d)
-{
-  SPI_BEGIN_TRANSACTION();
-  CS_LOW();
-
-  write32(d);
-
-  CS_HIGH();
-  SPI_END_TRANSACTION();
-}
-
 void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
 {
 #if defined(ESP32)
