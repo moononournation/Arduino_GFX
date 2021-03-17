@@ -288,8 +288,6 @@ void Arduino_ESP8266SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32
 
 void Arduino_ESP8266SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
-  volatile uint32_t *spi1Reg = (volatile uint32_t *)(0x60000000 + 0x140); // address of SPI1W0
-
   uint16_t p;
   uint8_t i;
 
