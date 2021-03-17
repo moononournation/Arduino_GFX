@@ -297,7 +297,6 @@ void loop(void)
   int32_t usecCircles = testCircles(10);
   serialOut(F("Circles (outline)\t"), usecCircles, 100, true);
 
-#ifndef __AVR__
   int32_t usecFilledArcs = testFillArcs();
   serialOut(F("Arcs (filled)\t"), usecFilledArcs, 100, false);
 
@@ -309,7 +308,6 @@ void loop(void)
 
   int32_t usecRoundRects = testRoundRects();
   serialOut(F("Rounded rects (outline)\t"), usecRoundRects, 100, true);
-#endif
 
 #ifdef CANVAS
   uint32_t start = micros_start();
@@ -363,12 +361,10 @@ void loop(void)
   printnice(F("Triangles   "), usecTriangles);
   printnice(F("Circles F   "), usecFilledCircles);
   printnice(F("Circles     "), usecCircles);
-#ifndef __AVR__
   printnice(F("Arcs F      "), usecFilledArcs);
   printnice(F("Arcs        "), usecArcs);
   printnice(F("RoundRects F"), usecFilledRoundRects);
   printnice(F("RoundRects  "), usecRoundRects);
-#endif
 
   if ((h > w) || (h > 240))
   {
