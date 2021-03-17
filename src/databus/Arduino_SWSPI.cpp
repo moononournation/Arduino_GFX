@@ -425,7 +425,6 @@ void Arduino_SWSPI::writeBytes(uint8_t *data, uint32_t len)
   }
 }
 
-void writeBytes(uint8_t *data, uint32_t len) override;
 /**
  * @param data uint8_t *
  * @param len uint8_t
