@@ -23,6 +23,7 @@ typedef uint32_t ARDUINOGFX_PORT_t;
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
 typedef uint32_t ARDUINOGFX_PORT_t;
 #elif defined(ESP8266)
+#define ESP8266SAFEBATCHBITSIZE (2048 * 8 * 9)
 #define USE_FAST_PINIO ///< Use direct PORT register access
 typedef uint32_t ARDUINOGFX_PORT_t;
 #elif defined(ARDUINO_STM32_FEATHER)
