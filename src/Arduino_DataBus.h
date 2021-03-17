@@ -171,7 +171,7 @@ public:
     void sendData16(uint16_t d);
     void sendData32(uint32_t d);
 
-    virtual void batchOperation(spi_operation_t batch[], uint8_t len);
+    void batchOperation(spi_operation_t batch[], uint8_t len);
 
 protected:
     int32_t _speed;
