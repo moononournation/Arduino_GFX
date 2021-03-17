@@ -10,11 +10,11 @@ class Arduino_Canvas_Indexed : public Arduino_GFX
 public:
   Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *output, int16_t output_x = 0, int16_t output_y = 0, uint8_t mask_level = 0);
 
-  virtual void begin(int32_t speed = 0);
-  virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
-  virtual void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-  virtual void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-  virtual void flush(void);
+  void begin(int32_t speed = 0) override;
+  void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
+  void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
+  void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
+  void flush(void) override;
 
   uint8_t get_color_index(uint16_t color);
   uint16_t get_index_color(uint8_t idx);

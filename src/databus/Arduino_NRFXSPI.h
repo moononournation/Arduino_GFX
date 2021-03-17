@@ -18,21 +18,21 @@ class Arduino_NRFXSPI : public Arduino_DataBus
 public:
   Arduino_NRFXSPI(int8_t dc, int8_t cs = -1, int8_t sck = -1, int8_t mosi = -1, int8_t miso = -1); // Constructor
 
-  virtual void begin(int32_t speed = 0, int8_t dataMode = -1);
-  virtual void beginWrite();
-  virtual void writeCommand(uint8_t);
-  virtual void writeCommand16(uint16_t);
-  virtual void write(uint8_t);
-  virtual void write16(uint16_t);
-  virtual void write32(uint32_t);
-  virtual void writeC8D8(uint8_t c, uint8_t d);
-  virtual void writeC8D16(uint8_t c, uint16_t d);
-  virtual void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2);
-  virtual void writeRepeat(uint16_t p, uint32_t len);
-  virtual void writeBytes(uint8_t *data, uint32_t len);
-  virtual void writePixels(uint16_t *data, uint32_t len);
-  virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat);
-  virtual void endWrite();
+  void begin(int32_t speed = 0, int8_t dataMode = -1) override;
+  void beginWrite() override;
+  void writeCommand(uint8_t) override;
+  void writeCommand16(uint16_t) override;
+  void write(uint8_t) override;
+  void write16(uint16_t) override;
+  void write32(uint32_t) override;
+  void writeC8D8(uint8_t c, uint8_t d) override;
+  void writeC8D16(uint8_t c, uint16_t d) override;
+  void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2) override;
+  void writeRepeat(uint16_t p, uint32_t len) override;
+  void writeBytes(uint8_t *data, uint32_t len) override;
+  void writePixels(uint16_t *data, uint32_t len) override;
+  void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
+  void endWrite() override;
 
 private:
   INLINE void WRITE(uint8_t d);

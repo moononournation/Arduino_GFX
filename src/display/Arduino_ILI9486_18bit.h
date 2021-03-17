@@ -54,15 +54,15 @@ class Arduino_ILI9486_18bit : public Arduino_TFT_18bit
 public:
   Arduino_ILI9486_18bit(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0);
 
-  virtual void begin(int32_t speed = 0);
-  virtual void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
-  virtual void setRotation(uint8_t r);
-  virtual void invertDisplay(bool);
-  virtual void displayOn();
-  virtual void displayOff();
+  void begin(int32_t speed = 0) override;
+  void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) override;
+  void setRotation(uint8_t r) override;
+  void invertDisplay(bool) override;
+  void displayOn() override;
+  void displayOff() override;
 
 protected:
-  virtual void tftInit();
+  void tftInit() override;
 
 private:
 };

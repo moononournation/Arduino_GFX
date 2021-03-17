@@ -87,19 +87,19 @@ class Arduino_ILI9341 : public Arduino_TFT
 public:
   Arduino_ILI9341(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0);
 
-  virtual void begin(int32_t speed = 0);
+  void begin(int32_t speed = 0) override;
 
-  virtual void setRotation(uint8_t r);
+  void setRotation(uint8_t r) override;
 
-  virtual void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
-  virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color);
+  void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) override;
+  void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
 
-  virtual void invertDisplay(bool);
-  virtual void displayOn();
-  virtual void displayOff();
+  void invertDisplay(bool) override;
+  void displayOn() override;
+  void displayOff() override;
 
 protected:
-  virtual void tftInit();
+  void tftInit() override;
 
 private:
 };

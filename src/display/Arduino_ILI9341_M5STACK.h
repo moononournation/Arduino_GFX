@@ -17,10 +17,10 @@ class Arduino_ILI9341_M5STACK : public Arduino_ILI9341
 public:
   Arduino_ILI9341_M5STACK(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0);
 
-  virtual void setRotation(uint8_t r);
+  void setRotation(uint8_t r) override;
 
 protected:
-  virtual void tftInit();
+  void tftInit() override;
 
 private:
 };

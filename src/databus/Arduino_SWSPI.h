@@ -12,18 +12,18 @@ class Arduino_SWSPI : public Arduino_DataBus
 public:
   Arduino_SWSPI(int8_t dc, int8_t cs, int8_t _sck, int8_t _mosi, int8_t _miso = -1); // Constructor
 
-  virtual void begin(int32_t speed = 0, int8_t dataMode = -1);
-  virtual void beginWrite();
-  virtual void writeCommand(uint8_t);
-  virtual void writeCommand16(uint16_t);
-  virtual void write(uint8_t);
-  virtual void write16(uint16_t);
-  virtual void write32(uint32_t);
-  virtual void writeRepeat(uint16_t p, uint32_t len);
-  virtual void writeBytes(uint8_t *data, uint32_t len);
-  virtual void writePixels(uint16_t *data, uint32_t len);
-  virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat);
-  virtual void endWrite();
+  void begin(int32_t speed = 0, int8_t dataMode = -1) override;
+  void beginWrite() override;
+  void writeCommand(uint8_t) override;
+  void writeCommand16(uint16_t) override;
+  void write(uint8_t) override;
+  void write16(uint16_t) override;
+  void write32(uint32_t) override;
+  void writeRepeat(uint16_t p, uint32_t len) override;
+  void writeBytes(uint8_t *data, uint32_t len) override;
+  void writePixels(uint16_t *data, uint32_t len) override;
+  void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
+  void endWrite() override;
 
 private:
   INLINE void WRITE9BITCOMMAND(uint8_t c);
