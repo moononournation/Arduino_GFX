@@ -36,7 +36,6 @@ public:
   virtual void beginWrite();
   virtual void writeCommand(uint8_t);
   virtual void writeCommand16(uint16_t);
-  virtual void writeCommand32(uint32_t);
   virtual void write(uint8_t);
   virtual void write16(uint16_t);
   virtual void write32(uint32_t);
@@ -54,7 +53,6 @@ public:
 
   virtual void sendCommand(uint8_t);
   virtual void sendCommand16(uint16_t);
-  virtual void sendCommand32(uint32_t);
   virtual void sendData(uint8_t);
   virtual void sendData16(uint16_t);
   virtual void sendData32(uint32_t);

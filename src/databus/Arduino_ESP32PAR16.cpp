@@ -234,18 +234,6 @@ void Arduino_ESP32PAR16::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
-void Arduino_ESP32PAR16::writeCommand32(uint32_t c)
-{
-  DC_LOW();
-
-  WRITE(c >> 24);
-  WRITE(c >> 16);
-  WRITE(c >> 8);
-  WRITE(c);
-
-  DC_HIGH();
-}
-
 void Arduino_ESP32PAR16::write(uint8_t d)
 {
   WRITE(d);
@@ -325,22 +313,6 @@ void Arduino_ESP32PAR16::sendCommand16(uint16_t c)
 
   DC_LOW();
 
-  WRITE(c >> 8);
-  WRITE(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_ESP32PAR16::sendCommand32(uint32_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  WRITE(c >> 24);
-  WRITE(c >> 16);
   WRITE(c >> 8);
   WRITE(c);
 

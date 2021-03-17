@@ -148,7 +148,6 @@ public:
     virtual void endWrite() = 0;
     virtual void writeCommand(uint8_t c) = 0;
     virtual void writeCommand16(uint16_t c) = 0;
-    virtual void writeCommand32(uint32_t c) = 0;
     virtual void write(uint8_t) = 0;
     virtual void write16(uint16_t) = 0;
     virtual void write32(uint32_t) = 0;
@@ -167,7 +166,6 @@ public:
 
     virtual void sendCommand(uint8_t c) = 0;
     virtual void sendCommand16(uint16_t c) = 0;
-    virtual void sendCommand32(uint32_t c) = 0;
     virtual void sendData(uint8_t d) = 0;
     virtual void sendData16(uint16_t d) = 0;
     virtual void sendData32(uint32_t d) = 0;

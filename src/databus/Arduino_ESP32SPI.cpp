@@ -280,34 +280,6 @@ void Arduino_ESP32SPI::writeCommand16(uint16_t c)
   }
 }
 
-void Arduino_ESP32SPI::writeCommand32(uint32_t c)
-{
-  if (_dc < 0) // 9-bit SPI
-  {
-    WRITE9BIT(c >> 24);
-    WRITE9BIT((c >> 16) & 0xff);
-    WRITE9BIT((c >> 8) & 0xff);
-    WRITE9BIT(c & 0xff);
-  }
-  else
-  {
-    if (_data_buf_bit_idx > 0)
-    {
-      flush_data_buf();
-    }
-
-    DC_LOW();
-
-    _spi->dev->mosi_dlen.usr_mosi_dbitlen = 31;
-    _spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-    MSB_32_SET(_spi->dev->data_buf[0], c);
-    _spi->dev->cmd.usr = 1;
-    WAIT_SPI_NOT_BUSY;
-
-    DC_HIGH();
-  }
-}
-
 void Arduino_ESP32SPI::write(uint8_t d)
 {
   if (_dc < 0) // 9-bit SPI
@@ -855,15 +827,6 @@ void Arduino_ESP32SPI::sendCommand16(uint16_t c)
   beginWrite();
 
   writeCommand16(c);
-
-  endWrite();
-}
-
-void Arduino_ESP32SPI::sendCommand32(uint32_t c)
-{
-  beginWrite();
-
-  writeCommand32(c);
 
   endWrite();
 }

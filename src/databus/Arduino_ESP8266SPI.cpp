@@ -86,16 +86,6 @@ void Arduino_ESP8266SPI::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
-void Arduino_ESP8266SPI::writeCommand32(uint32_t c)
-{
-  DC_LOW();
-
-  MSB_32_SET(c, c);
-  WRITE32(c);
-
-  DC_HIGH();
-}
-
 void Arduino_ESP8266SPI::write(uint8_t d)
 {
   WRITE(d);
@@ -378,20 +368,6 @@ void Arduino_ESP8266SPI::sendCommand16(uint16_t c)
 
   MSB_16_SET(c, c);
   WRITE16(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_ESP8266SPI::sendCommand32(uint32_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  MSB_32_SET(c, c);
-  WRITE32(c);
 
   DC_HIGH();
 

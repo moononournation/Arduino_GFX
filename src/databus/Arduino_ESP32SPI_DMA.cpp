@@ -210,40 +210,6 @@ void Arduino_ESP32SPI_DMA::writeCommand16(uint16_t c)
   }
 }
 
-void Arduino_ESP32SPI_DMA::writeCommand32(uint32_t c)
-{
-  if (_dc < 0) // 9-bit SPI
-  {
-    WRITE9BIT(c >> 24);
-    WRITE9BIT((c >> 16) & 0xff);
-    WRITE9BIT((c >> 8) & 0xff);
-    WRITE9BIT(c & 0xff);
-  }
-  else
-  {
-    if (data_buf_bit_idx > 0)
-    {
-      flush_data_buf();
-    }
-
-    DC_LOW();
-
-    spi_transaction_t ct;
-    memset(&ct, 0, sizeof(ct));
-    ct.length = 32;
-    MSB_32_SET(ct.tx_data[0], c);
-    ct.flags = SPI_TRANS_USE_TXDATA;
-
-    esp_err_t ret = spi_device_polling_transmit(_handle, &ct);
-    if (ret != ESP_OK)
-    {
-      log_e("spi_device_polling_transmit error: %d", ret);
-    }
-
-    DC_HIGH();
-  }
-}
-
 void Arduino_ESP32SPI_DMA::write(uint8_t d)
 {
   if (_dc < 0) // 9-bit SPI
@@ -457,15 +423,6 @@ void Arduino_ESP32SPI_DMA::sendCommand16(uint16_t c)
   beginWrite();
 
   writeCommand16(c);
-
-  endWrite();
-}
-
-void Arduino_ESP32SPI_DMA::sendCommand32(uint32_t c)
-{
-  beginWrite();
-
-  writeCommand32(c);
 
   endWrite();
 }

@@ -123,15 +123,6 @@ void Arduino_NRFXSPI::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
-void Arduino_NRFXSPI::writeCommand32(uint32_t c)
-{
-  DC_LOW();
-
-  WRITE32(c);
-
-  DC_HIGH();
-}
-
 void Arduino_NRFXSPI::write(uint8_t d)
 {
   WRITE(d);
@@ -209,19 +200,6 @@ void Arduino_NRFXSPI::sendCommand16(uint16_t c)
   DC_LOW();
 
   WRITE16(c);
-
-  DC_HIGH();
-
-  CS_HIGH();
-}
-
-void Arduino_NRFXSPI::sendCommand32(uint32_t c)
-{
-  CS_LOW();
-
-  DC_LOW();
-
-  WRITE32(c);
 
   DC_HIGH();
 

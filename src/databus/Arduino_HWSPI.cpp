@@ -255,16 +255,6 @@ void Arduino_HWSPI::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
-void Arduino_HWSPI::writeCommand32(uint32_t c)
-{
-  DC_LOW();
-  WRITE(c >> 24);
-  WRITE(c >> 16);
-  WRITE(c >> 8);
-  WRITE(c);
-  DC_HIGH();
-}
-
 void Arduino_HWSPI::write(uint8_t d)
 {
   WRITE(d);
@@ -319,17 +309,6 @@ void Arduino_HWSPI::sendCommand16(uint16_t c)
   CS_LOW();
 
   writeCommand16(c);
-
-  CS_HIGH();
-  SPI_END_TRANSACTION();
-}
-
-void Arduino_HWSPI::sendCommand32(uint32_t c)
-{
-  SPI_BEGIN_TRANSACTION();
-  CS_LOW();
-
-  writeCommand32(c);
 
   CS_HIGH();
   SPI_END_TRANSACTION();
