@@ -41,10 +41,10 @@ public:
 
 // TFT optimization code, too big for ATMEL family
 #if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
-  void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color) override;
-  void writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len) override;
-  void writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len) override;
+  virtual void writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len);
+  virtual void writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len);
 
+  void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color) override;
   void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg) override;
   void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg) override;
   void drawGrayscaleBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h) override;
