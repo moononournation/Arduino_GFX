@@ -138,7 +138,8 @@ void Arduino_ST7789::tftInit()
       {WRITE_DATA_8, 0x00},
 
       {WRITE_COMMAND_8, 0xB2},
-      {WRITE_DATA_32, 0x0C0C0033},
+      {WRITE_DATA_16, 0x0C0C},
+      {WRITE_DATA_16, 0x0033},
       {WRITE_DATA_8, 0x33},
 
       {WRITE_COMMAND_8, 0xB7},
@@ -160,19 +161,22 @@ void Arduino_ST7789::tftInit()
       {WRITE_DATA_16, 0xA4A1},
 
       {WRITE_COMMAND_8, 0xE0},
-      {WRITE_DATA_32, 0xF0091312},
+      {WRITE_DATA_16, 0xF009},
       // 0b11110000: V63P3, V63P2, V63P1, V63P0,  V0P3,  V0P2,  V0P1,  V0P0
       // 0b00001001:     0,     0,  V1P5,  V1P4,  V1P3,  V1P2,  V1P1,  V1P0
+      {WRITE_DATA_16, 0x1312},
       // 0b00010011:     0,     0,  V2P5,  V2P4,  V2P3,  V2P2,  V2P1,  V2P0
       // 0b00010010:     0,     0,     0,  V4P4,  V4P3,  V4P2,  V4P1,  V4P0
-      {WRITE_DATA_32, 0x122B3C44},
+      {WRITE_DATA_16, 0x122B},
       // 0b00010010:     0,     0,     0,  V6P4,  V6P3,  V6P2,  V6P1,  V6P0
       // 0b00101011:     0,     0,  J0P1,  J0P0, V13P3, V13P2, V13P1, V13P0
+      {WRITE_DATA_16, 0x3C44},
       // 0b00111100:     0, V20P6, V20P5, V20P4, V20P3, V20P2, V20P1, V20P0
       // 0b01000100:     0, V36P2, V36P1, V36P0,     0, V27P2, V27P1, V27P0
-      {WRITE_DATA_32, 0x4B1B1817},
+      {WRITE_DATA_16, 0x4B1B},
       // 0b01001011:     0, V43P6, V43P5, V43P4, V43P3, V43P2, V43P1, V43P0
       // 0b00011011:     0,     0,  J1P1,  J1P0, V50P3, V50P2, V50P1, V50P0
+      {WRITE_DATA_16, 0x1817},
       // 0b00011000:     0,     0,     0, V57P4, V57P3, V57P2, V57P1, V57P0
       // 0b00010111:     0,     0,     0, V59P4, V59P3, V59P2, V59P1, V59P0
       {WRITE_DATA_16, 0x1D21},
@@ -180,19 +184,22 @@ void Arduino_ST7789::tftInit()
       // 0b00100001:     0,     0, V62P5, V62P4, V62P3, V62P2, V62P1, V62P0
 
       {WRITE_COMMAND_8, 0XE1},
-      {WRITE_DATA_32, 0xF009130C},
+      {WRITE_DATA_16, 0xF009},
       // 0b11110000: V63P3, V63P2, V63P1, V63P0,  V0P3,  V0P2,  V0P1,  V0P0
       // 0b00001001:     0,     0,  V1P5,  V1P4,  V1P3,  V1P2,  V1P1,  V1P0
+      {WRITE_DATA_16, 0x130C},
       // 0b00010011:     0,     0,  V2P5,  V2P4,  V2P3,  V2P2,  V2P1,  V2P0
       // 0b00001100:     0,     0,     0,  V4N4,  V4N3,  V4N2,  V4N1,  V4N0
-      {WRITE_DATA_32, 0x0D273B44},
+      {WRITE_DATA_16, 0x0D27},
       // 0b00001101:     0,     0,     0,  V6N4,  V6N3,  V6N2,  V6N1,  V6N0
       // 0b00100111:     0,     0,  J0N1,  J0N0, V13N3, V13N2, V13N1, V13N0
+      {WRITE_DATA_16, 0x3B44},
       // 0b00111011:     0, V20N6, V20N5, V20N4, V20N3, V20N2, V20N1, V20N0
       // 0b01000100:     0, V36N2, V36N1, V36N0,     0, V27N2, V27N1, V27N0
-      {WRITE_DATA_32, 0x4D0B1717},
+      {WRITE_DATA_16, 0x4D0B},
       // 0b01001101:     0, V43N6, V43N5, V43N4, V43N3, V43N2, V43N1, V43N0
       // 0b00001011:     0,     0,  J1N1,  J1N0, V50N3, V50N2, V50N1, V50N0
+      {WRITE_DATA_16, 0x1717},
       // 0b00010111:     0,     0,     0, V57N4, V57N3, V57N2, V57N1, V57N0
       // 0b00010111:     0,     0,     0, V59N4, V59N3, V59N2, V59N1, V59N0
       {WRITE_DATA_16, 0x1D21},

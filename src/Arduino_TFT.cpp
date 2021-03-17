@@ -57,11 +57,6 @@ void Arduino_TFT::startWrite()
   _bus->beginWrite();
 }
 
-void Arduino_TFT::writeColor(uint16_t color)
-{
-  _bus->write16(color);
-}
-
 void Arduino_TFT::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
   writeAddrWindow(x, y, 1, 1);
@@ -71,16 +66,6 @@ void Arduino_TFT::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 void Arduino_TFT::writeRepeat(uint16_t color, uint32_t len)
 {
   _bus->writeRepeat(color, len);
-}
-
-void Arduino_TFT::writeBytes(uint8_t *data, uint32_t len)
-{
-  _bus->writeBytes(data, len);
-}
-
-void Arduino_TFT::writePixels(uint16_t *data, uint32_t len)
-{
-  _bus->writePixels(data, len);
 }
 
 /*!
@@ -216,19 +201,6 @@ void Arduino_TFT::setAddrWindow(int16_t x0, int16_t y0, uint16_t w,
 
 /**************************************************************************/
 /*!
-   @brief    Push a pixel, overwrite in subclasses if startWrite is defined!
-   @param    color 16-bit 5-6-5 Color to fill with
-*/
-/**************************************************************************/
-void Arduino_TFT::pushColor(uint16_t color)
-{
-  _bus->beginWrite();
-  _bus->write16(color);
-  _bus->endWrite();
-}
-
-/**************************************************************************/
-/*!
     @brief      Set rotation setting for display
     @param  x   0 thru 3 corresponding to 4 cardinal rotations
 */
@@ -265,7 +237,35 @@ void Arduino_TFT::setRotation(uint8_t r)
 }
 
 // TFT optimization code, too big for ATMEL family
-#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
+#if !defined(LITTLE_FOOT_PRINT)
+
+void Arduino_TFT::writeColor(uint16_t color)
+{
+  _bus->write16(color);
+}
+
+void Arduino_TFT::writeBytes(uint8_t *data, uint32_t len)
+{
+  _bus->writeBytes(data, len);
+}
+
+void Arduino_TFT::writePixels(uint16_t *data, uint32_t len)
+{
+  _bus->writePixels(data, len);
+}
+
+/**************************************************************************/
+/*!
+   @brief    Push a pixel, overwrite in subclasses if startWrite is defined!
+   @param    color 16-bit 5-6-5 Color to fill with
+*/
+/**************************************************************************/
+void Arduino_TFT::pushColor(uint16_t color)
+{
+  _bus->beginWrite();
+  writeColor(color);
+  _bus->endWrite();
+}
 
 /**************************************************************************/
 /*!
@@ -1122,4 +1122,4 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color
   } // End classic vs custom font
 }
 
-#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
+#endif // !defined(LITTLE_FOOT_PRINT)

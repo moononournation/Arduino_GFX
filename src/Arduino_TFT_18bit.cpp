@@ -14,13 +14,6 @@ Arduino_TFT_18bit::Arduino_TFT_18bit(
 {
 }
 
-void Arduino_TFT_18bit::writeColor(uint16_t color)
-{
-  _bus->write((color & 0xF800) >> 8);
-  _bus->write((color & 0x07E0) >> 3);
-  _bus->write(color << 3);
-}
-
 void Arduino_TFT_18bit::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
   writeAddrWindow(x, y, 1, 1);
@@ -47,6 +40,16 @@ void Arduino_TFT_18bit::writeRepeat(uint16_t color, uint32_t len)
 #endif
 }
 
+// TFT optimization code, too big for ATMEL family
+#if !defined(LITTLE_FOOT_PRINT)
+
+void Arduino_TFT_18bit::writeColor(uint16_t color)
+{
+  _bus->write((color & 0xF800) >> 8);
+  _bus->write((color & 0x07E0) >> 3);
+  _bus->write(color << 3);
+}
+
 void Arduino_TFT_18bit::writePixels(uint16_t *data, uint32_t len)
 {
   uint16_t d;
@@ -58,24 +61,6 @@ void Arduino_TFT_18bit::writePixels(uint16_t *data, uint32_t len)
     _bus->write(d << 3);
   }
 }
-
-/**************************************************************************/
-/*!
-   @brief    Push a pixel, overwrite in subclasses if startWrite is defined!
-   @param    color 16-bit 5-6-5 Color to fill with
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::pushColor(uint16_t color)
-{
-  _bus->beginWrite();
-  _bus->write((color & 0xF800) >> 8);
-  _bus->write((color & 0x07E0) >> 3);
-  _bus->write(color << 3);
-  _bus->endWrite();
-}
-
-// TFT optimization code, too big for ATMEL family
-#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
 
 // TFT tuned BITMAP / XBITMAP / GRAYSCALE / RGB BITMAP FUNCTIONS ---------------------
 
@@ -630,4 +615,4 @@ void Arduino_TFT_18bit::draw24bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
+#endif // !defined(LITTLE_FOOT_PRINT)

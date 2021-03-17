@@ -31,18 +31,19 @@ public:
   void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
   void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) override;
 
-  virtual void writeColor(uint16_t color);
   virtual void writeRepeat(uint16_t color, uint32_t len);
-  virtual void writeBytes(uint8_t *data, uint32_t size);
-  virtual void writePixels(uint16_t *data, uint32_t size);
 
-  virtual void setAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
-  virtual void pushColor(uint16_t color);
+  void setAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
 
 // TFT optimization code, too big for ATMEL family
-#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
+#if !defined(LITTLE_FOOT_PRINT)
+  virtual void writeColor(uint16_t color);
+  virtual void writePixels(uint16_t *data, uint32_t size);
   virtual void writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len);
   virtual void writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len);
+
+  void writeBytes(uint8_t *data, uint32_t size);
+  void pushColor(uint16_t color);
 
   void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color) override;
   void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg) override;
@@ -56,7 +57,7 @@ public:
   void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h) override;
   void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h) override;
   void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg) override;
-#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
+#endif // !defined(LITTLE_FOOT_PRINT)
 
 protected:
   virtual void tftInit() = 0;

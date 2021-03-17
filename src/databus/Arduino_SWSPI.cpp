@@ -407,14 +407,6 @@ void Arduino_SWSPI::writeRepeat(uint16_t p, uint32_t len)
   }
 }
 
-void Arduino_SWSPI::writeBytes(uint8_t *data, uint32_t len)
-{
-  while (len--)
-  {
-    WRITE(*data++);
-  }
-}
-
 void Arduino_SWSPI::writePixels(uint16_t *data, uint32_t len)
 {
   while (len--)
@@ -423,6 +415,17 @@ void Arduino_SWSPI::writePixels(uint16_t *data, uint32_t len)
   }
 }
 
+
+#if !defined(LITTLE_FOOT_PRINT)
+void Arduino_SWSPI::writeBytes(uint8_t *data, uint32_t len)
+{
+  while (len--)
+  {
+    WRITE(*data++);
+  }
+}
+
+void writeBytes(uint8_t *data, uint32_t len) override;
 /**
  * @param data uint8_t *
  * @param len uint8_t
@@ -438,6 +441,7 @@ void Arduino_SWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
     }
   }
 }
+#endif
 
 INLINE void Arduino_SWSPI::WRITE9BITCOMMAND(uint8_t c)
 {

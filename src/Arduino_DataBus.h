@@ -12,6 +12,7 @@
 #endif
 
 #if defined(__AVR__)
+#define LITTLE_FOOT_PRINT // reduce program size for limited flash MCU
 #define USE_FAST_PINIO ///< Use direct PORT register access
 typedef uint8_t ARDUINOGFX_PORT_t;
 #elif defined(ARDUINO_ARCH_NRF52840)
@@ -119,24 +120,20 @@ typedef enum
     BEGIN_WRITE,
     WRITE_COMMAND_8,
     WRITE_COMMAND_16,
-    WRITE_COMMAND_32,
     WRITE_DATA_8,
     WRITE_DATA_16,
-    WRITE_DATA_32,
     END_WRITE,
     DELAY,
     SEND_COMMAND_8,
     SEND_COMMAND_16,
-    SEND_COMMAND_32,
     SEND_DATA_8,
     SEND_DATA_16,
-    SEND_DATA_32,
 } spi_operation_type_t;
 
 struct spi_operation_t
 {
     spi_operation_type_t type;
-    uint32_t value;
+    uint16_t value;
 };
 
 class Arduino_DataBus
@@ -156,14 +153,14 @@ public:
     virtual void writeC8D16(uint8_t c, uint16_t d);
     virtual void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2);
     virtual void writeRepeat(uint16_t p, uint32_t len) = 0;
-    virtual void writeBytes(uint8_t *data, uint32_t len) = 0;
     virtual void writePixels(uint16_t *data, uint32_t len) = 0;
-    virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) = 0;
 
-#if defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
+#if !defined(LITTLE_FOOT_PRINT)
+    virtual void writeBytes(uint8_t *data, uint32_t len) = 0;
+    virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) = 0;
     virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
     virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
-#endif // defined(ARDUINO_ARCH_SAMD) || defined(ESP8266) || defined(ESP32)
+#endif // !defined(LITTLE_FOOT_PRINT)
 
     void sendCommand(uint8_t c);
     void sendCommand16(uint16_t c);
