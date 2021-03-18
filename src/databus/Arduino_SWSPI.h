@@ -26,7 +26,7 @@ public:
   void write32(uint32_t) override;
   void writeBytes(uint8_t *data, uint32_t len) override;
   void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
-#endif
+#endif // !defined(LITTLE_FOOT_PRINT)
 
 private:
   INLINE void WRITE9BITCOMMAND(uint8_t c);
@@ -35,7 +35,7 @@ private:
   INLINE void WRITE16(uint16_t d);
 #if !defined(LITTLE_FOOT_PRINT)
   INLINE void WRITE32(uint32_t d);
-#endif
+#endif // !defined(LITTLE_FOOT_PRINT)
   INLINE void WRITE9BITREPEAT(uint16_t p, uint32_t len);
   INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
   INLINE void CS_HIGH(void);

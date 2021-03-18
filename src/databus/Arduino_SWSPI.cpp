@@ -439,7 +439,7 @@ void Arduino_SWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
     }
   }
 }
-#endif // LITTLE_FOOT_PRINT
+#endif // !defined(LITTLE_FOOT_PRINT)
 
 INLINE void Arduino_SWSPI::WRITE9BITCOMMAND(uint8_t c)
 {
@@ -546,7 +546,7 @@ INLINE void Arduino_SWSPI::WRITE32(uint32_t d)
     SPI_SCK_LOW();
   }
 }
-#endif // LITTLE_FOOT_PRINT
+#endif // !defined(LITTLE_FOOT_PRINT)
 
 INLINE void Arduino_SWSPI::WRITE9BITREPEAT(uint16_t p, uint32_t len)
 {

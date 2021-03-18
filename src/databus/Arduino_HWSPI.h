@@ -32,7 +32,7 @@ public:
   void write32(uint32_t) override;
   void writeBytes(uint8_t *data, uint32_t len) override;
   void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
-#endif
+#endif // !defined(LITTLE_FOOT_PRINT)
 
 private:
   INLINE void WRITE(uint8_t d);

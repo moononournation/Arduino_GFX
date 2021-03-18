@@ -380,7 +380,7 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
   }
 #endif // !(defined(ESP8266) || defined(ESP32))
 }
-#endif // LITTLE_FOOT_PRINT
+#endif // !defined(LITTLE_FOOT_PRINT)
 
 INLINE void Arduino_HWSPI::WRITE(uint8_t d)
 {
