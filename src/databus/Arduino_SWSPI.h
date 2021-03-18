@@ -18,12 +18,12 @@ public:
   void writeCommand16(uint16_t) override;
   void write(uint8_t) override;
   void write16(uint16_t) override;
-  void write32(uint32_t) override;
   void writeRepeat(uint16_t p, uint32_t len) override;
   void writePixels(uint16_t *data, uint32_t len) override;
   void endWrite() override;
 
 #if !defined(LITTLE_FOOT_PRINT)
+  void write32(uint32_t) override;
   void writeBytes(uint8_t *data, uint32_t len) override;
   void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
 #endif
@@ -33,7 +33,9 @@ private:
   INLINE void WRITE9BITDATA(uint8_t d);
   INLINE void WRITE(uint8_t d);
   INLINE void WRITE16(uint16_t d);
+#if !defined(LITTLE_FOOT_PRINT)
   INLINE void WRITE32(uint32_t d);
+#endif
   INLINE void WRITE9BITREPEAT(uint16_t p, uint32_t len);
   INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
   INLINE void CS_HIGH(void);

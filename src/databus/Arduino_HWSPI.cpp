@@ -270,18 +270,6 @@ void Arduino_HWSPI::write16(uint16_t d)
 #endif
 }
 
-void Arduino_HWSPI::write32(uint32_t d)
-{
-#if defined(ESP8266) || defined(ESP32)
-  HWSPI.write32(d);
-#else
-  WRITE(d >> 24);
-  WRITE(d >> 16);
-  WRITE(d >> 8);
-  WRITE(d);
-#endif
-}
-
 void Arduino_HWSPI::endWrite()
 {
   CS_HIGH();
@@ -352,6 +340,18 @@ void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 }
 
 #if !defined(LITTLE_FOOT_PRINT)
+void Arduino_HWSPI::write32(uint32_t d)
+{
+#if defined(ESP8266) || defined(ESP32)
+  HWSPI.write32(d);
+#else
+  WRITE(d >> 24);
+  WRITE(d >> 16);
+  WRITE(d >> 8);
+  WRITE(d);
+#endif
+}
+
 void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
 {
 #if defined(ESP8266) || defined(ESP32)
@@ -380,7 +380,7 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
   }
 #endif // !(defined(ESP8266) || defined(ESP32))
 }
-#endif
+#endif // LITTLE_FOOT_PRINT
 
 INLINE void Arduino_HWSPI::WRITE(uint8_t d)
 {

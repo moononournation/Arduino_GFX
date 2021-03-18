@@ -25,33 +25,6 @@ void Arduino_DataBus::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   write16(d2);
 }
 
-#if !defined(LITTLE_FOOT_PRINT)
-void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
-{
-  while (len--)
-  {
-    write16(idx[*(data++)]);
-  }
-}
-
-void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
-{
-  uint8_t *d = data;
-  uint16_t p;
-  uint8_t hi, lo;
-  while (len--)
-  {
-    p = idx[*(d++)];
-    hi = p >> 8;
-    lo = p;
-    write(hi);
-    write(lo);
-    write(hi);
-    write(lo);
-  }
-}
-#endif // !defined(LITTLE_FOOT_PRINT)
-
 void Arduino_DataBus::sendCommand(uint8_t c)
 {
   beginWrite();
@@ -77,13 +50,6 @@ void Arduino_DataBus::sendData16(uint16_t d)
 {
   beginWrite();
   write16(d);
-  endWrite();
-}
-
-void Arduino_DataBus::sendData32(uint32_t d)
-{
-  beginWrite();
-  write32(d);
   endWrite();
 }
 
@@ -129,3 +95,37 @@ void Arduino_DataBus::batchOperation(spi_operation_t batch[], uint8_t len)
     }
   }
 }
+
+#if !defined(LITTLE_FOOT_PRINT)
+void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  while (len--)
+  {
+    write16(idx[*(data++)]);
+  }
+}
+
+void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  uint8_t *d = data;
+  uint16_t p;
+  uint8_t hi, lo;
+  while (len--)
+  {
+    p = idx[*(d++)];
+    hi = p >> 8;
+    lo = p;
+    write(hi);
+    write(lo);
+    write(hi);
+    write(lo);
+  }
+}
+
+void Arduino_DataBus::sendData32(uint32_t d)
+{
+  beginWrite();
+  write32(d);
+  endWrite();
+}
+#endif // !defined(LITTLE_FOOT_PRINT)
