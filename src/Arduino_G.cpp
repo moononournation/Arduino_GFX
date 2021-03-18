@@ -1,7 +1,5 @@
-/*
- * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
- */
+#if !defined(LITTLE_FOOT_PRINT)
+
 #include "Arduino_G.h"
 
 /**************************************************************************/
@@ -14,3 +12,5 @@
 Arduino_G::Arduino_G(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h)
 {
 }
+
+#endif // !defined(LITTLE_FOOT_PRINT)

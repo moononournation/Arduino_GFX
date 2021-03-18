@@ -1,7 +1,5 @@
-/*
- * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
- */
+#if !defined(LITTLE_FOOT_PRINT)
+
 #ifndef _ARDUINO_G_H_
 #define _ARDUINO_G_H_
 
@@ -34,3 +32,5 @@ protected:
 };
 
 #endif // _Arduino_G_H
+
+#endif // !defined(LITTLE_FOOT_PRINT)

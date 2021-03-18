@@ -12,31 +12,33 @@
 #include "databus/Arduino_mbedSPI.h"
 #include "databus/Arduino_NRFXSPI.h"
 
-#include "Arduino_GFX.h"                     // Core graphics library
-#include "canvas/Arduino_Canvas.h"           // Canvas (framebuffer) library
-#include "canvas/Arduino_Canvas_Indexed.h"   // Indexed Color Canvas (framebuffer) library
-#include "canvas/Arduino_Canvas_3bit.h"      // 3-bit Color Canvas (framebuffer) library
-#include "canvas/Arduino_Canvas_Mono.h"      // Mono Color Canvas (framebuffer) library
-#include "display/Arduino_GC9A01.h"          // Hardware-specific library for GC9A01
-#include "display/Arduino_HX8347C.h"         // Hardware-specific library for HX8347C
-#include "display/Arduino_HX8347D.h"         // Hardware-specific library for HX8347D
-#include "display/Arduino_HX8352C.h"         // Hardware-specific library for HX8352C
-#include "display/Arduino_HX8357B.h"         // Hardware-specific library for HX8357B
-#include "display/Arduino_ILI9225.h"         // Hardware-specific library for ILI9225
-#include "display/Arduino_ILI9341.h"         // Hardware-specific library for ILI9341
-#include "display/Arduino_ILI9341_M5STACK.h" // Hardware-specific library for M5STACK
-#include "display/Arduino_ILI9481_18bit.h"   // Hardware-specific library for ILI9481
-#include "display/Arduino_ILI9486_18bit.h"   // Hardware-specific library for ILI9486
-#include "display/Arduino_ILI9488_18bit.h"   // Hardware-specific library for ILI9488
-#include "display/Arduino_JBT6K71.h"         // Hardware-specific library for JBT6K71
-#include "display/Arduino_R61529.h"          // Hardware-specific library for R61529
-#include "display/Arduino_SEPS525.h"         // Hardware-specific library for SEPS525
-#include "display/Arduino_SSD1283A.h"        // Hardware-specific library for SSD1283A
-#include "display/Arduino_SSD1331.h"         // Hardware-specific library for SSD1331
-#include "display/Arduino_SSD1351.h"         // Hardware-specific library for SSD1351
-#include "display/Arduino_ST7735.h"          // Hardware-specific library for ST7735
-#include "display/Arduino_ST7789.h"          // Hardware-specific library for ST7789
-#include "display/Arduino_ST7796.h"          // Hardware-specific library for ST7796
+#include "Arduino_GFX.h" // Core graphics library
+#if !defined(LITTLE_FOOT_PRINT)
+#include "canvas/Arduino_Canvas.h"
+#include "canvas/Arduino_Canvas_Indexed.h"
+#include "canvas/Arduino_Canvas_3bit.h"
+#include "canvas/Arduino_Canvas_Mono.h"
+#endif // !defined(LITTLE_FOOT_PRINT)
+#include "display/Arduino_GC9A01.h"
+#include "display/Arduino_HX8347C.h"
+#include "display/Arduino_HX8347D.h"
+#include "display/Arduino_HX8352C.h"
+#include "display/Arduino_HX8357B.h"
+#include "display/Arduino_ILI9225.h"
+#include "display/Arduino_ILI9341.h"
+#include "display/Arduino_ILI9341_M5STACK.h"
+#include "display/Arduino_ILI9481_18bit.h"
+#include "display/Arduino_ILI9486_18bit.h"
+#include "display/Arduino_ILI9488_18bit.h"
+#include "display/Arduino_JBT6K71.h"
+#include "display/Arduino_R61529.h"
+#include "display/Arduino_SEPS525.h"
+#include "display/Arduino_SSD1283A.h"
+#include "display/Arduino_SSD1331.h"
+#include "display/Arduino_SSD1351.h"
+#include "display/Arduino_ST7735.h"
+#include "display/Arduino_ST7789.h"
+#include "display/Arduino_ST7796.h"
 
 #if defined(ESP32_LCDKIT_SPI)
 #define DISPLAY_DEV_KIT

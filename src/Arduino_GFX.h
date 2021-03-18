@@ -118,7 +118,11 @@ INLINE uint8_t *pgm_read_bitmap_ptr(const GFXfont *gfxFont)
 }
 
 /// A generic graphics superclass that can handle all sorts of drawing. At a minimum you can subclass and provide drawPixel(). At a maximum you can do a ton of overriding to optimize. Used for any/all Adafruit displays!
+#if defined(LITTLE_FOOT_PRINT)
+class Arduino_GFX : public Print
+#else
 class Arduino_GFX : public Print, public Arduino_G
+#endif // !defined(LITTLE_FOOT_PRINT)
 {
 public:
   Arduino_GFX(int16_t w, int16_t h); // Constructor
@@ -204,7 +208,7 @@ public:
   void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
   void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h);
   void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg);
-#else // !defined(LITTLE_FOOT_PRINT)
+#else  // !defined(LITTLE_FOOT_PRINT)
   virtual void writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
   virtual void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg);
   virtual void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg);
@@ -366,6 +370,11 @@ protected:
       _cp437; ///< If set, use correct CP437 charset (default is off)
   GFXfont
       *gfxFont; ///< Pointer to special font
+#if defined(LITTLE_FOOT_PRINT)
+  int16_t
+      WIDTH,  ///< This is the 'raw' display width - never changes
+      HEIGHT; ///< This is the 'raw' display height - never changes
+#endif        // !defined(LITTLE_FOOT_PRINT)
 };
 
 #endif // _Arduino_GFX_H

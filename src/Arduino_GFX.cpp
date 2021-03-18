@@ -22,7 +22,11 @@
     @param  h   Display height, in pixels
 */
 /**************************************************************************/
+#if defined(LITTLE_FOOT_PRINT)
+Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h)
+#else
 Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : Arduino_G(w, h)
+#endif // !defined(LITTLE_FOOT_PRINT)
 {
     _width = WIDTH;
     _height = HEIGHT;
