@@ -13,7 +13,10 @@
 #endif
 #include "Arduino_G.h"
 #include "Arduino_DataBus.h"
+
+#if !defined(ATTINY_CORE)
 #include "gfxfont.h"
+#endif // !defined(ATTINY_CORE)
 
 #ifndef DEGTORAD
 #define DEGTORAD 0.017453292519943295769236907684886F
@@ -93,6 +96,7 @@
 #define _in_range(v, a, b) ((a > b) ? _ordered_in_range(v, b, a) : _ordered_in_range(v, a, b))
 #endif
 
+#if !defined(ATTINY_CORE)
 INLINE GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
 {
 #ifdef __AVR__
@@ -116,6 +120,7 @@ INLINE uint8_t *pgm_read_bitmap_ptr(const GFXfont *gfxFont)
   return gfxFont->bitmap;
 #endif //__AVR__
 }
+#endif // !defined(ATTINY_CORE)
 
 /// A generic graphics superclass that can handle all sorts of drawing. At a minimum you can subclass and provide drawPixel(). At a maximum you can do a ton of overriding to optimize. Used for any/all Adafruit displays!
 #if defined(LITTLE_FOOT_PRINT)
@@ -182,7 +187,9 @@ public:
   void setTextSize(uint8_t s);
   void setTextSize(uint8_t sx, uint8_t sy);
   void setTextSize(uint8_t sx, uint8_t sy, uint8_t pixel_margin);
+#if !defined(ATTINY_CORE)
   void setFont(const GFXfont *f = NULL);
+#endif // !defined(ATTINY_CORE)
 
   // adopt from LovyanGFX
   void drawEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color);
@@ -368,13 +375,15 @@ protected:
   bool
       wrap,   ///< If set, 'wrap' text at right edge of display
       _cp437; ///< If set, use correct CP437 charset (default is off)
+#if !defined(ATTINY_CORE)
   GFXfont
       *gfxFont; ///< Pointer to special font
+#endif          // !defined(ATTINY_CORE)
 #if defined(LITTLE_FOOT_PRINT)
   int16_t
       WIDTH,  ///< This is the 'raw' display width - never changes
       HEIGHT; ///< This is the 'raw' display height - never changes
-#endif        // !defined(LITTLE_FOOT_PRINT)
+#endif        // defined(LITTLE_FOOT_PRINT)
 };
 
 #endif // _Arduino_GFX_H

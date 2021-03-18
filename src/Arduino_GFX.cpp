@@ -39,7 +39,9 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : Arduino_G(w, h)
     textcolor = textbgcolor = 0xFFFF;
     wrap = true;
     _cp437 = false;
+#if !defined(ATTINY_CORE)
     gfxFont = NULL;
+#endif // !defined(ATTINY_CORE)
 }
 
 /**************************************************************************/
@@ -1760,7 +1762,79 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
     int16_t block_w;
     int16_t block_h;
 
-    if (!gfxFont) // 'Classic' built-in font
+#if !defined(ATTINY_CORE)
+    if (gfxFont) // custom font
+    {
+        // Character is assumed previously filtered by write() to eliminate
+        // newlines, returns, non-printable characters, etc.  Calling
+        // drawChar() directly with 'bad' characters of font may cause mayhem!
+
+        c -= (uint8_t)pgm_read_byte(&gfxFont->first);
+        GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c);
+        uint8_t *bitmap = pgm_read_bitmap_ptr(gfxFont);
+
+        uint16_t bo = pgm_read_word(&glyph->bitmapOffset);
+        uint8_t w = pgm_read_byte(&glyph->width),
+                h = pgm_read_byte(&glyph->height),
+                xAdvance = pgm_read_byte(&glyph->xAdvance),
+                yAdvance = pgm_read_byte(&gfxFont->yAdvance),
+                baseline = yAdvance * 2 / 3; // TODO: baseline is an arbitrary currently, may be define in font file
+        int8_t xo = pgm_read_byte(&glyph->xOffset),
+               yo = pgm_read_byte(&glyph->yOffset);
+        uint8_t xx, yy, bits = 0, bit = 0;
+        int16_t xo16 = xo, yo16 = yo;
+
+        if (xAdvance < w)
+        {
+            xAdvance = w; // Don't know why it exists
+        }
+
+        block_w = xAdvance * textsize_x;
+        block_h = yAdvance * textsize_y;
+        if (
+            (x > _max_x) ||            // Clip right
+            (y > _max_y) ||            // Clip bottom
+            ((x + block_w - 1) < 0) || // Clip left
+            ((y + block_h - 1) < 0)    // Clip top
+        )
+        {
+            return;
+        }
+
+        // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background.
+        // Since it may introduce many ugly output, it should limited using on mono font only.
+        startWrite();
+        if (bg != color) // have background color
+        {
+            writeFillRect(x, y - (baseline * textsize_y), block_w, block_h, bg);
+        }
+        for (yy = 0; yy < h; yy++)
+        {
+            for (xx = 0; xx < w; xx++)
+            {
+                if (!(bit++ & 7))
+                {
+                    bits = pgm_read_byte(&bitmap[bo++]);
+                }
+                if (bits & 0x80)
+                {
+                    if (textsize_x == 1 && textsize_y == 1)
+                    {
+                        writePixel(x + xo + xx, y + yo + yy, color);
+                    }
+                    else
+                    {
+                        writeFillRect(x + (xo16 + xx) * textsize_x, y + (yo16 + yy) * textsize_y,
+                                      textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
+                    }
+                }
+                bits <<= 1;
+            }
+        }
+        endWrite();
+    }
+    else // 'Classic' built-in font
+#endif   // !defined(ATTINY_CORE)
     {
         block_w = 6 * textsize_x;
         block_h = 8 * textsize_y;
@@ -1831,76 +1905,6 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
         }
         endWrite();
     }
-    else // Custom font
-    {
-        // Character is assumed previously filtered by write() to eliminate
-        // newlines, returns, non-printable characters, etc.  Calling
-        // drawChar() directly with 'bad' characters of font may cause mayhem!
-
-        c -= (uint8_t)pgm_read_byte(&gfxFont->first);
-        GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c);
-        uint8_t *bitmap = pgm_read_bitmap_ptr(gfxFont);
-
-        uint16_t bo = pgm_read_word(&glyph->bitmapOffset);
-        uint8_t w = pgm_read_byte(&glyph->width),
-                h = pgm_read_byte(&glyph->height),
-                xAdvance = pgm_read_byte(&glyph->xAdvance),
-                yAdvance = pgm_read_byte(&gfxFont->yAdvance),
-                baseline = yAdvance * 2 / 3; // TODO: baseline is an arbitrary currently, may be define in font file
-        int8_t xo = pgm_read_byte(&glyph->xOffset),
-               yo = pgm_read_byte(&glyph->yOffset);
-        uint8_t xx, yy, bits = 0, bit = 0;
-        int16_t xo16 = xo, yo16 = yo;
-
-        if (xAdvance < w)
-        {
-            xAdvance = w; // Don't know why it exists
-        }
-
-        block_w = xAdvance * textsize_x;
-        block_h = yAdvance * textsize_y;
-        if (
-            (x > _max_x) ||            // Clip right
-            (y > _max_y) ||            // Clip bottom
-            ((x + block_w - 1) < 0) || // Clip left
-            ((y + block_h - 1) < 0)    // Clip top
-        )
-        {
-            return;
-        }
-
-        // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background.
-        // Since it may introduce many ugly output, it should limited using on mono font only.
-        startWrite();
-        if (bg != color) // have background color
-        {
-            writeFillRect(x, y - (baseline * textsize_y), block_w, block_h, bg);
-        }
-        for (yy = 0; yy < h; yy++)
-        {
-            for (xx = 0; xx < w; xx++)
-            {
-                if (!(bit++ & 7))
-                {
-                    bits = pgm_read_byte(&bitmap[bo++]);
-                }
-                if (bits & 0x80)
-                {
-                    if (textsize_x == 1 && textsize_y == 1)
-                    {
-                        writePixel(x + xo + xx, y + yo + yy, color);
-                    }
-                    else
-                    {
-                        writeFillRect(x + (xo16 + xx) * textsize_x, y + (yo16 + yy) * textsize_y,
-                                      textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
-                    }
-                }
-                bits <<= 1;
-            }
-        }
-        endWrite();
-    } // End classic vs custom font
 }
 
 /**************************************************************************/
@@ -1911,28 +1915,9 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 /**************************************************************************/
 size_t Arduino_GFX::write(uint8_t c)
 {
-    if (!gfxFont)
-    { // 'Classic' built-in font
-
-        if (c == '\n')
-        {                               // Newline?
-            cursor_x = 0;               // Reset x to zero,
-            cursor_y += textsize_y * 8; // advance y one line
-        }
-        else if (c != '\r')
-        { // Ignore carriage returns
-            if (wrap && ((cursor_x + (textsize_x * 6) - 1) > _max_x))
-            {                               // Off right?
-                cursor_x = 0;               // Reset x to zero,
-                cursor_y += textsize_y * 8; // advance y one line
-            }
-            drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor);
-            cursor_x += textsize_x * 6; // Advance x one char
-        }
-    }
-    else
-    { // Custom font
-
+#if !defined(ATTINY_CORE)
+    if (gfxFont) // custom font
+    {
         if (c == '\n')
         {
             cursor_x = 0;
@@ -1956,6 +1941,25 @@ size_t Arduino_GFX::write(uint8_t c)
                 drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor);
                 cursor_x += textsize_x * w;
             }
+        }
+    }
+    else // 'Classic' built-in font
+#endif   // !defined(ATTINY_CORE)
+    {
+        if (c == '\n')
+        {                               // Newline?
+            cursor_x = 0;               // Reset x to zero,
+            cursor_y += textsize_y * 8; // advance y one line
+        }
+        else if (c != '\r')
+        { // Ignore carriage returns
+            if (wrap && ((cursor_x + (textsize_x * 6) - 1) > _max_x))
+            {                               // Off right?
+                cursor_x = 0;               // Reset x to zero,
+                cursor_y += textsize_y * 8; // advance y one line
+            }
+            drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor);
+            cursor_x += textsize_x * 6; // Advance x one char
         }
     }
     return 1;
@@ -2027,6 +2031,7 @@ void Arduino_GFX::setRotation(uint8_t r)
     }
 }
 
+#if !defined(ATTINY_CORE)
 /**************************************************************************/
 /*!
     @brief  Set the font to display when print()ing, either custom or default
@@ -2052,6 +2057,7 @@ void Arduino_GFX::setFont(const GFXfont *f)
     }
     gfxFont = (GFXfont *)f;
 }
+#endif // !defined(ATTINY_CORE)
 
 /**************************************************************************/
 /*!
@@ -2069,7 +2075,8 @@ void Arduino_GFX::setFont(const GFXfont *f)
 void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
                              int16_t *minx, int16_t *miny, int16_t *maxx, int16_t *maxy)
 {
-    if (gfxFont)
+#if !defined(ATTINY_CORE)
+    if (gfxFont) // custom font
     {
         if (c == '\n')
         {           // Newline?
@@ -2119,9 +2126,9 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
             }
         }
     }
-    else
-    { // Default font
-
+    else // 'Classic' built-in font
+#endif   // !defined(ATTINY_CORE)
+    {
         if (c == '\n')
         {                         // Newline?
             *x = 0;               // Reset x to zero,
