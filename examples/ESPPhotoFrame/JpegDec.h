@@ -1,7 +1,6 @@
 #ifndef _JPEGDEC_H_
 #define _JPEGDEC_H_
 
-#include <FS.h>
 #include <Arduino_GFX.h>
 
 #include "lgfx_tjpgd.h"
@@ -68,22 +67,6 @@ public:
         }
     }
 
-    static size_t file_reader(JpegDec *jpegDec, size_t index, uint8_t *buf, size_t len)
-    {
-        // Serial.printf("index: %d, len: %d\n", index, len);
-        File *vFile = (File *)jpegDec->input;
-        size_t l;
-        if (buf)
-        {
-            return vFile->read(buf, len);
-        }
-        else
-        {
-            vFile->seek(index + len);
-            return len;
-        }
-    }
-
     static size_t buff_reader(JpegDec *jpegDec, size_t index, uint8_t *buf, size_t len)
     {
         // Serial.printf("index: %d, len: %d\n", index, len);
@@ -117,7 +100,10 @@ public:
             {
                 for (uint16_t j = 0; j < w; ++j)
                 {
-                    framebuffer[(y + i) * jpegDec->output_width + x + j] = ((*(data++) & 0xF8) << 8) | ((*(data++) & 0xFC) << 3) | (*(data++) >> 3);
+                    uint8_t r = *(data++);
+                    uint8_t g = *(data++);
+                    uint8_t b = *(data++);
+                    framebuffer[(y + i) * jpegDec->output_width + x + j] = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
                 }
             }
         }

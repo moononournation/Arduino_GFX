@@ -1,19 +1,20 @@
 /*******************************************************************************
- * ESP32 Photo Frame
+ * WiFi Photo Frame
  * This is a simple IoT photo frame sample
  * Please find more details at instructables:
  * https://www.instructables.com/id/Face-Aware-OSD-Photo-Frame/
  * 
  * Setup steps:
- * 1. Fill your own SSID_NAME, SSID_PASSWORD and URL_TEMPLATE
+ * 1. Fill your own SSID_NAME, SSID_PASSWORD, HTTP_HOST, HTTP_PORT and HTTP_PATH_TEMPLATE
  * 2. Change your LCD parameters in Arduino_GFX setting
  ******************************************************************************/
 
 /* WiFi settings */
 #define SSID_NAME "YourAP"
 #define SSID_PASSWORD "PleaseInputYourPasswordHere"
-
-#define URL_TEMPLATE "http://YourServerNameOrIP:8080/?w=%d&h=%d"
+#define HTTP_HOST "YourServerNameOrIP"
+#define HTTP_PORT 8080
+#define HTTP_PATH_TEMPLATE "/?w=%d&h=%d"
 
 #define HTTP_TIMEOUT 60000 // in ms, wait a while for server processing
 
@@ -52,20 +53,27 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 #include <esp_task_wdt.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
-#else // ESP8266
+WiFiClient client;
+HTTPClient http;
+#elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+WiFiClient client;
+HTTPClient http;
+#elif defined(RTL8722DM)
+#include <HttpClient.h>
+#include <WiFi.h>
+#include <WiFiClient.h>
+WiFiClient client;
+HttpClient http(client);
 #endif
 
 #include "JpegDec.h"
 static JpegDec jpegDec;
 
-static uint32_t len, offset;
 static unsigned long next_show_millis = 0;
 
-WiFiClient client;
-HTTPClient http;
-char url[1024];
+char http_path[1024];
 
 void setup()
 {
@@ -73,8 +81,8 @@ void setup()
   gfx->begin();
   gfx->fillScreen(BLACK);
 
-  // setup url query value with LCD dimension
-  sprintf(url, URL_TEMPLATE, gfx->width(), gfx->height());
+  // setup http_path query value with LCD dimension
+  sprintf(http_path, HTTP_PATH_TEMPLATE, gfx->width(), gfx->height());
 
   WiFi.begin(SSID_NAME, SSID_PASSWORD);
   while (WiFi.status() != WL_CONNECTED)
@@ -110,51 +118,84 @@ void loop()
   else
   {
     next_show_millis = ((millis() / 60000L) + 1) * 60000L; // next minute
-    Serial.print("[HTTP] begin...\n");
-    http.begin(client, url);
+    printf("[HTTP] begin...\n");
+#if defined(ESP32)
+    http.begin(client, HTTP_HOST, HTTP_PORT, http_path);
+#elif defined(ESP8266)
+    http.begin(client, HTTP_HOST, HTTP_PORT, http_path);
+#endif
     http.setTimeout(HTTP_TIMEOUT);
-    Serial.print("[HTTP] GET...\n");
+    printf("[HTTP] GET...\n");
+#if defined(ESP32)
     int httpCode = http.GET();
+#elif defined(ESP8266)
+    int httpCode = http.GET();
+#elif defined(RTL8722DM)
+    http.get(HTTP_HOST, HTTP_PORT, http_path);
+    int httpCode = http.responseStatusCode();
+    http.skipResponseHeaders();
+#endif
 
-    Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+    printf("[HTTP] GET... code: %d\n", httpCode);
     // HTTP header has been send and Server response header has been handled
     if (httpCode <= 0)
     {
-      Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+      // printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
     }
     else
     {
-      if (httpCode != HTTP_CODE_OK)
+      if (httpCode != 200)
       {
-        Serial.printf("[HTTP] Not OK!\n");
+        printf("[HTTP] Not OK!\n");
         delay(5000);
       }
       else
       {
-        // get lenght of document (is -1 when Server sends no Content-Length header)
-        len = http.getSize();
-        Serial.printf("[HTTP] size: %d\n", len);
+        // get lenght of document(is - 1 when Server sends no Content - Length header)
+#if defined(ESP32)
+        int len = http.getSize();
+#elif defined(ESP8266)
+        int len = http.getSize();
+#elif defined(RTL8722DM)
+        int len = http.contentLength();
+#endif
+        printf("[HTTP] size: %d\n", len);
 
         if (len <= 0)
         {
-          Serial.printf("[HTTP] Unknow content size: %d\n", len);
+          printf("[HTTP] Unknow content size: %d\n", len);
         }
         else
         {
+          unsigned long start = millis();
           // get tcp stream
+#if defined(ESP32)
           WiFiClient *http_stream = http.getStreamPtr();
           jpegDec.prepare(http_stream_reader, http_stream);
+#elif defined(ESP8266)
+          WiFiClient *http_stream = http.getStreamPtr();
+          jpegDec.prepare(http_stream_reader, http_stream);
+#elif defined(RTL8722DM)
+          jpegDec.prepare(http_stream_reader, &client);
+#endif
           jpegDec.decode(JPG_SCALE_NONE, jpegDec.gfx_writer, gfx);
+          printf("Time used: %d\n", millis() - start);
         }
       }
     }
+#if defined(ESP32)
     http.end();
+#elif defined(ESP8266)
+    http.end();
+#elif defined(RTL8722DM)
+    http.stop();
+#endif
   }
 
 #if defined(ESP32)
   // notify WDT still working
   feedLoopWDT();
-#else // ESP8266
+#elif defined(ESP8266)
   yield();
 #endif
 }
@@ -165,7 +206,7 @@ static size_t http_stream_reader(JpegDec *jpegDec, size_t index, uint8_t *buf, s
   uint8_t wait = 0;
   if (buf)
   {
-    // Serial.printf("[HTTP] read: %d\n", len);
+    // printf("http_stream_reader: index %d, len: %d\n", index, len);
     size_t a = http_stream->available();
     size_t r = 0;
     while ((r < len) && (wait < 10))

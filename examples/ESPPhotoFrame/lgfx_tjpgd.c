@@ -252,7 +252,7 @@ static int32_t bitext (	/* >=0: extracted data, <0: error code */
 )
 {
 	uint8_t *dp;
-	uint_fast8_t msk, shift;
+	uint_fast8_t msk;
 	uint32_t v;
 
 	msk = jd->dmsk; dp = jd->dptr;
@@ -453,7 +453,7 @@ static void block_idct (
 		v2 = t12 - t11;
 
 		/* Descale the transformed values 8 bits and output */
-#if defined (ESP32) || (CONFIG_IDF_TARGET_ESP32) || (ESP_PLATFORM)
+#if defined(ESP32)
 		int32_t d0 = (v0 + v7) >> 8;
 		int32_t d7 = (v0 - v7) >> 8;
 		int32_t d1 = (v1 + v6) >> 8;
