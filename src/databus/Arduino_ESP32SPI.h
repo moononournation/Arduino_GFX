@@ -44,7 +44,7 @@ public:
   void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len) override;
 
 protected:
-  void flush_data_buf() override;
+  void flush_data_buf();
 
 private:
   INLINE void WRITE8BIT(uint8_t c);
