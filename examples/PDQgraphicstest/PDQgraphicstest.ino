@@ -71,10 +71,10 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 #define TFT_RST 16
 #define TFT_BL 4
 #elif defined(RTL8722DM)
-#define TFT_CS 22
+#define TFT_CS 18
 #define TFT_DC 17
-#define TFT_RST 23
-#define TFT_BL 16
+#define TFT_RST 22
+#define TFT_BL 23
 #else
 #define TFT_CS 9
 #define TFT_DC 8
