@@ -23,7 +23,7 @@ Arduino_GFX *create_default_Arduino_GFX()
 #elif defined(WT32_SC01)
     return new Arduino_ST7796(bus, TFT_RST, 3 /* rotation */);
 #elif defined(WIO_TERMINAL)
-    return new Arduino_ILI9341(bus, TFT_RST, 3 /* rotation */);
+    return new Arduino_ILI9341(bus, TFT_RST, 1 /* rotation */);
 #elif defined(M5STACK_CORE)
     return new Arduino_ILI9341_M5STACK(bus, TFT_RST, 1 /* rotation */);
 #elif defined(ODROID_GO)

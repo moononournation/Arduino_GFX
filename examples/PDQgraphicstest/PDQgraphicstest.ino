@@ -33,7 +33,7 @@ Arduino_GFX *gfx = new Arduino_ST7796(bus, 22 /* RST */, 3 /* rotation */);
 #elif defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 // #define TFT_BL LCD_BACKLIGHT
 Arduino_DataBus *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 3 /* rotation */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
 
 /* M5Stack */
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
