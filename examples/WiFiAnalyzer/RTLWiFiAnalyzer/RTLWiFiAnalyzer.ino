@@ -8,7 +8,7 @@
  * Patch realtek ameba core variant.cpp to RTL8720DN pinout:
  * https://github.com/mikey60/BW16-RTL8720DN-Module-Arduino
  * 
- * default pins for RTL872x: TFT_CS: 22, TFT_DC: 17, TFT_RST: 23, TFT_BL: 16
+ * default pins for RTL872x: TFT_CS: 18, TFT_DC: 17, TFT_RST: 22, TFT_BL: 23
  ******************************************************************************/
 
 #define SCAN_INTERVAL 3000
