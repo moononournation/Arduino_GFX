@@ -10,7 +10,9 @@ public:
 
   void begin(int32_t speed = 0) override;
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
+#if !defined(ATTINY_CORE)
   void flush(void) override;
+#endif // !defined(ATTINY_CORE)
 
 protected:
   uint8_t *_framebuffer;

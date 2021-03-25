@@ -113,7 +113,9 @@ void Arduino_Canvas::writeFastHLine(int16_t x, int16_t y,
     }
 }
 
+#if !defined(ATTINY_CORE)
 void Arduino_Canvas::flush()
 {
     _output->draw16bitRGBBitmap(_output_x, _output_y, _framebuffer, _width, _height);
 }
+#endif // !defined(ATTINY_CORE)

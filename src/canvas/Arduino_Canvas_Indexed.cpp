@@ -118,10 +118,12 @@ void Arduino_Canvas_Indexed::writeFastHLine(int16_t x, int16_t y,
     }
 }
 
+#if !defined(ATTINY_CORE)
 void Arduino_Canvas_Indexed::flush()
 {
     _output->drawIndexedBitmap(_output_x, _output_y, _framebuffer, _color_index, _width, _height);
 }
+#endif // !defined(ATTINY_CORE)
 
 uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)
 {

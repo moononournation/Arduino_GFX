@@ -12,7 +12,9 @@ public:
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
   void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
   void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
+#if !defined(ATTINY_CORE)
   void flush(void) override;
+#endif // !defined(ATTINY_CORE)
 
 protected:
   uint16_t *_framebuffer;
@@ -22,4 +24,4 @@ protected:
 private:
 };
 
-#endif
+#endif // _Arduino_CANVAS_H_

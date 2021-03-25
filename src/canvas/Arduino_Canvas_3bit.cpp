@@ -47,7 +47,9 @@ void Arduino_Canvas_3bit::writePixelPreclipped(int16_t x, int16_t y, uint16_t co
     }
 }
 
+#if !defined(ATTINY_CORE)
 void Arduino_Canvas_3bit::flush()
 {
     _output->draw3bitRGBBitmap(_output_x, _output_y, _framebuffer, _width, _height);
 }
+#endif // !defined(ATTINY_CORE)
