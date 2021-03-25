@@ -389,12 +389,12 @@ INLINE void Arduino_HWSPI::WRITE(uint8_t d)
 #elif defined(__AVR__) || defined(CORE_TEENSY)
   SPCRbackup = SPCR;
   SPCR = mySPCR;
-  HWSPI.transfer(c);
+  HWSPI.transfer(d);
   SPCR = SPCRbackup;
 #elif defined(__arm__)
   HWSPI.setClockDivider(21); //4MHz
   HWSPI.setDataMode(_dataMode);
-  HWSPI.transfer(c);
+  HWSPI.transfer(d);
 #endif
 }
 
