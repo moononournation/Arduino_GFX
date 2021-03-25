@@ -300,15 +300,6 @@ INLINE void Arduino_GFX::endWrite()
 
 /**************************************************************************/
 /*!
-    @brief  flush framebuffer to output (for Canvas or NeoPixel sub-class)
-*/
-/**************************************************************************/
-void Arduino_GFX::flush()
-{
-}
-
-/**************************************************************************/
-/*!
     @brief  Draw a perfectly vertical line (this is often optimized in a subclass!)
     @param  x       Top-most x coordinate
     @param  y       Top-most y coordinate
@@ -2056,6 +2047,15 @@ void Arduino_GFX::setFont(const GFXfont *f)
         cursor_y -= 6;
     }
     gfxFont = (GFXfont *)f;
+}
+
+/**************************************************************************/
+/*!
+    @brief  flush framebuffer to output (for Canvas or NeoPixel sub-class)
+*/
+/**************************************************************************/
+void Arduino_GFX::flush()
+{
 }
 #endif // !defined(ATTINY_CORE)
 

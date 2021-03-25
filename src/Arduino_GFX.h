@@ -147,7 +147,6 @@ public:
   virtual void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
   virtual void writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
   virtual void endWrite(void);
-  virtual void flush(void);
 
   // CONTROL API
   // These MAY be overridden by the subclass to provide device-specific
@@ -187,8 +186,10 @@ public:
   void setTextSize(uint8_t s);
   void setTextSize(uint8_t sx, uint8_t sy);
   void setTextSize(uint8_t sx, uint8_t sy, uint8_t pixel_margin);
+
 #if !defined(ATTINY_CORE)
   void setFont(const GFXfont *f = NULL);
+  virtual void flush(void);
 #endif // !defined(ATTINY_CORE)
 
   // adopt from LovyanGFX
