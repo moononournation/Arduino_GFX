@@ -9,11 +9,9 @@
  * RTL872x various dev board   : TFT_CS: 18, TFT_DC: 17, TFT_RST: 22, TFT_BL: 23
  * Arduino Nano, Micro and more: TFT_CS:  9, TFT_DC:  8, TFT_RST:  7, TFT_BL:  6
  ******************************************************************************/
-// #define ESP32_LCDKIT_SPI
-// #define TTGO_T_DISPLAY
-// #define WT32_SC01
 #include <Arduino_GFX_Library.h>
 
+/* More dev device declaration: https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration */
 #if defined(DISPLAY_DEV_KIT)
 Arduino_GFX *gfx = create_default_Arduino_GFX();
 #else /* !defined(DISPLAY_DEV_KIT) */

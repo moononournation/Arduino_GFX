@@ -1,6 +1,8 @@
 #ifndef _ARDUINO_GFX_LIBRARIES_H_
 #define _ARDUINO_GFX_LIBRARIES_H_
 
+#define MAKERFABS_TFT_TOUCH_3_5
+
 #include "Arduino_DataBus.h"
 #include "databus/Arduino_SWSPI.h"
 #include "databus/Arduino_HWSPI.h"
@@ -40,34 +42,7 @@
 #include "display/Arduino_ST7789.h"
 #include "display/Arduino_ST7796.h"
 
-#if defined(ESP32_LCDKIT_SPI)
-#define DISPLAY_DEV_KIT
-#define TFT_SCK 22
-#define TFT_MOSI 21
-#define TFT_MISO 27
-#define TFT_CS 5
-#define TFT_DC 19
-#define TFT_RST 18
-#define TFT_BL 23
-#elif defined(TTGO_T_DISPLAY)
-#define DISPLAY_DEV_KIT
-#define TFT_SCK 18
-#define TFT_MOSI 19
-#define TFT_MISO -1
-#define TFT_CS 5
-#define TFT_DC 16
-#define TFT_RST 23
-#define TFT_BL 4
-#elif defined(WT32_SC01)
-#define DISPLAY_DEV_KIT
-#define TFT_SCK 14
-#define TFT_MOSI 13
-#define TFT_MISO -1
-#define TFT_CS 15
-#define TFT_DC 21
-#define TFT_RST 22
-#define TFT_BL 23
-#elif defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #define DISPLAY_DEV_KIT
 #define WIO_TERMINAL
 #define TFT_CS LCD_SS_PIN

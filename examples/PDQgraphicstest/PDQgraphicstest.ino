@@ -9,23 +9,28 @@
  ******************************************************************************/
 /* Arduino_GFX try to find the settings depends on selected board in Arduino IDE */
 /* Or you can define the dev kit cannot find in board list */
-// #define ESP32_LCDKIT_SPI
-// #define TTGO_T_DISPLAY
-// #define WT32_SC01
 #include <Arduino_GFX_Library.h>
 
+// #define ESP32_LCDKIT_SPI
+#define MAKERFABS_TFT_TOUCH_3_5
+// #define TTGO_T_DISPLAY
+// #define WT32_SC01
 #if defined(ESP32_LCDKIT_SPI)
-// #define TFT_BL 23
+#define TFT_BL 23
 Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 5 /* CS */, 22 /* SCK */, 21 /* MOSI */, 27 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
 
+#elif defined(MAKERFABS_TFT_TOUCH_3_5)
+Arduino_DataBus *bus = new Arduino_ESP32SPI(33 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, -1 /* RST */, 1 /* rotation */);
+
 #elif defined(TTGO_T_DISPLAY)
-// #define TFT_BL 4
+#define TFT_BL 4
 Arduino_DataBus *bus = new Arduino_ESP32SPI(16 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, -1 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 23 /* RST */, 2 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 53 /* col offset 1 */, 40 /* row offset 1 */, 52 /* col offset 2 */, 40 /* row offset 2 */);
 
 #elif defined(WT32_SC01)
-// #define TFT_BL 23
+#define TFT_BL 23
 Arduino_DataBus *bus = new Arduino_ESP32SPI(21 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, -1 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, 22 /* RST */, 3 /* rotation */);
 
