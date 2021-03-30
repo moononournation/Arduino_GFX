@@ -1,8 +1,6 @@
 #ifndef _ARDUINO_GFX_LIBRARIES_H_
 #define _ARDUINO_GFX_LIBRARIES_H_
 
-#define MAKERFABS_TFT_TOUCH_3_5
-
 #include "Arduino_DataBus.h"
 #include "databus/Arduino_SWSPI.h"
 #include "databus/Arduino_HWSPI.h"
