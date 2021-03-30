@@ -12,7 +12,7 @@
 #include <Arduino_GFX_Library.h>
 
 // #define ESP32_LCDKIT_SPI
-#define MAKERFABS_TFT_TOUCH_3_5
+// #define MAKERFABS_TFT_TOUCH_3_5
 // #define TTGO_T_DISPLAY
 // #define WT32_SC01
 #if defined(ESP32_LCDKIT_SPI)
