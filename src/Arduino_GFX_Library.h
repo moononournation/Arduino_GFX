@@ -18,6 +18,7 @@
 #include "canvas/Arduino_Canvas_Indexed.h"
 #include "canvas/Arduino_Canvas_3bit.h"
 #include "canvas/Arduino_Canvas_Mono.h"
+#include "display/Arduino_ILI9488_3bit.h"
 #endif // !defined(LITTLE_FOOT_PRINT)
 #include "display/Arduino_GC9A01.h"
 #include "display/Arduino_HX8347C.h"

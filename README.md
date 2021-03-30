@@ -60,7 +60,7 @@ This library is not putting speed at the first priority, but still paid much eff
 | Estimate memory    | 15,512        | 15,616        | ***15,432***  |
 
 
-## Currently Supported data bus
+## Currently Supported data bus [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class)]
 - 8-bit and 9-bit hardware SPI (ESP32SPI)
 - 8-bit hardware SPI (HWSPI)
 - 8-bit and 9-bit software SPI (SWSPI)
@@ -77,21 +77,25 @@ This library is not putting speed at the first priority, but still paid much eff
 - Arduino Pro Micro
 - ESP8266 Series
 - ESP32 Series
+- rtlduino
 
 ## Tobe Support Dev Board
 - Arduino ATMega2560
 - ESP32-S2 Series
 - ESP32-S3 Series
 - Raspberry Pi Pico
-- RTL8720
 
-## Currently Supported Dev Device
+## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
+- ESP32 LCDKIT
+- Makerfabs ESP32 3.5" TFT Touch with Camera
+- TTGO T-DISPLAY
+- wireless-tag WT-32-SC01
+- Wio Terminal
 - M5Stack Core Family
 - Odroid Go
 - TTGO T-Watch
-- Wio Terminal
 
-## Currently Supported Display
+## Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
 - GC9A01 round display 240x240 [[test video](https://youtu.be/kJrAFm20-zg)]
 - HX8347C 240x320 [[test video](https://youtu.be/25ymuV51YQM)]
 - HX8347D 240x320 [[test video](https://youtu.be/sv6LGkLRZjI)]
@@ -102,6 +106,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - ILI9341 M5Stack 320x240 [[test video](https://youtu.be/UoPpIjVSO5Q)]
 - ILI9481 320x480 (18 bit color) [[test video](https://youtu.be/YxjuuCFhlqM)]
 - ILI9486 320x480 (18 bit color) [[test video](https://youtu.be/pZ6izDqmVds)]
+- ILI9488 320x480 (3 bit color with canvas) [[test video](https://youtu.be/r7be0WbIBYk)]
 - ILI9488 320x480 (18 bit color) [[test video](https://youtu.be/NkE-LhtLHBQ)]
 - JBT6K71 (8-bit Parallel) 240x320 [[test video](https://youtu.be/qid3F4Gb0mM)]
 - R61529 (8-bit/16-bit Parallel) 320x480 [[test video](https://youtu.be/s93gxjbIAT8)]
@@ -119,10 +124,6 @@ This library is not putting speed at the first priority, but still paid much eff
 - ST7789 round corner display 240x280 [[test video](https://youtu.be/KzDC02wg8z0)]
 - ST7789 240x320 [[test video](https://youtu.be/ZEvc1LkuVuQ)]
 - ST7796 320x480 [[test video](https://youtu.be/hUL-RuG4MAQ)]
-- Canvas (framebuffer)
-- Canvas_Indexed (half memory space framebuffer)
-- Canvas_3bit (1/4 memory space framebuffer)
-- Canvas_Mono (1/16 memory space framebuffer)
 
 ## Tobe Support Display (Donation can make it happen)
 - HX8357A 240x320 (first trial failed)
@@ -132,7 +133,12 @@ This library is not putting speed at the first priority, but still paid much eff
 - FastLED Martix supported by co-operate with Canvas
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas
-- ILI9486 320x480 (3 bit color) supported by co-operate with Canvas
+
+## Canvas (framebuffer) [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Canvas-Class)]
+- Canvas (16-bit pixel)
+- Canvas_Indexed (half memory space)
+- Canvas_3bit (1/4 memory space framebuffer)
+- Canvas_Mono (1/16 memory space framebuffer)
 
 ## Used source code
 - http://elm-chan.org/fsw/tjpgd/00index.html

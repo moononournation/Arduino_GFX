@@ -122,17 +122,27 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
  * Step 2: Initize one driver for your display
 */
 
-// Canvas (framebuffer)
-// #define CANVAS
-// Arduino_GFX *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+/***************************************
+ * Start of Canvas (framebuffer)
+ **************************************/
 // 16-bit color Canvas (240x320 resolution only works for ESP32 with PSRAM)
+// Arduino_G *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // Arduino_GFX *gfx = new Arduino_Canvas(240 /* width */, 320 /* height */, output_display);
+
 // Indexed color Canvas, mask_level: 0-2, larger mask level mean less color variation but can have faster index mapping
+// Arduino_G *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // Arduino_GFX *gfx = new Arduino_Canvas_Indexed(240 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */, MAXMASKLEVEL /* mask_level */);
+
 // 3-bit color Canvas, R1G1B1, 8 colors
-// Arduino_GFX *gfx = new Arduino_Canvas_3bit(240 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */);
+// Arduino_G *output_display = new Arduino_ILI9488_3bit(bus, -1 /* RST */, 1 /* rotation */);
+// Arduino_GFX *gfx = new Arduino_Canvas_3bit(480 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */);
+
 // Mono color Canvas
+// Arduino_G *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // Arduino_GFX *gfx = new Arduino_Canvas_Mono(240 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */);
+/***************************************
+ * End of Canvas (framebuffer)
+ **************************************/
 
 // GC9A01 IPS LCD 240x240
 // Arduino_GFX *gfx = new Arduino_GC9A01(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
@@ -153,7 +163,7 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino_GFX *gfx = new Arduino_ILI9225(bus, TFT_RST);
 
 // ILI9341 LCD 240x320
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
+// Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 
 // ILI9481 LCD 320x480
 // Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, TFT_RST, 0 /* rotation */);
