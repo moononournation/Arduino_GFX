@@ -32,7 +32,6 @@ void Arduino_Canvas::begin(int32_t speed)
         Serial.println(F("_framebuffer allocation failed."));
     }
     _output->begin(speed);
-    _output->fillScreen(BLACK);
 }
 
 void Arduino_Canvas::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
