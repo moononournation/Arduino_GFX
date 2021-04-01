@@ -78,11 +78,6 @@ void Arduino_mbedSPI::write16(uint16_t d)
   WRITE16(d);
 }
 
-void Arduino_mbedSPI::write32(uint32_t d)
-{
-  WRITE32(d);
-}
-
 void Arduino_mbedSPI::writeC8D8(uint8_t c, uint8_t d)
 {
   DC_LOW();
@@ -205,12 +200,6 @@ INLINE void Arduino_mbedSPI::WRITE16(uint16_t d)
 {
   MSB_16_SET(d, d);
   _dev->write((const char *)&d, 2, NULL, 0);
-}
-
-INLINE void Arduino_mbedSPI::WRITE32(uint32_t d)
-{
-  MSB_32_SET(d, d);
-  _dev->write((const char *)&d, 4, NULL, 0);
 }
 
 INLINE void Arduino_mbedSPI::WRITEBUF(uint8_t *buf, size_t count)

@@ -80,7 +80,6 @@ void Arduino_ESP8266SPI::writeCommand16(uint16_t c)
 {
   DC_LOW();
 
-  MSB_16_SET(c, c);
   WRITE16(c);
 
   DC_HIGH();
@@ -93,14 +92,7 @@ void Arduino_ESP8266SPI::write(uint8_t d)
 
 void Arduino_ESP8266SPI::write16(uint16_t d)
 {
-  MSB_16_SET(d, d);
   WRITE16(d);
-}
-
-void Arduino_ESP8266SPI::write32(uint32_t d)
-{
-  MSB_32_SET(d, d);
-  WRITE32(d);
 }
 
 void Arduino_ESP8266SPI::writeC8D8(uint8_t c, uint8_t d)
@@ -122,7 +114,6 @@ void Arduino_ESP8266SPI::writeC8D16(uint8_t c, uint16_t d)
 
   DC_HIGH();
 
-  MSB_16_SET(d, d);
   WRITE16(d);
 }
 
@@ -136,7 +127,11 @@ void Arduino_ESP8266SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
   uint32_t d;
   MSB_32_16_16_SET(d, d1, d2);
-  WRITE32(d);
+
+  SPI1U1 = (31 << SPILMOSI);
+  SPI1W0 = d;
+  SPI1CMD |= SPIBUSY;
+  WAIT_SPI_NOT_BUSY;
 }
 
 void Arduino_ESP8266SPI::writeRepeat(uint16_t p, uint32_t len)
@@ -355,15 +350,9 @@ INLINE void Arduino_ESP8266SPI::WRITE(uint8_t d)
 
 INLINE void Arduino_ESP8266SPI::WRITE16(uint16_t d)
 {
-  SPI1U1 = (15 << SPILMOSI);
-  SPI1W0 = d;
-  SPI1CMD |= SPIBUSY;
-  WAIT_SPI_NOT_BUSY;
-}
+  MSB_16_SET(d, d);
 
-INLINE void Arduino_ESP8266SPI::WRITE32(uint32_t d)
-{
-  SPI1U1 = (31 << SPILMOSI);
+  SPI1U1 = (15 << SPILMOSI);
   SPI1W0 = d;
   SPI1CMD |= SPIBUSY;
   WAIT_SPI_NOT_BUSY;

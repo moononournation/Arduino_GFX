@@ -401,21 +401,6 @@ void Arduino_SWSPI::writePixels(uint16_t *data, uint32_t len)
 }
 
 #if !defined(LITTLE_FOOT_PRINT)
-void Arduino_SWSPI::write32(uint32_t d)
-{
-  if (_dc < 0) // 9-bit SPI
-  {
-    WRITE9BITDATA(d >> 24);
-    WRITE9BITDATA(d >> 16);
-    WRITE9BITDATA(d >> 8);
-    WRITE9BITDATA(d);
-  }
-  else
-  {
-    WRITE32(d);
-  }
-}
-
 void Arduino_SWSPI::writeBytes(uint8_t *data, uint32_t len)
 {
   while (len--)
@@ -526,27 +511,6 @@ INLINE void Arduino_SWSPI::WRITE16(uint16_t d)
     SPI_SCK_LOW();
   }
 }
-
-#if !defined(LITTLE_FOOT_PRINT)
-INLINE void Arduino_SWSPI::WRITE32(uint32_t d)
-{
-  uint32_t bit = 0x80000000;
-  while (bit)
-  {
-    if (d & bit)
-    {
-      SPI_MOSI_HIGH();
-    }
-    else
-    {
-      SPI_MOSI_LOW();
-    }
-    SPI_SCK_HIGH();
-    bit >>= 1;
-    SPI_SCK_LOW();
-  }
-}
-#endif // !defined(LITTLE_FOOT_PRINT)
 
 INLINE void Arduino_SWSPI::WRITE9BITREPEAT(uint16_t p, uint32_t len)
 {

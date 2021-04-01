@@ -21,7 +21,6 @@ public:
   void writeCommand16(uint16_t) override;
   void write(uint8_t) override;
   void write16(uint16_t) override;
-  void write32(uint32_t) override;
   void writeC8D8(uint8_t c, uint8_t d) override;
   void writeC8D16(uint8_t c, uint16_t d) override;
   void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2) override;
@@ -36,7 +35,6 @@ public:
 private:
   INLINE void WRITE(uint8_t d);
   INLINE void WRITE16(uint16_t d);
-  INLINE void WRITE32(uint32_t d);
   INLINE void CS_HIGH(void);
   INLINE void CS_LOW(void);
   INLINE void DC_HIGH(void);

@@ -121,11 +121,4 @@ void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uin
     write(lo);
   }
 }
-
-void Arduino_DataBus::sendData32(uint32_t d)
-{
-  beginWrite();
-  write32(d);
-  endWrite();
-}
 #endif // !defined(LITTLE_FOOT_PRINT)

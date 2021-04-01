@@ -133,11 +133,6 @@ void Arduino_NRFXSPI::write16(uint16_t d)
   WRITE16(d);
 }
 
-void Arduino_NRFXSPI::write32(uint32_t d)
-{
-  WRITE32(d);
-}
-
 void Arduino_NRFXSPI::writeC8D8(uint8_t c, uint8_t d)
 {
   DC_LOW();
@@ -258,13 +253,6 @@ INLINE void Arduino_NRFXSPI::WRITE16(uint16_t d)
 {
   MSB_16_SET(d, d);
   const nrfx_spi_xfer_desc_t xfer_desc = NRFX_SPI_SINGLE_XFER(&d, 2, NULL, 0);
-  nrfx_spi_xfer(&_nrfxSpi, &xfer_desc, 0);
-}
-
-INLINE void Arduino_NRFXSPI::WRITE32(uint32_t d)
-{
-  MSB_32_SET(d, d);
-  const nrfx_spi_xfer_desc_t xfer_desc = NRFX_SPI_SINGLE_XFER(&d, 4, NULL, 0);
   nrfx_spi_xfer(&_nrfxSpi, &xfer_desc, 0);
 }
 

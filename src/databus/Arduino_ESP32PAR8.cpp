@@ -197,14 +197,6 @@ void Arduino_ESP32PAR8::write16(uint16_t d)
   WRITE(d);
 }
 
-void Arduino_ESP32PAR8::write32(uint32_t d)
-{
-  WRITE(d >> 24);
-  WRITE(d >> 16);
-  WRITE(d >> 8);
-  WRITE(d);
-}
-
 void Arduino_ESP32PAR8::writeC8D8(uint8_t c, uint8_t d)
 {
   DC_LOW();

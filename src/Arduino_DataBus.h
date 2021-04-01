@@ -162,12 +162,10 @@ public:
     void batchOperation(spi_operation_t batch[], uint8_t len);
 
 #if !defined(LITTLE_FOOT_PRINT)
-    virtual void write32(uint32_t) = 0;
     virtual void writeBytes(uint8_t *data, uint32_t len) = 0;
     virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) = 0;
     virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
     virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
-    void sendData32(uint32_t d);
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 protected:

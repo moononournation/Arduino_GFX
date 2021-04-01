@@ -306,24 +306,6 @@ void Arduino_ESP32SPI::write16(uint16_t d)
   }
 }
 
-void Arduino_ESP32SPI::write32(uint32_t d)
-{
-  if (_dc < 0) // 9-bit SPI
-  {
-    WRITE9BIT(0x100 | (d >> 24));
-    WRITE9BIT(0x100 | ((d >> 16) & 0xff));
-    WRITE9BIT(0x100 | ((d >> 8) & 0xff));
-    WRITE9BIT(0x100 | (d & 0xff));
-  }
-  else
-  {
-    WRITE8BIT(d >> 24);
-    WRITE8BIT(d >> 16);
-    WRITE8BIT(d >> 8);
-    WRITE8BIT(d);
-  }
-}
-
 void Arduino_ESP32SPI::writeC8D8(uint8_t c, uint8_t d)
 {
   if (_dc < 0) // 9-bit SPI
