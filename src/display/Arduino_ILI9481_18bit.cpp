@@ -111,6 +111,10 @@ void Arduino_ILI9481_18bit::tftInit()
   {
     _bus->sendCommand(ILI9481_INVON);
   }
+  else
+  {
+    _bus->sendCommand(ILI9481_INVOFF);
+  }
   _bus->sendCommand(0x29);
 }
 

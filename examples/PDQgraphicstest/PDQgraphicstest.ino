@@ -22,7 +22,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
 
 #elif defined(MAKERFABS_TFT_TOUCH_3_5)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(33 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */);
-Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, -1 /* RST */, 1 /* rotation */);
+Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, -1 /* RST */, 1 /* rotation */, false /* IPS */);
 
 #elif defined(TTGO_T_DISPLAY)
 #define TFT_BL 4
@@ -134,7 +134,7 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino_GFX *gfx = new Arduino_Canvas_Indexed(240 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */, MAXMASKLEVEL /* mask_level */);
 
 // 3-bit color Canvas, R1G1B1, 8 colors
-// Arduino_G *output_display = new Arduino_ILI9488_3bit(bus, -1 /* RST */, 1 /* rotation */);
+// Arduino_G *output_display = new Arduino_ILI9488_3bit(bus, -1 /* RST */, 1 /* rotation */, false /* IPS */);
 // Arduino_GFX *gfx = new Arduino_Canvas_3bit(480 /* width */, 320 /* height */, output_display, 0 /* output_x */, 0 /* output_y */);
 
 // Mono color Canvas
@@ -166,13 +166,13 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */);
 
 // ILI9481 LCD 320x480
-// Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, TFT_RST, 0 /* rotation */);
+// Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
 
 // ILI9486 LCD 320x480
-// Arduino_GFX *gfx = new Arduino_ILI9486_18bit(bus, TFT_RST, 0 /* rotation */);
+// Arduino_GFX *gfx = new Arduino_ILI9486_18bit(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
 
 // ILI9488 LCD 320x480
-// Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, TFT_RST, 0 /* rotation */);
+// Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
 
 // JBT6K71 LCD 240x320
 // Arduino_GFX *gfx = new Arduino_JBT6K71(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 240, 320, 0, 0, 16, 0);

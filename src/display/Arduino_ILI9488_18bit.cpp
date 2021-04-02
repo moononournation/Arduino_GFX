@@ -4,8 +4,8 @@
  */
 #include "Arduino_ILI9488_18bit.h"
 
-Arduino_ILI9488_18bit::Arduino_ILI9488_18bit(Arduino_DataBus *bus, int8_t rst, uint8_t r)
-    : Arduino_TFT_18bit(bus, rst, r, false, ILI9488_TFTWIDTH, ILI9488_TFTHEIGHT, 0, 0, 0, 0)
+Arduino_ILI9488_18bit::Arduino_ILI9488_18bit(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
+    : Arduino_TFT_18bit(bus, rst, r, ips, ILI9488_TFTWIDTH, ILI9488_TFTHEIGHT, 0, 0, 0, 0)
 {
 }
 
@@ -111,6 +111,15 @@ void Arduino_ILI9488_18bit::tftInit()
   };
 
   _bus->batchOperation(ili9488_init_operations, sizeof(ili9488_init_operations) / sizeof(ili9488_init_operations[0]));
+
+  if (_ips)
+  {
+    _bus->sendCommand(ILI9488_INVON);
+  }
+  else
+  {
+    _bus->sendCommand(ILI9488_INVOFF);
+  }
 }
 
 void Arduino_ILI9488_18bit::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)

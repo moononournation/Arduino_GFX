@@ -1,7 +1,7 @@
 #include "Arduino_ILI9488_3bit.h"
 
-Arduino_ILI9488_3bit::Arduino_ILI9488_3bit(Arduino_DataBus *bus, int8_t rst, uint8_t r)
-    : Arduino_G(ILI9488_TFTWIDTH, ILI9488_TFTHEIGHT), _bus(bus), _rst(rst), _rotation(r)
+Arduino_ILI9488_3bit::Arduino_ILI9488_3bit(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
+    : Arduino_G(ILI9488_TFTWIDTH, ILI9488_TFTHEIGHT), _bus(bus), _rst(rst), _rotation(r), _ips(ips)
 {
 }
 
@@ -114,6 +114,15 @@ void Arduino_ILI9488_3bit::begin(int32_t speed)
 
   _bus->batchOperation(ili9488_init_operations, sizeof(ili9488_init_operations) / sizeof(ili9488_init_operations[0]));
 
+  if (_ips)
+  {
+    _bus->sendCommand(ILI9488_INVON);
+  }
+  else
+  {
+    _bus->sendCommand(ILI9488_INVOFF);
+  }
+
   uint16_t r;
   // setRotation
   switch (_rotation)
@@ -162,6 +171,11 @@ void Arduino_ILI9488_3bit::draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bi
 void Arduino_ILI9488_3bit::draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h)
 {
   printf("Not Implemented draw24bitRGBBitmap()");
+}
+
+void Arduino_ILI9488_3bit::invertDisplay(bool i)
+{
+  _bus->sendCommand(i ? ILI9488_INVON : ILI9488_INVOFF);
 }
 
 void Arduino_ILI9488_3bit::displayOn(void)

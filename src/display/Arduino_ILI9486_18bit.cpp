@@ -4,8 +4,8 @@
  */
 #include "Arduino_ILI9486_18bit.h"
 
-Arduino_ILI9486_18bit::Arduino_ILI9486_18bit(Arduino_DataBus *bus, int8_t rst, uint8_t r)
-    : Arduino_TFT_18bit(bus, rst, r, false, ILI9486_TFTWIDTH, ILI9486_TFTHEIGHT, 0, 0, 0, 0)
+Arduino_ILI9486_18bit::Arduino_ILI9486_18bit(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
+    : Arduino_TFT_18bit(bus, rst, r, ips, ILI9486_TFTWIDTH, ILI9486_TFTHEIGHT, 0, 0, 0, 0)
 {
 }
 
@@ -73,7 +73,14 @@ void Arduino_ILI9486_18bit::tftInit()
   _bus->sendData(0x20);
   _bus->sendData(0x00);
 
-  _bus->sendCommand(ILI9486_INVOFF);
+  if (_ips)
+  {
+    _bus->sendCommand(ILI9486_INVON);
+  }
+  else
+  {
+    _bus->sendCommand(ILI9486_INVOFF);
+  }
 
   _bus->sendCommand(ILI9486_DISPON); //Display on
   delay(25);

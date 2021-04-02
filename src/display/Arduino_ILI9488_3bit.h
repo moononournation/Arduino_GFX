@@ -48,7 +48,7 @@
 class Arduino_ILI9488_3bit : public Arduino_G
 {
 public:
-  Arduino_ILI9488_3bit(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0);
+  Arduino_ILI9488_3bit(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0, bool ips = false);
 
   void begin(int32_t speed = 0) override;
   void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg) override;
@@ -57,6 +57,7 @@ public:
   void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
   void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h) override;
 
+  void invertDisplay(bool);
   void displayOn();
   void displayOff();
 
@@ -66,6 +67,7 @@ protected:
   Arduino_DataBus *_bus;
   int8_t _rst;
   uint8_t _rotation;
+  bool _ips;
 
 private:
 };
