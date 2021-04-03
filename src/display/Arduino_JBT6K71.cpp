@@ -22,105 +22,112 @@ void Arduino_JBT6K71::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_JBT6K71::tftInit()
 {
-  uint16_t display_mode = _ips ? 0x4004 : 0x4000; //64K Colors
-  spi_operation_t jbt6k71_init_operations[] = {
-      {SEND_COMMAND_16, 0x0000}, //exiting from deep standby mode
-      {DELAY, 10},               //spec 1ms
-      {SEND_COMMAND_16, 0x0000},
-      {DELAY, 10}, //spec 1ms
-      {SEND_COMMAND_16, 0x0000},
-      {DELAY, 10}, //spec 1ms
+  uint8_t display_mode = _ips ? 0x04 : 0x00; // 64K Colors
+  uint8_t jbt6k71_init_operations[] = {
+      BEGIN_WRITE,
+      WRITE_COMMAND_16, 0x00, 0x00, // exiting from deep standby mode
+      END_WRITE,
 
-      {BEGIN_WRITE, 0},
-      {WRITE_COMMAND_16, 0x001d}, //mode setting
-      {WRITE_DATA_16, 0x0005},    //exit standby
-      {END_WRITE, 0},
-      {DELAY, 100}, //spec 1ms
+      DELAY, 10, // spec 1ms
 
-      {BEGIN_WRITE, 0},
-      {WRITE_COMMAND_16, 0x0000}, //oscillation setting
-      {WRITE_DATA_16, 0x0001},    //set to on
-      {END_WRITE, 0},
-      {DELAY, 100}, //spec 1ms
+      BEGIN_WRITE,
+      WRITE_COMMAND_16, 0x00, 0x00,
+      END_WRITE,
 
-      //Display control
-      {BEGIN_WRITE, 0},
-      {WRITE_COMMAND_16, 0x0002}, //LCD driver AC control
-      {WRITE_DATA_16, 0x0200},    //line inversion
-      {WRITE_COMMAND_16, 0x0007}, //Display mode
-      {WRITE_DATA_16, display_mode},
-      {WRITE_COMMAND_16, 0x000d}, //FR period adjustment setting
-      {WRITE_DATA_16, 0x0011},    //Ffr=60Hz optimized
-      {END_WRITE, 0},
-      {DELAY, 100}, //spec 1ms
+      DELAY, 10, // spec 1ms
 
-      //LTPS control settings
-      {BEGIN_WRITE, 0},
-      {WRITE_COMMAND_16, 0x0012}, //LTPS control setting 1
-      {WRITE_DATA_16, 0x0303},
-      {WRITE_COMMAND_16, 0x0013}, //LTPS control setting 2
-      {WRITE_DATA_16, 0x0102},
-      {WRITE_COMMAND_16, 0x001c}, //Amplifier capability setting
-      {WRITE_DATA_16, 0x0000},    //Maximum
+      BEGIN_WRITE,
+      WRITE_COMMAND_16, 0x00, 0x00,
+      END_WRITE,
 
-      //Power settings
-      {WRITE_COMMAND_16, 0x0102}, //Power supply control (1)
-      {WRITE_DATA_16, 0x00f6},    //VCOMD Output voltage: 1.4V(Initial), VCS output voltage: 4.5V, VGM output voltage: 4.3V
-      {END_WRITE, 0},
-      {DELAY, 500},
+      DELAY, 10, // spec 1ms
 
-      {BEGIN_WRITE, 0},
-      {WRITE_COMMAND_16, 0x0103}, //Power Supply Control (2)
-      {WRITE_DATA_16, 0x0007},    //Boosting clock mode: Dual mode, XVDD output voltage: 5.4V
-      {END_WRITE, 0},
-      {DELAY, 100},
+      BEGIN_WRITE,
+      WRITE_C16_D16, 0x00, 0x1d, // mode setting
+      0x00, 0x05,                // exit standby
+      END_WRITE,
 
-      {BEGIN_WRITE, 0},
-      {WRITE_COMMAND_16, 0x0105}, //Power supply control (4)
-      {WRITE_DATA_16, 0x0111},    //Mask period (DCEW1/DCEW2): 1.0 clock, DCCLK frequency for external regulate circuit: 1H, DCCLK frequency for XVDD regulate circuit: 1/2H, DCCLK frequency for AVDD regulate circuit: 1H
-      {END_WRITE, 0},
-      {DELAY, 100},
+      DELAY, 100, // spec 1ms
 
-      //Gray scale settings (gamma c
-      {BEGIN_WRITE, 0},
-      {WRITE_COMMAND_16, 0x0300},
-      {WRITE_DATA_16, 0x0200}, //chan
-      {WRITE_COMMAND_16, 0x0301},
-      {WRITE_DATA_16, 0x0002}, //
-      {WRITE_COMMAND_16, 0x0302},
-      {WRITE_DATA_16, 0x0000},
-      {WRITE_COMMAND_16, 0x0303},
-      {WRITE_DATA_16, 0x0300}, //
-      {WRITE_COMMAND_16, 0x0304},
-      {WRITE_DATA_16, 0x0700},
-      {WRITE_COMMAND_16, 0x0305},
-      {WRITE_DATA_16, 0x0070}, //
+      BEGIN_WRITE,
+      WRITE_C16_D16, 0x00, 0x00, // oscillation setting
+      0x00, 0x01,                // set to on
+      END_WRITE,
 
-      {WRITE_COMMAND_16, 0x0402}, //First screen start
-      {WRITE_DATA_16, 0x0000},    //0
-      {WRITE_COMMAND_16, 0x0403}, //First screen end
-      {WRITE_DATA_16, 0x013f},    //319
+      DELAY, 100, // spec 1ms
 
-      //	{WRITE_COMMAND_16, 0x0404);  //Second screen start
-      //  {WRITE_DATA_16, 10);  //0
-      //  {WRITE_COMMAND_16, 0x0405);  //Second screen end
-      //  {WRITE_DATA_16, 2);  //319
+      // Display control
+      BEGIN_WRITE,
+      WRITE_C16_D16, 0x00, 0x02, // LCD driver AC control
+      0x02, 0x00,                // line inversion
+      WRITE_C16_D16, 0x00, 0x07, // Display mode
+      0x40, display_mode,
 
-      {WRITE_COMMAND_16, 0x0100}, //Display Control
-      {WRITE_DATA_16, 0xC010},
-      {END_WRITE, 0},
-      {DELAY, 500},
+      WRITE_C16_D16, 0x00, 0x0d, // FR period adjustment setting
+      0x00, 0x11,                // Ffr=60Hz optimized
+      END_WRITE,
 
-      {BEGIN_WRITE, 0},
-      {WRITE_COMMAND_16, 0x0101}, //Auto sequence Control
-      {WRITE_DATA_16, 0x0001},    //AUTO
-      {WRITE_COMMAND_16, 0x0100}, //Display Control
-      {WRITE_DATA_16, 0xF7FE},
-      {END_WRITE, 0},
-      {DELAY, 800},
-  };
+      DELAY, 100, // spec 1ms
 
-  _bus->batchOperation(jbt6k71_init_operations, sizeof(jbt6k71_init_operations) / sizeof(jbt6k71_init_operations[0]));
+      // LTPS control settings
+      BEGIN_WRITE,
+      WRITE_C16_D16, 0x00, 0x12, // LTPS control setting 1
+      0x03, 0x03,
+
+      WRITE_C16_D16, 0x00, 0x13, // LTPS control setting 2
+      0x01, 0x02,
+
+      WRITE_C16_D16, 0x00, 0x1c, // Amplifier capability setting
+      0x00, 0x00,                // Maximum
+
+      // Power settings
+      WRITE_C16_D16, 0x01, 0x02, // Power supply control (1)
+      0x00, 0xf6,                // VCOMD Output voltage: 1.4V(Initial), VCS output voltage: 4.5V, VGM output voltage: 4.3V
+      END_WRITE,
+
+      DELAY, 250, // uint8_t max value 255
+      DELAY, 250,
+
+      BEGIN_WRITE,
+      WRITE_C16_D16, 0x01, 0x03, // Power Supply Control (2)
+      0x00, 0x07,                // Boosting clock mode: Dual mode, XVDD output voltage: 5.4V
+      END_WRITE,
+
+      DELAY, 100,
+
+      BEGIN_WRITE,
+      WRITE_C16_D16, 0x01, 0x05, // Power supply control (4)
+      0x01, 0x11,                // Mask period (DCEW1/DCEW2): 1.0 clock, DCCLK frequency for external regulate circuit: 1H, DCCLK frequency for XVDD regulate circuit: 1/2H, DCCLK frequency for AVDD regulate circuit: 1H
+      END_WRITE,
+
+      DELAY, 100,
+
+      // Gray scale settings (gamma c
+      BEGIN_WRITE,
+      WRITE_C16_D16, 0x03, 0x00, 0x02, 0x00, // chan
+      WRITE_C16_D16, 0x03, 0x01, 0x00, 0x02, //
+      WRITE_C16_D16, 0x03, 0x02, 0x00, 0x00,
+      WRITE_C16_D16, 0x03, 0x03, 0x03, 0x00, //
+      WRITE_C16_D16, 0x03, 0x04, 0x07, 0x00,
+      WRITE_C16_D16, 0x03, 0x05, 0x00, 0x70, //
+      WRITE_C16_D16, 0x04, 0x02, 0x00, 0x00, // First screen start, 0
+      WRITE_C16_D16, 0x04, 0x03, 0x01, 0x3f, // First screen end, 319
+      WRITE_C16_D16, 0x01, 0x00, 0xC0, 0x10, // Display Control
+      END_WRITE,
+
+      DELAY, 250, // uint8_t max value 255
+      DELAY, 250,
+
+      BEGIN_WRITE,
+      WRITE_C16_D16, 0x01, 0x01, 0x00, 0x01, // Auto sequence Control, AUTO
+      WRITE_C16_D16, 0x01, 0x00, 0xF7, 0xFE, // Display Control
+      END_WRITE,
+
+      DELAY, 250, // uint8_t max value 255
+      DELAY, 250,
+      DELAY, 250};
+
+  _bus->batchOperation(jbt6k71_init_operations, sizeof(jbt6k71_init_operations));
 }
 
 void Arduino_JBT6K71::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
@@ -231,7 +238,7 @@ void Arduino_JBT6K71::setRotation(uint8_t r)
     output_control = 0x0127; //SS=1
     entry_mode = 0x0030;
     break;
-  default: // 3
+  default:                   // 3
     output_control = 0x0027; //SS=0
     entry_mode = 0x0038;
     break;

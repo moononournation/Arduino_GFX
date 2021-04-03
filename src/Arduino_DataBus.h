@@ -122,19 +122,13 @@ typedef enum
     WRITE_COMMAND_16,
     WRITE_DATA_8,
     WRITE_DATA_16,
+    WRITE_BYTES,
+    WRITE_C8_D8,
+    WRITE_C8_D16,
+    WRITE_C16_D16,
     END_WRITE,
     DELAY,
-    SEND_COMMAND_8,
-    SEND_COMMAND_16,
-    SEND_DATA_8,
-    SEND_DATA_16,
 } spi_operation_type_t;
-
-struct spi_operation_t
-{
-    spi_operation_type_t type;
-    uint16_t value;
-};
 
 class Arduino_DataBus
 {
@@ -159,7 +153,7 @@ public:
     void sendData(uint8_t d);
     void sendData16(uint16_t d);
 
-    void batchOperation(spi_operation_t batch[], uint8_t len);
+    void batchOperation(uint8_t batch[], uint8_t len);
 
 #if !defined(LITTLE_FOOT_PRINT)
     virtual void writeBytes(uint8_t *data, uint32_t len) = 0;

@@ -53,45 +53,50 @@ void Arduino_DataBus::sendData16(uint16_t d)
   endWrite();
 }
 
-void Arduino_DataBus::batchOperation(spi_operation_t batch[], uint8_t len)
+void Arduino_DataBus::batchOperation(uint8_t batch[], uint8_t len)
 {
   for (uint8_t i = 0; i < len; ++i)
   {
-    switch (batch[i].type)
+    uint8_t l = 0;
+    switch (batch[i])
     {
     case BEGIN_WRITE:
       beginWrite();
       break;
+    case WRITE_C8_D16:
+      l++;
+    case WRITE_C8_D8:
+      l++;
     case WRITE_COMMAND_8:
-      writeCommand(batch[i].value);
+      writeCommand(batch[++i]);
       break;
+    case WRITE_C16_D16:
+      l = 2;
     case WRITE_COMMAND_16:
-      writeCommand16(batch[i].value);
+      writeCommand16(((uint16_t)batch[++i] << 8) | batch[++i]);
       break;
     case WRITE_DATA_8:
-      write(batch[i].value);
+      l = 1;
       break;
     case WRITE_DATA_16:
-      write16(batch[i].value);
+      l = 2;
+      break;
+    case WRITE_BYTES:
+      l = batch[++i];
       break;
     case END_WRITE:
       endWrite();
       break;
     case DELAY:
-      delay(batch[i].value);
+      delay(batch[++i]);
       break;
-    case SEND_COMMAND_8:
-      sendCommand(batch[i].value);
+    default:
+      printf("Unknown operation id at %d: %d", i, batch[i]);
       break;
-    case SEND_COMMAND_16:
-      sendCommand16(batch[i].value);
-      break;
-    case SEND_DATA_8:
-      sendData(batch[i].value);
-      break;
-    case SEND_DATA_16:
-      sendData16(batch[i].value);
-      break;
+    }
+    while (l--)
+    {
+      write(batch[++i]);
     }
   }
 }

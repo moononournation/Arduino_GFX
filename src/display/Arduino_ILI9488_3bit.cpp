@@ -25,94 +25,65 @@ void Arduino_ILI9488_3bit::begin(int32_t speed)
     delay(ILI9488_RST_DELAY);
   }
 
-  // tftInit
-  spi_operation_t ili9488_init_operations[] = {
-      {BEGIN_WRITE, 0},
+  uint8_t ili9488_init_operations[] = {
+      BEGIN_WRITE,
 
-      {WRITE_COMMAND_8, 0xE0},
-      {WRITE_DATA_8, 0x00},
-      {WRITE_DATA_8, 0x03},
-      {WRITE_DATA_8, 0x09},
-      {WRITE_DATA_8, 0x08},
-      {WRITE_DATA_8, 0x16},
-      {WRITE_DATA_8, 0x0A},
-      {WRITE_DATA_8, 0x3F},
-      {WRITE_DATA_8, 0x78},
-      {WRITE_DATA_8, 0x4C},
-      {WRITE_DATA_8, 0x09},
-      {WRITE_DATA_8, 0x0A},
-      {WRITE_DATA_8, 0x08},
-      {WRITE_DATA_8, 0x16},
-      {WRITE_DATA_8, 0x1A},
-      {WRITE_DATA_8, 0x0F},
+      WRITE_COMMAND_8, 0xE0,
+      WRITE_BYTES, 15,
+      0x00, 0x03, 0x09, 0x08,
+      0x16, 0x0A, 0x3F, 0x78,
+      0x4C, 0x09, 0x0A, 0x08,
+      0x16, 0x1A, 0x0F,
 
-      {WRITE_COMMAND_8, 0XE1},
-      {WRITE_DATA_8, 0x00},
-      {WRITE_DATA_8, 0x16},
-      {WRITE_DATA_8, 0x19},
-      {WRITE_DATA_8, 0x03},
-      {WRITE_DATA_8, 0x0F},
-      {WRITE_DATA_8, 0x05},
-      {WRITE_DATA_8, 0x32},
-      {WRITE_DATA_8, 0x45},
-      {WRITE_DATA_8, 0x46},
-      {WRITE_DATA_8, 0x04},
-      {WRITE_DATA_8, 0x0E},
-      {WRITE_DATA_8, 0x0D},
-      {WRITE_DATA_8, 0x35},
-      {WRITE_DATA_8, 0x37},
-      {WRITE_DATA_8, 0x0F},
+      WRITE_COMMAND_8, 0XE1,
+      WRITE_BYTES, 15,
+      0x00, 0x16, 0x19, 0x03,
+      0x0F, 0x05, 0x32, 0x45,
+      0x46, 0x04, 0x0E, 0x0D,
+      0x35, 0x37, 0x0F,
 
-      {WRITE_COMMAND_8, 0XC0}, //Power Control 1
-      {WRITE_DATA_8, 0x17},    //Vreg1out
-      {WRITE_DATA_8, 0x15},    //Verg2out
+      WRITE_C8_D16, 0XC0, // Power Control 1
+      0x17,               // Vreg1out
+      0x15,               // Verg2out
 
-      {WRITE_COMMAND_8, 0xC1}, //Power Control 2
-      {WRITE_DATA_8, 0x41},    //VGH,VGL
+      WRITE_C8_D8, 0xC1, // Power Control 2
+      0x41,              // VGH,VGL
 
-      {WRITE_COMMAND_8, 0xC5}, //Power Control 3
-      {WRITE_DATA_8, 0x00},
-      {WRITE_DATA_8, 0x12}, //Vcom
-      {WRITE_DATA_8, 0x80},
+      WRITE_COMMAND_8, 0xC5, // Power Control 3
+      WRITE_BYTES, 3,
+      0x00,
+      0x12, // Vcom
+      0x80,
 
-      {WRITE_COMMAND_8, 0x36}, //Memory Access
-      {WRITE_DATA_8, 0x48},
+      WRITE_C8_D8, 0x36, 0x48, // Memory Access
 
-      {WRITE_COMMAND_8, 0x3A}, // Interface Pixel Format
-      {WRITE_DATA_8, 0x01},    // 3 bit
+      WRITE_C8_D8, 0x3A, 0x01, // Interface Pixel Format, 3 bit
 
-      {WRITE_COMMAND_8, 0XB0}, // Interface Mode Control
-      {WRITE_DATA_8, 0x80},    //SDO NOT USE
+      WRITE_C8_D8, 0xB0, 0x80, // Interface Mode Control, SDO NOT USE
 
-      {WRITE_COMMAND_8, 0xB1}, //Frame rate
-      {WRITE_DATA_8, 0xA0},    //60Hz
+      WRITE_C8_D8, 0xB1, 0xA0, // Frame rate, 60Hz
 
-      {WRITE_COMMAND_8, 0xB4}, //Display Inversion Control
-      {WRITE_DATA_8, 0x02},    //2-dot
+      WRITE_C8_D8, 0xB4, 0x02, // Display Inversion Control, 2-dot
 
-      {WRITE_COMMAND_8, 0XB6}, //Display Function Control  RGB/MCU Interface Control
+      WRITE_C8_D16, 0XB6, // Display Function Control  RGB/MCU Interface Control
+      0x02,               // MCU
+      0x02,               // Source,Gate scan dieection
 
-      {WRITE_DATA_8, 0x02}, //MCU
-      {WRITE_DATA_8, 0x02}, //Source,Gate scan dieection
+      WRITE_C8_D8, 0XE9, 0x00, // Set Image Function, Disable 24 bit data
 
-      {WRITE_COMMAND_8, 0XE9}, // Set Image Functio
-      {WRITE_DATA_8, 0x00},    // Disable 24 bit data
+      WRITE_COMMAND_8, 0xF7,                  // Adjust Control
+      WRITE_BYTES, 4, 0xA9, 0x51, 0x2C, 0x82, // D7 stream, loose
 
-      {WRITE_COMMAND_8, 0xF7}, // Adjust Control
-      {WRITE_DATA_8, 0xA9},
-      {WRITE_DATA_8, 0x51},
-      {WRITE_DATA_8, 0x2C},
-      {WRITE_DATA_8, 0x82}, // D7 stream, loose
+      WRITE_COMMAND_8, ILI9488_SLPOUT, // Exit Sleep
+      END_WRITE,
 
-      {WRITE_COMMAND_8, ILI9488_SLPOUT}, //Exit Sleep
-      {END_WRITE, 0},
-      {DELAY, ILI9488_SLPOUT_DELAY},
-      {BEGIN_WRITE, 0},
-      {WRITE_COMMAND_8, ILI9488_DISPON}, //Display on
-      {END_WRITE, 0},
-  };
+      DELAY, ILI9488_SLPOUT_DELAY,
 
-  _bus->batchOperation(ili9488_init_operations, sizeof(ili9488_init_operations) / sizeof(ili9488_init_operations[0]));
+      BEGIN_WRITE,
+      WRITE_COMMAND_8, ILI9488_DISPON, // Display on
+      END_WRITE};
+
+  _bus->batchOperation(ili9488_init_operations, sizeof(ili9488_init_operations));
 
   if (_ips)
   {
