@@ -5,11 +5,7 @@
 #ifndef _Arduino_DataBus_H_
 #define _Arduino_DataBus_H_
 
-#if ARDUINO >= 100
 #include <Arduino.h>
-#else
-#include "WProgram.h"
-#endif
 
 #if defined(__AVR__)
 #define LITTLE_FOOT_PRINT // reduce program size for limited flash MCU

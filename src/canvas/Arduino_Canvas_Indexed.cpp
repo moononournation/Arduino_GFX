@@ -1,3 +1,6 @@
+#include "../Arduino_DataBus.h"
+#if !defined(LITTLE_FOOT_PRINT)
+
 #include "../Arduino_GFX.h"
 #include "Arduino_Canvas_Indexed.h"
 
@@ -117,12 +120,10 @@ void Arduino_Canvas_Indexed::writeFastHLine(int16_t x, int16_t y,
     }
 }
 
-#if !defined(ATTINY_CORE)
 void Arduino_Canvas_Indexed::flush()
 {
     _output->drawIndexedBitmap(_output_x, _output_y, _framebuffer, _color_index, _width, _height);
 }
-#endif // !defined(ATTINY_CORE)
 
 uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)
 {
@@ -177,3 +178,5 @@ void Arduino_Canvas_Indexed::raise_mask_level()
         }
     }
 }
+
+#endif // !defined(LITTLE_FOOT_PRINT)

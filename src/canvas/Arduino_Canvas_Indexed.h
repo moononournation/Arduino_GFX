@@ -1,3 +1,6 @@
+#include "../Arduino_DataBus.h"
+#if !defined(LITTLE_FOOT_PRINT)
+
 #ifndef _Arduino_CANVAS_INDEXED_H_
 #define _Arduino_CANVAS_INDEXED_H_
 
@@ -14,9 +17,7 @@ public:
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
   void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
   void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
-#if !defined(ATTINY_CORE)
   void flush(void) override;
-#endif // !defined(ATTINY_CORE)
 
   uint8_t get_color_index(uint16_t color);
   uint16_t get_index_color(uint8_t idx);
@@ -41,3 +42,5 @@ private:
 };
 
 #endif // _Arduino_CANVAS_INDEXED_H_
+
+#endif // !defined(LITTLE_FOOT_PRINT)

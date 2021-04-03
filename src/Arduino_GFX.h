@@ -5,12 +5,8 @@
 #ifndef _ARDUINO_GFX_H_
 #define _ARDUINO_GFX_H_
 
-#if ARDUINO >= 100
 #include <Arduino.h>
 #include <Print.h>
-#else
-#include "WProgram.h"
-#endif
 #include "Arduino_G.h"
 #include "Arduino_DataBus.h"
 
@@ -293,11 +289,7 @@ public:
   /**********************************************************************/
   void cp437(bool x = true) { _cp437 = x; }
 
-#if ARDUINO >= 100
   virtual size_t write(uint8_t);
-#else
-  virtual void write(uint8_t);
-#endif
 
   /************************************************************************/
   /*!

@@ -1,3 +1,6 @@
+#include "Arduino_DataBus.h"
+#if !defined(LITTLE_FOOT_PRINT)
+
 #ifndef _ARDUINO_ILI9488_3BIT_H_
 #define _ARDUINO_ILI9488_3BIT_H_
 
@@ -72,4 +75,6 @@ protected:
 private:
 };
 
-#endif
+#endif // _ARDUINO_ILI9488_3BIT_H_
+
+#endif // !defined(LITTLE_FOOT_PRINT)

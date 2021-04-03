@@ -1,3 +1,6 @@
+#include "../Arduino_DataBus.h"
+#if !defined(LITTLE_FOOT_PRINT)
+
 #include "../Arduino_GFX.h"
 #include "Arduino_Canvas.h"
 
@@ -112,9 +115,9 @@ void Arduino_Canvas::writeFastHLine(int16_t x, int16_t y,
     }
 }
 
-#if !defined(ATTINY_CORE)
 void Arduino_Canvas::flush()
 {
     _output->draw16bitRGBBitmap(_output_x, _output_y, _framebuffer, _width, _height);
 }
-#endif // !defined(ATTINY_CORE)
+
+#endif // !defined(LITTLE_FOOT_PRINT)

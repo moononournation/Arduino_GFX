@@ -1,3 +1,6 @@
+#include "../Arduino_DataBus.h"
+#if !defined(LITTLE_FOOT_PRINT)
+
 #ifndef _Arduino_CANVAS_3BIT_H_
 #define _Arduino_CANVAS_3BIT_H_
 
@@ -10,9 +13,7 @@ public:
 
   void begin(int32_t speed = 0) override;
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
-#if !defined(ATTINY_CORE)
   void flush(void) override;
-#endif // !defined(ATTINY_CORE)
 
 protected:
   uint8_t *_framebuffer;
@@ -23,3 +24,5 @@ private:
 };
 
 #endif // _Arduino_CANVAS_3BIT_H_
+
+#endif // !defined(LITTLE_FOOT_PRINT)

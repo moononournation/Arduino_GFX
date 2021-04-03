@@ -1,3 +1,6 @@
+#include "Arduino_DataBus.h"
+#if !defined(LITTLE_FOOT_PRINT)
+
 #include "Arduino_ILI9488_3bit.h"
 
 Arduino_ILI9488_3bit::Arduino_ILI9488_3bit(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
@@ -167,3 +170,5 @@ void Arduino_ILI9488_3bit::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uin
   _bus->writeC8D16D16(ILI9488_PASET, y, y + h - 1);
   _bus->writeCommand(ILI9488_RAMWR);
 }
+
+#endif // !defined(LITTLE_FOOT_PRINT)
