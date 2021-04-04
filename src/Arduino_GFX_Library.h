@@ -5,7 +5,6 @@
 #include "databus/Arduino_SWSPI.h"
 #include "databus/Arduino_HWSPI.h"
 #include "databus/Arduino_ESP32SPI.h"
-#include "databus/Arduino_ESP32SPI_DMA.h"
 #include "databus/Arduino_ESP32PAR8.h"
 #include "databus/Arduino_ESP32PAR16.h"
 #include "databus/Arduino_ESP8266SPI.h"
