@@ -7,7 +7,7 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_ESP32PAR8.h"
 
-// #define SET_DATA_AND_WR_AT_THE_SAME_TIME
+#define SET_DATA_AND_WR_AT_THE_SAME_TIME
 
 Arduino_ESP32PAR8::Arduino_ESP32PAR8(
     int8_t dc, int8_t cs, int8_t wr, int8_t rd,
