@@ -117,16 +117,12 @@ void loop()
   {
     next_show_millis = ((millis() / 60000L) + 1) * 60000L; // next minute
     printf("[HTTP] begin...\n");
-#if defined(ESP32)
-    http.begin(client, HTTP_HOST, HTTP_PORT, http_path);
-#elif defined(ESP8266)
+#if defined(ESP32) || defined(ESP8266)
     http.begin(client, HTTP_HOST, HTTP_PORT, http_path);
 #endif
     http.setTimeout(HTTP_TIMEOUT);
     printf("[HTTP] GET...\n");
-#if defined(ESP32)
-    int httpCode = http.GET();
-#elif defined(ESP8266)
+#if defined(ESP32) || defined(ESP8266)
     int httpCode = http.GET();
 #elif defined(RTL8722DM)
     http.get(HTTP_HOST, HTTP_PORT, http_path);
@@ -150,9 +146,7 @@ void loop()
       else
       {
         // get lenght of document(is - 1 when Server sends no Content - Length header)
-#if defined(ESP32)
-        int len = http.getSize();
-#elif defined(ESP8266)
+#if defined(ESP32) || defined(ESP8266)
         int len = http.getSize();
 #elif defined(RTL8722DM)
         int len = http.contentLength();
@@ -167,23 +161,13 @@ void loop()
         {
           unsigned long start = millis();
           // get tcp stream
-#if defined(ESP32)
-          WiFiClient *http_stream = http.getStreamPtr();
-          jpegDec.prepare(http_stream_reader, http_stream);
-#elif defined(ESP8266)
-          WiFiClient *http_stream = http.getStreamPtr();
-          jpegDec.prepare(http_stream_reader, http_stream);
-#elif defined(RTL8722DM)
           jpegDec.prepare(http_stream_reader, &client);
-#endif
           jpegDec.decode(JPG_SCALE_NONE, jpegDec.gfx_writer, gfx);
           printf("Time used: %d\n", millis() - start);
         }
       }
     }
-#if defined(ESP32)
-    http.end();
-#elif defined(ESP8266)
+#if defined(ESP32) || defined(ESP8266)
     http.end();
 #elif defined(RTL8722DM)
     http.stop();
