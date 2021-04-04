@@ -6,8 +6,6 @@
 #ifndef _ARDUINO_ESP32PAR8_H_
 #define _ARDUINO_ESP32PAR8_H_
 
-typedef volatile uint32_t *PORTreg_t; ///< PORT register type
-
 #include "Arduino_DataBus.h"
 
 class Arduino_ESP32PAR8 : public Arduino_DataBus

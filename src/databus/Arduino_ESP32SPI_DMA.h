@@ -8,8 +8,6 @@
 
 #include <driver/spi_master.h>
 
-typedef volatile uint32_t *PORTreg_t; ///< PORT register type
-
 #include "Arduino_DataBus.h"
 
 #define MAX_TRANSFER_SZ (480 * 2 * 9) // size should able divisible by 32
