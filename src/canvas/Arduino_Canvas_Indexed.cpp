@@ -5,6 +5,8 @@
 #include "../Arduino_GFX.h"
 #include "Arduino_Canvas_Indexed.h"
 
+#include <unordered_map>
+
 Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *output, int16_t output_x, int16_t output_y, uint8_t mask_level)
     : Arduino_GFX(w, h), _output(output), _output_x(output_x), _output_y(output_y)
 {
@@ -14,6 +16,7 @@ Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *
     }
     _current_mask_level = mask_level;
     _color_mask = mask_level_list[_current_mask_level];
+    _color_to_index_map.
 }
 
 void Arduino_Canvas_Indexed::begin(int32_t speed)
@@ -129,18 +132,17 @@ void Arduino_Canvas_Indexed::flush()
 uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)
 {
     color &= _color_mask;
-    for (uint8_t i = 0; i < _indexed_size; i++)
-    {
-        if (_color_index[i] == color)
-        {
-            return i;
-        }
-    }
+
+    auto itr = _color_to_index_map.find(color);
+    if(itr != _color_to_index_map.end())
+        return _color_to_index_map[color];
+
     if (_indexed_size == (COLOR_IDX_SIZE - 1)) // overflowed
     {
         raise_mask_level();
     }
     _color_index[_indexed_size] = color;
+    _color_to_index_map[color] = _indexed_size;
     // Serial.print("color_index[");
     // Serial.print(_indexed_size);
     // Serial.print("] = ");
@@ -160,22 +162,27 @@ void Arduino_Canvas_Indexed::raise_mask_level()
         int32_t buffer_size = _width * _height;
         uint8_t old_indexed_size = _indexed_size;
         uint8_t new_color;
+        uint8_t old_to_new_color[sizeof(uint8_t) * 8];   // size 256
         _indexed_size = 0;
         _color_mask = mask_level_list[++_current_mask_level];
         Serial.print("Raised mask level: ");
         Serial.println(_current_mask_level);
 
-        // update _framebuffer color index, it is a time consuming job
+        // update _framebuffer color index, it is (was?) a time consuming job
         for (uint8_t old_color = 0; old_color < old_indexed_size; old_color++)
         {
-            new_color = get_color_index(_color_index[old_color]);
-            for (int32_t i = 0; i < buffer_size; i++)
-            {
-                if (_framebuffer[i] == old_color)
-                {
-                    _framebuffer[i] = new_color;
-                }
-            }
+            uint16_t old_color_indexing = _color_index[old_color];
+            
+            _color_to_index_map.erase(old_color_indexing);      //remove the color with old mask
+            new_color = get_color_index(old_color_indexing);    //insert color with new mask
+            
+            old_to_new_color[old_color] = new_color;            
+        }
+
+        for (int i = 0; i < buffer_size; i++)
+        {
+            old_color = _framebuffer[i];
+            _framebuffer[i] = old_to_new_color[old_color];
         }
     }
 }

@@ -5,7 +5,8 @@
 #ifndef _Arduino_CANVAS_INDEXED_H_
 #define _Arduino_CANVAS_INDEXED_H_
 
-#include "../Arduino_GFX.h"
+#include "Arduino_GFX.h"
+#include <unordered_map>
 
 #define COLOR_IDX_SIZE 256
 
@@ -29,6 +30,7 @@ protected:
   Arduino_G *_output;
   int16_t _output_x, _output_y;
   uint16_t _color_index[COLOR_IDX_SIZE];
+  std::unordered_map<uint16_t, uint8_t> _color_to_index_map(COLOR_IDX_SIZE);
   uint8_t _indexed_size = 0;
   uint8_t _current_mask_level;
   uint16_t _color_mask;
