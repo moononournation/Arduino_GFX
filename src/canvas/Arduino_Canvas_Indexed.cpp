@@ -16,7 +16,6 @@ Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *
     }
     _current_mask_level = mask_level;
     _color_mask = mask_level_list[_current_mask_level];
-    _color_to_index_map.
 }
 
 void Arduino_Canvas_Indexed::begin(int32_t speed)
@@ -172,7 +171,7 @@ void Arduino_Canvas_Indexed::raise_mask_level()
         for (uint8_t old_color = 0; old_color < old_indexed_size; old_color++)
         {
             uint16_t old_color_indexing = _color_index[old_color];
-            
+
             _color_to_index_map.erase(old_color_indexing);      //remove the color with old mask
             new_color = get_color_index(old_color_indexing);    //insert color with new mask
             

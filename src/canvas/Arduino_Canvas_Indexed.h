@@ -5,7 +5,7 @@
 #ifndef _Arduino_CANVAS_INDEXED_H_
 #define _Arduino_CANVAS_INDEXED_H_
 
-#include "Arduino_GFX.h"
+#include "../Arduino_GFX.h"
 #include <unordered_map>
 
 #define COLOR_IDX_SIZE 256
