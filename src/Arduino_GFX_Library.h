@@ -26,7 +26,7 @@
 #include "display/Arduino_HX8357B.h"
 #include "display/Arduino_ILI9225.h"
 #include "display/Arduino_ILI9341.h"
-#include "display/Arduino_ILI9341_M5STACK.h"
+#include "display/Arduino_ILI9342.h"
 #include "display/Arduino_ILI9481_18bit.h"
 #include "display/Arduino_ILI9486_18bit.h"
 #include "display/Arduino_ILI9488_18bit.h"

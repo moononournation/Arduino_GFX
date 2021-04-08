@@ -44,7 +44,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 1 /* rotation */);
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 // #define TFT_BL 32
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
-Arduino_GFX *gfx = new Arduino_ILI9341_M5STACK(bus, 33 /* RST */, 1 /* rotation */);
+Arduino_GFX *gfx = new Arduino_ILI9342(bus, 33 /* RST */, 0 /* rotation */);
 
 /* Odroid-Go */
 #elif defined(ARDUINO_ODROID_ESP32)

@@ -19,7 +19,7 @@ Arduino_GFX *create_default_Arduino_GFX()
 #if defined(WIO_TERMINAL)
     return new Arduino_ILI9341(bus, TFT_RST, 1 /* rotation */);
 #elif defined(M5STACK_CORE)
-    return new Arduino_ILI9341_M5STACK(bus, TFT_RST, 1 /* rotation */);
+    return new Arduino_ILI9342(bus, TFT_RST, 0 /* rotation */);
 #elif defined(ODROID_GO)
     return new Arduino_ILI9341(bus, TFT_RST, 3 /* rotation */);
 #elif defined(TTGO_T_WATCH)
