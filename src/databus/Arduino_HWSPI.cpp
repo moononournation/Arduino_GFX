@@ -333,8 +333,8 @@ void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
   while (len--)
   {
     pixel = *data++;
-    WRITE(twoBytes[0]);
     WRITE(twoBytes[1]);
+    WRITE(twoBytes[0]);
   }
 #endif // !defined(ESP32)
 }
