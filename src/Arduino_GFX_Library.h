@@ -86,6 +86,11 @@
 #define TFT_DC 8
 #define TFT_RST 7
 #define TFT_BL 6
+#elif defined(ARDUINO_BLACKPILL_F411CE)
+#define TFT_CS 4
+#define TFT_DC 3
+#define TFT_RST 2
+#define TFT_BL 1
 #elif defined(ESP32)
 #define TFT_SCK 18
 #define TFT_MOSI 23

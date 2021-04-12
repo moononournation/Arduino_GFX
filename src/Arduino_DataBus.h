@@ -23,8 +23,9 @@ typedef uint32_t ARDUINOGFX_PORT_t;
 #define ESP8266SAFEBATCHBITSIZE (2048 * 8 * 9)
 #define USE_FAST_PINIO ///< Use direct PORT register access
 typedef uint32_t ARDUINOGFX_PORT_t;
-#elif defined(ARDUINO_STM32_FEATHER)
-// TODO: fast pin IO?
+#elif defined(ARDUINO_ARCH_STM32)
+#define USE_FAST_PINIO ///< Use direct PORT register access
+typedef uint32_t ARDUINOGFX_PORT_t;
 #elif defined(__arm__)
 #if defined(ARDUINO_ARCH_SAMD)
 // Adafruit M0, M4
@@ -81,6 +82,8 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #define SPI_DEFAULT_FREQ 80000000
 #elif defined(ARDUINO_ARCH_STM32F1)
 #define SPI_DEFAULT_FREQ 36000000
+#elif defined(ARDUINO_BLACKPILL_F411CE)
+#define SPI_DEFAULT_FREQ 50000000
 #else
 #define SPI_DEFAULT_FREQ 24000000 ///< Default SPI data clock frequency
 #endif

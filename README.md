@@ -78,6 +78,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - ESP8266 Series
 - ESP32 Series
 - rtlduino
+- WeAct BlackPill V2.0 (BlackPill F411CE)
 
 ## Tobe Support Dev Board
 - Arduino ATMega2560

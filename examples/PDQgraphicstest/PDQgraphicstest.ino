@@ -61,17 +61,18 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 
 #else /* not selected specific hardware */
 
-#if defined(ESP32)
-#define TFT_CS 5
-// #define TFT_CS -1 // for display without CS pin
-// #define TFT_DC 16
-#define TFT_DC 27
-// #define TFT_DC -1 // for display without DC pin (9-bit SPI)
-// #define TFT_RST 17
+#if defined(ARDUINO_BLACKPILL_F411CE)
+#define TFT_CS 4 // -1 for display without CS pin
+#define TFT_DC 3
+#define TFT_RST 2
+#define TFT_BL 1
+#elif defined(ESP32)
+#define TFT_CS 5 // -1 for display without CS pin
+#define TFT_DC 27 // -1 for display without DC pin (9-bit SPI)
 #define TFT_RST 33
 #define TFT_BL 22
 #elif defined(ESP8266)
-#define TFT_CS 15
+#define TFT_CS 15 // -1 for display without CS pin
 #define TFT_DC 4
 #define TFT_RST 2
 #define TFT_BL 5
@@ -81,7 +82,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 #define TFT_RST 22
 #define TFT_BL 23
 #else
-#define TFT_CS 9
+#define TFT_CS 9 // -1 for display without CS pin
 #define TFT_DC 8
 #define TFT_RST 7
 #define TFT_BL 6
