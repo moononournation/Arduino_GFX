@@ -240,6 +240,16 @@ void Arduino_HWSPI::beginWrite()
   CS_LOW();
 }
 
+void Arduino_HWSPI::endWrite()
+{
+  CS_HIGH();
+
+  if (_is_shared_interface)
+  {
+    SPI_END_TRANSACTION();
+  }
+}
+
 void Arduino_HWSPI::writeCommand(uint8_t c)
 {
   DC_LOW();
@@ -268,16 +278,6 @@ void Arduino_HWSPI::write16(uint16_t d)
   WRITE(d >> 8);
   WRITE(d);
 #endif
-}
-
-void Arduino_HWSPI::endWrite()
-{
-  CS_HIGH();
-
-  if (_is_shared_interface)
-  {
-    SPI_END_TRANSACTION();
-  }
 }
 
 void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
@@ -349,11 +349,6 @@ void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
 #endif // !(defined(ESP8266) || defined(ESP32))
 }
 
-/**
- * @param data uint8_t *
- * @param len uint8_t
- * @param repeat uint32_t
- */
 void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
 #if defined(ESP8266) || defined(ESP32)
@@ -387,6 +382,40 @@ INLINE void Arduino_HWSPI::WRITE(uint8_t d)
 }
 
 /******** low level bit twiddling **********/
+
+INLINE void Arduino_HWSPI::DC_HIGH(void)
+{
+#if defined(USE_FAST_PINIO)
+#if defined(HAS_PORT_SET_CLR)
+#if defined(KINETISK)
+  *_dcPortSet = 1;
+#else  // !KINETISK
+  *_dcPortSet = _dcPinMask;
+#endif // end !KINETISK
+#else  // !HAS_PORT_SET_CLR
+  *_dcPort |= _dcPinMaskSet;
+#endif // end !HAS_PORT_SET_CLR
+#else  // !USE_FAST_PINIO
+  digitalWrite(_dc, HIGH);
+#endif // end !USE_FAST_PINIO
+}
+
+INLINE void Arduino_HWSPI::DC_LOW(void)
+{
+#if defined(USE_FAST_PINIO)
+#if defined(HAS_PORT_SET_CLR)
+#if defined(KINETISK)
+  *_dcPortClr = 1;
+#else  // !KINETISK
+  *_dcPortClr = _dcPinMask;
+#endif // end !KINETISK
+#else  // !HAS_PORT_SET_CLR
+  *_dcPort &= _dcPinMaskClr;
+#endif // end !HAS_PORT_SET_CLR
+#else  // !USE_FAST_PINIO
+  digitalWrite(_dc, LOW);
+#endif // end !USE_FAST_PINIO
+}
 
 INLINE void Arduino_HWSPI::CS_HIGH(void)
 {
@@ -426,38 +455,4 @@ INLINE void Arduino_HWSPI::CS_LOW(void)
     digitalWrite(_cs, LOW);
 #endif // end !USE_FAST_PINIO
   }
-}
-
-INLINE void Arduino_HWSPI::DC_HIGH(void)
-{
-#if defined(USE_FAST_PINIO)
-#if defined(HAS_PORT_SET_CLR)
-#if defined(KINETISK)
-  *_dcPortSet = 1;
-#else  // !KINETISK
-  *_dcPortSet = _dcPinMask;
-#endif // end !KINETISK
-#else  // !HAS_PORT_SET_CLR
-  *_dcPort |= _dcPinMaskSet;
-#endif // end !HAS_PORT_SET_CLR
-#else  // !USE_FAST_PINIO
-  digitalWrite(_dc, HIGH);
-#endif // end !USE_FAST_PINIO
-}
-
-INLINE void Arduino_HWSPI::DC_LOW(void)
-{
-#if defined(USE_FAST_PINIO)
-#if defined(HAS_PORT_SET_CLR)
-#if defined(KINETISK)
-  *_dcPortClr = 1;
-#else  // !KINETISK
-  *_dcPortClr = _dcPinMask;
-#endif // end !KINETISK
-#else  // !HAS_PORT_SET_CLR
-  *_dcPort &= _dcPinMaskClr;
-#endif // end !HAS_PORT_SET_CLR
-#else  // !USE_FAST_PINIO
-  digitalWrite(_dc, LOW);
-#endif // end !USE_FAST_PINIO
 }

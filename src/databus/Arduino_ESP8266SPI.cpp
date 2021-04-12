@@ -95,56 +95,12 @@ void Arduino_ESP8266SPI::write16(uint16_t d)
   WRITE16(d);
 }
 
-void Arduino_ESP8266SPI::writeC8D8(uint8_t c, uint8_t d)
-{
-  DC_LOW();
-
-  WRITE(c);
-
-  DC_HIGH();
-
-  WRITE(d);
-}
-
-void Arduino_ESP8266SPI::writeC8D16(uint8_t c, uint16_t d)
-{
-  DC_LOW();
-
-  WRITE(c);
-
-  DC_HIGH();
-
-  WRITE16(d);
-}
-
-void Arduino_ESP8266SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
-{
-  DC_LOW();
-
-  WRITE(c);
-
-  DC_HIGH();
-
-  uint32_t d;
-  MSB_32_16_16_SET(d, d1, d2);
-
-  SPI1U1 = (31 << SPILMOSI);
-  SPI1W0 = d;
-  SPI1CMD |= SPIBUSY;
-  WAIT_SPI_NOT_BUSY;
-}
-
 void Arduino_ESP8266SPI::writeRepeat(uint16_t p, uint32_t len)
 {
   static uint8_t temp[2];
   temp[0] = p >> 8;
   temp[1] = p & 0xFF;
   SPI.writePattern((uint8_t *)temp, 2, len);
-}
-
-void Arduino_ESP8266SPI::writeBytes(uint8_t *data, uint32_t len)
-{
-  SPI.writeBytes(data, len);
 }
 
 void Arduino_ESP8266SPI::writePixels(uint16_t *data, uint32_t len)
@@ -208,11 +164,50 @@ void Arduino_ESP8266SPI::writePixels(uint16_t *data, uint32_t len)
   WAIT_SPI_NOT_BUSY;
 }
 
-/**
- * @param data uint8_t *
- * @param len uint8_t
- * @param repeat uint32_t
- */
+void Arduino_ESP8266SPI::writeC8D8(uint8_t c, uint8_t d)
+{
+  DC_LOW();
+
+  WRITE(c);
+
+  DC_HIGH();
+
+  WRITE(d);
+}
+
+void Arduino_ESP8266SPI::writeC8D16(uint8_t c, uint16_t d)
+{
+  DC_LOW();
+
+  WRITE(c);
+
+  DC_HIGH();
+
+  WRITE16(d);
+}
+
+void Arduino_ESP8266SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
+{
+  DC_LOW();
+
+  WRITE(c);
+
+  DC_HIGH();
+
+  uint32_t d;
+  MSB_32_16_16_SET(d, d1, d2);
+
+  SPI1U1 = (31 << SPILMOSI);
+  SPI1W0 = d;
+  SPI1CMD |= SPIBUSY;
+  WAIT_SPI_NOT_BUSY;
+}
+
+void Arduino_ESP8266SPI::writeBytes(uint8_t *data, uint32_t len)
+{
+  SPI.writeBytes(data, len);
+}
+
 void Arduino_ESP8266SPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
   SPI.writePattern(data, len, repeat);
@@ -360,6 +355,16 @@ INLINE void Arduino_ESP8266SPI::WRITE16(uint16_t d)
 
 /******** low level bit twiddling **********/
 
+INLINE void Arduino_ESP8266SPI::DC_HIGH(void)
+{
+  *_dcPort |= _dcPinMaskSet;
+}
+
+INLINE void Arduino_ESP8266SPI::DC_LOW(void)
+{
+  *_dcPort &= _dcPinMaskClr;
+}
+
 INLINE void Arduino_ESP8266SPI::CS_HIGH(void)
 {
   if (_cs >= 0)
@@ -374,16 +379,6 @@ INLINE void Arduino_ESP8266SPI::CS_LOW(void)
   {
     *_csPort &= _csPinMaskClr;
   }
-}
-
-INLINE void Arduino_ESP8266SPI::DC_HIGH(void)
-{
-  *_dcPort |= _dcPinMaskSet;
-}
-
-INLINE void Arduino_ESP8266SPI::DC_LOW(void)
-{
-  *_dcPort &= _dcPinMaskClr;
 }
 
 #endif // ESP8266

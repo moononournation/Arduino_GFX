@@ -20,27 +20,28 @@ public:
 
   void begin(int32_t speed = 0, int8_t dataMode = -1) override;
   void beginWrite() override;
+  void endWrite() override;
   void writeCommand(uint8_t) override;
   void writeCommand16(uint16_t) override;
   void write(uint8_t) override;
   void write16(uint16_t) override;
+  void writeRepeat(uint16_t p, uint32_t len) override;
+  void writePixels(uint16_t *data, uint32_t len) override;
+
   void writeC8D8(uint8_t c, uint8_t d) override;
   void writeC8D16(uint8_t c, uint16_t d) override;
   void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2) override;
-  void writeRepeat(uint16_t p, uint32_t len) override;
   void writeBytes(uint8_t *data, uint32_t len) override;
-  void writePixels(uint16_t *data, uint32_t len) override;
   void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
-  void endWrite() override;
 
 private:
   INLINE void WRITE(uint8_t d);
   INLINE void WRITE16(uint16_t d);
   INLINE void WRITEBUF(uint8_t *buf, size_t count);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
   INLINE void DC_HIGH(void);
   INLINE void DC_LOW(void);
+  INLINE void CS_HIGH(void);
+  INLINE void CS_LOW(void);
 
   int8_t _dc, _cs;
   int8_t _sck, _mosi, _miso;

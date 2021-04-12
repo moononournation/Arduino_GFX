@@ -215,6 +215,11 @@ void Arduino_ESP32PAR16::beginWrite()
   CS_LOW();
 }
 
+void Arduino_ESP32PAR16::endWrite()
+{
+  CS_HIGH();
+}
+
 void Arduino_ESP32PAR16::writeCommand(uint8_t c)
 {
   DC_LOW();
@@ -242,6 +247,25 @@ void Arduino_ESP32PAR16::write(uint8_t d)
 void Arduino_ESP32PAR16::write16(uint16_t d)
 {
   WRITE16(d);
+}
+
+void Arduino_ESP32PAR16::writeRepeat(uint16_t p, uint32_t len)
+{
+  uint32_t d = xset_mask_hi[p >> 8] | xset_mask_lo[p & 0xff];
+  while (len--)
+  {
+    *dataPortClr = dataClrMask;
+    *dataPortSet = d;
+  }
+}
+
+void Arduino_ESP32PAR16::writePixels(uint16_t *data, uint32_t len)
+{
+  while (len--)
+  {
+    uint16_t d = *data++;
+    WRITE16(d);
+  }
 }
 
 void Arduino_ESP32PAR16::writeC8D8(uint8_t c, uint8_t d)
@@ -281,21 +305,6 @@ void Arduino_ESP32PAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   WRITE(d2);
 }
 
-void Arduino_ESP32PAR16::endWrite()
-{
-  CS_HIGH();
-}
-
-void Arduino_ESP32PAR16::writeRepeat(uint16_t p, uint32_t len)
-{
-  uint32_t d = xset_mask_hi[p >> 8] | xset_mask_lo[p & 0xff];
-  while (len--)
-  {
-    *dataPortClr = dataClrMask;
-    *dataPortSet = d;
-  }
-}
-
 void Arduino_ESP32PAR16::writeBytes(uint8_t *data, uint32_t len)
 {
   while (len--)
@@ -304,20 +313,6 @@ void Arduino_ESP32PAR16::writeBytes(uint8_t *data, uint32_t len)
   }
 }
 
-void Arduino_ESP32PAR16::writePixels(uint16_t *data, uint32_t len)
-{
-  while (len--)
-  {
-    uint16_t d = *data++;
-    WRITE16(d);
-  }
-}
-
-/**
- * @param data uint8_t *
- * @param len uint8_t
- * @param repeat uint32_t
- */
 void Arduino_ESP32PAR16::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
   while (repeat--)
@@ -325,8 +320,6 @@ void Arduino_ESP32PAR16::writePattern(uint8_t *data, uint8_t len, uint32_t repea
     writeBytes(data, len);
   }
 }
-
-/******** low level bit twiddling **********/
 
 INLINE void Arduino_ESP32PAR16::WRITE(uint8_t d)
 {
@@ -339,6 +332,8 @@ INLINE void Arduino_ESP32PAR16::WRITE16(uint16_t d)
   *dataPortClr = dataClrMask;
   *dataPortSet = xset_mask_hi[d >> 8] | xset_mask_lo[d & 0xff];
 }
+
+/******** low level bit twiddling **********/
 
 INLINE void Arduino_ESP32PAR16::DC_HIGH(void)
 {

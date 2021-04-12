@@ -14,13 +14,13 @@ public:
 
   void begin(int32_t speed = 0, int8_t dataMode = -1) override;
   void beginWrite() override;
+  void endWrite() override;
   void writeCommand(uint8_t) override;
   void writeCommand16(uint16_t) override;
   void write(uint8_t) override;
   void write16(uint16_t) override;
   void writeRepeat(uint16_t p, uint32_t len) override;
   void writePixels(uint16_t *data, uint32_t len) override;
-  void endWrite() override;
 
 #if !defined(LITTLE_FOOT_PRINT)
   void writeBytes(uint8_t *data, uint32_t len) override;
@@ -34,10 +34,10 @@ private:
   INLINE void WRITE16(uint16_t d);
   INLINE void WRITE9BITREPEAT(uint16_t p, uint32_t len);
   INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
   INLINE void DC_HIGH(void);
   INLINE void DC_LOW(void);
+  INLINE void CS_HIGH(void);
+  INLINE void CS_LOW(void);
   INLINE void SPI_MOSI_HIGH(void);
   INLINE void SPI_MOSI_LOW(void);
   INLINE void SPI_SCK_HIGH(void);
