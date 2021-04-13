@@ -97,9 +97,10 @@ void Arduino_ESP8266SPI::write16(uint16_t d)
 
 void Arduino_ESP8266SPI::writeRepeat(uint16_t p, uint32_t len)
 {
+  _data16.value = p;
   static uint8_t temp[2];
-  temp[0] = p >> 8;
-  temp[1] = p & 0xFF;
+  temp[0] = _data16.msb;
+  temp[1] = _data16.lsb;
   SPI.writePattern((uint8_t *)temp, 2, len);
 }
 
@@ -221,7 +222,7 @@ void Arduino_ESP8266SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32
   if (len > 31)
   {
     SPI1U1 = (511 << SPILMOSI);
-  
+
     while (len > 31)
     {
       i = 0;

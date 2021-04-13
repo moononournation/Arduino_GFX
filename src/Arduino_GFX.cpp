@@ -1499,14 +1499,15 @@ void Arduino_GFX::draw16bitBeRGBBitmap(int16_t x, int16_t y,
                                        uint16_t *bitmap, int16_t w, int16_t h)
 {
     int32_t offset = 0;
-    uint16_t bEpixel;
+    uint16_t p;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
     {
         for (int16_t i = 0; i < w; i++)
         {
-            bEpixel = bitmap[offset++];
-            writePixel(x + i, y, (bEpixel >> 8) | (bEpixel << 8));
+            p = bitmap[offset++];
+            MSB_16_SET(p, p);
+            writePixel(x + i, y, p);
         }
     }
     endWrite();

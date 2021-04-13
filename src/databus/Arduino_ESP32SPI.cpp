@@ -292,8 +292,9 @@ void Arduino_ESP32SPI::writeCommand16(uint16_t c)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    WRITE9BIT(c >> 8);
-    WRITE9BIT(c & 0xff);
+    _data16.value = c;
+    WRITE9BIT(_data16.msb);
+    WRITE9BIT(_data16.lsb);
   }
   else
   {
@@ -328,15 +329,16 @@ void Arduino_ESP32SPI::write(uint8_t d)
 
 void Arduino_ESP32SPI::write16(uint16_t d)
 {
+  _data16.value = d;
   if (_dc < 0) // 9-bit SPI
   {
-    WRITE9BIT(0x100 | (d >> 8));
-    WRITE9BIT(0x100 | (d & 0xff));
+    WRITE9BIT(0x100 | _data16.msb);
+    WRITE9BIT(0x100 | _data16.lsb);
   }
   else
   {
-    WRITE8BIT(d >> 8);
-    WRITE8BIT(d);
+    WRITE8BIT(_data16.msb);
+    WRITE8BIT(_data16.lsb);
   }
 }
 
@@ -349,8 +351,9 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
 
   if (_dc < 0) // 9-bit SPI
   {
-    uint32_t hi = 0x100 | (p >> 8);
-    uint32_t lo = 0x100 | (p & 0xff);
+    _data16.value = p;
+    uint32_t hi = 0x100 | _data16.msb;
+    uint32_t lo = 0x100 | _data16.lsb;
     uint16_t idx;
     uint8_t shift;
     uint32_t l;
@@ -559,8 +562,9 @@ void Arduino_ESP32SPI::writeC8D16(uint8_t c, uint16_t d)
   if (_dc < 0) // 9-bit SPI
   {
     WRITE9BIT(c);
-    WRITE9BIT(0x100 | (d >> 8));
-    WRITE9BIT(0x100 | (d & 0xff));
+    _data16.value = d;
+    WRITE9BIT(0x100 | _data16.msb);
+    WRITE9BIT(0x100 | _data16.lsb);
   }
   else
   {
@@ -592,10 +596,12 @@ void Arduino_ESP32SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   if (_dc < 0) // 9-bit SPI
   {
     WRITE9BIT(c);
-    WRITE9BIT(0x100 | (d1 >> 8));
-    WRITE9BIT(0x100 | (d1 & 0xff));
-    WRITE9BIT(0x100 | (d2 >> 8));
-    WRITE9BIT(0x100 | (d2 & 0xff));
+    _data16.value = d1;
+    WRITE9BIT(0x100 | _data16.msb);
+    WRITE9BIT(0x100 | _data16.lsb);
+    _data16.value = d2;
+    WRITE9BIT(0x100 | _data16.msb);
+    WRITE9BIT(0x100 | _data16.lsb);
   }
   else
   {
@@ -760,16 +766,16 @@ void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, ui
   uint16_t p;
   if (_dc < 0) // 9-bit SPI
   {
-    p = idx[*data++];
-    uint8_t hi, lo;
+    uint16_t hi, lo;
     while (len--)
     {
-      hi = p >> 8;
-      lo = p;
-      write(hi);
-      write(lo);
-      write(hi);
-      write(lo);
+      _data16.value = idx[*data++];
+      hi = 0x100 | _data16.msb;
+      lo = 0x100 | _data16.lsb;
+      WRITE9BIT(hi);
+      WRITE9BIT(lo);
+      WRITE9BIT(hi);
+      WRITE9BIT(lo);
     }
   }
   else // 8-bit SPI

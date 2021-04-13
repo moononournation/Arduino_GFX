@@ -264,9 +264,9 @@ void Arduino_HWSPI::writeCommand16(uint16_t c)
   DC_LOW();
 
 #if defined(LITTLE_FOOT_PRINT)
-  _value.v16 = c;
-  WRITE(_value.v8[1]);
-  WRITE(_value.v8[0]);
+  _data16.value = c;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 #else  // !defined(LITTLE_FOOT_PRINT)
   WRITE16(c);
 #endif // !defined(LITTLE_FOOT_PRINT)
@@ -282,9 +282,9 @@ void Arduino_HWSPI::write(uint8_t d)
 void Arduino_HWSPI::write16(uint16_t d)
 {
 #if defined(LITTLE_FOOT_PRINT)
-  _value.v16 = d;
-  WRITE(_value.v8[1]);
-  WRITE(_value.v8[0]);
+  _data16.value = d;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 #else  // !defined(LITTLE_FOOT_PRINT)
   WRITE16(d);
 #endif // !defined(LITTLE_FOOT_PRINT)
@@ -293,11 +293,11 @@ void Arduino_HWSPI::write16(uint16_t d)
 void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
 {
 #if defined(LITTLE_FOOT_PRINT)
-  _value.v16 = p;
+  _data16.value = p;
   while (len--)
   {
-    WRITE(_value.v8[1]);
-    WRITE(_value.v8[0]);
+    WRITE(_data16.msb);
+    WRITE(_data16.lsb);
   }
 #else  // !defined(LITTLE_FOOT_PRINT)
   MSB_16_SET(p, p);
@@ -323,9 +323,9 @@ void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 #if defined(LITTLE_FOOT_PRINT)
   while (len--)
   {
-    _value.v16 = *data++;
-    WRITE(_value.v8[1]);
-    WRITE(_value.v8[0]);
+    _data16.value = *data++;
+    WRITE(_data16.msb);
+    WRITE(_data16.lsb);
   }
 #else  // !defined(LITTLE_FOOT_PRINT)
   uint32_t xferLen;

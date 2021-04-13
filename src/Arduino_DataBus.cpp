@@ -113,17 +113,13 @@ void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t 
 void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   uint8_t *d = data;
-  uint16_t p;
-  uint8_t hi, lo;
   while (len--)
   {
-    p = idx[*(d++)];
-    hi = p >> 8;
-    lo = p;
-    write(hi);
-    write(lo);
-    write(hi);
-    write(lo);
+    _data16.value = idx[*(d++)];
+    write(_data16.msb);
+    write(_data16.lsb);
+    write(_data16.msb);
+    write(_data16.lsb);
   }
 }
 #endif // !defined(LITTLE_FOOT_PRINT)

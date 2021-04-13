@@ -233,8 +233,9 @@ void Arduino_ESP32PAR16::writeCommand16(uint16_t c)
 {
   DC_LOW();
 
-  WRITE(c >> 8);
-  WRITE(c);
+  _data16.value = c;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 
   DC_HIGH();
 }
@@ -251,7 +252,8 @@ void Arduino_ESP32PAR16::write16(uint16_t d)
 
 void Arduino_ESP32PAR16::writeRepeat(uint16_t p, uint32_t len)
 {
-  uint32_t d = xset_mask_hi[p >> 8] | xset_mask_lo[p & 0xff];
+  _data16.value = p;
+  uint32_t d = xset_mask_hi[_data16.msb] | xset_mask_lo[_data16.lsb];
   while (len--)
   {
     *dataPortClr = dataClrMask;
@@ -287,8 +289,9 @@ void Arduino_ESP32PAR16::writeC8D16(uint8_t c, uint16_t d)
 
   DC_HIGH();
 
-  WRITE(d >> 8);
-  WRITE(d);
+  _data16.value = d;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 }
 
 void Arduino_ESP32PAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
@@ -299,10 +302,12 @@ void Arduino_ESP32PAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
   DC_HIGH();
 
-  WRITE(d1 >> 8);
-  WRITE(d1);
-  WRITE(d2 >> 8);
-  WRITE(d2);
+  _data16.value = d1;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
+  _data16.value = d2;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 }
 
 void Arduino_ESP32PAR16::writeBytes(uint8_t *data, uint32_t len)
@@ -330,7 +335,8 @@ INLINE void Arduino_ESP32PAR16::WRITE(uint8_t d)
 INLINE void Arduino_ESP32PAR16::WRITE16(uint16_t d)
 {
   *dataPortClr = dataClrMask;
-  *dataPortSet = xset_mask_hi[d >> 8] | xset_mask_lo[d & 0xff];
+  _data16.value = d;
+  *dataPortSet = xset_mask_hi[_data16.msb] | xset_mask_lo[_data16.lsb];
 }
 
 /******** low level bit twiddling **********/

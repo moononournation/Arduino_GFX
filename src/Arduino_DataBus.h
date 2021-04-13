@@ -9,7 +9,7 @@
 
 #if defined(__AVR__)
 #define LITTLE_FOOT_PRINT // reduce program size for limited flash MCU
-#define USE_FAST_PINIO ///< Use direct PORT register access
+#define USE_FAST_PINIO    ///< Use direct PORT register access
 typedef uint8_t ARDUINOGFX_PORT_t;
 #elif defined(ARDUINO_ARCH_NRF52840)
 #define USE_FAST_PINIO   ///< Use direct PORT register access
@@ -33,7 +33,7 @@ typedef uint32_t ARDUINOGFX_PORT_t;
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
 typedef uint32_t ARDUINOGFX_PORT_t;
 #elif defined(RTL8722DM)
-#define USE_FAST_PINIO   ///< Use direct PORT register access
+#define USE_FAST_PINIO ///< Use direct PORT register access
 typedef uint32_t ARDUINOGFX_PORT_t;
 #elif defined(CORE_TEENSY)
 #define USE_FAST_PINIO   ///< Use direct PORT register access
@@ -164,6 +164,15 @@ public:
 protected:
     int32_t _speed;
     int8_t _dataMode;
+    union
+    {
+        uint16_t value;
+        struct
+        {
+            uint8_t lsb;
+            uint8_t msb;
+        };
+    } _data16;
 };
 
 #endif

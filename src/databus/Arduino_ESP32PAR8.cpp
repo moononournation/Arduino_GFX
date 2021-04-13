@@ -121,7 +121,7 @@ void Arduino_ESP32PAR8::begin(int32_t speed, int8_t dataMode)
   {
 #if defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
     xset_mask[c] = (1 << _wr);
-#else // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
+#else  // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
     xset_mask[c] = 0;
 #endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
     if (c & 0x01)
@@ -185,8 +185,9 @@ void Arduino_ESP32PAR8::writeCommand16(uint16_t c)
 {
   DC_LOW();
 
-  WRITE(c >> 8);
-  WRITE(c);
+  _data16.value = c;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 
   DC_HIGH();
 }
@@ -198,23 +199,25 @@ void Arduino_ESP32PAR8::write(uint8_t d)
 
 void Arduino_ESP32PAR8::write16(uint16_t d)
 {
-  WRITE(d >> 8);
-  WRITE(d);
+  _data16.value = d;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 }
 
 void Arduino_ESP32PAR8::writeRepeat(uint16_t p, uint32_t len)
 {
-  uint32_t hi = xset_mask[p >> 8];
-  uint32_t lo = xset_mask[p & 0xff];
+  _data16.value = p;
+  uint32_t hiMask = xset_mask[_data16.msb];
+  uint32_t loMask = xset_mask[_data16.lsb];
   while (len--)
   {
     *dataPortClr = dataClrMask;
-    *dataPortSet = hi;
+    *dataPortSet = hiMask;
 #if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
     *wrPortClr = wrPinMask;
 #endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
     *dataPortClr = dataClrMask;
-    *dataPortSet = lo;
+    *dataPortSet = loMask;
 #if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
     *wrPortSet = wrPinMask;
 #endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
@@ -225,9 +228,9 @@ void Arduino_ESP32PAR8::writePixels(uint16_t *data, uint32_t len)
 {
   while (len--)
   {
-    uint16_t d = *data++;
-    WRITE(d >> 8);
-    WRITE(d);
+    _data16.value = *data++;
+    WRITE(_data16.msb);
+    WRITE(_data16.lsb);
   }
 }
 
@@ -250,8 +253,9 @@ void Arduino_ESP32PAR8::writeC8D16(uint8_t c, uint16_t d)
 
   DC_HIGH();
 
-  WRITE(d >> 8);
-  WRITE(d);
+  _data16.value = d;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 }
 
 void Arduino_ESP32PAR8::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
@@ -262,10 +266,12 @@ void Arduino_ESP32PAR8::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
   DC_HIGH();
 
-  WRITE(d1 >> 8);
-  WRITE(d1);
-  WRITE(d2 >> 8);
-  WRITE(d2);
+  _data16.value = d1;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
+  _data16.value = d2;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 }
 
 void Arduino_ESP32PAR8::writeBytes(uint8_t *data, uint32_t len)

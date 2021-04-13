@@ -323,8 +323,9 @@ void Arduino_SWSPI::writeCommand16(uint16_t c)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    WRITE9BITCOMMAND(c >> 8);
-    WRITE9BITCOMMAND(c);
+    _data16.value = c;
+    WRITE9BITCOMMAND(_data16.msb);
+    WRITE9BITCOMMAND(_data16.lsb);
   }
   else
   {
@@ -350,8 +351,9 @@ void Arduino_SWSPI::write16(uint16_t d)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    WRITE9BITDATA(d >> 8);
-    WRITE9BITDATA(d);
+    _data16.value = c;
+    WRITE9BITDATA(_data16.msb);
+    WRITE9BITDATA(_data16.lsb);
   }
   else
   {
@@ -521,12 +523,11 @@ INLINE void Arduino_SWSPI::WRITE9BITREPEAT(uint16_t p, uint32_t len)
   }
   else
   {
-    uint8_t hi = p >> 8;
-    uint8_t lo = p;
+    _data16.value = p;
     while (len--)
     {
-      WRITE9BITDATA(hi);
-      WRITE9BITDATA(lo);
+      WRITE9BITDATA(_data16.msb);
+      WRITE9BITDATA(_data16.lsb);
     }
   }
 }

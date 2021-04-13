@@ -71,24 +71,18 @@ private:
 #if !defined(KINETISK)
   ARDUINOGFX_PORT_t _csPinMask; ///< Bitmask for chip select
   ARDUINOGFX_PORT_t _dcPinMask; ///< Bitmask for data/command
-#endif                         // !KINETISK
-#else                          // !HAS_PORT_SET_CLR
+#endif                          // !KINETISK
+#else                           // !HAS_PORT_SET_CLR
   PORTreg_t _csPort;               ///< PORT register for chip select
   PORTreg_t _dcPort;               ///< PORT register for data/command
   ARDUINOGFX_PORT_t _csPinMaskSet; ///< Bitmask for chip select SET (OR)
   ARDUINOGFX_PORT_t _csPinMaskClr; ///< Bitmask for chip select CLEAR (AND)
   ARDUINOGFX_PORT_t _dcPinMaskSet; ///< Bitmask for data/command SET (OR)
   ARDUINOGFX_PORT_t _dcPinMaskClr; ///< Bitmask for data/command CLEAR (AND)
-#endif                         // HAS_PORT_SET_CLR
-#endif                         // !defined(USE_FAST_PINIO)
+#endif                          // HAS_PORT_SET_CLR
+#endif                          // !defined(USE_FAST_PINIO)
 
-#if defined(LITTLE_FOOT_PRINT)
-  union
-  {
-    uint8_t v8[2];
-    uint16_t v16;
-  } _value;
-#else // !defined(LITTLE_FOOT_PRINT)
+#if !defined(LITTLE_FOOT_PRINT)
   union
   {
     uint8_t v8[SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
