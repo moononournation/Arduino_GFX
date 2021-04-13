@@ -253,15 +253,24 @@ void Arduino_HWSPI::endWrite()
 void Arduino_HWSPI::writeCommand(uint8_t c)
 {
   DC_LOW();
+
   WRITE(c);
+
   DC_HIGH();
 }
 
 void Arduino_HWSPI::writeCommand16(uint16_t c)
 {
   DC_LOW();
-  WRITE(c >> 8);
-  WRITE(c);
+
+#if defined(LITTLE_FOOT_PRINT)
+  _value.v16 = c;
+  WRITE(_value.v8[1]);
+  WRITE(_value.v8[0]);
+#else  // !defined(LITTLE_FOOT_PRINT)
+  WRITE16(c);
+#endif // !defined(LITTLE_FOOT_PRINT)
+
   DC_HIGH();
 }
 
@@ -272,81 +281,87 @@ void Arduino_HWSPI::write(uint8_t d)
 
 void Arduino_HWSPI::write16(uint16_t d)
 {
-#if defined(ESP8266) || defined(ESP32)
-  HWSPI.write16(d);
-#else
-  WRITE(d >> 8);
-  WRITE(d);
-#endif
+#if defined(LITTLE_FOOT_PRINT)
+  _value.v16 = d;
+  WRITE(_value.v8[1]);
+  WRITE(_value.v8[0]);
+#else  // !defined(LITTLE_FOOT_PRINT)
+  WRITE16(d);
+#endif // !defined(LITTLE_FOOT_PRINT)
 }
 
 void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
 {
-#if defined(ESP32)
-#define SPI_MAX_PIXELS_AT_ONCE 32
-#define TMPBUF_LONGWORDS ((SPI_MAX_PIXELS_AT_ONCE + 1) / 2)
-#define TMPBUF_PIXELS (TMPBUF_LONGWORDS * 2)
-  static uint32_t temp[TMPBUF_LONGWORDS];
-  uint32_t c32 = p * 0x00010001;
-  uint32_t bufLen = (len < TMPBUF_PIXELS) ? len : TMPBUF_PIXELS,
-           xferLen, fillLen;
-  // Fill temp buffer 32 bits at a time
-  fillLen = (bufLen + 1) / 2; // Round up to next 32-bit boundary
-  for (uint32_t t = 0; t < fillLen; t++)
-  {
-    temp[t] = c32;
-  }
-  // Issue pixels in blocks from temp buffer
-  while (len)
-  {                                          // While pixels remain
-    xferLen = (bufLen < len) ? bufLen : len; // How many this pass?
-    HWSPI.writePixels((uint16_t *)temp, xferLen * 2);
-    len -= xferLen;
-  }
-#elif defined(ESP8266)
-  static uint8_t temp[2];
-  temp[0] = p >> 8;
-  temp[1] = p & 0xFF;
-  HWSPI.writePattern((uint8_t *)temp, 2, len);
-#else
-  uint8_t hi = p >> 8, lo = p;
-
+#if defined(LITTLE_FOOT_PRINT)
+  _value.v16 = p;
   while (len--)
   {
-    write(hi);
-    write(lo);
+    WRITE(_value.v8[1]);
+    WRITE(_value.v8[0]);
   }
-#endif
+#else  // !defined(LITTLE_FOOT_PRINT)
+  MSB_16_SET(p, p);
+  uint32_t bufLen = (len < SPI_MAX_PIXELS_AT_ONCE) ? len : SPI_MAX_PIXELS_AT_ONCE;
+  uint32_t xferLen;
+  for (uint32_t i = 0; i < bufLen; i++)
+  {
+    _buffer.v16[i] = p;
+  }
+
+  while (len)
+  {
+    xferLen = (bufLen < len) ? bufLen : len;
+    len -= xferLen;
+
+    xferLen += xferLen;
+    WRITEBUF(_buffer.v8, xferLen);
+  }
+#endif // !defined(LITTLE_FOOT_PRINT)
 }
 
 void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 {
-#if defined(ESP32)
-  // don't know why require double len
-  HWSPI.writePixels(data, len * 2);
-#else  // !defined(ESP32)
-  union
-  {
-    uint16_t pixel;
-    uint8_t twoBytes[2];
-  };
+#if defined(LITTLE_FOOT_PRINT)
   while (len--)
   {
-    pixel = *data++;
-    WRITE(twoBytes[1]);
-    WRITE(twoBytes[0]);
+    _value.v16 = *data++;
+    WRITE(_value.v8[1]);
+    WRITE(_value.v8[0]);
   }
-#endif // !defined(ESP32)
+#else  // !defined(LITTLE_FOOT_PRINT)
+  uint32_t xferLen;
+  uint8_t *b;
+  union
+  {
+    uint16_t val;
+    struct
+    {
+      uint8_t lsb;
+      uint8_t msb;
+    };
+  } t;
+  while (len)
+  {
+    xferLen = (len < SPI_MAX_PIXELS_AT_ONCE) ? len : SPI_MAX_PIXELS_AT_ONCE;
+    b = _buffer.v8;
+    for (uint32_t i = 0; i < xferLen; i++)
+    {
+      t.val = *data++;
+      *b++ = t.msb;
+      *b++ = t.lsb;
+    }
+    len -= xferLen;
+
+    xferLen += xferLen; // uint16_t to uint8_t, double length
+    WRITEBUF(_buffer.v8, xferLen);
+  }
+#endif // !defined(LITTLE_FOOT_PRINT)
 }
 
 #if !defined(LITTLE_FOOT_PRINT)
 void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
 {
-#if defined(ESP8266) || defined(ESP32)
-  HWSPI.writeBytes(data, len);
-#else  // !(defined(ESP8266) || defined(ESP32))
-  HWSPI.transfer(data, len);
-#endif // !(defined(ESP8266) || defined(ESP32))
+  WRITEBUF(data, len);
 }
 
 void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
@@ -356,10 +371,7 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 #else  // !(defined(ESP8266) || defined(ESP32))
   while (repeat--)
   {
-    for (uint8_t i = 0; i < len; i++)
-    {
-      write(data[i]);
-    }
+    WRITEBUF(data, len);
   }
 #endif // !(defined(ESP8266) || defined(ESP32))
 }
@@ -380,6 +392,37 @@ INLINE void Arduino_HWSPI::WRITE(uint8_t d)
   HWSPI.transfer(d);
 #endif
 }
+
+#if !defined(LITTLE_FOOT_PRINT)
+INLINE void Arduino_HWSPI::WRITE16(uint16_t d)
+{
+#if defined(ESP8266) || defined(ESP32)
+  HWSPI.write16(d);
+#elif defined(SPI_HAS_TRANSACTION)
+  HWSPI.transfer16(d);
+#elif defined(__AVR__) || defined(CORE_TEENSY)
+  SPCRbackup = SPCR;
+  SPCR = mySPCR;
+  HWSPI.transfer16(d);
+  SPCR = SPCRbackup;
+#elif defined(__arm__)
+  HWSPI.setClockDivider(21); //4MHz
+  HWSPI.setDataMode(_dataMode);
+  HWSPI.transfer16(d);
+#else
+  HWSPI.transfer16(d);
+#endif
+}
+
+INLINE void Arduino_HWSPI::WRITEBUF(uint8_t *buf, size_t count)
+{
+#if defined(ESP8266) || defined(ESP32)
+  HWSPI.writeBytes(buf, count);
+#else  // !(defined(ESP8266) || defined(ESP32))
+  HWSPI.transfer(buf, count);
+#endif // !(defined(ESP8266) || defined(ESP32))
+}
+#endif // !defined(LITTLE_FOOT_PRINT)
 
 /******** low level bit twiddling **********/
 

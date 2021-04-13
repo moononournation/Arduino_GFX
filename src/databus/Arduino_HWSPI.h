@@ -7,6 +7,10 @@
 
 #include "Arduino_DataBus.h"
 
+#if !defined(LITTLE_FOOT_PRINT)
+#define SPI_MAX_PIXELS_AT_ONCE 32
+#endif
+
 // HARDWARE CONFIG ---------------------------------------------------------
 
 class Arduino_HWSPI : public Arduino_DataBus
@@ -35,6 +39,10 @@ public:
 
 private:
   INLINE void WRITE(uint8_t d);
+#if !defined(LITTLE_FOOT_PRINT)
+  INLINE void WRITE16(uint16_t d);
+  INLINE void WRITEBUF(uint8_t *buf, size_t count);
+#endif // !defined(LITTLE_FOOT_PRINT)
   INLINE void DC_HIGH(void);
   INLINE void DC_LOW(void);
   INLINE void CS_HIGH(void);
@@ -73,6 +81,20 @@ private:
   ARDUINOGFX_PORT_t _dcPinMaskClr; ///< Bitmask for data/command CLEAR (AND)
 #endif                         // HAS_PORT_SET_CLR
 #endif                         // !defined(USE_FAST_PINIO)
+
+#if defined(LITTLE_FOOT_PRINT)
+  union
+  {
+    uint8_t v8[2];
+    uint16_t v16;
+  } _value;
+#else // !defined(LITTLE_FOOT_PRINT)
+  union
+  {
+    uint8_t v8[SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
+    uint32_t v16[SPI_MAX_PIXELS_AT_ONCE];
+  } _buffer;
+#endif // !defined(LITTLE_FOOT_PRINT)
 };
 
 #endif // _ARDUINO_HWSPI_H_
