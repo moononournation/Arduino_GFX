@@ -299,11 +299,6 @@ void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
     WRITE(_value.v8[1]);
     WRITE(_value.v8[0]);
   }
-#elif defined(ARDUINO_ARCH_STM32)
-  while (len--)
-  {
-    WRITE16(p);
-  }
 #else  // !defined(LITTLE_FOOT_PRINT)
   MSB_16_SET(p, p);
   uint32_t xferLen;

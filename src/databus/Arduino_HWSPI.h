@@ -92,7 +92,7 @@ private:
   union
   {
     uint8_t v8[SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
-    uint32_t v16[SPI_MAX_PIXELS_AT_ONCE];
+    uint16_t v16[SPI_MAX_PIXELS_AT_ONCE];
   } _buffer;
 #endif // !defined(LITTLE_FOOT_PRINT)
 };
