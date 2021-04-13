@@ -1,5 +1,5 @@
 /*******************************************************************************
- * JPEGDEC Wrapper Class
+ * BMP Class
  * 
  * Rewrite from: https://github.com/Jaycar-Electronics/Arduino-Picture-Frame.git
  ******************************************************************************/
