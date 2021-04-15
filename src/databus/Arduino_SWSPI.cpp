@@ -351,7 +351,7 @@ void Arduino_SWSPI::write16(uint16_t d)
 {
   if (_dc < 0) // 9-bit SPI
   {
-    _data16.value = c;
+    _data16.value = d;
     WRITE9BITDATA(_data16.msb);
     WRITE9BITDATA(_data16.lsb);
   }
