@@ -214,13 +214,11 @@ void Arduino_ESP32PAR8::writeRepeat(uint16_t p, uint32_t len)
     *dataPortClr = dataClrMask;
     *dataPortSet = hiMask;
 #if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
-    *wrPortClr = wrPinMask;
     *wrPortSet = wrPinMask;
 #endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
     *dataPortClr = dataClrMask;
     *dataPortSet = loMask;
 #if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
-    *wrPortSet = wrPinMask;
     *wrPortSet = wrPinMask;
 #endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
   }
@@ -298,7 +296,6 @@ INLINE void Arduino_ESP32PAR8::WRITE(uint8_t d)
   *dataPortClr = dataClrMask;
   *dataPortSet = mask;
 #if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
-  *wrPortSet = wrPinMask;
   *wrPortSet = wrPinMask;
 #endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
 }
