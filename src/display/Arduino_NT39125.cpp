@@ -126,6 +126,7 @@ void Arduino_NT39125::tftInit()
       END_WRITE};
 
   _bus->batchOperation(NT39125_init_operations, sizeof(NT39125_init_operations));
+
   if (_ips) {
     _bus->sendCommand(NT39125_INVON);
   }

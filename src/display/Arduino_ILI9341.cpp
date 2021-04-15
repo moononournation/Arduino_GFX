@@ -6,8 +6,8 @@
 #include "Arduino_ILI9341.h"
 #include "SPI.h"
 
-Arduino_ILI9341::Arduino_ILI9341(Arduino_DataBus *bus, int8_t rst, uint8_t r)
-    : Arduino_TFT(bus, rst, r, false, ILI9341_TFTWIDTH, ILI9341_TFTHEIGHT, 0, 0, 0, 0)
+Arduino_ILI9341::Arduino_ILI9341(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
+    : Arduino_TFT(bus, rst, r, ips, ILI9341_TFTWIDTH, ILI9341_TFTHEIGHT, 0, 0, 0, 0)
 {
 }
 
@@ -29,16 +29,16 @@ void Arduino_ILI9341::setRotation(uint8_t r)
   switch (_rotation)
   {
   case 0:
-    r = (ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
-    break;
-  case 1:
-    r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
-    break;
-  case 2:
     r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_BGR);
     break;
-  case 3:
+  case 1:
     r = (ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
+    break;
+  case 2:
+    r = (ILI9341_MADCTL_MY | ILI9341_MADCTL_BGR);
+    break;
+  case 3:
+    r = (ILI9341_MADCTL_MX | ILI9341_MADCTL_MY | ILI9341_MADCTL_MV | ILI9341_MADCTL_BGR);
     break;
   }
   _bus->beginWrite();
@@ -90,7 +90,7 @@ void Arduino_ILI9341::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 
 void Arduino_ILI9341::invertDisplay(bool i)
 {
-  _bus->sendCommand(i ? ILI9341_INVON : ILI9341_INVOFF);
+  _bus->sendCommand((_ips ^ i) ? ILI9341_INVON : ILI9341_INVOFF);
 }
 
 void Arduino_ILI9341::displayOn(void)
@@ -138,4 +138,8 @@ void Arduino_ILI9341::tftInit()
       END_WRITE};
 
   _bus->batchOperation(ili9341_init_operations, sizeof(ili9341_init_operations));
+
+  if (_ips) {
+    _bus->sendCommand(ILI9341_INVON);
+  }
 }

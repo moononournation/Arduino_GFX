@@ -6,8 +6,8 @@
 #include "Arduino_ILI9342.h"
 #include "SPI.h"
 
-Arduino_ILI9342::Arduino_ILI9342(Arduino_DataBus *bus, int8_t rst, uint8_t r)
-    : Arduino_TFT(bus, rst, r, false, ILI9342_TFTWIDTH, ILI9342_TFTHEIGHT, 0, 0, 0, 0)
+Arduino_ILI9342::Arduino_ILI9342(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
+    : Arduino_TFT(bus, rst, r, ips, ILI9342_TFTWIDTH, ILI9342_TFTHEIGHT, 0, 0, 0, 0)
 {
 }
 
@@ -90,7 +90,7 @@ void Arduino_ILI9342::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 
 void Arduino_ILI9342::invertDisplay(bool i)
 {
-  _bus->sendCommand(i ? ILI9342_INVON : ILI9342_INVOFF);
+  _bus->sendCommand((_ips ^ i) ? ILI9342_INVON : ILI9342_INVOFF);
 }
 
 void Arduino_ILI9342::displayOn(void)
@@ -138,4 +138,8 @@ void Arduino_ILI9342::tftInit()
       END_WRITE};
 
   _bus->batchOperation(ILI9342_init_operations, sizeof(ILI9342_init_operations));
+
+  if (_ips) {
+    _bus->sendCommand(ILI9342_INVON);
+  }
 }

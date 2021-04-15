@@ -104,6 +104,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - HX8357B (9-bit SPI) 320x480 [[test video](https://youtu.be/pB6_LOCiUqg)]
 - ILI9225 176x220 [[test video](https://youtu.be/jm2UrCG27F4)]
 - ILI9341 240x320 [[test video](https://youtu.be/NtlEEL7MkQY)]
+- ILI9341 (8-bit Parallel) 240x320 [[test video](https://youtu.be/xuVx0dzQ7nM)]
 - ILI9342 320x240 [[test video](https://youtu.be/UoPpIjVSO5Q)]
 - ILI9481 320x480 (18 bit color) [[test video](https://youtu.be/YxjuuCFhlqM)]
 - ILI9486 320x480 (18 bit color) [[test video](https://youtu.be/pZ6izDqmVds)]
