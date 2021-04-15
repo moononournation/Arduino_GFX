@@ -31,6 +31,7 @@
 #include "display/Arduino_ILI9486_18bit.h"
 #include "display/Arduino_ILI9488_18bit.h"
 #include "display/Arduino_JBT6K71.h"
+#include "display/Arduino_NT39125.h"
 #include "display/Arduino_R61529.h"
 #include "display/Arduino_SEPS525.h"
 #include "display/Arduino_SSD1283A.h"

@@ -110,6 +110,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - ILI9488 320x480 (3 bit color with canvas) [[test video](https://youtu.be/r7be0WbIBYk)]
 - ILI9488 320x480 (18 bit color) [[test video](https://youtu.be/NkE-LhtLHBQ)]
 - JBT6K71 (8-bit Parallel) 240x320 [[test video](https://youtu.be/qid3F4Gb0mM)]
+- NT39125 (8-bit/16-bit Parallel) 240x376 [[test video](https://youtu.be/JGMrM18JAFA)]
 - R61529 (8-bit/16-bit Parallel) 320x480 [[test video](https://youtu.be/s93gxjbIAT8)]
 - SEPS525 160x128 [[test video](https://youtu.be/tlmvFBHYv-k)]
 - SSD1283A 130x130 [[test video](https://youtu.be/OrIchaRikiQ)]
@@ -130,7 +131,8 @@ This library is not putting speed at the first priority, but still paid much eff
 - HX8357A 240x320 (first trial failed)
 - LG4573 480x800 (first trial failed)
 - ILI9806 480x800 (first trial failed)
-- ST7701 480x800
+- NT35310
+- NT35510
 - FastLED Martix supported by co-operate with Canvas
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas
