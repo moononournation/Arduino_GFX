@@ -207,20 +207,36 @@ void Arduino_ESP32PAR8::write16(uint16_t d)
 void Arduino_ESP32PAR8::writeRepeat(uint16_t p, uint32_t len)
 {
   _data16.value = p;
-  uint32_t hiMask = xset_mask[_data16.msb];
-  uint32_t loMask = xset_mask[_data16.lsb];
-  while (len--)
+  if (_data16.msb == _data16.lsb)
   {
+    uint32_t setMask = xset_mask[_data16.msb];
     *dataPortClr = dataClrMask;
-    *dataPortSet = hiMask;
+    *dataPortSet = setMask;
+    while (len--)
+    {
+      *wrPortClr = wrPinMask;
+      *wrPortSet = wrPinMask;
+      *wrPortClr = wrPinMask;
+      *wrPortSet = wrPinMask;
+    }
+  }
+  else
+  {
+    uint32_t hiMask = xset_mask[_data16.msb];
+    uint32_t loMask = xset_mask[_data16.lsb];
+    while (len--)
+    {
+      *dataPortClr = dataClrMask;
+      *dataPortSet = hiMask;
 #if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
-    *wrPortSet = wrPinMask;
+      *wrPortSet = wrPinMask;
 #endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
-    *dataPortClr = dataClrMask;
-    *dataPortSet = loMask;
+      *dataPortClr = dataClrMask;
+      *dataPortSet = loMask;
 #if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
-    *wrPortSet = wrPinMask;
+      *wrPortSet = wrPinMask;
 #endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
+    }
   }
 }
 
@@ -287,6 +303,28 @@ void Arduino_ESP32PAR8::writePattern(uint8_t *data, uint8_t len, uint32_t repeat
   while (repeat--)
   {
     writeBytes(data, len);
+  }
+}
+
+void Arduino_ESP32PAR8::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  while (len--)
+  {
+    _data16.value = idx[*data++];
+    WRITE(_data16.msb);
+    WRITE(_data16.lsb);
+  }
+}
+
+void Arduino_ESP32PAR8::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  while (len--)
+  {
+    _data16.value = idx[*data++];
+    WRITE(_data16.msb);
+    WRITE(_data16.lsb);
+    WRITE(_data16.msb);
+    WRITE(_data16.lsb);
   }
 }
 

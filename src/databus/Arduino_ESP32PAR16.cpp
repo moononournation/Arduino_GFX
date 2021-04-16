@@ -289,9 +289,7 @@ void Arduino_ESP32PAR16::writeC8D16(uint8_t c, uint16_t d)
 
   DC_HIGH();
 
-  _data16.value = d;
-  WRITE(_data16.msb);
-  WRITE(_data16.lsb);
+  WRITE16(d);
 }
 
 void Arduino_ESP32PAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
@@ -302,12 +300,8 @@ void Arduino_ESP32PAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
   DC_HIGH();
 
-  _data16.value = d1;
-  WRITE(_data16.msb);
-  WRITE(_data16.lsb);
-  _data16.value = d2;
-  WRITE(_data16.msb);
-  WRITE(_data16.lsb);
+  WRITE16(d1);
+  WRITE16(d2);
 }
 
 void Arduino_ESP32PAR16::writeBytes(uint8_t *data, uint32_t len)
@@ -323,6 +317,26 @@ void Arduino_ESP32PAR16::writePattern(uint8_t *data, uint8_t len, uint32_t repea
   while (repeat--)
   {
     writeBytes(data, len);
+  }
+}
+
+void Arduino_ESP32PAR16::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  while (len--)
+  {
+    WRITE16(idx[*data++]);
+  }
+}
+
+void Arduino_ESP32PAR16::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  while (len--)
+  {
+    _data16.value = idx[*data++];
+    *dataPortClr = dataClrMask;
+    *dataPortSet = xset_mask_hi[_data16.msb] | xset_mask_lo[_data16.lsb];
+    *wrPortClr = wrPinMask;
+    *wrPortSet = wrPinMask;
   }
 }
 
