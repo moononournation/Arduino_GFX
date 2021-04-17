@@ -54,8 +54,8 @@ private:
 
   union
   {
-    uint8_t buffer[SPI_MAX_PIXELS_AT_ONCE * 2];
-    uint16_t buffer16[SPI_MAX_PIXELS_AT_ONCE];
+    uint8_t _buffer[SPI_MAX_PIXELS_AT_ONCE * 2];
+    uint16_t _buffer16[SPI_MAX_PIXELS_AT_ONCE];
   };
 };
 

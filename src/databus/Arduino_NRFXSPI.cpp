@@ -145,13 +145,13 @@ void Arduino_NRFXSPI::writeRepeat(uint16_t p, uint32_t len)
   uint32_t xferLen;
   for (uint32_t i = 0; i < bufLen; i++)
   {
-    buffer16[i] = p;
+    _buffer16[i] = p;
   }
 
   while (len)
   {
     xferLen = (bufLen < len) ? bufLen : len;
-    WRITEBUF(buffer, xferLen * 2);
+    WRITEBUF(_buffer, xferLen * 2);
     len -= xferLen;
   }
 }
@@ -172,7 +172,7 @@ void Arduino_NRFXSPI::writePixels(uint16_t *data, uint32_t len)
   while (len)
   {
     xferLen = (len < SPI_MAX_PIXELS_AT_ONCE) ? len : SPI_MAX_PIXELS_AT_ONCE;
-    p = buffer;
+    p = _buffer;
     for (uint32_t i = 0; i < xferLen; i++)
     {
       t.val = *data++;
@@ -182,7 +182,7 @@ void Arduino_NRFXSPI::writePixels(uint16_t *data, uint32_t len)
     len -= xferLen;
 
     xferLen += xferLen; // uint16_t to uint8_t, double length
-    WRITEBUF(buffer, xferLen);
+    WRITEBUF(_buffer, xferLen);
   }
 }
 
