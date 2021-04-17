@@ -50,28 +50,28 @@ private:
   int8_t _d0, _d1, _d2, _d3, _d4, _d5, _d6, _d7;
   int8_t _d8, _d9, _d10, _d11, _d12, _d13, _d14, _d15;
 
-  PORTreg_t dcPortSet; ///< PORT register SET
-  PORTreg_t dcPortClr; ///< PORT register CLEAR
-  uint32_t dcPinMask;  ///< Bitmask
+  PORTreg_t _dcPortSet; ///< PORT register SET
+  PORTreg_t _dcPortClr; ///< PORT register CLEAR
+  uint32_t _dcPinMask;  ///< Bitmask
 
-  PORTreg_t csPortSet; ///< PORT register SET
-  PORTreg_t csPortClr; ///< PORT register CLEAR
-  uint32_t csPinMask;  ///< Bitmask
+  PORTreg_t _csPortSet; ///< PORT register SET
+  PORTreg_t _csPortClr; ///< PORT register CLEAR
+  uint32_t _csPinMask;  ///< Bitmask
 
-  PORTreg_t wrPortSet; ///< PORT register SET
+  PORTreg_t _wrPortSet; ///< PORT register SET
   PORTreg_t wrPortClr; ///< PORT register CLEAR
-  uint32_t wrPinMask;  ///< Bitmask
+  uint32_t _wrPinMask;  ///< Bitmask
 
-  PORTreg_t rdPortSet; ///< PORT register SET
-  PORTreg_t rdPortClr; ///< PORT register CLEAR
-  uint32_t rdPinMask;  ///< Bitmask
+  PORTreg_t _rdPortSet; ///< PORT register SET
+  PORTreg_t _rdPortClr; ///< PORT register CLEAR
+  uint32_t _rdPinMask;  ///< Bitmask
 
-  PORTreg_t dataPortSet; ///< PORT register SET
-  PORTreg_t dataPortClr; ///< PORT register CLEAR
-  uint32_t dataClrMask;
+  PORTreg_t _dataPortSet; ///< PORT register SET
+  PORTreg_t _dataPortClr; ///< PORT register CLEAR
+  uint32_t _dataClrMask;
   // Lookup table for ESP32 parallel bus interface uses 2kbyte RAM,
-  uint32_t xset_mask_lo[256];
-  uint32_t xset_mask_hi[256];
+  uint32_t _xset_mask_lo[256];
+  uint32_t _xset_mask_hi[256];
 };
 
 #endif // _ARDUINO_ESP32PAR16_H_
