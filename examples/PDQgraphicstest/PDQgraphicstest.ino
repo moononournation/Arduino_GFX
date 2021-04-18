@@ -164,7 +164,7 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino_GFX *gfx = new Arduino_ILI9225(bus, TFT_RST);
 
 // ILI9341 LCD 240x320
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
 
 // ILI9342 LCD 320x240
 // Arduino_GFX *gfx = new Arduino_ILI9342(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
