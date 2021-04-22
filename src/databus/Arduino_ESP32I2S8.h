@@ -6,17 +6,8 @@
 #ifndef _ARDUINO_ESP32I2S8_H_
 #define _ARDUINO_ESP32I2S8_H_
 
-#include <driver/periph_ctrl.h>
-#include <driver/rtc_io.h>
 #include <driver/i2s.h>
-#include <esp_heap_caps.h>
-#include <esp32-hal-cpu.h>
-#include <esp32/rom/lldesc.h>
-#include <freertos/task.h>
-#include <soc/dport_reg.h>
-#include <soc/rtc.h>
 #include <soc/i2s_reg.h>
-#include <soc/periph_defs.h>
 
 #include "Arduino_DataBus.h"
 
