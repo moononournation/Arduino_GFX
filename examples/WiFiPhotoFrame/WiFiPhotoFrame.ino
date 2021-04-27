@@ -210,10 +210,11 @@ static size_t http_stream_reader(JpegDec *jpegDec, size_t index, uint8_t *buf, s
   {
     // Serial.printf("[HTTP] skip: %d\n", len);
     size_t l = len;
-    while ((--l) && (wait < 10))
+    while ((l) && (wait < 10))
     {
       if (http_stream->available())
       {
+        --l;
         http_stream->read();
       }
       else
