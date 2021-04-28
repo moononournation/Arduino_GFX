@@ -52,6 +52,11 @@
 #ifndef pgm_read_dword
 #define pgm_read_dword(addr) (*(const unsigned long *)(addr))
 #endif
+// workaround of a15 asm compile error
+#ifdef ESP8266
+#undef pgm_read_word
+#define pgm_read_word(addr) (*(const unsigned short *)(addr))
+#endif
 
 // Pointers are a peculiar case...typically 16-bit on AVR boards,
 // 32 bits elsewhere.  Try to accommodate both...
