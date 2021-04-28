@@ -52,7 +52,7 @@ private:
   PORTreg_t _csPortClr; ///< PORT register CLEAR
   uint32_t _csPinMask;  ///< Bitmask
 
-  i2s_port_t _i2s_port = I2S_NUM_0;
+  i2s_port_t _i2s_port = I2S_NUM_1;
   uint32_t _conf_reg_default = I2S_TX_MSB_RIGHT | I2S_TX_RIGHT_FIRST | I2S_RX_RIGHT_FIRST;
   uint32_t _conf_reg_start = _conf_reg_default | I2S_TX_START;
   uint32_t _sample_rate_conf_reg_32bit = 32 << I2S_TX_BITS_MOD_S | 32 << I2S_RX_BITS_MOD_S | 1 << I2S_TX_BCK_DIV_NUM_S | 1 << I2S_RX_BCK_DIV_NUM_S;
