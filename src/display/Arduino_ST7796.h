@@ -67,7 +67,6 @@ public:
   void setRotation(uint8_t r) override;
 
   void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) override;
-  void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
 
   void invertDisplay(bool) override;
   void displayOn() override;

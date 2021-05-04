@@ -77,27 +77,6 @@ void Arduino_ST7789::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t 
   _bus->writeCommand(ST7789_RAMWR); // write to RAM
 }
 
-void Arduino_ST7789::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
-{
-  if ((x != _currentX) || (1 != _currentW))
-  {
-    _currentX = x;
-    _currentW = 1;
-    x += _xStart;
-    _bus->writeC8D16D16(ST7789_CASET, x, x);
-  }
-
-  if ((y != _currentY) || (1 != _currentH))
-  {
-    _currentY = y;
-    _currentH = 1;
-    y += _yStart;
-    _bus->writeC8D16D16(ST7789_RASET, y, y);
-  }
-
-  _bus->writeC8D16(ST7789_RAMWR, color); // write to RAM
-}
-
 void Arduino_ST7789::invertDisplay(bool i)
 {
   _bus->sendCommand(_ips ? (i ? ST7789_INVOFF : ST7789_INVON) : (i ? ST7789_INVON : ST7789_INVOFF));

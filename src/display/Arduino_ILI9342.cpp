@@ -67,27 +67,6 @@ void Arduino_ILI9342::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
   _bus->writeCommand(ILI9342_RAMWR); // write to RAM
 }
 
-void Arduino_ILI9342::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
-{
-  if ((x != _currentX) || (1 != _currentW))
-  {
-    _currentX = x;
-    _currentW = 1;
-    x += _xStart;
-    _bus->writeC8D16D16(ILI9342_CASET, x, x);
-  }
-
-  if ((y != _currentY) || (1 != _currentH))
-  {
-    _currentY = y;
-    _currentH = 1;
-    y += _yStart;
-    _bus->writeC8D16D16(ILI9342_PASET, y, y);
-  }
-
-  _bus->writeC8D16(ILI9342_RAMWR, color); // write to RAM
-}
-
 void Arduino_ILI9342::invertDisplay(bool i)
 {
   _bus->sendCommand((_ips ^ i) ? ILI9342_INVON : ILI9342_INVOFF);
