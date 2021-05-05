@@ -129,6 +129,16 @@ typedef enum
     DELAY,
 } spi_operation_type_t;
 
+union
+{
+    uint16_t value;
+    struct
+    {
+        uint8_t lsb;
+        uint8_t msb;
+    };
+} _data16;
+
 class Arduino_DataBus
 {
 public:
@@ -152,7 +162,7 @@ public:
     void sendData(uint8_t d);
     void sendData16(uint16_t d);
 
-    void batchOperation(uint8_t batch[], uint8_t len);
+    void batchOperation(uint8_t batch[], size_t len);
 
 #if !defined(LITTLE_FOOT_PRINT)
     virtual void writeBytes(uint8_t *data, uint32_t len) = 0;
@@ -164,15 +174,6 @@ public:
 protected:
     int32_t _speed;
     int8_t _dataMode;
-    union
-    {
-        uint16_t value;
-        struct
-        {
-            uint8_t lsb;
-            uint8_t msb;
-        };
-    } _data16;
 };
 
 #endif

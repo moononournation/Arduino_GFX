@@ -157,6 +157,9 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // HX8352C IPS LCD 240x400
 // Arduino_GFX *gfx = new Arduino_HX8352C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
+// HX8357A IPS LCD 320x480 (currently only portrait works, i.e. rotation 0 and 2)
+// Arduino_GFX *gfx = new Arduino_HX8357A(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+
 // HX8357B IPS LCD 320x480
 // Arduino_GFX *gfx = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 

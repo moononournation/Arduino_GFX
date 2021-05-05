@@ -6,7 +6,7 @@ This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
 
 ## Various dat bus interfaces
 
-Most tiny display in hobbiest electronics world support 8-bit SPI, but some require 9-bit SPI. As I know, it should be the first Arduino display library that can support ESP32 9-bit hardware SPI. It is very important to support the displays (e.g. HX8357B, ST7701, ...) that require 9-bit SPI interface.
+Most tiny display in hobbiest electronics world support 8-bit SPI, but some require 9-bit SPI. As I know, it should be the first Arduino display library that can support ESP32 9-bit hardware SPI. It is very important to support the displays (e.g. HX8357B, ...) that require 9-bit SPI interface.
 
 Larger display most likely not support standalone SPI since it is not fast enough to refresh the full screen details. Most of them can use 8-bit/16-bit Parallel interface.
 
@@ -101,6 +101,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - HX8347C 240x320 [[test video](https://youtu.be/25ymuV51YQM)]
 - HX8347D 240x320 [[test video](https://youtu.be/sv6LGkLRZjI)]
 - HX8352C 240x400 [[test video](https://youtu.be/m2xWYbS3t7s)]
+- HX8357A 320x480 [[test video](https://youtu.be/wJkLO_xCTXA)] (currently only portrait works, i.e. rotation 0 and 2)
 - HX8357B (9-bit SPI) 320x480 [[test video](https://youtu.be/pB6_LOCiUqg)]
 - ILI9225 176x220 [[test video](https://youtu.be/jm2UrCG27F4)]
 - ILI9341 240x320 [[test video](https://youtu.be/NtlEEL7MkQY)]

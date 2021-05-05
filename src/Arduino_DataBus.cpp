@@ -53,9 +53,9 @@ void Arduino_DataBus::sendData16(uint16_t d)
   endWrite();
 }
 
-void Arduino_DataBus::batchOperation(uint8_t batch[], uint8_t len)
+void Arduino_DataBus::batchOperation(uint8_t batch[], size_t len)
 {
-  for (uint8_t i = 0; i < len; ++i)
+  for (size_t i = 0; i < len; ++i)
   {
     uint8_t l = 0;
     uint16_t d;
