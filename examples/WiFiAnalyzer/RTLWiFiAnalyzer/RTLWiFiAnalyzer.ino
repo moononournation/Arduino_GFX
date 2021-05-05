@@ -23,7 +23,7 @@
 #include <Arduino_GFX_Library.h>
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
-Arduino_GFX *output_display = new Arduino_ILI9341(bus, TFT_RST, 1 /* rotation */);
+Arduino_GFX *output_display = new Arduino_ILI9341(bus, TFT_RST, 1 /* rotation */, false /* IPS */);
 Arduino_GFX *gfx = new Arduino_Canvas(320 /* width */, 220 /* height */, output_display, 0 /* output_x*/, 20 /* output_y */);
 
 static int16_t w, h, text_size, banner_height, graph24_baseline, graph50_baseline, graph_baseline, graph_height, channel24_width, channel50_width, channel_width, signal_width;

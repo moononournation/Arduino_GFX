@@ -11,10 +11,10 @@ Arduino_DataBus *bus2 = new Arduino_ESP32SPI(TFT_DC, 10 /* CS */, TFT_SCK, TFT_M
 Arduino_ST7789 *gfx2 = new Arduino_ST7789(bus2, 13 /* RST */, 2 /* rotation */, true /* IPS */);
 
 Arduino_DataBus *bus3 = new Arduino_ESP32SPI(TFT_DC, 4 /* CS */, TFT_SCK, TFT_MOSI, TFT_MISO, VSPI /* spi_num */);
-Arduino_ILI9341 *gfx3 = new Arduino_ILI9341(bus3, 12 /* RST */, 2 /* rotation */);
+Arduino_ILI9341 *gfx3 = new Arduino_ILI9341(bus3, 12 /* RST */, 2 /* rotation */, false /* IPS */);
 
 Arduino_DataBus *bus4 = new Arduino_ESP32SPI(TFT_DC, 32 /* CS */, TFT_SCK, TFT_MOSI, TFT_MISO, VSPI /* spi_num */);
-Arduino_ST7796 *gfx4 = new Arduino_ST7796(bus4, 25 /* RST */);
+Arduino_ST7796 *gfx4 = new Arduino_ST7796(bus4, 25 /* RST */, false /* IPS */);
 
 Arduino_GFX *gfx = gfx1;
 
