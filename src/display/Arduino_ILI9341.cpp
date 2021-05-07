@@ -88,9 +88,20 @@ void Arduino_ILI9341::displayOff(void)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ILI9341::tftInit()
 {
-  if (_rst < 0)
+  if (_rst >= 0)
   {
-    _bus->sendCommand(ILI9341_SWRESET); // 1: Software reset
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(ILI9341_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(ILI9341_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+    _bus->sendCommand(ILI9341_SWRESET);
     delay(ILI9341_RST_DELAY);
   }
 

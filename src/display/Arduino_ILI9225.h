@@ -13,9 +13,9 @@
 #define ILI9225_TFTWIDTH 176  ///< ILI9225 max TFT width
 #define ILI9225_TFTHEIGHT 220 ///< ILI9225 max TFT height
 
-#define ILI9225_RST_DELAY 120    ///< delay ms wait for reset finish
-#define ILI9225_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
-#define ILI9225_SLPOUT_DELAY 120 ///< delay ms wait for sleep out finish
+#define ILI9225_RST_DELAY 150    ///< delay ms wait for reset finish
+#define ILI9225_SLPIN_DELAY 150  ///< delay ms wait for sleep in finish
+#define ILI9225_SLPOUT_DELAY 150 ///< delay ms wait for sleep out finish
 
 #define ILI9225_DRIVER_OUTPUT_CTRL 0x01      // Driver Output Control
 #define ILI9225_LCD_AC_DRIVING_CTRL 0x02     // LCD AC Driving Control

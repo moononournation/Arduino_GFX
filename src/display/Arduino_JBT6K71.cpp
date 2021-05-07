@@ -22,6 +22,21 @@ void Arduino_JBT6K71::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_JBT6K71::tftInit()
 {
+  if (_rst >= 0)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(JBT6K71_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(JBT6K71_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+  }
+
   uint8_t display_mode = _ips ? 0x04 : 0x00; // 64K Colors
   uint8_t jbt6k71_init_operations[] = {
       BEGIN_WRITE,

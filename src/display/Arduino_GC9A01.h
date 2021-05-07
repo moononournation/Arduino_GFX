@@ -9,7 +9,7 @@
 #define GC9A01_TFTWIDTH 240
 #define GC9A01_TFTHEIGHT 240
 
-#define GC9A01_RST_DELAY 100    ///< delay ms wait for reset finish
+#define GC9A01_RST_DELAY 120    ///< delay ms wait for reset finish
 #define GC9A01_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
 #define GC9A01_SLPOUT_DELAY 120 ///< delay ms wait for sleep out finish
 

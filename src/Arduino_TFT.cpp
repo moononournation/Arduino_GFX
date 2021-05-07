@@ -36,17 +36,6 @@ void Arduino_TFT::begin(int32_t speed)
     _bus->begin(speed);
   }
 
-  if (_rst >= 0)
-  {
-    pinMode(_rst, OUTPUT);
-    digitalWrite(_rst, HIGH);
-    delay(120);
-    digitalWrite(_rst, LOW);
-    delay(120);
-    digitalWrite(_rst, HIGH);
-    delay(120);
-  }
-
   tftInit();
   setRotation(_rotation); // apply the setting rotation to the display
   setAddrWindow(0, 0, _width, _height);

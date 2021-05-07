@@ -21,8 +21,19 @@ void Arduino_SEPS525::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_SEPS525::tftInit()
 {
-  if (_rst < 0)
+  if (_rst >= 0)
   {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(SEPS525_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(SEPS525_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
     _bus->sendCommand(SEPS525_SOFT_RST);
     _bus->sendData(0x01);
     delay(SEPS525_RST_DELAY);

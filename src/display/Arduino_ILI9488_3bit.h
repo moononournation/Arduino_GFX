@@ -13,9 +13,9 @@
 #define ILI9488_TFTWIDTH 320  ///< ILI9488 max TFT width
 #define ILI9488_TFTHEIGHT 480 ///< ILI9488 max TFT height
 
-#define ILI9488_RST_DELAY 120    ///< delay ms wait for reset finish
-#define ILI9488_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
-#define ILI9488_SLPOUT_DELAY 120 ///< delay ms wait for sleep out finish
+#define ILI9488_RST_DELAY 150    ///< delay ms wait for reset finish
+#define ILI9488_SLPIN_DELAY 150  ///< delay ms wait for sleep in finish
+#define ILI9488_SLPOUT_DELAY 150 ///< delay ms wait for sleep out finish
 
 // Generic commands used by ILI9488_eSPI.cpp
 #define ILI9488_NOP 0x00

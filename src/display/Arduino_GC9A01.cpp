@@ -19,6 +19,21 @@ void Arduino_GC9A01::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_GC9A01::tftInit()
 {
+  if (_rst >= 0)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(GC9A01_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(GC9A01_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+  }
+
   _bus->sendCommand(0xEF);
   _bus->sendCommand(0xEB);
   _bus->sendData(0x14);

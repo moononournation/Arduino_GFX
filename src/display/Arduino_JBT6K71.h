@@ -14,6 +14,8 @@
 #define JBT6K71_TFTWIDTH 240  ///< JBT6K71 max TFT width
 #define JBT6K71_TFTHEIGHT 320 ///< JBT6K71 max TFT height
 
+#define JBT6K71_RST_DELAY 150
+
 class Arduino_JBT6K71 : public Arduino_TFT
 {
 public:

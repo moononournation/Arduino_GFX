@@ -35,6 +35,21 @@ void Arduino_SSD1351::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_SSD1351::tftInit()
 {
+  if (_rst >= 0)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(SSD1351_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(SSD1351_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+  }
+
   _bus->sendCommand(SSD1351_COMMANDLOCK); // set command lock
   _bus->sendData(0x12);
   _bus->sendCommand(SSD1351_COMMANDLOCK); // set command lock

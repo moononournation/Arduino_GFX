@@ -22,6 +22,21 @@ void Arduino_HX8352C::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_HX8352C::tftInit()
 {
+  if (_rst >= 0)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(HX8352C_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(HX8352C_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+  }
+
   //LCD Init For 3.0inch LCD Panel with HX8352C.
   //Power Voltage Setting
   _bus->sendCommand(0x1A);

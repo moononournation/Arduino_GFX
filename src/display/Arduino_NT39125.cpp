@@ -22,9 +22,20 @@ void Arduino_NT39125::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_NT39125::tftInit()
 {
-  if (_rst < 0)
+  if (_rst >= 0)
   {
-    _bus->sendCommand(NT39125_SWRESET); // 1: Software reset
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(NT39125_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(NT39125_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+    _bus->sendCommand(NT39125_SWRESET);
     delay(NT39125_RST_DELAY);
   }
 
@@ -42,13 +53,13 @@ void Arduino_NT39125::tftInit()
 
       //Display Settings
       BEGIN_WRITE,
-      WRITE_C8_D8, NT39125_TEOFF, // Tearing Effect Line OFF
+      WRITE_C8_D8, NT39125_TEOFF,                // Tearing Effect Line OFF
       WRITE_C8_D16, NT39125_FRMCTR1, 0x11, 0x1b, // Set Division ratio for internal clocks of Normal mode
       WRITE_C8_D16, NT39125_FRMCTR2, 0x11, 0x1b, // Set Division ratio for internal clocks of Idle mode
       WRITE_C8_D16, NT39125_FRMCTR3, 0x11, 0x1b, // Set Division ratio for internal clocks of Partial mode (Idle mode off)
       WRITE_C8_D8, NT39125_INVCTR, 0x02,         // Inversion Control
       WRITE_C8_D16, NT39125_DISSET5, 0x01, 0x02, // Display Function set 5
-      WRITE_C8_D8, NT39125_PWCTR1, 0x24,        // Power Control 1, 4.1V
+      WRITE_C8_D8, NT39125_PWCTR1, 0x24,         // Power Control 1, 4.1V
 
       // VGL -7V
       WRITE_C8_D16, NT39125_PWCTR2, 0x02, 0x00, // Power Control 2
@@ -59,9 +70,9 @@ void Arduino_NT39125::tftInit()
       WRITE_C8_D16, NT39125_PWCTR4, 0x02, 0x05, // Power Control 4 (in Idle mode/ 8-colors)
       WRITE_C8_D16, NT39125_PWCTR5, 0x02, 0x04, // Power Control 5 (in Partial mode/ full-colors)
       WRITE_C8_D16, NT39125_VMCTR1,             // VCOM Control, Chameleon
-      0x14,                           // 3   	.	 VcomH
-      0x2e,                           // -1.35	.VcomL
-      WRITE_C8_D8, NT39125_GAM_R_SEL, 0x01,        // Gamma Selection
+      0x14,                                     // 3   	.	 VcomH
+      0x2e,                                     // -1.35	.VcomL
+      WRITE_C8_D8, NT39125_GAM_R_SEL, 0x01,     // Gamma Selection
 
       ///////////////////////////////////////// gamma //////////////////////
 
@@ -127,7 +138,8 @@ void Arduino_NT39125::tftInit()
 
   _bus->batchOperation(NT39125_init_operations, sizeof(NT39125_init_operations));
 
-  if (_ips) {
+  if (_ips)
+  {
     _bus->sendCommand(NT39125_INVON);
   }
 }

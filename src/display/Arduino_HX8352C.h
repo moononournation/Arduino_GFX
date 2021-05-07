@@ -13,6 +13,8 @@
 #define HX8352C_TFTWIDTH 240  ///< HX8352C max TFT width
 #define HX8352C_TFTHEIGHT 400 ///< HX8352C max TFT height
 
+#define HX8352C_RST_DELAY 120
+
 class Arduino_HX8352C : public Arduino_TFT
 {
 public:

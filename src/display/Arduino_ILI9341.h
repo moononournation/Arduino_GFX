@@ -14,9 +14,9 @@
 #define ILI9341_TFTWIDTH 240  ///< ILI9341 max TFT width
 #define ILI9341_TFTHEIGHT 320 ///< ILI9341 max TFT height
 
-#define ILI9341_RST_DELAY 120    ///< delay ms wait for reset finish
-#define ILI9341_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
-#define ILI9341_SLPOUT_DELAY 120 ///< delay ms wait for sleep out finish
+#define ILI9341_RST_DELAY 150    ///< delay ms wait for reset finish
+#define ILI9341_SLPIN_DELAY 150  ///< delay ms wait for sleep in finish
+#define ILI9341_SLPOUT_DELAY 150 ///< delay ms wait for sleep out finish
 
 #define ILI9341_NOP 0x00     ///< No-op register
 #define ILI9341_SWRESET 0x01 ///< Software reset register

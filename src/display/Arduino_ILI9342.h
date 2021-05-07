@@ -9,9 +9,9 @@
 #define ILI9342_TFTWIDTH 320  ///< ILI9342 max TFT width
 #define ILI9342_TFTHEIGHT 240 ///< ILI9342 max TFT height
 
-#define ILI9342_RST_DELAY 120    ///< delay ms wait for reset finish
-#define ILI9342_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
-#define ILI9342_SLPOUT_DELAY 120 ///< delay ms wait for sleep out finish
+#define ILI9342_RST_DELAY 150    ///< delay ms wait for reset finish
+#define ILI9342_SLPIN_DELAY 150  ///< delay ms wait for sleep in finish
+#define ILI9342_SLPOUT_DELAY 150 ///< delay ms wait for sleep out finish
 
 #define ILI9342_NOP 0x00     ///< No-op register
 #define ILI9342_SWRESET 0x01 ///< Software reset register

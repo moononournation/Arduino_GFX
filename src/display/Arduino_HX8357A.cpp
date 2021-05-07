@@ -98,10 +98,10 @@ void Arduino_HX8357A::displayOn(void)
   _bus->endWrite();
   delay(5);
   _bus->beginWrite();
-  _bus->writeC8D8(HX8357A_POWER_CONTROL_1, 0x88); // PON=0, DK=1
+  _bus->writeC8D8(HX8357A_POWER_CONTROL_1, 0x88);      // PON=0, DK=1
   _bus->writeC8D8(HX8357A_DISPLAY_MODE_CONTROL, 0x00); // DP_STB=00
-  _bus->writeC8D8(HX8357A_POWER_CONTROL_4, 0x03); // AP=011
-  _bus->writeC8D8(HX8357A_POWER_CONTROL_1, 0x80); // DK=0
+  _bus->writeC8D8(HX8357A_POWER_CONTROL_4, 0x03);      // AP=011
+  _bus->writeC8D8(HX8357A_POWER_CONTROL_1, 0x80);      // DK=0
   _bus->endWrite();
   delay(3);
   _bus->beginWrite();
@@ -109,7 +109,7 @@ void Arduino_HX8357A::displayOn(void)
   _bus->endWrite();
   delay(3);
   _bus->beginWrite();
-  _bus->writeC8D8(HX8357A_POWER_CONTROL_1, 0xD0); // VCOMG=1
+  _bus->writeC8D8(HX8357A_POWER_CONTROL_1, 0xD0);   // VCOMG=1
   _bus->writeC8D8(HX8357A_DISPLAY_CONTROL_3, 0x3C); // GON=1, DTE=1, D[1:0]=11
   _bus->endWrite();
 }
@@ -118,7 +118,7 @@ void Arduino_HX8357A::displayOff(void)
 {
   _bus->beginWrite();
   _bus->writeC8D8(HX8357A_DISPLAY_CONTROL_3, 0x34); // GON=1, DTE=1, D[1:0]=01
-  _bus->writeC8D8(HX8357A_POWER_CONTROL_1, 0x90); // VCOMG=0
+  _bus->writeC8D8(HX8357A_POWER_CONTROL_1, 0x90);   // VCOMG=0
   _bus->endWrite();
   delay(1);
   _bus->beginWrite();
@@ -132,6 +132,21 @@ void Arduino_HX8357A::displayOff(void)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_HX8357A::tftInit()
 {
+  if (_rst >= 0)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(HX8357A_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(HX8357A_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+  }
+
   uint8_t hx8357a_init_operations[] = {
       BEGIN_WRITE,
       WRITE_C8_D8, HX8357A_PAGE_SELECT, 0x00, // Command page 0
@@ -148,11 +163,11 @@ void Arduino_HX8357A::tftInit()
       END_WRITE,
       DELAY, 10,
       BEGIN_WRITE,
-      WRITE_C8_D8, HX8357A_POWER_CONTROL_6, 0x00,                         // VGH VGL VCL  DDVDH
-      WRITE_C8_D8, HX8357A_POWER_CONTROL_1, 0x8A,                         //
+      WRITE_C8_D8, HX8357A_POWER_CONTROL_6, 0x00,      // VGH VGL VCL  DDVDH
+      WRITE_C8_D8, HX8357A_POWER_CONTROL_1, 0x8A,      //
       WRITE_C8_D8, HX8357A_DISPLAY_MODE_CONTROL, 0x00, //
-      WRITE_C8_D8, HX8357A_POWER_CONTROL_4, 0x05,                         //
-      WRITE_C8_D8, HX8357A_POWER_CONTROL_1, 0x82,                         //
+      WRITE_C8_D8, HX8357A_POWER_CONTROL_4, 0x05,      //
+      WRITE_C8_D8, HX8357A_POWER_CONTROL_1, 0x82,      //
       END_WRITE,
       DELAY, 10,
       BEGIN_WRITE,
@@ -162,8 +177,8 @@ void Arduino_HX8357A::tftInit()
       BEGIN_WRITE,
       WRITE_C8_D8, HX8357A_POWER_CONTROL_1, 0xD4, //
 
-      WRITE_C8_D8, HX8357A_COLMOD, 0x55, // 16-bit/pixel
-      WRITE_C8_D8, HX8357A_OSC_CONTROL_1, 0x21, // Fosc=130%*5.2MHZ   21
+      WRITE_C8_D8, HX8357A_COLMOD, 0x55,          // 16-bit/pixel
+      WRITE_C8_D8, HX8357A_OSC_CONTROL_1, 0x21,   // Fosc=130%*5.2MHZ   21
       WRITE_C8_D8, HX8357A_POWER_CONTROL_3, 0x00, // FS0[1:0]=01, Set the operating frequency of the step-up circuit 1
       WRITE_C8_D8, HX8357A_POWER_CONTROL_2, 0x00,
       WRITE_C8_D8, HX8357A_DISPLAY_CONTROL_1, 0x33,

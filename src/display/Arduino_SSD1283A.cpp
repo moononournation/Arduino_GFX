@@ -34,6 +34,21 @@ void Arduino_SSD1283A::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_SSD1283A::tftInit()
 {
+  if (_rst >= 0)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(SSD1283A_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(SSD1283A_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+  }
+
   // Initialization Sequence
   _bus->beginWrite();
   _bus->writeCommand16(SSD1283A_POWER_CONTROL_1);

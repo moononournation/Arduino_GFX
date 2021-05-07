@@ -18,9 +18,20 @@ void Arduino_ILI9486_18bit::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ILI9486_18bit::tftInit()
 {
-  if (_rst < 0)
+  if (_rst >= 0)
   {
-    _bus->sendCommand(ILI9486_SWRST); // 1: Software reset
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(ILI9486_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(ILI9486_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+    _bus->sendCommand(ILI9486_SWRST);
     delay(ILI9486_RST_DELAY);
   }
 

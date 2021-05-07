@@ -16,11 +16,11 @@ void Arduino_ILI9488_3bit::begin(int32_t speed)
   {
     pinMode(_rst, OUTPUT);
     digitalWrite(_rst, HIGH);
-    delay(120);
+    delay(100);
     digitalWrite(_rst, LOW);
-    delay(120);
+    delay(ILI9488_RST_DELAY);
     digitalWrite(_rst, HIGH);
-    delay(120);
+    delay(ILI9488_RST_DELAY);
   }
   else
   {

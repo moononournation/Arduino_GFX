@@ -13,6 +13,8 @@
 #define HX8347C_TFTWIDTH 240  ///< HX8347C max TFT width
 #define HX8347C_TFTHEIGHT 320 ///< HX8347C max TFT height
 
+#define HX8347C_RST_DELAY 120
+
 class Arduino_HX8347C : public Arduino_TFT
 {
 public:

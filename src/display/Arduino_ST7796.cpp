@@ -97,6 +97,23 @@ void Arduino_ST7796::displayOff(void)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ST7796::tftInit()
 {
+  if (_rst >= 0)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(ST7796_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(ST7796_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+    _bus->sendCommand(ST7796_SWRESET);
+    delay(ST7796_RST_DELAY);
+  }
+
   _bus->beginWrite();
   _bus->writeC8D8(0xF0, 0xC3);
   _bus->writeC8D8(0xF0, 0x96);

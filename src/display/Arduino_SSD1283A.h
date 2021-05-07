@@ -14,6 +14,8 @@
 #define SSD1283A_TFTWIDTH 130  ///< SSD1283A max TFT width
 #define SSD1283A_TFTHEIGHT 130 ///< SSD1283A max TFT height
 
+#define SSD1283A_RST_DELAY 120
+
 // http://www.lcdwiki.com/res/MSP1601/SSD1283A%20Datasheet.pdf
 #define SSD1283A_OSCILLATOR 0x00
 #define SSD1283A_DRIVER_OUTPUT_CONTROL 0x01

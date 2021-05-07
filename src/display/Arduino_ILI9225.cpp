@@ -18,6 +18,21 @@ void Arduino_ILI9225::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ILI9225::tftInit()
 {
+  if (_rst >= 0)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(ILI9225_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(ILI9225_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+  }
+
   // Power-on sequence
   _bus->sendCommand(ILI9225_POWER_CTRL2);
   _bus->sendData16(0x0018); // Set APON,PON,AON,VCI1EN,VC

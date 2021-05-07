@@ -25,6 +25,21 @@ void Arduino_HX8347D::begin(int32_t speed)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_HX8347D::tftInit()
 {
+  if (_rst >= 0)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(HX8347D_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(HX8347D_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+  }
+
   uint8_t hx8347d_init_operations[] = {
       BEGIN_WRITE,
       WRITE_C8_D8, 0xEA, 0x00,

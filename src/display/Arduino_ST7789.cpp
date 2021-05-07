@@ -98,13 +98,24 @@ void Arduino_ST7789::displayOff(void)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ST7789::tftInit()
 {
+  if (_rst >= 0)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(ST7789_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(ST7789_RST_DELAY);
+  }
+  // else
+  // {
+  // Software Rest
+  _bus->sendCommand(ST7789_SWRESET);
+  delay(ST7789_RST_DELAY);
+  // }
+
   uint8_t st7789_init_operations[] = {
-      BEGIN_WRITE,
-      WRITE_COMMAND_8, ST7789_SWRESET, // 1: Software reset
-      END_WRITE,
-
-      DELAY, ST7789_RST_DELAY,
-
       BEGIN_WRITE,
       WRITE_COMMAND_8, ST7789_SLPOUT, // 2: Out of sleep mode, no args, w/delay
       END_WRITE,
