@@ -130,9 +130,8 @@ This library is not putting speed at the first priority, but still paid much eff
 - ST7796 320x480 [[test video](https://youtu.be/hUL-RuG4MAQ)]
 
 ## Tobe Support Display (Donation can make it happen)
-- HX8357A 240x320 (first trial failed)
 - LG4573 480x800 (first trial failed)
-- ILI9806 480x800 (first trial failed)
+- ILI9806 480x800 (second trial failed)
 - NT35310
 - NT35510
 - FastLED Martix supported by co-operate with Canvas
