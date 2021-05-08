@@ -1,5 +1,4 @@
 #include "Arduino_HX8357A.h"
-#include "SPI.h"
 
 Arduino_HX8357A::Arduino_HX8357A(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
     : Arduino_TFT(bus, rst, r, ips, HX8357A_TFTWIDTH, HX8357A_TFTHEIGHT, 0, 0, 0, 0)
@@ -8,10 +7,6 @@ Arduino_HX8357A::Arduino_HX8357A(Arduino_DataBus *bus, int8_t rst, uint8_t r, bo
 
 void Arduino_HX8357A::begin(int32_t speed)
 {
-#if defined(ESP32) || defined(ARDUINO_ARCH_NRF52840)
-  _override_datamode = SPI_MODE3;
-#endif
-
   Arduino_TFT::begin(speed);
 }
 
@@ -23,8 +18,6 @@ void Arduino_HX8357A::begin(int32_t speed)
 /**************************************************************************/
 void Arduino_HX8357A::setRotation(uint8_t r)
 {
-  delay(HX8357A_RST_DELAY);
-
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
