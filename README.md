@@ -155,5 +155,6 @@ This library is not putting speed at the first priority, but still paid much eff
 - https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test
 - https://github.com/espressif/arduino-esp32.git
 - https://github.com/gitcnd/LCDWIKI_SPI.git
+- https://github.com/lcdwiki/LCDWIKI_SPI.git
 - https://github.com/lovyan03/LovyanGFX.git
 - https://github.com/lovyan03/M5Stack_JpgLoopAnime
