@@ -7,6 +7,8 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_ESP32PAR16.h"
 
+// #define SET_DATA_AND_WR_AT_THE_SAME_TIME
+
 Arduino_ESP32PAR16::Arduino_ESP32PAR16(
     int8_t dc, int8_t cs, int8_t wr, int8_t rd,
     int8_t d0, int8_t d1, int8_t d2, int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7,
@@ -135,7 +137,11 @@ void Arduino_ESP32PAR16::begin(int32_t speed, int8_t dataMode)
   _dataClrMask = (1 << _wr) | (1 << _d0) | (1 << _d1) | (1 << _d2) | (1 << _d3) | (1 << _d4) | (1 << _d5) | (1 << _d6) | (1 << _d7) | (1 << _d8) | (1 << _d9) | (1 << _d10) | (1 << _d11) | (1 << _d12) | (1 << _d13) | (1 << _d14) | (1 << _d15);
   for (int32_t c = 0; c < 256; c++)
   {
+#if defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
     _xset_mask_lo[c] = (1 << _wr);
+#else  // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
+    _xset_mask_lo[c] = 0;
+#endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
     if (c & 0x01)
     {
       _xset_mask_lo[c] |= (1 << _d0);
@@ -258,6 +264,9 @@ void Arduino_ESP32PAR16::writeRepeat(uint16_t p, uint32_t len)
   {
     *_dataPortClr = _dataClrMask;
     *_dataPortSet = d;
+#if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
+    *_wrPortSet = _wrPinMask;
+#endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
   }
 }
 
@@ -289,7 +298,9 @@ void Arduino_ESP32PAR16::writeC8D16(uint8_t c, uint16_t d)
 
   DC_HIGH();
 
-  WRITE16(d);
+  _data16.value = d;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 }
 
 void Arduino_ESP32PAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
@@ -300,8 +311,12 @@ void Arduino_ESP32PAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
   DC_HIGH();
 
-  WRITE16(d1);
-  WRITE16(d2);
+  _data16.value = d1;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
+  _data16.value = d2;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
 }
 
 void Arduino_ESP32PAR16::writeBytes(uint8_t *data, uint32_t len)
@@ -335,6 +350,9 @@ void Arduino_ESP32PAR16::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, 
     _data16.value = idx[*data++];
     *_dataPortClr = _dataClrMask;
     *_dataPortSet = _xset_mask_hi[_data16.msb] | _xset_mask_lo[_data16.lsb];
+#if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
+    *_wrPortSet = _wrPinMask;
+#endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
     *wrPortClr = _wrPinMask;
     *_wrPortSet = _wrPinMask;
   }
@@ -344,6 +362,9 @@ INLINE void Arduino_ESP32PAR16::WRITE(uint8_t d)
 {
   *_dataPortClr = _dataClrMask;
   *_dataPortSet = _xset_mask_lo[d];
+#if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
+  *_wrPortSet = _wrPinMask;
+#endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
 }
 
 INLINE void Arduino_ESP32PAR16::WRITE16(uint16_t d)
@@ -351,6 +372,9 @@ INLINE void Arduino_ESP32PAR16::WRITE16(uint16_t d)
   *_dataPortClr = _dataClrMask;
   _data16.value = d;
   *_dataPortSet = _xset_mask_hi[_data16.msb] | _xset_mask_lo[_data16.lsb];
+#if !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
+  *_wrPortSet = _wrPinMask;
+#endif // !defined(SET_DATA_AND_WR_AT_THE_SAME_TIME)
 }
 
 /******** low level bit twiddling **********/
