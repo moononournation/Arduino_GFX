@@ -65,8 +65,7 @@ private:
   PORTreg_t _dataPortClr; ///< PORT register CLEAR
   uint32_t _dataClrMask;
   // Lookup table for ESP32 parallel bus interface uses 1kbyte RAM,
-  uint32_t _xset_mask[256]; // Makes Sprite rendering test 33% faster, for slower macro equivalent
-                           // see commented out #define set_mask(C) within TFT_eSPI_ESP32.h
+  uint32_t _xset_mask[256];
 };
 
 #endif // _ARDUINO_ESP32PAR8_H_
