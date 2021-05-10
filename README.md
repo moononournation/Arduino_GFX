@@ -2,13 +2,17 @@
 
 Arduino_GFX is a Arduino graphics library supporting various displays with various data bus interfaces.
 
-This library start rewrite from Adafruit_GFX, TFT_eSPI, Ucglib and more...
+This library start rewrite from Adafruit_GFX, LovyanGFX, TFT_eSPI, Ucglib, and more...
 
 ## Various dat bus interfaces
 
-Most tiny display in hobbiest electronics world support 8-bit SPI, but some require 9-bit SPI. As I know, it should be the first Arduino display library that can support ESP32 9-bit hardware SPI. It is very important to support the displays (e.g. HX8357B, ...) that require 9-bit SPI interface.
+Arduino_GFX utilize Arduino Built-in SPI class to support 8-bit SPI for most platform.
 
-Larger display most likely not support standalone SPI since it is not fast enough to refresh the full screen details. Most of them can use 8-bit/16-bit Parallel interface.
+Most tiny display in hobbiest electronics world support 8-bit SPI. But some requires 9-bit SPI. Arduino_GFX should be the first Arduino display library that can use ESP32 SPI to support 9-bit hardware SPI. 9-bit hardware SPI is important to support the displays that require 9-bit SPI interface. (e.g. HX8357B, ...)
+
+Larger display most likely not support standalone SPI since it is not fast enough to refresh the full screen details. Most of them support 8-bit/16-bit Parallel interface.
+
+Some larger display requires 3-bit SPI + RGB combo interface, i.e. requires more than 3 + 24 pins. Most dev board have not enough GPIO to support this. Arduino_GFX will finally support this combo interface but will be in very low priority. Huge monthly donation may make it happen :P
 
 ## Ease of use
 #### Simple Declaration
@@ -144,7 +148,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - Canvas_3bit (1/4 memory space framebuffer)
 - Canvas_Mono (1/16 memory space framebuffer)
 
-## Used source code
+## Using source code come from:
 - http://elm-chan.org/fsw/tjpgd/00index.html
 - https://github.com/adafruit/Adafruit-GFX-Library.git
 - https://github.com/adafruit/Adafruit_ILI9341.git
