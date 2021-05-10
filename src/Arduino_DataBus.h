@@ -144,6 +144,8 @@ class Arduino_DataBus
 public:
     Arduino_DataBus();
 
+    void unused() { UNUSED(_data16); } // avoid compiler warning
+
     virtual void begin(int32_t speed, int8_t dataMode = -1) = 0;
     virtual void beginWrite() = 0;
     virtual void endWrite() = 0;
