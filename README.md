@@ -81,6 +81,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - Arduino Pro Micro
 - ESP8266 Series
 - ESP32 Series
+- Raspberry Pi Pico
 - rtlduino
 - WeAct BlackPill V2.0 (BlackPill F411CE)
 
