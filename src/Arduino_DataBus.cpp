@@ -73,7 +73,7 @@ void Arduino_DataBus::batchOperation(uint8_t batch[], size_t len)
     case WRITE_C16_D16:
       l = 2;
     case WRITE_COMMAND_16:
-      _data16.msb = ((uint16_t)batch[++i]) << 8;
+      _data16.msb = batch[++i];
       _data16.lsb = batch[++i];
       writeCommand16(_data16.value);
       break;
