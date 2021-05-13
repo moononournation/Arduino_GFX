@@ -3,15 +3,15 @@
  * https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test
  */
 #ifdef ESP32
-#ifndef _ARDUINO_ESP32PAR16_H_
-#define _ARDUINO_ESP32PAR16_H_
+#ifndef _ARDUINO_ESP32PAR16Q_H_
+#define _ARDUINO_ESP32PAR16Q_H_
 
 #include "Arduino_DataBus.h"
 
-class Arduino_ESP32PAR16 : public Arduino_DataBus
+class Arduino_ESP32PAR16Q : public Arduino_DataBus
 {
 public:
-  Arduino_ESP32PAR16(
+  Arduino_ESP32PAR16Q(
       int8_t dc, int8_t cs, int8_t wr, int8_t rd,
       int8_t d0, int8_t d1, int8_t d2, int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7,
       int8_t d8, int8_t d9, int8_t d10, int8_t d11, int8_t d12, int8_t d13, int8_t d14, int8_t d15); // Constructor
@@ -72,5 +72,5 @@ private:
   uint32_t _xset_mask_hi[256];
 };
 
-#endif // _ARDUINO_ESP32PAR16_H_
+#endif // _ARDUINO_ESP32PAR16Q_H_
 #endif // #ifdef ESP32

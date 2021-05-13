@@ -3,18 +3,17 @@
  * https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test
  */
 #ifdef ESP32
-#ifndef _ARDUINO_ESP32PAR16_H_
-#define _ARDUINO_ESP32PAR16_H_
+#ifndef _ARDUINO_ESP32PAR8Q_H_
+#define _ARDUINO_ESP32PAR8Q_H_
 
 #include "Arduino_DataBus.h"
 
-class Arduino_ESP32PAR16 : public Arduino_DataBus
+class Arduino_ESP32PAR8Q : public Arduino_DataBus
 {
 public:
-  Arduino_ESP32PAR16(
+  Arduino_ESP32PAR8Q(
       int8_t dc, int8_t cs, int8_t wr, int8_t rd,
-      int8_t d0, int8_t d1, int8_t d2, int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7,
-      int8_t d8, int8_t d9, int8_t d10, int8_t d11, int8_t d12, int8_t d13, int8_t d14, int8_t d15); // Constructor
+      int8_t d0, int8_t d1, int8_t d2, int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7); // Constructor
 
   void begin(int32_t speed = 0, int8_t dataMode = 0) override;
   void beginWrite() override;
@@ -38,7 +37,6 @@ public:
 protected:
 private:
   INLINE void WRITE(uint8_t d);
-  INLINE void WRITE16(uint16_t d);
   INLINE void DC_HIGH(void);
   INLINE void DC_LOW(void);
   INLINE void CS_HIGH(void);
@@ -46,7 +44,6 @@ private:
 
   int8_t _dc, _cs, _wr, _rd;
   int8_t _d0, _d1, _d2, _d3, _d4, _d5, _d6, _d7;
-  int8_t _d8, _d9, _d10, _d11, _d12, _d13, _d14, _d15;
 
   PORTreg_t _dcPortSet; ///< PORT register SET
   PORTreg_t _dcPortClr; ///< PORT register CLEAR
@@ -67,10 +64,9 @@ private:
   PORTreg_t _dataPortSet; ///< PORT register SET
   PORTreg_t _dataPortClr; ///< PORT register CLEAR
   uint32_t _dataClrMask;
-  // Lookup table for ESP32 parallel bus interface uses 2kbyte RAM,
-  uint32_t _xset_mask_lo[256];
-  uint32_t _xset_mask_hi[256];
+  // Lookup table for ESP32 parallel bus interface uses 1kbyte RAM,
+  uint32_t _xset_mask[256];
 };
 
-#endif // _ARDUINO_ESP32PAR16_H_
+#endif // _ARDUINO_ESP32PAR8Q_H_
 #endif // #ifdef ESP32

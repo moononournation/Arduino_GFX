@@ -54,7 +54,7 @@ private:
   uint32_t _csPinMask;  ///< Bitmask
 
   PORTreg_t _wrPortSet; ///< PORT register SET
-  PORTreg_t wrPortClr; ///< PORT register CLEAR
+  PORTreg_t _wrPortClr; ///< PORT register CLEAR
   uint32_t _wrPinMask;  ///< Bitmask
 
   PORTreg_t _rdPortSet; ///< PORT register SET
