@@ -117,6 +117,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - ILI9488 320x480 (3 bit color with canvas) [[test video](https://youtu.be/r7be0WbIBYk)]
 - ILI9488 320x480 (18 bit color) [[test video](https://youtu.be/NkE-LhtLHBQ)]
 - JBT6K71 (8-bit Parallel) 240x320 [[test video](https://youtu.be/qid3F4Gb0mM)]
+- NT35510 480x800 [[test video](https://youtu.be/C_1ASzUN3bg)]
 - NT39125 (8-bit/16-bit Parallel) 240x376 [[test video](https://youtu.be/JGMrM18JAFA)]
 - R61529 (8-bit/16-bit Parallel) 320x480 [[test video](https://youtu.be/s93gxjbIAT8)]
 - SEPS525 160x128 [[test video](https://youtu.be/tlmvFBHYv-k)]
@@ -138,7 +139,6 @@ This library is not putting speed at the first priority, but still paid much eff
 - LG4573 480x800 (first trial failed)
 - ILI9806 480x800 (second trial failed)
 - NT35310
-- NT35510
 - FastLED Martix supported by co-operate with Canvas
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas
@@ -160,6 +160,7 @@ This library is not putting speed at the first priority, but still paid much eff
 - https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test
 - https://github.com/espressif/arduino-esp32.git
 - https://github.com/gitcnd/LCDWIKI_SPI.git
+- https://github.com/hi631/LCD_NT35510-MRB3971.git
 - https://github.com/lcdwiki/LCDWIKI_SPI.git
 - https://github.com/lovyan03/LovyanGFX.git
 - https://github.com/lovyan03/M5Stack_JpgLoopAnime
