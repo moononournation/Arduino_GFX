@@ -72,6 +72,51 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
     _misoPort = &reg->IN;
     _misoPinMask = 1UL << pin;
   }
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+  _sckPinMask = digitalPinToBitMask(_sck);
+  _mosiPinMask = digitalPinToBitMask(_mosi);
+  _sckPortSet = (PORTreg_t)&sio_hw->gpio_set;
+  _sckPortClr = (PORTreg_t)&sio_hw->gpio_clr;
+  _mosiPortSet = (PORTreg_t)&sio_hw->gpio_set;
+  _mosiPortClr = (PORTreg_t)&sio_hw->gpio_clr;
+  _dcPinMask = digitalPinToBitMask(_dc);
+  _dcPortSet = (PORTreg_t)&sio_hw->gpio_set;
+  _dcPortClr = (PORTreg_t)&sio_hw->gpio_clr;
+  if (_cs >= 0)
+  {
+    _csPinMask = digitalPinToBitMask(_cs);
+    _csPortSet = (PORTreg_t)&sio_hw->gpio_set;
+    _csPortClr = (PORTreg_t)&sio_hw->gpio_clr;
+  }
+  else
+  {
+    // No chip-select line defined; might be permanently tied to GND.
+    // Assign a valid GPIO register (though not used for CS), and an
+    // empty pin bitmask...the nonsense bit-twiddling might be faster
+    // than checking _cs and possibly branching.
+    _csPortSet = (PORTreg_t)_dcPortSet;
+    _csPortClr = (PORTreg_t)_dcPortClr;
+    _csPinMask = 0;
+  }
+  if (_miso >= 0)
+  {
+    _misoPort = portInputRegister(_miso);
+    _misoPinMask = digitalPinToBitMask(_miso);
+  }
+  else
+  {
+    _misoPort = portInputRegister(_miso);
+  }
+  if (_miso >= 0)
+  {
+    _misoPinMask = digitalPinToBitMask(_miso);
+    _misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
+  }
+  else
+  {
+    _misoPinMask = 0;
+    _misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_sck));
+  }
 #elif defined(ESP32)
   _sckPinMask = digitalPinToBitMask(_sck);
   _mosiPinMask = digitalPinToBitMask(_mosi);
@@ -131,9 +176,7 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
   if (_miso >= 0)
   {
     _misoPort = portInputRegister(_miso);
-#if !defined(KINETISK)
     _misoPinMask = digitalPinToBitMask(_miso);
-#endif
   }
   else
   {
