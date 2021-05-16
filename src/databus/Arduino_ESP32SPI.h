@@ -69,7 +69,7 @@ private:
   uint32_t _csPinMask;  ///< Bitmask for chip select
 
   spi_t *_spi;
-  uint8_t _bitOrder;
+  uint8_t _bitOrder = SPI_MSBFIRST;
   union
   {
     uint8_t _buffer[SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
