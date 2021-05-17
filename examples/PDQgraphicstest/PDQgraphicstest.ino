@@ -99,6 +99,8 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 #if defined(ARDUINO_ARCH_NRF52840)
 // Arduino_DataBus *bus = new Arduino_mbedSPI(TFT_DC, TFT_CS);
 Arduino_DataBus *bus = new Arduino_NRFXSPI(TFT_DC, TFT_CS, 13 /* SCK */, 11 /* MOSI */, 12 /* MISO */);
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+Arduino_DataBus *bus = new Arduino_RPiPicoSPI(TFT_DC, TFT_CS, PIN_SPI0_SCK /* SCK */, PIN_SPI0_MOSI /* MOSI */, PIN_SPI0_MISO /* MISO */, spi0 /* spi */);
 #elif defined(ESP32)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
 #elif defined(ESP8266)
@@ -252,6 +254,8 @@ uint8_t tsa, tsb, tsc, ds;
 void setup()
 {
   Serial.begin(115200);
+
+  // while(!Serial);
 
   Serial.println("Arduino_GFX library Test!");
 

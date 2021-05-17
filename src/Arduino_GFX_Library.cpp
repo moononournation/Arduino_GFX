@@ -4,6 +4,8 @@ Arduino_DataBus *create_default_Arduino_DataBus()
 {
 #if defined(ARDUINO_ARCH_NRF52840)
     return new Arduino_NRFXSPI(TFT_DC, TFT_CS, TFT_SCK, TFT_MOSI, TFT_MISO);
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+    return new Arduino_RPiPicoSPI(TFT_DC, TFT_CS, TFT_SCK, TFT_MOSI, TFT_MISO, spi0);
 #elif defined(ESP32)
     return new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCK, TFT_MOSI, TFT_MISO);
 #elif defined(ESP8266)

@@ -13,6 +13,7 @@
 #include "databus/Arduino_ESP8266SPI.h"
 #include "databus/Arduino_mbedSPI.h"
 #include "databus/Arduino_NRFXSPI.h"
+#include "databus/Arduino_RPiPicoSPI.h"
 
 #include "Arduino_GFX.h" // Core graphics library
 #if !defined(LITTLE_FOOT_PRINT)
@@ -22,6 +23,7 @@
 #include "canvas/Arduino_Canvas_Mono.h"
 #include "display/Arduino_ILI9488_3bit.h"
 #endif // !defined(LITTLE_FOOT_PRINT)
+
 #include "display/Arduino_GC9A01.h"
 #include "display/Arduino_HX8347C.h"
 #include "display/Arduino_HX8347D.h"
@@ -88,6 +90,14 @@
 #define TFT_SCK 13
 #define TFT_MOSI 11
 #define TFT_MISO 12
+#define TFT_CS 9
+#define TFT_DC 8
+#define TFT_RST 7
+#define TFT_BL 6
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+#define TFT_SCK PIN_SPI0_SCK
+#define TFT_MOSI PIN_SPI0_MOSI
+#define TFT_MISO PIN_SPI0_MISO
 #define TFT_CS 9
 #define TFT_DC 8
 #define TFT_RST 7
