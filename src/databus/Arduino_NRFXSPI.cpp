@@ -232,10 +232,7 @@ void Arduino_NRFXSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
   while (repeat--)
   {
-    for (uint8_t i = 0; i < len; i++)
-    {
-      write(data[i]);
-    }
+    WRITEBUF(data, len);
   }
 }
 
