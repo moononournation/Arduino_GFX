@@ -66,6 +66,11 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 #define TFT_DC 3
 #define TFT_RST 2
 #define TFT_BL 1
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+#define TFT_CS 17 // -1 for display without CS pin
+#define TFT_DC 27
+#define TFT_RST 26
+#define TFT_BL 28
 #elif defined(ESP32)
 #define TFT_CS 5 // -1 for display without CS pin
 #define TFT_DC 27 // -1 for display without DC pin (9-bit SPI)
@@ -77,7 +82,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 #define TFT_RST 2
 #define TFT_BL 5
 #elif defined(RTL8722DM)
-#define TFT_CS 18
+#define TFT_CS 18 // -1 for display without CS pin
 #define TFT_DC 17
 #define TFT_RST 22
 #define TFT_BL 23

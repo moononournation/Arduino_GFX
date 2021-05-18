@@ -94,19 +94,19 @@
 #define TFT_DC 8
 #define TFT_RST 7
 #define TFT_BL 6
-#elif defined(ARDUINO_RASPBERRY_PI_PICO)
-#define TFT_SCK PIN_SPI0_SCK
-#define TFT_MOSI PIN_SPI0_MOSI
-#define TFT_MISO PIN_SPI0_MISO
-#define TFT_CS 9
-#define TFT_DC 8
-#define TFT_RST 7
-#define TFT_BL 6
 #elif defined(ARDUINO_BLACKPILL_F411CE)
 #define TFT_CS 4
 #define TFT_DC 3
 #define TFT_RST 2
 #define TFT_BL 1
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+#define TFT_SCK PIN_SPI0_SCK
+#define TFT_MOSI PIN_SPI0_MOSI
+#define TFT_MISO PIN_SPI0_MISO
+#define TFT_CS 17
+#define TFT_DC 27
+#define TFT_RST 26
+#define TFT_BL 28
 #elif defined(ESP32)
 #define TFT_SCK 18
 #define TFT_MOSI 23
