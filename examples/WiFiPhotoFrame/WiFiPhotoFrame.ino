@@ -76,6 +76,9 @@ char http_path[1024];
 void setup()
 {
   Serial.begin(115200);
+  // while (!Serial);
+  Serial.println("WiFi Photo Frame");
+
   gfx->begin();
   gfx->fillScreen(BLACK);
 

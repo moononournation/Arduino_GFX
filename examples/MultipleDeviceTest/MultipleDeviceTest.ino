@@ -24,7 +24,7 @@ uint8_t tsa, tsb, tsc, ds;
 void setup()
 {
   Serial.begin(115200);
-
+  // while (!Serial);
   Serial.println("Arduino_GFX library Multiple Device Test!");
 
   gfx1->begin();
