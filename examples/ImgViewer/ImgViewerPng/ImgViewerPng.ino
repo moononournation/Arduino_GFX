@@ -9,12 +9,17 @@
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
  * 2. Upload PNG file
+ *   FFat (ESP32):
+ *     upload FFat (FatFS) data with ESP32 Sketch Data Upload:
+ *     ESP32: https://github.com/lorol/arduino-esp32fs-plugin
+ *   LittleFS (ESP32 / ESP8266 / Pico):
+ *     upload LittleFS data with ESP8266 LittleFS Data Upload:
+ *     ESP32: https://github.com/lorol/arduino-esp32fs-plugin
+ *     ESP8266: https://github.com/earlephilhower/arduino-esp8266littlefs-plugin
+ *     Pico: https://github.com/earlephilhower/arduino-pico-littlefs-plugin.git
  *   SPIFFS (ESP32):
  *     upload SPIFFS data with ESP32 Sketch Data Upload:
- *     ESP32: https://github.com/me-no-dev/arduino-esp32fs-plugin
- *   LittleFS (ESP8266):
- *     upload LittleFS data with ESP8266 LittleFS Data Upload:
- *     ESP8266: https://github.com/earlephilhower/arduino-esp8266littlefs-plugin
+ *     ESP32: https://github.com/lorol/arduino-esp32fs-plugin
  *   SD:
  *     Most Arduino system built-in support SD file system.
  *     Wio Terminal require extra dependant Libraries:
@@ -46,7 +51,7 @@ Arduino_GFX *gfx = create_default_Arduino_GFX();
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 3 /* rotation */, false /* IPS */);
 
 #endif /* !defined(DISPLAY_DEV_KIT) */
 /*******************************************************************************
@@ -57,7 +62,12 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #include <Seeed_FS.h>
 #include <SD/Seeed_SD.h>
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+#include <LittleFS.h>
+#include <SD.h>
 #elif defined(ESP32)
+#include <FFat.h>
+#include <LittleFS.h>
 #include <SPIFFS.h>
 #include <SD.h>
 #elif defined(ESP8266)
@@ -92,6 +102,8 @@ void pngleDrawCallback(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint3
 void setup()
 {
   Serial.begin(115200);
+  // while (!Serial);
+  Serial.println("PNG Image Viewer");
 
   // Init Display
   gfx->begin();
@@ -105,8 +117,11 @@ void setup()
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
   if (!SD.begin(SDCARD_SS_PIN, SDCARD_SPI, 4000000UL))
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
 #elif defined(ESP32)
-  if (!SPIFFS.begin())
+  if (!FFat.begin())
+  // if (!LittleFS.begin())
+  // if (!SPIFFS.begin())
   // if (!SD.begin(SS))
 #elif defined(ESP8266)
   if (!LittleFS.begin())
@@ -125,8 +140,13 @@ void setup()
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
     File pngFile = SD.open(PNG_FILENAME, "r");
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+    File pngFile = LittleFS.open(PNG_FILENAME, "r");
+    // File pngFile = SD.open(PNG_FILENAME, "r");
 #elif defined(ESP32)
-    File pngFile = SPIFFS.open(PNG_FILENAME, "r");
+    File pngFile = FFat.open(PNG_FILENAME, "r");
+    // File pngFile = LittleFS.open(PNG_FILENAME, "r");
+    // File pngFile = SPIFFS.open(PNG_FILENAME, "r");
     // File pngFile = SD.open(PNG_FILENAME, "r");
 #elif defined(ESP8266)
     File pngFile = LittleFS.open(PNG_FILENAME, "r");

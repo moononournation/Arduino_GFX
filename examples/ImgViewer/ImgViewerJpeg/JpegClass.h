@@ -72,6 +72,8 @@ public:
 
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
         File f = fs->open(filename, "r");
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+        File f = fs->open(filename, "r");
 #elif defined(ESP32)
         File f = fs->open(filename, "r");
 #elif defined(ESP8266)

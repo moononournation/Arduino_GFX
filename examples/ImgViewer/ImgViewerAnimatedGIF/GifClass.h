@@ -17,8 +17,13 @@
 
 #include <sys/types.h>
 
+#ifndef MIN
 #define MIN(A, B) ((A) < (B) ? (A) : (B))
+#endif
+
+#ifndef MAX
 #define MAX(A, B) ((A) > (B) ? (A) : (B))
+#endif
 
 #define GIF_BUF_SIZE 1024
 
