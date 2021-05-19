@@ -2,8 +2,6 @@
 #define _ARDUINO_GFX_LIBRARIES_H_
 
 #include "Arduino_DataBus.h"
-#include "databus/Arduino_SWSPI.h"
-#include "databus/Arduino_HWSPI.h"
 #include "databus/Arduino_ESP32I2S8.h"
 #include "databus/Arduino_ESP32PAR8.h"
 #include "databus/Arduino_ESP32PAR8Q.h"
@@ -11,9 +9,12 @@
 #include "databus/Arduino_ESP32PAR16Q.h"
 #include "databus/Arduino_ESP32SPI.h"
 #include "databus/Arduino_ESP8266SPI.h"
+#include "databus/Arduino_HWSPI.h"
 #include "databus/Arduino_mbedSPI.h"
 #include "databus/Arduino_NRFXSPI.h"
+#include "databus/Arduino_RPiPicoPAR8.h"
 #include "databus/Arduino_RPiPicoSPI.h"
+#include "databus/Arduino_SWSPI.h"
 
 #include "Arduino_GFX.h" // Core graphics library
 #if !defined(LITTLE_FOOT_PRINT)
