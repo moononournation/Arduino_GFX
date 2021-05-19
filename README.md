@@ -34,7 +34,10 @@ gfx->println("Hello World!");
 
 
 ## Performance
-This library is not putting speed at the first priority, but still paid much effort to make the display look smooth. Below are some figures compare with other 2 Arduino common display libraries.
+This library is not putting speed at the first priority, but still paid much effort to make the display look smooth.
+
+### Figures
+Below are some figures compare with other 2 Arduino common display libraries.
 - Arduino IDE: 1.8.10
 - MCU: ESP32-PICO-D4
 - PSRAM: disable
@@ -63,12 +66,15 @@ This library is not putting speed at the first priority, but still paid much eff
 | Flash              | 232,572       | 245,544       | ***231,136*** |
 | Estimate memory    | 15,512        | 15,616        | ***15,432***  |
 
+### Why Run Fast?
+- No read operation. Since not all display provide read back graphic memories API, Arduino_GFX skip all read operations. It can reduce the library size footprint and sometimes reduce the operation time.
+- Tailor-made data bus classes. Arduino_GFX decopule data bus operation from display driver, it is more easy to write individual data bus class for each platform.
 
 ## Currently Supported data bus [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class)]
 - 8-bit and 9-bit hardware SPI (ESP32SPI)
-- 8-bit hardware SPI (HWSPI)
+- 8-bit hardware SPI (HWSPI, ESP8266SPI, mbedSPI, NRFXSPI, RPiPicoSPI)
 - 8-bit and 9-bit software SPI (SWSPI)
-- 8-bit parallel interface (ESP32PAR8)
+- 8-bit parallel interface (ESP32PAR8, RPiPicoPAR8)
 - 16-bit parallel interface (ESP32PAR16)
 
 ## Tobe Support data bus (Donation can make it happen)
@@ -89,7 +95,6 @@ This library is not putting speed at the first priority, but still paid much eff
 - Arduino ATMega2560
 - ESP32-S2 Series
 - ESP32-S3 Series
-- Raspberry Pi Pico
 
 ## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
 - ESP32 LCDKIT
