@@ -1572,8 +1572,7 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
 void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
                                      uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
-    int32_t offset = 0;
-    int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
+    int32_t offset = 0, maskIdx = 0;
     uint8_t byte = 0;
     startWrite();
     for (int16_t j = 0; j < h; j++, y++)
@@ -1586,7 +1585,7 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
             }
             else
             {
-                byte = mask[j * bw + i / 8];
+                byte = mask[maskIdx++];
             }
             if (byte & 0x80)
             {
