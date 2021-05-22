@@ -79,4 +79,5 @@ private:
 };
 
 #endif // _ARDUINO_ESP32SPI_H_
+
 #endif // #ifdef ESP32

@@ -3,6 +3,7 @@
  * https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test
  */
 #ifdef ESP32
+
 #ifndef _ARDUINO_ESP32PAR8Q_H_
 #define _ARDUINO_ESP32PAR8Q_H_
 
@@ -69,4 +70,5 @@ private:
 };
 
 #endif // _ARDUINO_ESP32PAR8Q_H_
+
 #endif // #ifdef ESP32

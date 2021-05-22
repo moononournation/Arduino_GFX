@@ -3,6 +3,7 @@
  * https://github.com/Bodmer/TFT_eSPI.git
  */
 #ifdef ESP8266
+
 #include <SPI.h>
 #include "Arduino_ESP8266SPI.h"
 
@@ -382,4 +383,4 @@ INLINE void Arduino_ESP8266SPI::CS_LOW(void)
   }
 }
 
-#endif // ESP8266
+#endif // #ifdef ESP8266

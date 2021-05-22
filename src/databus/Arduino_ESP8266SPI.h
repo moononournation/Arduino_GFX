@@ -56,4 +56,4 @@ private:
 
 #endif // _ARDUINO_ESP8266SPI_H_
 
-#endif // ESP8266
+#endif // #ifdef ESP8266

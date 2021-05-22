@@ -345,4 +345,4 @@ INLINE void Arduino_ESP32PAR8Q::CS_LOW(void)
   *_csPortClr = _csPinMask;
 }
 
-#endif
+#endif // #ifdef ESP32

@@ -1,4 +1,5 @@
 #ifdef ARDUINO_RASPBERRY_PI_PICO
+
 #include "Arduino_RPiPicoPAR8.h"
 
 Arduino_RPiPicoPAR8::Arduino_RPiPicoPAR8(int8_t dc, int8_t cs, int8_t wr, int8_t rd)
