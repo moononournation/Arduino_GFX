@@ -84,7 +84,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 #elif defined(RTL8722DM)
 #define TFT_CS 18 // -1 for display without CS pin
 #define TFT_DC 17
-#define TFT_RST 22
+#define TFT_RST 2
 #define TFT_BL 23
 #else
 #define TFT_CS 9 // -1 for display without CS pin
