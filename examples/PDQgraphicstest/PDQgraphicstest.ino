@@ -126,8 +126,13 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 //     19 /* D0 */, 23 /* D1 */, 18 /* D2 */, 5 /* D3 */, 17 /* D4 */, 16 /* D5 */, 25 /* D6 */, 26 /* D7 */,
 //     27 /* D8 */, 14 /* D9 */, 12 /* D10 */, 13 /* D11 */, 15 /* D12 */, 2 /* D13 */, 0 /* D14 */, 4 /* D15 */);
 
-// Raspberry Pi Pico parallel 8-bit, Display D0-D7 connect to GPIO 0-7
+// Raspberry Pi Pico parallel 8-bit
+// Display D0-D7 connect to GPIO 0-7
 // Arduino_DataBus *bus = new Arduino_RPiPicoPAR8(TFT_DC, TFT_CS, 18 /* WR */, 19 /* RD */);
+
+// RTL8722 parallel 8-bit
+// Reduce GPIO usage: CS connect to GND (enable); RD connect to Vcc (disable); No Backlight pins.
+// Arduino_DataBus *bus = new Arduino_RTLPAR8(0 /* DC */, -1 /* CS */, 1 /* WR */, -1 /* RD */, 18 /* D0 */, 22 /* D1 */, 17 /* D2 */, 20 /* D3 */, 19 /* D4 */, 23 /* D5 */, 21 /* D6 */, 16 /* D7 */);
 
 /*
  * Step 2: Initize one driver for your display

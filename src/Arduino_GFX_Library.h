@@ -14,6 +14,7 @@
 #include "databus/Arduino_NRFXSPI.h"
 #include "databus/Arduino_RPiPicoPAR8.h"
 #include "databus/Arduino_RPiPicoSPI.h"
+#include "databus/Arduino_RTLPAR8.h"
 #include "databus/Arduino_SWSPI.h"
 
 #include "Arduino_GFX.h" // Core graphics library
@@ -124,7 +125,7 @@
 #elif defined(RTL8722DM)
 #define TFT_CS 18
 #define TFT_DC 17
-#define TFT_RST 22
+#define TFT_RST 2
 #define TFT_BL 23
 #else // default pins for Arduino Nano, Mini, Micro and more
 #define TFT_CS 9

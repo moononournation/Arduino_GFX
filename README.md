@@ -74,7 +74,7 @@ Below are some figures compare with other 2 Arduino common display libraries.
 - 8-bit and 9-bit hardware SPI (ESP32SPI)
 - 8-bit hardware SPI (HWSPI, ESP8266SPI, mbedSPI, NRFXSPI, RPiPicoSPI)
 - 8-bit and 9-bit software SPI (SWSPI)
-- 8-bit parallel interface (ESP32PAR8, RPiPicoPAR8)
+- 8-bit parallel interface (ESP32PAR8, RPiPicoPAR8, RTLPAR8)
 - 16-bit parallel interface (ESP32PAR16)
 
 ## Tobe Support data bus (Donation can make it happen)
