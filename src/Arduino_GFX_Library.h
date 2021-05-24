@@ -13,6 +13,7 @@
 #include "databus/Arduino_mbedSPI.h"
 #include "databus/Arduino_NRFXSPI.h"
 #include "databus/Arduino_RPiPicoPAR8.h"
+#include "databus/Arduino_RPiPicoPAR16.h"
 #include "databus/Arduino_RPiPicoSPI.h"
 #include "databus/Arduino_RTLPAR8.h"
 #include "databus/Arduino_SWSPI.h"
