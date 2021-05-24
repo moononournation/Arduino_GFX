@@ -18,8 +18,74 @@ void Arduino_NT39125::begin(int32_t speed)
   Arduino_TFT::begin(speed);
 }
 
-// Companion code to the above tables.  Reads and issues
-// a series of LCD commands stored in PROGMEM byte array.
+void Arduino_NT39125::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
+{
+  if ((x != _currentX) || (w != _currentW))
+  {
+    _bus->writeC8D16D16(NT39125_CASET, x + _xStart, x + w - 1 + _xStart);
+
+    _currentX = x;
+    _currentW = w;
+  }
+  if ((y != _currentY) || (h != _currentH))
+  {
+    _bus->writeC8D16D16(NT39125_RASET, y + _yStart, y + h - 1 + _yStart);
+
+    _currentY = y;
+    _currentH = h;
+  }
+
+  _bus->writeCommand(NT39125_RAMWR); // write to RAM
+}
+
+/**************************************************************************/
+/*!
+    @brief   Set origin of (0,0) and orientation of TFT display
+    @param   m  The index for rotation, from 0-3 inclusive
+*/
+/**************************************************************************/
+void Arduino_NT39125::setRotation(uint8_t r)
+{
+  Arduino_TFT::setRotation(r);
+  switch (_rotation)
+  {
+  case 0:
+    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MX;
+    break;
+  case 1:
+    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MV;
+    break;
+  case 2:
+    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MY;
+    break;
+  case 3:
+    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MV | NT39125_MADCTL_MX | NT39125_MADCTL_MY;
+    break;
+  }
+
+  _bus->beginWrite();
+  _bus->writeCommand(NT39125_MADCTL);
+  _bus->write(r);
+  _bus->endWrite();
+}
+
+void Arduino_NT39125::invertDisplay(bool i)
+{
+  _bus->sendCommand((_ips ^ i) ? NT39125_INVON : NT39125_INVOFF);
+}
+
+void Arduino_NT39125::displayOn(void)
+{
+  _bus->sendCommand(NT39125_SLPOUT);
+  delay(NT39125_SLPOUT_DELAY);
+}
+
+void Arduino_NT39125::displayOff(void)
+{
+  _bus->sendCommand(NT39125_SLPIN);
+  delay(NT39125_SLPIN_DELAY);
+}
+
 void Arduino_NT39125::tftInit()
 {
   if (_rst >= 0)
@@ -39,7 +105,7 @@ void Arduino_NT39125::tftInit()
     delay(NT39125_RST_DELAY);
   }
 
-  uint8_t NT39125_init_operations[] = {
+  uint8_t nt39125_init_operations[] = {
       //Initializing
       BEGIN_WRITE,
       WRITE_COMMAND_8, NT39125_SLPOUT, // Sleep Out
@@ -136,78 +202,10 @@ void Arduino_NT39125::tftInit()
       WRITE_COMMAND_8, 0x29,
       END_WRITE};
 
-  _bus->batchOperation(NT39125_init_operations, sizeof(NT39125_init_operations));
+  _bus->batchOperation(nt39125_init_operations, sizeof(nt39125_init_operations));
 
   if (_ips)
   {
     _bus->sendCommand(NT39125_INVON);
   }
-}
-
-void Arduino_NT39125::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
-{
-  if ((x != _currentX) || (w != _currentW))
-  {
-    _bus->writeC8D16D16(NT39125_CASET, x + _xStart, x + w - 1 + _xStart);
-
-    _currentX = x;
-    _currentW = w;
-  }
-  if ((y != _currentY) || (h != _currentH))
-  {
-    _bus->writeC8D16D16(NT39125_RASET, y + _yStart, y + h - 1 + _yStart);
-
-    _currentY = y;
-    _currentH = h;
-  }
-
-  _bus->writeCommand(NT39125_RAMWR); // write to RAM
-}
-
-/**************************************************************************/
-/*!
-    @brief   Set origin of (0,0) and orientation of TFT display
-    @param   m  The index for rotation, from 0-3 inclusive
-*/
-/**************************************************************************/
-void Arduino_NT39125::setRotation(uint8_t r)
-{
-  Arduino_TFT::setRotation(r);
-  switch (_rotation)
-  {
-  case 0:
-    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MX;
-    break;
-  case 1:
-    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MV;
-    break;
-  case 2:
-    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MY;
-    break;
-  case 3:
-    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MV | NT39125_MADCTL_MX | NT39125_MADCTL_MY;
-    break;
-  }
-
-  _bus->beginWrite();
-  _bus->writeCommand(NT39125_MADCTL);
-  _bus->write(r);
-  _bus->endWrite();
-}
-
-void Arduino_NT39125::invertDisplay(bool i)
-{
-  _bus->sendCommand((_ips ^ i) ? NT39125_INVON : NT39125_INVOFF);
-}
-
-void Arduino_NT39125::displayOn(void)
-{
-  _bus->sendCommand(NT39125_SLPOUT);
-  delay(NT39125_SLPOUT_DELAY);
-}
-
-void Arduino_NT39125::displayOff(void)
-{
-  _bus->sendCommand(NT39125_SLPIN);
-  delay(NT39125_SLPIN_DELAY);
 }
