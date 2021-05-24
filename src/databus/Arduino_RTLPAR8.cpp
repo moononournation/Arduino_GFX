@@ -159,16 +159,18 @@ void Arduino_RTLPAR8::write16(uint16_t d)
 void Arduino_RTLPAR8::writeRepeat(uint16_t p, uint32_t len)
 {
   uint32_t dataMaskBase = *_dataPort & _dataPinMaskClr;
+  uint32_t wrMaskBase = *_wrPort & _wrPinMaskClr;
+  uint32_t wrMaskSet = wrMaskBase | _wrPinMaskSet;
   _data16.value = p;
   if (_data16.msb == _data16.lsb)
   {
     *_dataPort = dataMaskBase | _xset_mask[_data16.msb];
     while (len--)
     {
-      *_wrPort &= _wrPinMaskClr;
-      *_wrPort |= _wrPinMaskSet;
-      *_wrPort &= _wrPinMaskClr;
-      *_wrPort |= _wrPinMaskSet;
+      *_wrPort = wrMaskBase;
+      *_wrPort = wrMaskSet;
+      *_wrPort = wrMaskBase;
+      *_wrPort = wrMaskSet;
     }
   }
   else
@@ -178,12 +180,12 @@ void Arduino_RTLPAR8::writeRepeat(uint16_t p, uint32_t len)
     while (len--)
     {
       *_dataPort = dataMaskBase | hiMask;
-      *_wrPort &= _wrPinMaskClr;
-      *_wrPort |= _wrPinMaskSet;
+      *_wrPort = wrMaskBase;
+      *_wrPort = wrMaskSet;
 
       *_dataPort = dataMaskBase | loMask;
-      *_wrPort &= _wrPinMaskClr;
-      *_wrPort |= _wrPinMaskSet;
+      *_wrPort = wrMaskBase;
+      *_wrPort = wrMaskSet;
     }
   }
 }
@@ -191,18 +193,20 @@ void Arduino_RTLPAR8::writeRepeat(uint16_t p, uint32_t len)
 void Arduino_RTLPAR8::writePixels(uint16_t *data, uint32_t len)
 {
   uint32_t dataMaskBase = *_dataPort & _dataPinMaskClr;
+  uint32_t wrMaskBase = *_wrPort & _wrPinMaskClr;
+  uint32_t wrMaskSet = wrMaskBase | _wrPinMaskSet;
   while (len--)
   {
     _data16.value = *(data++);
     uint32_t hiMask = _xset_mask[_data16.msb];
     uint32_t loMask = _xset_mask[_data16.lsb];
     *_dataPort = dataMaskBase | hiMask;
-    *_wrPort &= _wrPinMaskClr;
-    *_wrPort |= _wrPinMaskSet;
+    *_wrPort = wrMaskBase;
+    *_wrPort = wrMaskSet;
 
     *_dataPort = dataMaskBase | loMask;
-    *_wrPort &= _wrPinMaskClr;
-    *_wrPort |= _wrPinMaskSet;
+    *_wrPort = wrMaskBase;
+    *_wrPort = wrMaskSet;
   }
 }
 
@@ -265,23 +269,27 @@ void Arduino_RTLPAR8::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 void Arduino_RTLPAR8::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   uint32_t dataMaskBase = *_dataPort & _dataPinMaskClr;
+  uint32_t wrMaskBase = *_wrPort & _wrPinMaskClr;
+  uint32_t wrMaskSet = wrMaskBase | _wrPinMaskSet;
   while (len--)
   {
     _data16.value = idx[*data++];
 
     *_dataPort = dataMaskBase | _xset_mask[_data16.msb];
-    *_wrPort &= _wrPinMaskClr;
-    *_wrPort |= _wrPinMaskSet;
+    *_wrPort = wrMaskBase;
+    *_wrPort = wrMaskSet;
 
     *_dataPort = dataMaskBase | _xset_mask[_data16.lsb];
-    *_wrPort &= _wrPinMaskClr;
-    *_wrPort |= _wrPinMaskSet;
+    *_wrPort = wrMaskBase;
+    *_wrPort = wrMaskSet;
   }
 }
 
 void Arduino_RTLPAR8::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   uint32_t dataMaskBase = *_dataPort & _dataPinMaskClr;
+  uint32_t wrMaskBase = *_wrPort & _wrPinMaskClr;
+  uint32_t wrMaskSet = wrMaskBase | _wrPinMaskSet;
   while (len--)
   {
     _data16.value = idx[*data++];
@@ -289,30 +297,31 @@ void Arduino_RTLPAR8::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uin
     uint32_t loMask = _xset_mask[_data16.lsb];
 
     *_dataPort = dataMaskBase | hiMask;
-    *_wrPort &= _wrPinMaskClr;
-    *_wrPort |= _wrPinMaskSet;
+    *_wrPort = wrMaskBase;
+    *_wrPort = wrMaskSet;
 
     *_dataPort = dataMaskBase | loMask;
-    *_wrPort &= _wrPinMaskClr;
-    *_wrPort |= _wrPinMaskSet;
+    *_wrPort = wrMaskBase;
+    *_wrPort = wrMaskSet;
 
     *_dataPort = dataMaskBase | hiMask;
-    *_wrPort &= _wrPinMaskClr;
-    *_wrPort |= _wrPinMaskSet;
+    *_wrPort = wrMaskBase;
+    *_wrPort = wrMaskSet;
 
     *_dataPort = dataMaskBase | loMask;
-    *_wrPort &= _wrPinMaskClr;
-    *_wrPort |= _wrPinMaskSet;
+    *_wrPort = wrMaskBase;
+    *_wrPort = wrMaskSet;
   }
 }
 
 INLINE void Arduino_RTLPAR8::WRITE(uint8_t d)
 {
   uint32_t dataMaskBase = *_dataPort & _dataPinMaskClr;
+  uint32_t wrMaskBase = *_wrPort & _wrPinMaskClr;
   *_dataPort = dataMaskBase | _xset_mask[d];
 
-  *_wrPort &= _wrPinMaskClr;
-  *_wrPort |= _wrPinMaskSet;
+    *_wrPort = wrMaskBase;
+    *_wrPort = wrMaskBase | _wrPinMaskSet;
 }
 
 /******** low level bit twiddling **********/
