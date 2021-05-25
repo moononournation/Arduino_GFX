@@ -203,6 +203,9 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 // JBT6K71 LCD 240x320
 // Arduino_GFX *gfx = new Arduino_JBT6K71(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 240, 320, 0, 0, 16, 0);
 
+// NT35310 LCD 320x480
+// Arduino_GFX *gfx = new Arduino_NT35310(bus, TFT_RST, 0 /* rotation */);
+
 // NT35510 LCD 480x800
 // Arduino_GFX *gfx = new Arduino_NT35510(bus, TFT_RST, 0 /* rotation */);
 
