@@ -167,8 +167,6 @@ void setup()
   gfx->setTextColor(GREEN);
   gfx->setCursor(2, 2);
   gfx->print("RTL");
-  gfx->setTextColor(YELLOW);
-  gfx->print("872x");
   gfx->setTextColor(WHITE);
   gfx->print(" WiFi Analyzer");
 }
