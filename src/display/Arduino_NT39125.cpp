@@ -49,17 +49,17 @@ void Arduino_NT39125::setRotation(uint8_t r)
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
-  case 0:
-    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MX;
-    break;
-  case 1:
+  case 3:
     r = NT39125_MADCTL_BGR | NT39125_MADCTL_MV;
     break;
   case 2:
-    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MY;
+    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MX;
     break;
-  case 3:
+  case 1:
     r = NT39125_MADCTL_BGR | NT39125_MADCTL_MV | NT39125_MADCTL_MX | NT39125_MADCTL_MY;
+    break;
+  default: // case 0:
+    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MY;
     break;
   }
 

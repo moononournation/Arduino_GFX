@@ -210,7 +210,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 // Arduino_GFX *gfx = new Arduino_NT35510(bus, TFT_RST, 0 /* rotation */);
 
 // NT39125 LCD 240x376
-// Arduino_GFX *gfx = new Arduino_NT39125(bus, TFT_RST, 2 /* rotation */, false /* IPS */, 240, 376, 0, 0, 0, 56);
+// Arduino_GFX *gfx = new Arduino_NT39125(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 240, 376, 0, 0, 0, 56);
 
 // R61529 IPS LCD 320x480
 // Arduino_GFX *gfx = new Arduino_R61529(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
@@ -243,7 +243,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 // 1.5" GREENTAB C 128x128
 // Arduino_GFX *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 128 /* width */, 128 /* height */, 0 /* col offset 1 */, 32 /* row offset 1 */);
 // 0.96" IPS LCD 80x160
-// Arduino_GFX *gfx = new Arduino_ST7735(bus, TFT_RST, 3 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
+// Arduino_GFX *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
 
 // ST7789 LCD
 // 2.4" LCD 240x320
