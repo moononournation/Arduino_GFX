@@ -50,16 +50,16 @@ void Arduino_NT39125::setRotation(uint8_t r)
   switch (_rotation)
   {
   case 3:
-    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MV;
-    break;
-  case 2:
-    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MX;
-    break;
-  case 1:
     r = NT39125_MADCTL_BGR | NT39125_MADCTL_MV | NT39125_MADCTL_MX | NT39125_MADCTL_MY;
     break;
-  default: // case 0:
+  case 2:
     r = NT39125_MADCTL_BGR | NT39125_MADCTL_MY;
+    break;
+  case 1:
+    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MV;
+    break;
+  default: // case 0:
+    r = NT39125_MADCTL_BGR | NT39125_MADCTL_MX;
     break;
   }
 
