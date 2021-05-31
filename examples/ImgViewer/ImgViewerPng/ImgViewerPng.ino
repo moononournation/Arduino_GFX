@@ -4,7 +4,7 @@
  * Image Source: https://github.com/logos
  *
  * Dependent libraries:
- * Pngle: https://github.com/kikuchan/pngle.git
+ * PNGdec: https://github.com/bitbank2/PNGdec.git
  * 
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
@@ -27,6 +27,7 @@
  *     - Seeed_Arduino_SFUD: https://github.com/Seeed-Studio/Seeed_Arduino_SFUD.git
  ******************************************************************************/
 #define PNG_FILENAME "/octocat.png"
+#define PNG_4BPP_FILENAME "/octocat-4bpp.png"
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
@@ -77,26 +78,76 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 3 /* rotation */, false /* 
 #include <SD.h>
 #endif
 
-#include <pngle.h>
-int16_t xOffset = 0;
-int16_t yOffset = 0;
+#include <PNGdec.h>
+PNG png;
 
-// Pngle init callback
-void pngleInitCallback(pngle_t *pngle, uint32_t w, uint32_t h)
+int16_t w, h, xOffset, yOffset;
+
+// Functions to access a file on the SD card
+File pngFile;
+
+void *myOpen(const char *filename, int32_t *size)
 {
-  int16_t gfxW = gfx->width();
-  int16_t gfxH = gfx->height();
-  xOffset = (w > gfxW) ? 0 : ((gfxW - w) / 2);
-  yOffset = (h > gfxH) ? 0 : ((gfxH - h) / 2);
+/* Wio Terminal */
+#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
+  pngFile = SD.open(filename, "r");
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+  pngFile = LittleFS.open(filename, "r");
+  // pngFile = SD.open(filename, "r");
+#elif defined(ESP32)
+  pngFile = FFat.open(filename, "r");
+  // pngFile = LittleFS.open(filename, "r");
+  // pngFile = SPIFFS.open(filename, "r");
+  // pngFile = SD.open(filename, "r");
+#elif defined(ESP8266)
+  pngFile = LittleFS.open(filename, "r");
+  // pngFile = SD.open(filename, "r");
+#else
+  pngFile = SD.open(filename, FILE_READ);
+#endif
+
+  if (!pngFile || pngFile.isDirectory())
+  {
+    Serial.println(F("ERROR: Failed to open " PNG_FILENAME " file for reading"));
+    gfx->println(F("ERROR: Failed to open " PNG_FILENAME " file for reading"));
+  }
+  else
+  {
+    *size = pngFile.size();
+  }
+
+  return &pngFile;
 }
 
-// Pngle draw callback
-void pngleDrawCallback(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint8_t rgba[4])
+void myClose(void *handle)
 {
-  if (rgba[3]) // not transparent
-  {
-    gfx->fillRect(x + xOffset, y + yOffset, w, h, gfx->color565(rgba[0], rgba[1], rgba[2]));
-  }
+  if (pngFile)
+    pngFile.close();
+}
+
+int32_t myRead(PNGFILE *handle, uint8_t *buffer, int32_t length)
+{
+  if (!pngFile)
+    return 0;
+  return pngFile.read(buffer, length);
+}
+int32_t mySeek(PNGFILE *handle, int32_t position)
+{
+  if (!pngFile)
+    return 0;
+  return pngFile.seek(position);
+}
+
+// Function to draw pixels to the display
+void PNGDraw(PNGDRAW *pDraw)
+{
+  uint16_t usPixels[320];
+  uint8_t usMask[320];
+
+  // Serial.printf("Draw pos = 0,%d. size = %d x 1\n", pDraw->y, pDraw->iWidth);
+  png.getLineAsRGB565(pDraw, usPixels, RGB565_LITTLE_ENDIAN, 0x00000000);
+  png.getAlphaMask(pDraw, usMask, 1);
+  gfx->draw16bitRGBBitmap(xOffset, yOffset + pDraw->y, usPixels, usMask, pDraw->iWidth, 1);
 }
 
 void setup()
@@ -108,6 +159,13 @@ void setup()
   // Init Display
   gfx->begin();
   gfx->fillScreen(BLACK);
+
+  w = gfx->width(), h = gfx->height();
+  gfx->fillScreen(BLACK);
+  for (int16_t x = 0; x < w; x += 5)
+  {
+    gfx->drawFastVLine(x, 0, h, PINK);
+  }
 
 #ifdef TFT_BL
   pinMode(TFT_BL, OUTPUT);
@@ -138,63 +196,43 @@ void setup()
   else
   {
     unsigned long start = millis();
-
-/* Wio Terminal */
-#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-    File pngFile = SD.open(PNG_FILENAME, "r");
-#elif defined(ARDUINO_RASPBERRY_PI_PICO)
-    File pngFile = LittleFS.open(PNG_FILENAME, "r");
-    // File pngFile = SD.open(PNG_FILENAME, "r");
-#elif defined(ESP32)
-    File pngFile = FFat.open(PNG_FILENAME, "r");
-    // File pngFile = LittleFS.open(PNG_FILENAME, "r");
-    // File pngFile = SPIFFS.open(PNG_FILENAME, "r");
-    // File pngFile = SD.open(PNG_FILENAME, "r");
-#elif defined(ESP8266)
-    File pngFile = LittleFS.open(PNG_FILENAME, "r");
-    // File pngFile = SD.open(PNG_FILENAME, "r");
-#else
-    File pngFile = SD.open(PNG_FILENAME, FILE_READ);
-#endif
-
-    if (!pngFile || pngFile.isDirectory())
+    int rc;
+    rc = png.open(PNG_FILENAME, myOpen, myClose, myRead, mySeek, PNGDraw);
+    if (rc == PNG_SUCCESS)
     {
-      Serial.println(F("ERROR: Failed to open " PNG_FILENAME " file for reading"));
-      gfx->println(F("ERROR: Failed to open " PNG_FILENAME " file for reading"));
-    }
-    else
-    {
-      pngle_t *pngle = pngle_new();
-      pngle_set_init_callback(pngle, pngleInitCallback);
-      pngle_set_draw_callback(pngle, pngleDrawCallback);
-      char buf[16]; // buffer minimum size is 16 but it can be much larger, e.g. 2048
-      int remain = 0;
-      int len;
-      gfx->fillScreen(PINK); // transprant background color
-      while ((len = pngFile.readBytes(buf + remain, sizeof(buf) - remain)) > 0)
-      {
-        int fed = pngle_feed(pngle, buf, remain + len);
-        if (fed < 0)
-        {
-          Serial.printf("ERROR: %s\n", pngle_error(pngle));
-          break;
-        }
+      xOffset = (w - png.getWidth()) / 2;
+      yOffset = (h - png.getHeight()) / 2;
 
-        remain = remain + len - fed;
-        if (remain > 0)
-        {
-          memmove(buf, buf + fed, remain);
-        }
-      }
+      rc = png.decode(NULL, 0);
 
-      pngle_destroy(pngle);
-      pngFile.close();
-
-      Serial.printf("Time used: %lu\n", millis() - start);
+      Serial.printf("Time used: %lu\n", xOffset, yOffset, millis() - start);
+      Serial.printf("image specs: (%d x %d), %d bpp, pixel type: %d\n", png.getWidth(), png.getHeight(), png.getBpp(), png.getPixelType());
+      png.close();
     }
   }
+
+  delay(5000); // 5 seconds
 }
 
 void loop()
 {
+  unsigned long start = millis();
+  int rc;
+  rc = png.open(PNG_4BPP_FILENAME, myOpen, myClose, myRead, mySeek, PNGDraw);
+  if (rc == PNG_SUCCESS)
+  {
+    // random draw position
+    int16_t pw = png.getWidth();
+    int16_t ph = png.getHeight();
+    xOffset = random(w) - (pw / 2);
+    yOffset = random(h) - (ph / 2);
+
+    rc = png.decode(NULL, 0);
+
+    Serial.printf("Draw offset: (%d, %d), time used: %lu\n", xOffset, yOffset, millis() - start);
+    Serial.printf("image specs: (%d x %d), %d bpp, pixel type: %d\n", png.getWidth(), png.getHeight(), png.getBpp(), png.getPixelType());
+    png.close();
+  }
+
+  delay(1000); // 1 second
 }
