@@ -102,7 +102,7 @@ void Arduino_NT35510::displayOff(void)
 
 void Arduino_NT35510::WriteRegM(uint16_t adr, uint16_t len, uint8_t dat[])
 {
-  for (int i = 0; i < len; i++)
+  for (uint16_t i = 0; i < len; i++)
   {
     _bus->writeCommand16(adr++);
     _bus->write16(dat[i]);
