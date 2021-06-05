@@ -24,6 +24,8 @@ void Arduino_RTLPAR8::begin(int32_t speed, int8_t dataMode)
 
   if (_cs >= 0)
   {
+    pinMode(_cs, OUTPUT);
+    digitalWrite(_cs, HIGH); // disable chip select
     _csPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_cs));
     _csPinMaskSet = digitalPinToBitMask(_cs);
   }
@@ -320,8 +322,8 @@ INLINE void Arduino_RTLPAR8::WRITE(uint8_t d)
   uint32_t wrMaskBase = *_wrPort & _wrPinMaskClr;
   *_dataPort = dataMaskBase | _xset_mask[d];
 
-    *_wrPort = wrMaskBase;
-    *_wrPort = wrMaskBase | _wrPinMaskSet;
+  *_wrPort = wrMaskBase;
+  *_wrPort = wrMaskBase | _wrPinMaskSet;
 }
 
 /******** low level bit twiddling **********/
