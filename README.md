@@ -74,7 +74,7 @@ Below are some figures compare with other 2 Arduino common display libraries.
 - 8-bit and 9-bit hardware SPI (ESP32SPI)
 - 8-bit hardware SPI (HWSPI, ESP8266SPI, mbedSPI, NRFXSPI, RPiPicoSPI)
 - 8-bit and 9-bit software SPI (SWSPI)
-- 8-bit parallel interface (ESP32PAR8, RPiPicoPAR8, RTLPAR8)
+- 8-bit parallel interface (AVRPAR8, ESP32PAR8, RPiPicoPAR8, RTLPAR8)
 - 16-bit parallel interface (ESP32PAR16, RPiPicoPAR16)
 
 ## Tobe Support data bus (Donation can make it happen)
@@ -142,9 +142,7 @@ Below are some figures compare with other 2 Arduino common display libraries.
 - ST7796 320x480 [[demo video](https://youtu.be/hUL-RuG4MAQ)]
 
 ## Tobe Support Display (Donation can make it happen)
-- LG4573 480x800 (first trial failed)
 - ILI9806 480x800 (second trial failed)
-- NT35310
 - FastLED Martix supported by co-operate with Canvas
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas

@@ -2,6 +2,7 @@
 #define _ARDUINO_GFX_LIBRARIES_H_
 
 #include "Arduino_DataBus.h"
+#include "databus/Arduino_AVRPAR8.h"
 #include "databus/Arduino_ESP32I2S8.h"
 #include "databus/Arduino_ESP32PAR8.h"
 #include "databus/Arduino_ESP32PAR8Q.h"
