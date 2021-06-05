@@ -100,7 +100,7 @@ void Arduino_RPiPicoPAR8::writeRepeat(uint16_t p, uint32_t len)
   if (_data16.msb == _data16.lsb)
   {
     sio_hw->gpio_clr = 0xFF;
-    sio_hw->gpio_set = p;
+    sio_hw->gpio_set = _data16.msb;
     while (len--)
     {
       sio_hw->gpio_clr = _wrPinMask;
