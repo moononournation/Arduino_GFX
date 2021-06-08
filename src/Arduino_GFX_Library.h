@@ -130,6 +130,11 @@
 #define TFT_DC 17
 #define TFT_RST 2
 #define TFT_BL 23
+#elif defined(SEEED_XIAO_M0)
+#define TFT_CS 3 // -1 for display without CS pin
+#define TFT_DC 2
+#define TFT_RST 1
+#define TFT_BL 0
 #else // default pins for Arduino Nano, Mini, Micro and more
 #define TFT_CS 9
 #define TFT_DC 8

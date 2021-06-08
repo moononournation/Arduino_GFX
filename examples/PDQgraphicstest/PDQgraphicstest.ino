@@ -86,6 +86,11 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 #define TFT_DC 17
 #define TFT_RST 2
 #define TFT_BL 23
+#elif defined(SEEED_XIAO_M0)
+#define TFT_CS 3 // -1 for display without CS pin
+#define TFT_DC 2
+#define TFT_RST 1
+#define TFT_BL 0
 #else
 #define TFT_CS 9 // -1 for display without CS pin
 #define TFT_DC 8
@@ -203,6 +208,9 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 
 // ILI9488 LCD 320x480
 // Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
+
+// ILI9806 LCD 480x854
+// Arduino_GFX *gfx = new Arduino_ILI9806(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
 
 // JBT6K71 LCD 240x320
 // Arduino_GFX *gfx = new Arduino_JBT6K71(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 240, 320, 0, 0, 16, 0);
