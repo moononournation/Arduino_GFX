@@ -78,8 +78,6 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #define SPI_DEFAULT_FREQ 8000000
 #elif defined(ARDUINO_ARCH_NRF52840)
 #define SPI_DEFAULT_FREQ 8000000
-#elif defined(ARDUINO_RASPBERRY_PI_PICO)
-#define SPI_DEFAULT_FREQ (F_CPU / 4)
 #elif defined(ESP8266) || defined(ESP32)
 #define SPI_DEFAULT_FREQ 40000000
 #elif defined(RTL8722DM)
@@ -91,7 +89,7 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #elif defined(ARDUINO_BLACKPILL_F411CE)
 #define SPI_DEFAULT_FREQ 50000000
 #else
-#define SPI_DEFAULT_FREQ 24000000 ///< Default SPI data clock frequency
+#define SPI_DEFAULT_FREQ (F_CPU / 4) ///< Default SPI data clock frequency
 #endif
 
 #define UNUSED(x) (void)(x)
