@@ -8,6 +8,11 @@
 #define _ARDUINO_MBEDSPI_H_
 
 #include <SPI.h>
+#if !defined(ARDUINO_AS_MBED_LIBRARY)
+#include "drivers/SPIMaster.h"
+#else
+#include "drivers/SPI.h"
+#endif
 
 #include "Arduino_DataBus.h"
 
