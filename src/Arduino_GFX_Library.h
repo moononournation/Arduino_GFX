@@ -99,6 +99,12 @@
 #define TFT_DC 8
 #define TFT_RST 7
 #define TFT_BL 6
+#elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
+// PJRC Teensy 4.x
+#define TFT_CS 39 // -1 for display without CS pin
+#define TFT_DC 41
+#define TFT_RST 40
+#define TFT_BL 22
 #elif defined(ARDUINO_BLACKPILL_F411CE)
 #define TFT_CS 4
 #define TFT_DC 3
