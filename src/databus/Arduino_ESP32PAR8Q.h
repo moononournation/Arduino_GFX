@@ -2,12 +2,12 @@
  * start rewrite from:
  * https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test
  */
-#ifdef ESP32
+#include "Arduino_DataBus.h"
+
+#if CONFIG_IDF_TARGET_ESP32
 
 #ifndef _ARDUINO_ESP32PAR8Q_H_
 #define _ARDUINO_ESP32PAR8Q_H_
-
-#include "Arduino_DataBus.h"
 
 class Arduino_ESP32PAR8Q : public Arduino_DataBus
 {
@@ -71,4 +71,4 @@ private:
 
 #endif // _ARDUINO_ESP32PAR8Q_H_
 
-#endif // #ifdef ESP32
+#endif // #if CONFIG_IDF_TARGET_ESP32

@@ -1,9 +1,9 @@
-#ifdef ESP32
+#include "Arduino_DataBus.h"
+
+#if CONFIG_IDF_TARGET_ESP32
 
 #ifndef _ARDUINO_ESP32PAR16Q_H_
 #define _ARDUINO_ESP32PAR16Q_H_
-
-#include "Arduino_DataBus.h"
 
 class Arduino_ESP32PAR16Q : public Arduino_DataBus
 {
@@ -71,4 +71,4 @@ private:
 
 #endif // _ARDUINO_ESP32PAR16Q_H_
 
-#endif // #ifdef ESP32
+#endif // #if CONFIG_IDF_TARGET_ESP32

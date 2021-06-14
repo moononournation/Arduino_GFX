@@ -1,6 +1,7 @@
-#ifdef ESP32
-
 #include "Arduino_DataBus.h"
+
+#if CONFIG_IDF_TARGET_ESP32
+
 #include "Arduino_ESP32PAR16Q.h"
 
 Arduino_ESP32PAR16Q::Arduino_ESP32PAR16Q(
@@ -377,4 +378,4 @@ INLINE void Arduino_ESP32PAR16Q::CS_LOW(void)
   *_csPortClr = _csPinMask;
 }
 
-#endif // #ifdef ESP32
+#endif // #if CONFIG_IDF_TARGET_ESP32

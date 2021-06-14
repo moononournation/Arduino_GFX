@@ -2,15 +2,15 @@
  * start rewrite from:
  * https://github.com/espressif/arduino-esp32.git
  */
-#ifdef ESP32
+#include "Arduino_DataBus.h"
+
+#if CONFIG_IDF_TARGET_ESP32
 
 #ifndef _ARDUINO_ESP32SPI_H_
 #define _ARDUINO_ESP32SPI_H_
 
 #include "soc/spi_struct.h"
 #include "soc/dport_reg.h"
-
-#include "Arduino_DataBus.h"
 
 #define SPI_MAX_PIXELS_AT_ONCE 32
 
@@ -80,4 +80,4 @@ private:
 
 #endif // _ARDUINO_ESP32SPI_H_
 
-#endif // #ifdef ESP32
+#endif // #if CONFIG_IDF_TARGET_ESP32

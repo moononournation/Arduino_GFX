@@ -94,7 +94,27 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
     _csPortClr = (PORTreg_t)_dcPortClr;
     _csPinMask = 0;
   }
-#elif defined(ESP32)
+#elif CONFIG_IDF_TARGET_ESP32C3
+  _dcPinMask = digitalPinToBitMask(_dc);
+  _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
+  _dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  if (_cs >= 0)
+  {
+    _csPinMask = digitalPinToBitMask(_cs);
+    _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    _csPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+  else
+  {
+    // No chip-select line defined; might be permanently tied to GND.
+    // Assign a valid GPIO register (though not used for CS), and an
+    // empty pin bitmask...the nonsense bit-twiddling might be faster
+    // than checking _cs and possibly branching.
+    _csPortSet = _dcPortSet;
+    _csPortClr = _dcPortClr;
+    _csPinMask = 0;
+  }
+  #elif defined(ESP32)
   _dcPinMask = digitalPinToBitMask(_dc);
   if (_dc >= 32)
   {

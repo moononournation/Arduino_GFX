@@ -2,9 +2,10 @@
  * start rewrite from:
  * https://github.com/espressif/arduino-esp32.git
  */
-#ifdef ESP32
-
 #include "Arduino_DataBus.h"
+
+#if CONFIG_IDF_TARGET_ESP32
+
 #include "Arduino_ESP32SPI.h"
 
 #define WAIT_SPI_NOT_BUSY while (_spi->dev->cmd.usr)
@@ -141,23 +142,7 @@ void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
   }
 #endif
 
-#if CONFIG_IDF_TARGET_ESP32S2
-  if (_spi_num == FSPI)
-  {
-    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI2_CLK_EN);
-    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI2_RST);
-  }
-  else if (_spi_num == HSPI)
-  {
-    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI3_CLK_EN);
-    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI3_RST);
-  }
-  else
-  {
-    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI01_CLK_EN);
-    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI01_RST);
-  }
-#elif defined(DPORT_SPI2_CLK_EN)
+#if defined(DPORT_SPI2_CLK_EN)
   if (_spi_num == HSPI)
   {
     DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI2_CLK_EN);
@@ -900,4 +885,4 @@ INLINE void Arduino_ESP32SPI::CS_LOW(void)
   *_csPortClr = _csPinMask;
 }
 
-#endif // #ifdef ESP32
+#endif // #if CONFIG_IDF_TARGET_ESP32

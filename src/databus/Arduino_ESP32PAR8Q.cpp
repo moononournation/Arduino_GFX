@@ -2,9 +2,10 @@
  * start rewrite from:
  * https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test
  */
-#ifdef ESP32
-
 #include "Arduino_DataBus.h"
+
+#if CONFIG_IDF_TARGET_ESP32
+
 #include "Arduino_ESP32PAR8Q.h"
 
 Arduino_ESP32PAR8Q::Arduino_ESP32PAR8Q(
@@ -345,4 +346,4 @@ INLINE void Arduino_ESP32PAR8Q::CS_LOW(void)
   *_csPortClr = _csPinMask;
 }
 
-#endif // #ifdef ESP32
+#endif // #if CONFIG_IDF_TARGET_ESP32

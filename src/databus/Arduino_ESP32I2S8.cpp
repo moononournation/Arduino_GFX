@@ -2,9 +2,12 @@
  * start rewrite from:
  * https://github.com/lovyan03/LovyanGFX/blob/master/src/lgfx/v0/platforms/LGFX_PARALLEL_ESP32.hpp
  */
-#ifdef ESP32
-
 #include "Arduino_DataBus.h"
+
+#if CONFIG_IDF_TARGET_ESP32
+
+#include "soc/dport_reg.h"
+
 #include "Arduino_ESP32I2S8.h"
 
 // #define SET_DATA_AND_WR_AT_THE_SAME_TIME
@@ -328,4 +331,4 @@ INLINE void Arduino_ESP32I2S8::CS_LOW(void)
   }
 }
 
-#endif
+#endif // #if CONFIG_IDF_TARGET_ESP32

@@ -2,14 +2,15 @@
  * start rewrite from:
  * https://github.com/lovyan03/LovyanGFX/blob/master/src/lgfx/v0/platforms/LGFX_PARALLEL_ESP32.hpp
  */
-#ifdef ESP32
+#include "Arduino_DataBus.h"
+
+#if CONFIG_IDF_TARGET_ESP32
+
 #ifndef _ARDUINO_ESP32I2S8_H_
 #define _ARDUINO_ESP32I2S8_H_
 
 #include <driver/i2s.h>
 #include <soc/i2s_reg.h>
-
-#include "Arduino_DataBus.h"
 
 #define SAFE_I2S_FIFO_WR_REG(i) (0x6000F000 + ((i)*0x1E000))
 #define SPI_MAX_PIXELS_AT_ONCE 32
@@ -63,4 +64,5 @@ private:
 };
 
 #endif // _ARDUINO_ESP32I2S8_H_
-#endif // #ifdef ESP32
+
+#endif // #if CONFIG_IDF_TARGET_ESP32
