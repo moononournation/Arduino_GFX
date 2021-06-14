@@ -77,7 +77,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 3 /* rotation */, false /* 
 #include <SD.h>
 #elif defined(ESP32)
 #include <FFat.h>
-#include <LittleFS.h>
+// #include <LittleFS.h>
 #include <SPIFFS.h>
 #include <SD.h>
 #elif defined(ESP8266)
