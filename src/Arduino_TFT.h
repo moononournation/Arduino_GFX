@@ -34,10 +34,10 @@ public:
   virtual void writeRepeat(uint16_t color, uint32_t len);
 
   void setAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
+  virtual void writeColor(uint16_t color);
 
 // TFT optimization code, too big for ATMEL family
 #if !defined(LITTLE_FOOT_PRINT)
-  virtual void writeColor(uint16_t color);
   virtual void writePixels(uint16_t *data, uint32_t size);
   virtual void writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len);
   virtual void writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len);

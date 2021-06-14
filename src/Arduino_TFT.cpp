@@ -225,13 +225,13 @@ void Arduino_TFT::setRotation(uint8_t r)
   _currentH = 0xFFFF;
 }
 
-// TFT optimization code, too big for ATMEL family
-#if !defined(LITTLE_FOOT_PRINT)
-
 void Arduino_TFT::writeColor(uint16_t color)
 {
   _bus->write16(color);
 }
+
+// TFT optimization code, too big for ATMEL family
+#if !defined(LITTLE_FOOT_PRINT)
 
 void Arduino_TFT::writeBytes(uint8_t *data, uint32_t len)
 {

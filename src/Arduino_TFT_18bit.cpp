@@ -14,6 +14,13 @@ Arduino_TFT_18bit::Arduino_TFT_18bit(
 {
 }
 
+void Arduino_TFT_18bit::writeColor(uint16_t color)
+{
+  _bus->write((color & 0xF800) >> 8);
+  _bus->write((color & 0x07E0) >> 3);
+  _bus->write(color << 3);
+}
+
 void Arduino_TFT_18bit::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
   writeAddrWindow(x, y, 1, 1);
@@ -42,13 +49,6 @@ void Arduino_TFT_18bit::writeRepeat(uint16_t color, uint32_t len)
 
 // TFT optimization code, too big for ATMEL family
 #if !defined(LITTLE_FOOT_PRINT)
-
-void Arduino_TFT_18bit::writeColor(uint16_t color)
-{
-  _bus->write((color & 0xF800) >> 8);
-  _bus->write((color & 0x07E0) >> 3);
-  _bus->write(color << 3);
-}
 
 void Arduino_TFT_18bit::writePixels(uint16_t *data, uint32_t len)
 {
