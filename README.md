@@ -38,7 +38,7 @@ This library is not putting speed at the first priority, but still paid much eff
 
 ### Figures
 Below are some figures compare with other 3 Arduino common display libraries.
-- Arduino IDE: 1.8.13
+- Arduino IDE: 1.8.15
 - arduino-esp32: 1.0.6
 - Dev Board: TTGO T8 v1.8
 - PSRAM: disable
