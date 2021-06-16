@@ -37,34 +37,33 @@ gfx->println("Hello World!");
 This library is not putting speed at the first priority, but still paid much effort to make the display look smooth.
 
 ### Figures
-Below are some figures compare with other 2 Arduino common display libraries.
-- Arduino IDE: 1.8.10
-- MCU: ESP32-PICO-D4
+Below are some figures compare with other 3 Arduino common display libraries.
+- Arduino IDE: 1.8.13
+- arduino-esp32: 1.0.6
+- Dev Board: TTGO T8 v1.8
 - PSRAM: disable
 - Display: ILI9341
-- Interface: SPI@40MHz
-- Test time: 2019 Oct 13
+- Interface: SPI
+- SPI Frequency: 40MHz
+- Test time: 2021 Jun 16
 
-| Benchmark          | Adafruit_GFX  | *Arduino_GFX* | TFT_eSPI      |
-| ------------------ | ------------- | ------------- | ------------- |
-| Screen fill        | 39,055        | ***32,229***  | 33,355        |
-| Text               | 96,432        | ***18,717***  | 24,010        |
-| Pixels             | 1,353,319     | *919,219*     | **768,022**   |
-| Lines              | 1,061,808     | *455,992*     | **307,429**   |
-| Horiz/Vert Lines   | 17,614        | ***14,277***  | 14,587        |
-| Rectangles-filled  | 405,880       | ***334,974*** | 346,317       |
-| Rectangles         | 11,656        | *9,374*       | **9,251**     |
-| Circles-filled     | 76,619        | ***55,173***  | 62,182        |
-| Circles            | 118,051       | *52,315*      | **46,909**    |
-| Triangles-filled   | 150,999       | *120,362*     | **117,591**   |
-| Triangles          | 58,795        | *26,143*      | **18,704**    |
-| Rounded rects-fill | 407,755       | ***335,537*** | 376,764       |
-| Rounded rects      | 42,668        | ***21,100***  | 24,201        |
-
-| Foot print         | Adafruit_GFX  | *Arduino_GFX* | TFT_eSPI      |
-| ------------------ | ------------- | ------------- | ------------- |
-| Flash              | 232,572       | 245,544       | ***231,136*** |
-| Estimate memory    | 15,512        | 15,616        | ***15,432***  |
+| Benchmark          |  Adafruit_GFX | *Arduino_GFX* |    Lovyan_GFX |      TFT_eSPI |
+| ------------------ | ------------- | ------------- | ------------- | ------------- |
+| Screen fill        |       195,782 |     *160,094* |       154,341 |       155,938 |
+| Text               |        97,662 |      *18,960* |        22,473 |        21,752 |
+| Pixels             |     1,365,211 |     *903,549* |       867,702 |       775,781 |
+| Lines              |     1,062,311 |     *412,026* |       269,060 |       264,950 |
+| Horiz/Vert Lines   |        17,637 |      *14,197* |        13,692 |        13,833 |
+| Rectangles-filled  |       406,817 |     *332,696* |       320,761 |       323,908 |
+| Rectangles         |        11,641 |       *9,254* |         8,545 |         8,714 |
+| Triangles-filled   |       150,941 |     *118,010* |       105,661 |       109,675 |
+| Triangles          |        58,843 |      *23,570* |        15,884 |        16,277 |
+| Circles-filled     |        76,739 |      *52,170* |        42,787 |        45,827 |
+| Circles            |       118,125 |      *40,955* |        25,959 |        25,269 |
+| Arcs-filled        |      N/A      |      *33,381* |        21,546 |      N/A      |
+| Arcs               |      N/A      |      *66,054* |        47,901 |      N/A      |
+| Rounded rects-fill |       408,534 |     *338,136* |       318,882 |       323,189 |
+| Rounded rects      |        43,185 |      *21,562* |        13,089 |        15,371 |
 
 ### Why Run Fast?
 - No read operation. Since not all display provide read back graphic memories API, Arduino_GFX skip all read operations. It can reduce the library size footprint and sometimes reduce the operation time.
