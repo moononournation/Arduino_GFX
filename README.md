@@ -67,7 +67,7 @@ Below are some figures compare with other 3 Arduino common display libraries.
 
 ### Why Run Fast?
 - No read operation. Since not all display provide read back graphic memories API, Arduino_GFX skip all read operations. It can reduce the library size footprint and sometimes reduce the operation time.
-- Tailor-made data bus classes. Arduino_GFX decopule data bus operation from display driver, it is more easy to write individual data bus class for each platform.
+- Tailor-made data bus classes. Arduino_GFX decouple data bus operation from display driver, it is more easy to write individual data bus class for each platform.
 
 ## Currently Supported data bus [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class)]
 - 8-bit and 9-bit hardware SPI (ESP32SPI)
