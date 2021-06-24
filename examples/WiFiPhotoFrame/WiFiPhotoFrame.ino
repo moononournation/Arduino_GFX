@@ -169,7 +169,7 @@ void loop()
           // get tcp stream
           jpegDec.prepare(http_stream_reader, &client);
           jpegDec.decode(JPG_SCALE_NONE, jpegDec.gfx_writer, gfx);
-          printf("Time used: %d\n", millis() - start);
+          printf("Time used: %lu\n", millis() - start);
         }
       }
     }
