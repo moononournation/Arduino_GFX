@@ -120,9 +120,10 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - ILI9486 320x480 (18 bit color) [[demo video](https://youtu.be/pZ6izDqmVds)]
 - ILI9488 320x480 (3 bit color with canvas) [[demo video](https://youtu.be/r7be0WbIBYk)]
 - ILI9488 320x480 (18 bit color) [[demo video](https://youtu.be/NkE-LhtLHBQ)]
+- ILI9806 (8-bit/16-bit Parallel) 480x854 [[demo video](https://youtu.be/mYv-wdtWr8s)]
 - JBT6K71 (8-bit Parallel) 240x320 [[demo video](https://youtu.be/qid3F4Gb0mM)]
 - NT35310 320x480 [[demo video](https://youtu.be/bvIz5CoYPNk)]
-- NT35510 480x800 [[demo video](https://youtu.be/C_1ASzUN3bg)]
+- NT35510 (8-bit/16-bit Parallel) 480x800 [[demo video](https://youtu.be/C_1ASzUN3bg)]
 - NT39125 (8-bit/16-bit Parallel) 240x376 [[demo video](https://youtu.be/JGMrM18JAFA)]
 - R61529 (8-bit/16-bit Parallel) 320x480 [[demo video](https://youtu.be/s93gxjbIAT8)]
 - SEPS525 160x128 [[demo video](https://youtu.be/tlmvFBHYv-k)]
@@ -141,7 +142,6 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - ST7796 320x480 [[demo video](https://youtu.be/hUL-RuG4MAQ)]
 
 ## Tobe Support Display (Donation can make it happen)
-- ILI9806 480x800 (second trial failed)
 - FastLED Martix supported by co-operate with Canvas
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas

@@ -40,6 +40,7 @@
 #include "display/Arduino_ILI9481_18bit.h"
 #include "display/Arduino_ILI9486_18bit.h"
 #include "display/Arduino_ILI9488_18bit.h"
+#include "display/Arduino_ILI9806.h"
 #include "display/Arduino_JBT6K71.h"
 #include "display/Arduino_NT35310.h"
 #include "display/Arduino_NT35510.h"
