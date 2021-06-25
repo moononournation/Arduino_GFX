@@ -2,9 +2,9 @@
 
 #if CONFIG_IDF_TARGET_ESP32
 
-#include "Arduino_ESP32PAR16Q.h"
+#include "Arduino_ESP32PAR16QQ.h"
 
-Arduino_ESP32PAR16Q::Arduino_ESP32PAR16Q(
+Arduino_ESP32PAR16QQ::Arduino_ESP32PAR16QQ(
     int8_t dc, int8_t cs, int8_t wr, int8_t rd,
     int8_t d0, int8_t d1, int8_t d2, int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7,
     int8_t d8, int8_t d9, int8_t d10, int8_t d11, int8_t d12, int8_t d13, int8_t d14, int8_t d15)
@@ -14,7 +14,7 @@ Arduino_ESP32PAR16Q::Arduino_ESP32PAR16Q(
 {
 }
 
-void Arduino_ESP32PAR16Q::begin(int32_t speed, int8_t dataMode)
+void Arduino_ESP32PAR16QQ::begin(int32_t speed, int8_t dataMode)
 {
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
@@ -206,18 +206,18 @@ void Arduino_ESP32PAR16Q::begin(int32_t speed, int8_t dataMode)
   _dataPortClr = (PORTreg_t)&GPIO.out_w1tc;
 }
 
-void Arduino_ESP32PAR16Q::beginWrite()
+void Arduino_ESP32PAR16QQ::beginWrite()
 {
   DC_HIGH();
   CS_LOW();
 }
 
-void Arduino_ESP32PAR16Q::endWrite()
+void Arduino_ESP32PAR16QQ::endWrite()
 {
   CS_HIGH();
 }
 
-void Arduino_ESP32PAR16Q::writeCommand(uint8_t c)
+void Arduino_ESP32PAR16QQ::writeCommand(uint8_t c)
 {
   DC_LOW();
 
@@ -226,7 +226,7 @@ void Arduino_ESP32PAR16Q::writeCommand(uint8_t c)
   DC_HIGH();
 }
 
-void Arduino_ESP32PAR16Q::writeCommand16(uint16_t c)
+void Arduino_ESP32PAR16QQ::writeCommand16(uint16_t c)
 {
   DC_LOW();
 
@@ -237,30 +237,28 @@ void Arduino_ESP32PAR16Q::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
-void Arduino_ESP32PAR16Q::write(uint8_t d)
+void Arduino_ESP32PAR16QQ::write(uint8_t d)
 {
   WRITE(d);
 }
 
-void Arduino_ESP32PAR16Q::write16(uint16_t d)
+void Arduino_ESP32PAR16QQ::write16(uint16_t d)
 {
   WRITE16(d);
 }
 
-void Arduino_ESP32PAR16Q::writeRepeat(uint16_t p, uint32_t len)
+void Arduino_ESP32PAR16QQ::writeRepeat(uint16_t p, uint32_t len)
 {
   _data16.value = p;
   uint32_t d = _xset_mask_hi[_data16.msb] | _xset_mask_lo[_data16.lsb];
-  *_dataPortClr = _dataClrMask;
-  *_dataPortSet = d;
   while (len--)
   {
-    *_wrPortClr = _wrPinMask;
-    *_wrPortSet = _wrPinMask;
+    *_dataPortClr = _dataClrMask;
+    *_dataPortSet = d;
   }
 }
 
-void Arduino_ESP32PAR16Q::writePixels(uint16_t *data, uint32_t len)
+void Arduino_ESP32PAR16QQ::writePixels(uint16_t *data, uint32_t len)
 {
   while (len--)
   {
@@ -269,7 +267,7 @@ void Arduino_ESP32PAR16Q::writePixels(uint16_t *data, uint32_t len)
   }
 }
 
-void Arduino_ESP32PAR16Q::writeC8D8(uint8_t c, uint8_t d)
+void Arduino_ESP32PAR16QQ::writeC8D8(uint8_t c, uint8_t d)
 {
   DC_LOW();
 
@@ -280,7 +278,7 @@ void Arduino_ESP32PAR16Q::writeC8D8(uint8_t c, uint8_t d)
   WRITE(d);
 }
 
-void Arduino_ESP32PAR16Q::writeC8D16(uint8_t c, uint16_t d)
+void Arduino_ESP32PAR16QQ::writeC8D16(uint8_t c, uint16_t d)
 {
   DC_LOW();
 
@@ -293,7 +291,7 @@ void Arduino_ESP32PAR16Q::writeC8D16(uint8_t c, uint16_t d)
   WRITE(_data16.lsb);
 }
 
-void Arduino_ESP32PAR16Q::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
+void Arduino_ESP32PAR16QQ::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 {
   DC_LOW();
 
@@ -309,7 +307,7 @@ void Arduino_ESP32PAR16Q::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   WRITE(_data16.lsb);
 }
 
-void Arduino_ESP32PAR16Q::writeBytes(uint8_t *data, uint32_t len)
+void Arduino_ESP32PAR16QQ::writeBytes(uint8_t *data, uint32_t len)
 {
   while (len--)
   {
@@ -317,7 +315,7 @@ void Arduino_ESP32PAR16Q::writeBytes(uint8_t *data, uint32_t len)
   }
 }
 
-void Arduino_ESP32PAR16Q::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
+void Arduino_ESP32PAR16QQ::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
   while (repeat--)
   {
@@ -325,7 +323,7 @@ void Arduino_ESP32PAR16Q::writePattern(uint8_t *data, uint8_t len, uint32_t repe
   }
 }
 
-void Arduino_ESP32PAR16Q::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+void Arduino_ESP32PAR16QQ::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   while (len--)
   {
@@ -333,52 +331,49 @@ void Arduino_ESP32PAR16Q::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint3
   }
 }
 
-void Arduino_ESP32PAR16Q::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+void Arduino_ESP32PAR16QQ::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   while (len--)
   {
     _data16.value = idx[*data++];
     *_dataPortClr = _dataClrMask;
     *_dataPortSet = _xset_mask_hi[_data16.msb] | _xset_mask_lo[_data16.lsb];
-    *_wrPortSet = _wrPinMask;
     *_wrPortClr = _wrPinMask;
     *_wrPortSet = _wrPinMask;
   }
 }
 
-INLINE void Arduino_ESP32PAR16Q::WRITE(uint8_t d)
+INLINE void Arduino_ESP32PAR16QQ::WRITE(uint8_t d)
 {
   *_dataPortClr = _dataClrMask;
   *_dataPortSet = _xset_mask_lo[d];
-  *_wrPortSet = _wrPinMask;
 }
 
-INLINE void Arduino_ESP32PAR16Q::WRITE16(uint16_t d)
+INLINE void Arduino_ESP32PAR16QQ::WRITE16(uint16_t d)
 {
   _data16.value = d;
   *_dataPortClr = _dataClrMask;
   *_dataPortSet = _xset_mask_hi[_data16.msb] | _xset_mask_lo[_data16.lsb];
-  *_wrPortSet = _wrPinMask;
 }
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_ESP32PAR16Q::DC_HIGH(void)
+INLINE void Arduino_ESP32PAR16QQ::DC_HIGH(void)
 {
   *_dcPortSet = _dcPinMask;
 }
 
-INLINE void Arduino_ESP32PAR16Q::DC_LOW(void)
+INLINE void Arduino_ESP32PAR16QQ::DC_LOW(void)
 {
   *_dcPortClr = _dcPinMask;
 }
 
-INLINE void Arduino_ESP32PAR16Q::CS_HIGH(void)
+INLINE void Arduino_ESP32PAR16QQ::CS_HIGH(void)
 {
   *_csPortSet = _csPinMask;
 }
 
-INLINE void Arduino_ESP32PAR16Q::CS_LOW(void)
+INLINE void Arduino_ESP32PAR16QQ::CS_LOW(void)
 {
   *_csPortClr = _csPinMask;
 }

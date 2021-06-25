@@ -387,4 +387,3 @@ INLINE void Arduino_ESP32PAR16::CS_LOW(void)
 }
 
 #endif // #if CONFIG_IDF_TARGET_ESP32
-
