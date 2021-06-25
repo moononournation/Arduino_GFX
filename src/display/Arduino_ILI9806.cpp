@@ -71,10 +71,13 @@ void Arduino_ILI9806::displayOn(void)
 {
   _bus->sendCommand(ILI9806_SLPOUT);
   delay(ILI9806_SLPOUT_DELAY);
+  _bus->sendCommand(ILI9806_DISPON);
 }
 
 void Arduino_ILI9806::displayOff(void)
 {
+  _bus->sendCommand(ILI9806_DISPOFF);
+  delay(10);
   _bus->sendCommand(ILI9806_SLPIN);
   delay(ILI9806_SLPIN_DELAY);
 }
@@ -87,9 +90,9 @@ void Arduino_ILI9806::tftInit()
   {
     pinMode(_rst, OUTPUT);
     digitalWrite(_rst, HIGH);
-    delay(100);
+    delay(1);
     digitalWrite(_rst, LOW);
-    delay(ILI9806_RST_DELAY);
+    delay(10);
     digitalWrite(_rst, HIGH);
     delay(ILI9806_RST_DELAY);
   }
@@ -100,178 +103,125 @@ void Arduino_ILI9806::tftInit()
     delay(ILI9806_RST_DELAY);
   }
 
-  /***************************************/
-  _bus->sendCommand(0xFF); // EXTC Command Set enable register
-  _bus->sendData(0xFF);
-  _bus->sendData(0x98);
-  _bus->sendData(0x06);
+  uint8_t ili9806_init_operations[] = {
+      BEGIN_WRITE,
+      WRITE_COMMAND_8, 0xFF, // EXTC Command Set enable register
+      WRITE_BYTES, 3, 0xFF, 0x98, 0x06,
 
-  _bus->sendCommand(0xBA); // SPI Interface Setting
-  _bus->sendData(0x60);
+      WRITE_C8_D8, 0xBA, 0x60, // SPI Interface Setting
 
-  _bus->sendCommand(0xBC); // GIP 1
-  _bus->sendData(0x01);
-  _bus->sendData(0x10);
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x01);
-  _bus->sendData(0x01);
-  _bus->sendData(0x0B);
-  _bus->sendData(0x11);
-  _bus->sendData(0x32);
-  _bus->sendData(0x10);
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x01);
-  _bus->sendData(0x01);
-  _bus->sendData(0x01);
-  _bus->sendData(0x01);
-  _bus->sendData(0x50);
-  _bus->sendData(0x52);
-  _bus->sendData(0x01);
-  _bus->sendData(0x00);
-  _bus->sendData(0x40);
+      WRITE_COMMAND_8, 0xBC, // GIP 1
+      WRITE_BYTES, 21,
+      0x01, 0x10, 0x00, 0x00, 0x01,
+      0x01, 0x0B, 0x11, 0x32, 0x10,
+      0x00, 0x00, 0x01, 0x01, 0x01,
+      0x01, 0x50, 0x52, 0x01, 0x00,
+      0x40,
 
-  _bus->sendCommand(0xBD); // GIP 2
-  _bus->sendData(0x01);
-  _bus->sendData(0x23);
-  _bus->sendData(0x45);
-  _bus->sendData(0x67);
-  _bus->sendData(0x01);
-  _bus->sendData(0x23);
-  _bus->sendData(0x45);
-  _bus->sendData(0x67);
+      WRITE_COMMAND_8, 0xBD, // GIP 2
+      WRITE_BYTES, 8,
+      0x01, 0x23, 0x45, 0x67, 0x01,
+      0x23, 0x45, 0x67,
 
-  _bus->sendCommand(0xBE); // GIP 3
-  _bus->sendData(0x00);
-  _bus->sendData(0x21);
-  _bus->sendData(0xAB);
-  _bus->sendData(0x60);
-  _bus->sendData(0x22);
-  _bus->sendData(0x22);
-  _bus->sendData(0x22);
-  _bus->sendData(0x22);
-  _bus->sendData(0x22);
+      WRITE_COMMAND_8, 0xBE, // GIP 3
+      WRITE_BYTES, 9,
+      0x00, 0x21, 0xAB, 0x60, 0x22,
+      0x22, 0x22, 0x22, 0x22,
 
-  _bus->sendCommand(0xC7); // VCOM Control
-  _bus->sendData(0x30);
+      WRITE_C8_D8, 0xC7, 0x30, // VCOM Control
 
-  _bus->sendCommand(0xED); // EN_volt_reg
-  _bus->sendData(0x7F);
-  _bus->sendData(0x0F);
-  _bus->sendData(0x00);
+      WRITE_COMMAND_8, 0xED, // EN_volt_reg
+      WRITE_BYTES, 3, 0x7F, 0x0F, 0x00,
 
-  _bus->sendCommand(0xC0); // Power Control 1
-  _bus->sendData(0x03);
-  _bus->sendData(0x0B);
-  _bus->sendData(0x0C); //0A  VGH VGL
+      WRITE_COMMAND_8, 0xC0,            // Power Control 1
+      WRITE_BYTES, 3, 0x03, 0x0B, 0x0C, // 0A VGH VGL
 
-  _bus->sendCommand(0xFD); //External Power Selection Set
-  _bus->sendData(0x0A);
-  _bus->sendData(0x00);
+      WRITE_C8_D16, 0xFD, 0x0A, 0x00, // External Power Selection Set
 
-  _bus->sendCommand(0xFC); // LVGL
-  _bus->sendData(0x08);
+      WRITE_C8_D8, 0xFC, 0x08, // LVGL
 
-  _bus->sendCommand(0xDF); // Engineering Setting
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x20);
+      WRITE_COMMAND_8, 0xDF, // Engineering Setting
+      WRITE_BYTES, 6,
+      0x00, 0x00, 0x00, 0x00, 0x00,
+      0x20,
 
-  _bus->sendCommand(0xF3); // DVDD Voltage Setting
-  _bus->sendData(0x74);
+      WRITE_C8_D8, 0xF3, 0x74, // DVDD Voltage Setting
 
-  _bus->sendCommand(0xB4); // Display Inversion Control
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
+      WRITE_COMMAND_8, 0xB4, // Display Inversion Control
+      WRITE_BYTES, 3, 0x00, 0x00, 0x00,
 
-  _bus->sendCommand(0xB5); //Blanking Porch Control
-  _bus->sendData(0x08);
-  _bus->sendData(0x15);
+      WRITE_C8_D16, 0xB5, 0x08, 0x15, // Blanking Porch Control
 
-  _bus->sendCommand(0xF7); // 480x854
-  _bus->sendData(0x81);
+      WRITE_C8_D8, 0xF7, 0x81, // 480x854
 
-  _bus->sendCommand(0xB1); // Frame Rate Control
-  _bus->sendData(0x00);
-  _bus->sendData(0x13);
-  _bus->sendData(0x13);
+      WRITE_COMMAND_8, 0xB1, // Frame Rate Control
+      WRITE_BYTES, 3, 0x00, 0x13, 0x13,
 
-  _bus->sendCommand(0xF2); //Panel Timing Control
-  _bus->sendData(0x80);
-  _bus->sendData(0x04);
-  _bus->sendData(0x40);
-  _bus->sendData(0x28);
+      WRITE_COMMAND_8, 0xF2, //Panel Timing Control
+      WRITE_BYTES, 4, 0x80, 0x04, 0x40, 0x28,
 
-  _bus->sendCommand(0xC1); //Power Control 2
-  _bus->sendData(0x17);
-  _bus->sendData(0x71); //VGMP
-  _bus->sendData(0x71); //VGMN
+      WRITE_COMMAND_8, 0xC1, //Power Control 2
+      WRITE_BYTES, 3,
+      0x17,
+      0x71, //VGMP
+      0x71, //VGMN
 
-  _bus->sendCommand(0xE0); //P_Gamma
-  _bus->sendData(0x00);    //P1
-  _bus->sendData(0x13);    //P2
-  _bus->sendData(0x1A);    //P3
-  _bus->sendData(0x0C);    //P4
-  _bus->sendData(0x0E);    //P5
-  _bus->sendData(0x0B);    //P6
-  _bus->sendData(0x07);    //P7
-  _bus->sendData(0x05);    //P8
-  _bus->sendData(0x05);    //P9
-  _bus->sendData(0x0A);    //P10
-  _bus->sendData(0x0F);    //P11
-  _bus->sendData(0x0F);    //P12
-  _bus->sendData(0x0E);    //P13
-  _bus->sendData(0x1C);    //P14
-  _bus->sendData(0x16);    //P15
-  _bus->sendData(0x00);    //P16
+      WRITE_COMMAND_8, 0xE0, //P_Gamma
+      WRITE_BYTES, 16,
+      0x00, //P1
+      0x13, //P2
+      0x1A, //P3
+      0x0C, //P4
+      0x0E, //P5
+      0x0B, //P6
+      0x07, //P7
+      0x05, //P8
+      0x05, //P9
+      0x0A, //P10
+      0x0F, //P11
+      0x0F, //P12
+      0x0E, //P13
+      0x1C, //P14
+      0x16, //P15
+      0x00, //P16
 
-  _bus->sendCommand(0xE1); //N_Gamma
-  _bus->sendData(0x00);    //P1
-  _bus->sendData(0x13);    //P2
-  _bus->sendData(0x1A);    //P3
-  _bus->sendData(0x0C);    //P4
-  _bus->sendData(0x0E);    //P5
-  _bus->sendData(0x0B);    //P6
-  _bus->sendData(0x07);    //P7
-  _bus->sendData(0x05);    //P8
-  _bus->sendData(0x05);    //P9
-  _bus->sendData(0x0A);    //P10
-  _bus->sendData(0x0F);    //P11
-  _bus->sendData(0x0F);    //P12
-  _bus->sendData(0x0E);    //P13
-  _bus->sendData(0x1C);    //P14
-  _bus->sendData(0x16);    //P15
-  _bus->sendData(0x00);    //P16
+      WRITE_COMMAND_8, 0xE1, //N_Gamma
+      WRITE_BYTES, 16,
+      0x00, //P1
+      0x13, //P2
+      0x1A, //P3
+      0x0C, //P4
+      0x0E, //P5
+      0x0B, //P6
+      0x07, //P7
+      0x05, //P8
+      0x05, //P9
+      0x0A, //P10
+      0x0F, //P11
+      0x0F, //P12
+      0x0E, //P13
+      0x1C, //P14
+      0x16, //P15
+      0x00, //P16
 
-  _bus->sendCommand(0x3A);
-  _bus->sendData(0x55); //55-16BIT,66-18BIT,77-24BIT
+      WRITE_C8_D8, 0x3A, 0x55, //55-16BIT,66-18BIT,77-24BIT
 
-  _bus->sendCommand(0x36); //Memory Access Control
-  _bus->sendData(0x00);    //01-180
-  //*****************
-  _bus->sendCommand(0x2A); //480
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x01);
-  _bus->sendData(0xdf);
+      WRITE_COMMAND_8, 0x11,
+      END_WRITE,
 
-  _bus->sendCommand(0x2B); //854
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x03);
-  _bus->sendData(0x55);
-  //*****************************
+      DELAY, ILI9806_SLPOUT_DELAY,
 
-  _bus->sendCommand(0x11);
-  delay(120);
-  _bus->sendCommand(0x29);
-  delay(25);
-  _bus->sendCommand(0x2C);
+      BEGIN_WRITE,
+      WRITE_COMMAND_8, 0x29,
+      END_WRITE,
+
+      DELAY, 25,
+
+      BEGIN_WRITE,
+      WRITE_COMMAND_8, 0x2C,
+      END_WRITE};
+
+  _bus->batchOperation(ili9806_init_operations, sizeof(ili9806_init_operations));
 
   if (_ips)
   {
