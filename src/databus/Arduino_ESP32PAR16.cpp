@@ -311,9 +311,16 @@ void Arduino_ESP32PAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
 void Arduino_ESP32PAR16::writeBytes(uint8_t *data, uint32_t len)
 {
-  while (len--)
+  while (len > 1)
   {
-    WRITE(*data++);
+    _data16.msb = *data++;
+    _data16.lsb = *data++;
+    WRITE16(_data16.value);
+    len -= 2;
+  }
+  if (len)
+  {
+    WRITE(*data);
   }
 }
 
