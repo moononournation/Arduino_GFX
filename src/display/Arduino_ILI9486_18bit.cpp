@@ -39,7 +39,7 @@ void Arduino_ILI9486_18bit::tftInit()
   delay(ILI9486_SLPIN_DELAY);
 
   _bus->sendCommand(0x3A);
-  _bus->sendData(0x66);
+  _bus->sendData(0x66); // 18-bit color
 
   _bus->sendCommand(0xC2);
   _bus->sendData(0x44);
