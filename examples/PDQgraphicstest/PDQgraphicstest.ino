@@ -77,11 +77,16 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 #define TFT_DC 27
 #define TFT_RST 26
 #define TFT_BL 28
-#elif defined(ESP32)
+#elif CONFIG_IDF_TARGET_ESP32
 #define TFT_CS 5 // -1 for display without CS pin
 #define TFT_DC 27 // -1 for display without DC pin (9-bit SPI)
 #define TFT_RST 33
 #define TFT_BL 22
+#elif CONFIG_IDF_TARGET_ESP32S2
+#define TFT_CS 34 // -1 for display without CS pin
+#define TFT_DC 20
+#define TFT_RST 19
+#define TFT_BL 18
 #elif defined(ESP8266)
 #define TFT_CS 15 // -1 for display without CS pin
 #define TFT_DC 4
@@ -117,8 +122,10 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 Arduino_DataBus *bus = new Arduino_NRFXSPI(TFT_DC, TFT_CS, 13 /* SCK */, 11 /* MOSI */, 12 /* MISO */);
 #elif defined(ARDUINO_RASPBERRY_PI_PICO)
 Arduino_DataBus *bus = new Arduino_RPiPicoSPI(TFT_DC, TFT_CS, PIN_SPI0_SCK /* SCK */, PIN_SPI0_MOSI /* MOSI */, PIN_SPI0_MISO /* MISO */, spi0 /* spi */);
-#elif CONFIG_IDF_TARGET_ESP32 // ESP32/PICO-D4
+#elif CONFIG_IDF_TARGET_ESP32
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, -1 /* MISO */, VSPI /* spi_num */);
+#elif CONFIG_IDF_TARGET_ESP32S2
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 36 /* SCK */, 35 /* MOSI */, 37 /* MISO */, HSPI /* spi_num */);
 #elif defined(ESP8266)
 Arduino_DataBus *bus = new Arduino_ESP8266SPI(TFT_DC, TFT_CS);
 #else
@@ -140,6 +147,9 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 //     32 /* DC */, -1 /* CS */, 21 /* WR */, -1 /* RD */,
 //     19 /* D0 */, 23 /* D1 */, 18 /* D2 */, 5 /* D3 */, 17 /* D4 */, 16 /* D5 */, 25 /* D6 */, 26 /* D7 */,
 //     27 /* D8 */, 14 /* D9 */, 12 /* D10 */, 13 /* D11 */, 15 /* D12 */, 2 /* D13 */, 0 /* D14 */, 4 /* D15 */);
+
+// ESP32S2 parallel 16-bit
+// Arduino_DataBus *bus = new Arduino_ESP32S2PAR16(17 /* DC */, -1 /* CS */, 16 /* WR */, -1 /* RD */);
 
 // Raspberry Pi Pico parallel 8-bit
 // Display D0-D7 connect to GPIO 0-7

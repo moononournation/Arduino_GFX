@@ -4,25 +4,39 @@
  */
 #include "Arduino_DataBus.h"
 
-#if CONFIG_IDF_TARGET_ESP32
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
 
 #ifndef _ARDUINO_ESP32SPI_H_
 #define _ARDUINO_ESP32SPI_H_
 
 #include "soc/spi_struct.h"
+#if CONFIG_IDF_TARGET_ESP32C3
+#include "esp32c3/rom/gpio.h"
+#else
 #include "soc/dport_reg.h"
+#endif
 
 #define SPI_MAX_PIXELS_AT_ONCE 32
 
-#define SPI_SPI_SS_IDX(n) ((n == 0) ? SPICS0_OUT_IDX : ((n == 1) ? SPICS1_OUT_IDX : ((n == 2) ? SPICS2_OUT_IDX : SPICS0_OUT_IDX)))
-#define SPI_HSPI_SS_IDX(n) ((n == 0) ? HSPICS0_OUT_IDX : ((n == 1) ? HSPICS1_OUT_IDX : ((n == 2) ? HSPICS2_OUT_IDX : HSPICS0_OUT_IDX)))
-#define SPI_VSPI_SS_IDX(n) ((n == 0) ? VSPICS0_OUT_IDX : ((n == 1) ? VSPICS1_OUT_IDX : ((n == 2) ? VSPICS2_OUT_IDX : VSPICS0_OUT_IDX)))
-#define SPI_SS_IDX(p, n) ((p == 0) ? SPI_SPI_SS_IDX(n) : ((p == 1) ? SPI_SPI_SS_IDX(n) : ((p == 2) ? SPI_HSPI_SS_IDX(n) : ((p == 3) ? SPI_VSPI_SS_IDX(n) : 0))))
+#if CONFIG_IDF_TARGET_ESP32
+#define MOSI_BIT_LEN _spi->dev->mosi_dlen.usr_mosi_dbitlen
+#define MISO_BIT_LEN _spi->dev->miso_dlen.usr_miso_dbitlen
+#elif CONFIG_IDF_TARGET_ESP32S2
+#define MOSI_BIT_LEN _spi->dev->mosi_dlen.usr_mosi_bit_len
+#define MISO_BIT_LEN _spi->dev->miso_dlen.usr_miso_bit_len
+#elif CONFIG_IDF_TARGET_ESP32C3
+#define MOSI_BIT_LEN _spi->dev->ms_dlen.ms_data_bitlen
+#define MISO_BIT_LEN _spi->dev->ms_dlen.ms_data_bitlen
+#endif
 
 class Arduino_ESP32SPI : public Arduino_DataBus
 {
 public:
+#if CONFIG_IDF_TARGET_ESP32
   Arduino_ESP32SPI(int8_t dc = -1, int8_t cs = -1, int8_t sck = -1, int8_t mosi = -1, int8_t miso = -1, uint8_t spi_num = VSPI, bool is_shared_interface = true); // Constructor
+#else
+  Arduino_ESP32SPI(int8_t dc = -1, int8_t cs = -1, int8_t sck = -1, int8_t mosi = -1, int8_t miso = -1, uint8_t spi_num = FSPI, bool is_shared_interface = true); // Constructor
+#endif
 
   void begin(int32_t speed = 0, int8_t dataMode = SPI_MODE0) override;
   void beginWrite() override;
@@ -80,4 +94,4 @@ private:
 
 #endif // _ARDUINO_ESP32SPI_H_
 
-#endif // #if CONFIG_IDF_TARGET_ESP32
+#endif // #if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)

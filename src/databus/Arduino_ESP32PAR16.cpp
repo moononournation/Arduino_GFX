@@ -1,8 +1,6 @@
-#include "Arduino_DataBus.h"
+#include "Arduino_ESP32PAR16.h"
 
 #if CONFIG_IDF_TARGET_ESP32
-
-#include "Arduino_ESP32PAR16.h"
 
 Arduino_ESP32PAR16::Arduino_ESP32PAR16(
     int8_t dc, int8_t cs, int8_t wr, int8_t rd,
@@ -304,6 +302,7 @@ void Arduino_ESP32PAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   _data16.value = d1;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
+
   _data16.value = d2;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
