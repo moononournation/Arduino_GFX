@@ -78,15 +78,15 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, -1 /* RST */, 2 /* rotation */, true 
 #define TFT_RST 26
 #define TFT_BL 28
 #elif CONFIG_IDF_TARGET_ESP32
-#define TFT_CS 5 // -1 for display without CS pin
+#define TFT_CS 5  // -1 for display without CS pin
 #define TFT_DC 27 // -1 for display without DC pin (9-bit SPI)
 #define TFT_RST 33
 #define TFT_BL 22
 #elif CONFIG_IDF_TARGET_ESP32S2
 #define TFT_CS 34 // -1 for display without CS pin
-#define TFT_DC 20
-#define TFT_RST 19
-#define TFT_BL 18
+#define TFT_DC 26
+#define TFT_RST 33
+#define TFT_BL 21
 #elif defined(ESP8266)
 #define TFT_CS 15 // -1 for display without CS pin
 #define TFT_DC 4
@@ -647,7 +647,7 @@ int32_t testLines()
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
 #ifdef ESP8266
-    yield(); // avoid long run triggered ESP8266 WDT restart
+  yield(); // avoid long run triggered ESP8266 WDT restart
 #endif
 
   x2 = w - 1;
@@ -656,7 +656,7 @@ int32_t testLines()
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
 #ifdef ESP8266
-    yield(); // avoid long run triggered ESP8266 WDT restart
+  yield(); // avoid long run triggered ESP8266 WDT restart
 #endif
 
   x1 = w - 1;
@@ -667,7 +667,7 @@ int32_t testLines()
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
 #ifdef ESP8266
-    yield(); // avoid long run triggered ESP8266 WDT restart
+  yield(); // avoid long run triggered ESP8266 WDT restart
 #endif
 
   x2 = 0;
@@ -676,7 +676,7 @@ int32_t testLines()
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
 #ifdef ESP8266
-    yield(); // avoid long run triggered ESP8266 WDT restart
+  yield(); // avoid long run triggered ESP8266 WDT restart
 #endif
 
   x1 = 0;
@@ -687,7 +687,7 @@ int32_t testLines()
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
 #ifdef ESP8266
-    yield(); // avoid long run triggered ESP8266 WDT restart
+  yield(); // avoid long run triggered ESP8266 WDT restart
 #endif
 
   x2 = w - 1;
@@ -696,7 +696,7 @@ int32_t testLines()
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
 #ifdef ESP8266
-    yield(); // avoid long run triggered ESP8266 WDT restart
+  yield(); // avoid long run triggered ESP8266 WDT restart
 #endif
 
   x1 = w - 1;
@@ -707,7 +707,7 @@ int32_t testLines()
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
 #ifdef ESP8266
-    yield(); // avoid long run triggered ESP8266 WDT restart
+  yield(); // avoid long run triggered ESP8266 WDT restart
 #endif
 
   x2 = 0;
@@ -716,7 +716,7 @@ int32_t testLines()
     gfx->drawLine(x1, y1, x2, y2, BLUE);
   }
 #ifdef ESP8266
-    yield(); // avoid long run triggered ESP8266 WDT restart
+  yield(); // avoid long run triggered ESP8266 WDT restart
 #endif
 
   return micros() - start;

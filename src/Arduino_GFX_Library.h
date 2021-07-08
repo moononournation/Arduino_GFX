@@ -136,9 +136,9 @@
 #define TFT_MOSI 35
 #define TFT_MISO -1
 #define TFT_CS 34
-#define TFT_DC 20
-#define TFT_RST 19
-#define TFT_BL 18
+#define TFT_DC 26
+#define TFT_RST 33
+#define TFT_BL 21
 #elif defined(ESP8266)
 #define TFT_CS 15
 #define TFT_DC 4
