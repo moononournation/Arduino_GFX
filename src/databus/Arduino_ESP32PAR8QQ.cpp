@@ -2,11 +2,9 @@
  * start rewrite from:
  * https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test
  */
-#include "Arduino_DataBus.h"
-
-#if CONFIG_IDF_TARGET_ESP32
-
 #include "Arduino_ESP32PAR8QQ.h"
+
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
 
 Arduino_ESP32PAR8QQ::Arduino_ESP32PAR8QQ(
     int8_t dc, int8_t cs, int8_t wr, int8_t rd,
@@ -98,21 +96,13 @@ void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
 
   // TODO: check pin range 0-31
   pinMode(_d0, OUTPUT);
-  digitalWrite(_d0, HIGH);
   pinMode(_d1, OUTPUT);
-  digitalWrite(_d1, HIGH);
   pinMode(_d2, OUTPUT);
-  digitalWrite(_d2, HIGH);
   pinMode(_d3, OUTPUT);
-  digitalWrite(_d3, HIGH);
   pinMode(_d4, OUTPUT);
-  digitalWrite(_d4, HIGH);
   pinMode(_d5, OUTPUT);
-  digitalWrite(_d5, HIGH);
   pinMode(_d6, OUTPUT);
-  digitalWrite(_d6, HIGH);
   pinMode(_d7, OUTPUT);
-  digitalWrite(_d7, HIGH);
 
   // INIT 8-bit mask
   _dataClrMask = (1 << _wr) | (1 << _d0) | (1 << _d1) | (1 << _d2) | (1 << _d3) | (1 << _d4) | (1 << _d5) | (1 << _d6) | (1 << _d7);
@@ -154,6 +144,7 @@ void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
   }
   _dataPortSet = (PORTreg_t)&GPIO.out_w1ts;
   _dataPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  *_dataPortClr = _dataClrMask;
 }
 
 void Arduino_ESP32PAR8QQ::beginWrite()
@@ -274,6 +265,7 @@ void Arduino_ESP32PAR8QQ::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   _data16.value = d1;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
+
   _data16.value = d2;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
@@ -346,4 +338,4 @@ INLINE void Arduino_ESP32PAR8QQ::CS_LOW(void)
   *_csPortClr = _csPinMask;
 }
 
-#endif // #if CONFIG_IDF_TARGET_ESP32
+#endif // #if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
