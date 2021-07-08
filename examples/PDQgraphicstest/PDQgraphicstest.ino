@@ -149,7 +149,8 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 //     27 /* D8 */, 14 /* D9 */, 12 /* D10 */, 13 /* D11 */, 15 /* D12 */, 2 /* D13 */, 0 /* D14 */, 4 /* D15 */);
 
 // ESP32S2 parallel 16-bit
-// Arduino_DataBus *bus = new Arduino_ESP32S2PAR16(17 /* DC */, -1 /* CS */, 16 /* WR */, -1 /* RD */);
+// Display D0-D15 connect to GPIO 0-15
+// Arduino_DataBus *bus = new Arduino_ESP32S2PAR16(TFT_DC, TFT_CS, 16 /* WR */, -1 /* RD */);
 
 // Raspberry Pi Pico parallel 8-bit
 // Display D0-D7 connect to GPIO 0-7

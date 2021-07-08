@@ -2,11 +2,9 @@
  * start rewrite from:
  * https://github.com/espressif/arduino-esp32.git
  */
-#include "Arduino_DataBus.h"
+#include "Arduino_ESP32SPI.h"
 
 #if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
-
-#include "Arduino_ESP32SPI.h"
 
 #define WAIT_SPI_NOT_BUSY while (_spi->dev->cmd.usr)
 
@@ -1031,4 +1029,4 @@ INLINE void Arduino_ESP32SPI::CS_LOW(void)
   *_csPortClr = _csPinMask;
 }
 
- #endif // #if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
+#endif // #if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
