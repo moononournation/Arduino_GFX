@@ -2,20 +2,11 @@
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
-#include <SPI.h>
 #include "Arduino_HWSPI.h"
 
-#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-#define HWSPI LCD_SPI
-#elif defined(RTL8722DM)
-#define HWSPI SPI1
-#else
-#define HWSPI SPI
-#endif
-
 #if defined(SPI_HAS_TRANSACTION)
-#define SPI_BEGIN_TRANSACTION() HWSPI.beginTransaction(mySPISettings)
-#define SPI_END_TRANSACTION() HWSPI.endTransaction()
+#define SPI_BEGIN_TRANSACTION() _spi->beginTransaction(mySPISettings)
+#define SPI_END_TRANSACTION() _spi->endTransaction()
 #else
 #define SPI_BEGIN_TRANSACTION() \
   {                             \
@@ -33,12 +24,12 @@ static uint8_t mySPCR;
 #endif
 
 #if defined(ESP32)
-Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, bool is_shared_interface /* = true */)
-    : _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso), _is_shared_interface(is_shared_interface)
+Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, SPIClass *spi, bool is_shared_interface /* = true */)
+    : _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso), _spi(spi), _is_shared_interface(is_shared_interface)
 {
 #else
-Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, bool is_shared_interface /* = true */)
-    : _dc(dc), _cs(cs), _is_shared_interface(is_shared_interface)
+Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, SPIClass *spi, bool is_shared_interface /* = true */)
+    : _dc(dc), _cs(cs), _spi(spi), _is_shared_interface(is_shared_interface)
 {
 #endif
 }
@@ -214,14 +205,14 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 #endif // USE_FAST_PINIO
 
 #if defined(ESP32)
-  HWSPI.begin(_sck, _miso, _mosi);
+  _spi->begin(_sck, _miso, _mosi);
   if (_dataMode < 0)
   {
     _dataMode = SPI_MODE0;
   }
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(ESP8266)
-  HWSPI.begin();
+  _spi->begin();
   if (_dataMode < 0)
   {
     _dataMode = SPI_MODE0;
@@ -229,14 +220,14 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 // Teensy 4.x
 #elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
-  HWSPI.begin();
+  _spi->begin();
   if (_dataMode < 0)
   {
     _dataMode = SPI_MODE0;
   }
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(SPI_HAS_TRANSACTION)
-  HWSPI.begin();
+  _spi->begin();
   if (_dataMode < 0)
   {
     _dataMode = SPI_MODE2;
@@ -244,23 +235,23 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(__AVR__) || defined(CORE_TEENSY)
   SPCRbackup = SPCR;
-  HWSPI.begin();
-  HWSPI.setClockDivider(SPI_CLOCK_DIV2);
+  _spi->begin();
+  _spi->setClockDivider(SPI_CLOCK_DIV2);
   if (_dataMode < 0)
   {
     _dataMode = SPI_MODE2;
   }
-  HWSPI.setDataMode(_dataMode);
+  _spi->setDataMode(_dataMode);
   mySPCR = SPCR;     // save our preferred state
   SPCR = SPCRbackup; // then restore
 #elif defined(__SAM3X8E__)
-  HWSPI.begin();
-  HWSPI.setClockDivider(21); //4MHz
+  _spi->begin();
+  _spi->setClockDivider(21); //4MHz
   if (_dataMode < 0)
   {
     _dataMode = SPI_MODE2;
   }
-  HWSPI.setDataMode(_dataMode);
+  _spi->setDataMode(_dataMode);
 #elif defined(__arm__)
   if (_dataMode < 0)
   {
@@ -406,7 +397,7 @@ void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
 void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
 #if defined(ESP8266) || defined(ESP32)
-  HWSPI.writePattern(data, len, repeat);
+  _spi->writePattern(data, len, repeat);
 #else  // !(defined(ESP8266) || defined(ESP32))
   while (repeat--)
   {
@@ -419,16 +410,16 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 INLINE void Arduino_HWSPI::WRITE(uint8_t d)
 {
 #if defined(SPI_HAS_TRANSACTION)
-  HWSPI.transfer(d);
+  _spi->transfer(d);
 #elif defined(__AVR__) || defined(CORE_TEENSY)
   SPCRbackup = SPCR;
   SPCR = mySPCR;
-  HWSPI.transfer(d);
+  _spi->transfer(d);
   SPCR = SPCRbackup;
 #elif defined(__arm__)
-  HWSPI.setClockDivider(21); //4MHz
-  HWSPI.setDataMode(_dataMode);
-  HWSPI.transfer(d);
+  _spi->setClockDivider(21); //4MHz
+  _spi->setDataMode(_dataMode);
+  _spi->transfer(d);
 #endif
 }
 
@@ -436,29 +427,29 @@ INLINE void Arduino_HWSPI::WRITE(uint8_t d)
 INLINE void Arduino_HWSPI::WRITE16(uint16_t d)
 {
 #if defined(ESP8266) || defined(ESP32)
-  HWSPI.write16(d);
+  _spi->write16(d);
 #elif defined(SPI_HAS_TRANSACTION)
-  HWSPI.transfer16(d);
+  _spi->transfer16(d);
 #elif defined(__AVR__) || defined(CORE_TEENSY)
   SPCRbackup = SPCR;
   SPCR = mySPCR;
-  HWSPI.transfer16(d);
+  _spi->transfer16(d);
   SPCR = SPCRbackup;
 #elif defined(__arm__)
-  HWSPI.setClockDivider(21); //4MHz
-  HWSPI.setDataMode(_dataMode);
-  HWSPI.transfer16(d);
+  _spi->setClockDivider(21); //4MHz
+  _spi->setDataMode(_dataMode);
+  _spi->transfer16(d);
 #else
-  HWSPI.transfer16(d);
+  _spi->transfer16(d);
 #endif
 }
 
 INLINE void Arduino_HWSPI::WRITEBUF(uint8_t *buf, size_t count)
 {
 #if defined(ESP8266) || defined(ESP32)
-  HWSPI.writeBytes(buf, count);
+  _spi->writeBytes(buf, count);
 #else  // !(defined(ESP8266) || defined(ESP32))
-  HWSPI.transfer(buf, count);
+  _spi->transfer(buf, count);
 #endif // !(defined(ESP8266) || defined(ESP32))
 }
 #endif // !defined(LITTLE_FOOT_PRINT)
