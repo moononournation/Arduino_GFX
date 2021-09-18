@@ -53,12 +53,12 @@ private:
   INLINE void CS_HIGH(void);
   INLINE void CS_LOW(void);
 
-  SPIClass *_spi;
 
   int8_t _dc, _cs;
 #if defined(ESP32)
   int8_t _sck, _mosi, _miso;
 #endif
+  SPIClass *_spi;
   bool _is_shared_interface;
 
   // CLASS INSTANCE VARIABLES --------------------------------------------
