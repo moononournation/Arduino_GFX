@@ -1,11 +1,17 @@
 /*******************************************************************************
- * LVGL Hello World
- * This is a simple examplle for LVGL - Light and Versatile Graphics Library
+ * LVGL Widgets
+ * This is a widgets demo for LVGL - Light and Versatile Graphics Library
+ * import from: https://github.com/lvgl/lv_demos.git
  *
  * Dependent libraries:
  * LVGL: https://github.com/lvgl/lvgl.git
+ *
+ * Settings in lv_conf.h
+ * #define LV_COLOR_DEPTH     16
+ * #define LV_COLOR_16_SWAP   1
  ******************************************************************************/
 #include <lvgl.h>
+#include "lv_demo_widgets.h"
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
@@ -61,7 +67,7 @@ void setup()
 {
    Serial.begin(115200);
    // while (!Serial);
-   Serial.println("LVGL Hello World");
+   Serial.println("LVGL Widgets Demo");
 
    // Init Display
    gfx->begin();
@@ -100,10 +106,7 @@ void setup()
       indev_drv.type = LV_INDEV_TYPE_POINTER;
       lv_indev_drv_register(&indev_drv);
 
-      /* Create simple label */
-      lv_obj_t *label = lv_label_create(lv_scr_act());
-      lv_label_set_text(label, "Hello Arduino! (V8.0.X)");
-      lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+      lv_demo_widgets();
 
       Serial.println("Setup done");
    }
