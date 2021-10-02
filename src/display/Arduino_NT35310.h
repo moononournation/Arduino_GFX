@@ -5,8 +5,8 @@
  * Data Sheet:
  * http://read.pudn.com/downloads648/ebook/2620902/NT35310.pdf
  */
-#ifndef _Arduino_NT35310_H_
-#define _Arduino_NT35310_H_
+#ifndef _ARDUINO_NT35310_H_
+#define _ARDUINO_NT35310_H_
 
 #include <Arduino.h>
 #include <Print.h>
@@ -156,4 +156,4 @@ protected:
 private:
 };
 
-#endif
+#endif // _ARDUINO_NT35310_H_

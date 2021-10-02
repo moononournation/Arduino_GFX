@@ -2,8 +2,8 @@
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
-#ifndef _Arduino_DataBus_H_
-#define _Arduino_DataBus_H_
+#ifndef _ARDUINO_DATABUS_H_
+#define _ARDUINO_DATABUS_H_
 
 #include <Arduino.h>
 
@@ -184,4 +184,4 @@ protected:
     int8_t _dataMode;
 };
 
-#endif
+#endif // _ARDUINO_DATABUS_H_

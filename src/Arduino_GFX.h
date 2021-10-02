@@ -385,4 +385,4 @@ protected:
 #endif        // defined(LITTLE_FOOT_PRINT)
 };
 
-#endif // _Arduino_GFX_H
+#endif // _ARDUINO_GFX_H_

@@ -5,8 +5,8 @@
  * Data Sheet:
  * http://read.pudn.com/downloads648/ebook/2620902/NT39125.pdf
  */
-#ifndef _Arduino_NT39125_H_
-#define _Arduino_NT39125_H_
+#ifndef _ARDUINO_NT39125_H_
+#define _ARDUINO_NT39125_H_
 
 #include <Arduino.h>
 #include <Print.h>
@@ -117,4 +117,4 @@ protected:
 private:
 };
 
-#endif
+#endif // _ARDUINO_NT39125_H_

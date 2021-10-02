@@ -1,7 +1,7 @@
 #ifdef __AVR__
 
-#ifndef _Arduino_AVRPAR8_H_
-#define _Arduino_AVRPAR8_H_
+#ifndef _ARDUINO_AVRPAR8_H_
+#define _ARDUINO_AVRPAR8_H_
 
 #include "Arduino_DataBus.h"
 
@@ -54,6 +54,6 @@ private:
   PORTreg_t _dataPort;                 ///< PORT register for data/command
 };
 
-#endif // _Arduino_AVRPAR8_H_
+#endif // _ARDUINO_AVRPAR8_H_
 
 #endif // #ifdef __AVR__
