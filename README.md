@@ -73,8 +73,8 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - 8-bit and 9-bit hardware SPI (ESP32SPI)
 - 8-bit hardware SPI (HWSPI, ESP8266SPI, mbedSPI, NRFXSPI, RPiPicoSPI)
 - 8-bit and 9-bit software SPI (SWSPI)
-- 8-bit parallel interface (AVRPAR8, ESP32PAR8, RPiPicoPAR8, RTLPAR8)
-- 16-bit parallel interface (ESP32PAR16, RPiPicoPAR16)
+- 8-bit parallel interface (AVRPAR8, ESP32PAR8, ESP32S2PAR8, RPiPicoPAR8, RTLPAR8)
+- 16-bit parallel interface (ESP32PAR16, ESP32S2PAR8, RPiPicoPAR16)
 
 ## Tobe Support data bus (Donation can make it happen)
 - ESP32 I2S 8-bit/16-bit parallel interface
@@ -86,13 +86,14 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - Arduino Pro Micro
 - ESP8266 Series
 - ESP32 Series
+- ESP32-S2 Series
 - Raspberry Pi Pico
 - rtlduino
 - WeAct BlackPill V2.0 (BlackPill F411CE)
 
 ## Tobe Support Dev Board
 - Arduino ATMega2560
-- ESP32-S2 Series
+- ESP32-C3 Series
 - ESP32-S3 Series
 
 ## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
@@ -107,6 +108,7 @@ Below are some figures compare with other 3 Arduino common display libraries.
 
 ## Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
 - GC9A01 round display 240x240 [[demo video](https://youtu.be/kJrAFm20-zg)]
+- GC9106 80x160
 - HX8347C 240x320 [[demo video](https://youtu.be/25ymuV51YQM)]
 - HX8347D 240x320 [[demo video](https://youtu.be/sv6LGkLRZjI)]
 - HX8352C 240x400 [[demo video](https://youtu.be/m2xWYbS3t7s)]
