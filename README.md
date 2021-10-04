@@ -108,7 +108,7 @@ Below are some figures compare with other 3 Arduino common display libraries.
 
 ## Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
 - GC9A01 round display 240x240 [[demo video](https://youtu.be/kJrAFm20-zg)]
-- GC9106 80x160
+- GC9106 80x160 [[demo video](https://youtu.be/RToGeeb1jxQ)]
 - HX8347C 240x320 [[demo video](https://youtu.be/25ymuV51YQM)]
 - HX8347D 240x320 [[demo video](https://youtu.be/sv6LGkLRZjI)]
 - HX8352C 240x400 [[demo video](https://youtu.be/m2xWYbS3t7s)]
