@@ -86,14 +86,14 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - Arduino Pro Micro
 - ESP8266 Series
 - ESP32 Series
+- ESP32-C3 Series
 - ESP32-S2 Series
 - Raspberry Pi Pico
 - rtlduino
 - WeAct BlackPill V2.0 (BlackPill F411CE)
 
-## Tobe Support Dev Board
+## Tobe Support Dev Board (Donation can make it happen)
 - Arduino ATMega2560
-- ESP32-C3 Series
 - ESP32-S3 Series
 
 ## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
