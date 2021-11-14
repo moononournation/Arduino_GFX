@@ -149,7 +149,7 @@ void PNGDraw(PNGDRAW *pDraw)
   uint8_t usMask[320];
 
   // Serial.printf("Draw pos = 0,%d. size = %d x 1\n", pDraw->y, pDraw->iWidth);
-  png.getLineAsRGB565(pDraw, usPixels, RGB565_LITTLE_ENDIAN, 0x00000000);
+  png.getLineAsRGB565(pDraw, usPixels, PNG_RGB565_LITTLE_ENDIAN, 0x00000000);
   png.getAlphaMask(pDraw, usMask, 1);
   gfx->draw16bitRGBBitmap(xOffset, yOffset + pDraw->y, usPixels, usMask, pDraw->iWidth, 1);
 }
