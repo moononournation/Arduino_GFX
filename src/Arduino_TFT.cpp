@@ -654,7 +654,8 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
         {
           if (len)
           {
-            draw16bitRGBBitmap(x + i - len, y, &bitmap[offset - len], len, 1);
+            writeAddrWindow(x + i - len, y, len, 1);
+            _bus->writePixels(&bitmap[offset - len], len);
             len = 0;
           }
         }
@@ -662,7 +663,8 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
       }
       if (len)
       {
-        draw16bitRGBBitmap(x + w - 1 - len, y, &bitmap[offset - len], len, 1);
+        writeAddrWindow(x + w - 1 - len, y, len, 1);
+        _bus->writePixels(&bitmap[offset - len], len);
         len = 0;
       }
     }
