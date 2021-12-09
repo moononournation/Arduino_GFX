@@ -36,6 +36,9 @@ typedef uint32_t ARDUINOGFX_PORT_t;
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
 typedef uint32_t ARDUINOGFX_PORT_t;
+#elif defined(CONFIG_ARCH_CHIP_CXD56XX) // Sony Spresense
+#define USE_FAST_PINIO    ///< Use direct PORT register access
+typedef uint8_t ARDUINOGFX_PORT_t;
 #elif defined(RTL8722DM)
 #define USE_FAST_PINIO ///< Use direct PORT register access
 typedef uint32_t ARDUINOGFX_PORT_t;

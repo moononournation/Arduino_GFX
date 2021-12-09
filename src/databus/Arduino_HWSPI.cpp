@@ -424,6 +424,7 @@ INLINE void Arduino_HWSPI::WRITE(uint8_t d)
 }
 
 #if !defined(LITTLE_FOOT_PRINT)
+
 INLINE void Arduino_HWSPI::WRITE16(uint16_t d)
 {
 #if defined(ESP8266) || defined(ESP32)
@@ -448,10 +449,13 @@ INLINE void Arduino_HWSPI::WRITEBUF(uint8_t *buf, size_t count)
 {
 #if defined(ESP8266) || defined(ESP32)
   _spi->writeBytes(buf, count);
-#else  // !(defined(ESP8266) || defined(ESP32))
+#elif defined(CONFIG_ARCH_CHIP_CXD56XX) // Sony Spresense
+  _spi->send(buf, count);
+#else // other arch.
   _spi->transfer(buf, count);
-#endif // !(defined(ESP8266) || defined(ESP32))
+#endif // other arch.
 }
+
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 /******** low level bit twiddling **********/

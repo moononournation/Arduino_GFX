@@ -90,6 +90,7 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - ESP32-S2 Series
 - Raspberry Pi Pico
 - rtlduino
+- Sony Spresense
 - WeAct BlackPill V2.0 (BlackPill F411CE)
 
 ## Tobe Support Dev Board (Donation can make it happen)
