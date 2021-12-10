@@ -105,7 +105,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
     _csPortClr = _dcPortClr;
     _csPinMask = 0;
   }
-  #elif defined(ESP32)
+#elif defined(ESP32)
   _dcPinMask = digitalPinToBitMask(_dc);
   if (_dc >= 32)
   {
@@ -330,7 +330,23 @@ void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
     WRITE(_data16.msb);
     WRITE(_data16.lsb);
   }
-#else  // !defined(LITTLE_FOOT_PRINT)
+#elif defined(ESP8266) || defined(CONFIG_ARCH_CHIP_CXD56XX)
+  MSB_16_SET(p, p);
+  uint32_t xferLen = (len < SPI_MAX_PIXELS_AT_ONCE) ? len : SPI_MAX_PIXELS_AT_ONCE;
+  for (uint32_t i = 0; i < xferLen; i++)
+  {
+    _buffer.v16[i] = p;
+  }
+
+  while (len)
+  {
+    xferLen = (len < SPI_MAX_PIXELS_AT_ONCE) ? len : SPI_MAX_PIXELS_AT_ONCE;
+    len -= xferLen;
+
+    xferLen += xferLen;
+    WRITEBUF(_buffer.v8, xferLen);
+  }
+#else  // other arch
   MSB_16_SET(p, p);
   uint32_t xferLen;
 
@@ -346,7 +362,7 @@ void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
     xferLen += xferLen;
     WRITEBUF(_buffer.v8, xferLen);
   }
-#endif // !defined(LITTLE_FOOT_PRINT)
+#endif // other arch
 }
 
 void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
@@ -449,9 +465,9 @@ INLINE void Arduino_HWSPI::WRITEBUF(uint8_t *buf, size_t count)
 {
 #if defined(ESP8266) || defined(ESP32)
   _spi->writeBytes(buf, count);
-#elif defined(CONFIG_ARCH_CHIP_CXD56XX) // Sony Spresense
+#elif defined(CONFIG_ARCH_CHIP_CXD56XX)
   _spi->send(buf, count);
-#else // other arch.
+#else  // other arch.
   _spi->transfer(buf, count);
 #endif // other arch.
 }
