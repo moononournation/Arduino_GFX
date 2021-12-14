@@ -44,6 +44,7 @@
 #include "display/Arduino_ILI9341.h"
 #include "display/Arduino_ILI9342.h"
 #include "display/Arduino_ILI9481_18bit.h"
+#include "display/Arduino_ILI9486.h"
 #include "display/Arduino_ILI9486_18bit.h"
 #include "display/Arduino_ILI9488_18bit.h"
 #include "display/Arduino_ILI9806.h"

@@ -18,7 +18,6 @@
 #define ILI9486_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
 #define ILI9486_SLPOUT_DELAY 120 ///< delay ms wait for sleep out finish
 
-// Generic commands used by ILI9486_eSPI.cpp
 #define ILI9486_NOP     0x00
 #define ILI9486_SWRST   0x01
 
