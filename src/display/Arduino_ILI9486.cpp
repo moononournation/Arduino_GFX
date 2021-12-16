@@ -164,10 +164,10 @@ void Arduino_ILI9486::tftInit()
 
   if (_ips)
   {
-    _bus->sendCommand(ILI9488_INVON);
+    _bus->sendCommand(ILI9486_INVON);
   }
   else
   {
-    _bus->sendCommand(ILI9488_INVOFF);
+    _bus->sendCommand(ILI9486_INVOFF);
   }
 }

@@ -44,6 +44,9 @@
 #define ILI9486_RAMWR 0x2C ///< Memory Write
 #define ILI9486_RAMRD 0x2E ///< Memory Read
 
+#define ILI9486_MADCTL 0x36   ///< Memory Access Control
+#define ILI9486_PIXFMT 0x3A   ///< COLMOD: Pixel Format Set
+
 #define ILI9486_GMCTRP1 0xE0 ///< Positive Gamma Correction
 #define ILI9486_GMCTRN1 0xE1 ///< Negative Gamma Correction
 
