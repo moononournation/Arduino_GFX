@@ -170,3 +170,4 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - https://github.com/lcdwiki/LCDWIKI_SPI.git
 - https://github.com/lovyan03/LovyanGFX.git
 - https://github.com/lovyan03/M5Stack_JpgLoopAnime
+- https://github.com/nopnop2002/esp-idf-parallel-tft

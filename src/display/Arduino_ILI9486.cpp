@@ -1,6 +1,6 @@
 /*
  * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
+ * https://github.com/nopnop2002/esp-idf-parallel-tft
  */
 #include "Arduino_ILI9486.h"
 
@@ -38,6 +38,7 @@ void Arduino_ILI9486::setRotation(uint8_t r)
     r = (ILI9486_MADCTL_MX | ILI9486_MADCTL_MY | ILI9486_MADCTL_MV | ILI9486_MADCTL_BGR);
     break;
   }
+
   _bus->beginWrite();
   _bus->writeC8D8(ILI9486_MADCTL, r);
   _bus->endWrite();
@@ -52,7 +53,6 @@ void Arduino_ILI9486::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
     x += _xStart;
     _bus->writeC8D16D16(ILI9486_CASET, x, x + w - 1);
   }
-
   if ((y != _currentY) || (h != _currentH))
   {
     _currentY = y;
@@ -95,26 +95,49 @@ void Arduino_ILI9486::tftInit()
     digitalWrite(_rst, HIGH);
     delay(ILI9486_RST_DELAY);
   }
-  else
-  {
-    // Software Rest
-    _bus->sendCommand(ILI9486_SWRESET);
-    delay(ILI9486_RST_DELAY);
-  }
 
   uint8_t ili9486_init_operations[] = {
       BEGIN_WRITE,
-      WRITE_COMMAND_8, ILI9486_SLPOUT, // Exit Sleep
+      WRITE_COMMAND_8, ILI9486_SWRESET,
       END_WRITE,
 
-      DELAY, ILI9486_SLPOUT_DELAY,
+      DELAY, ILI9486_RST_DELAY,
 
       BEGIN_WRITE,
-      WRITE_C8_D8, ILI9486_PIXFMT, 0x55,        // 16-bit color
-      WRITE_C8_D8, ILI9486_PWCTR3, 0x44,
+      WRITE_COMMAND_8, ILI9486_DISPOFF,
+      WRITE_C8_D8, ILI9486_PIXFMT, 0x55, // 16-bit color
+      WRITE_C8_D8, 0xB0, 0x00,           // unlocks E0, F0
+      WRITE_COMMAND_8, 0xB3,
+      WRITE_BYTES, 4, 0x02, 0x00, 0x00, 0x00, //Frame Memory, interface [02 00 00 00]
+      WRITE_C8_D8, 0xB4, 0x00,                // Frame mode [00]
+      // WRITE_COMMAND_8, 0xB6,
+      // WRITE_BYTES, 3, 0x02, 0x02, 0x3B,  // Display Function Control [02 02 3B]
+      WRITE_COMMAND_8, 0xB6,
+      WRITE_BYTES, 3, 0x02, 0x42, 0x3B, // Display Function Control [02 02 3B]
+      WRITE_COMMAND_8, 0xD0,
+      WRITE_BYTES, 3, 0x07, 0x42, 0x18,
+      WRITE_COMMAND_8, 0xD1,
+      WRITE_BYTES, 3, 0x00, 0x07, 0x18,
+      WRITE_C8_D16, 0xD2, 0x01, 0x02,
+      WRITE_C8_D16, 0xD3, 0x01, 0x02, // Set Power for Partial Mode [01 22]
+      WRITE_C8_D16, 0xD4, 0x01, 0x02, // Set Power for Idle Mode [01 22]
+      // WRITE_COMMAND_8, 0xC0,
+      // 5, 0x10, 0x3B, 0x00, 0x02, 0x11,
+      WRITE_COMMAND_8, 0xC0,
+      WRITE_BYTES, 5, 0x14, 0x3B, 0x00, 0x02, 0x11,
+      WRITE_COMMAND_8, 0xC1,
+      WRITE_BYTES, 3, 0x10, 0x10, 0x88, // Display Timing Normal [10 10 88]
+      WRITE_C8_D8, 0xC5, 0x03,          //Frame Rate [03]
+      WRITE_C8_D8, 0xC6, 0x02,          //Interface Control [02]
 
-      WRITE_COMMAND_8, ILI9486_VMCTR1,
-      WRITE_BYTES, 4, 0x00, 0x00, 0x00, 0x00,
+      WRITE_COMMAND_8, 0xC8,
+      WRITE_BYTES, 12,
+      0x00, 0x32, 0x36, 0x45, 0x06,
+      0x16, 0x37, 0x75, 0x77, 0x54,
+      0x0C, 0x00,
+
+      WRITE_C8_D8, 0xCC, 0x00, // Panel Control [00]
+      WRITE_C8_D8, 0x36, 0x18, // 0x08,
 
       WRITE_COMMAND_8, ILI9486_GMCTRP1,
       WRITE_BYTES, 15,
@@ -128,6 +151,11 @@ void Arduino_ILI9486::tftInit()
       0x05, 0x47, 0x75, 0x37, 0x06,
       0x10, 0x03, 0x24, 0x20, 0x00,
 
+      WRITE_COMMAND_8, ILI9486_SLPOUT, // Exit Sleep
+      END_WRITE,
+
+      DELAY, ILI9486_SLPOUT_DELAY,
+
       BEGIN_WRITE,
       WRITE_COMMAND_8, ILI9486_DISPON, // Display on
       END_WRITE};
@@ -136,6 +164,10 @@ void Arduino_ILI9486::tftInit()
 
   if (_ips)
   {
-    _bus->sendCommand(ILI9486_INVON);
+    _bus->sendCommand(ILI9488_INVON);
+  }
+  else
+  {
+    _bus->sendCommand(ILI9488_INVOFF);
   }
 }

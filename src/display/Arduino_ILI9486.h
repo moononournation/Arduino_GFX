@@ -1,6 +1,6 @@
 /*
  * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
+ * https://github.com/nopnop2002/esp-idf-parallel-tft
  */
 #ifndef _ARDUINO_ILI9486_H_
 #define _ARDUINO_ILI9486_H_
@@ -13,9 +13,9 @@
 #define ILI9486_TFTWIDTH 320  ///< ILI9486 max TFT width
 #define ILI9486_TFTHEIGHT 480 ///< ILI9486 max TFT height
 
-#define ILI9486_RST_DELAY 120    ///< delay ms wait for reset finish
-#define ILI9486_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
-#define ILI9486_SLPOUT_DELAY 120 ///< delay ms wait for sleep out finish
+#define ILI9486_RST_DELAY 150    ///< delay ms wait for reset finish
+#define ILI9486_SLPIN_DELAY 150  ///< delay ms wait for sleep in finish
+#define ILI9486_SLPOUT_DELAY 150 ///< delay ms wait for sleep out finish
 
 #define ILI9486_NOP 0x00     ///< No-op register
 #define ILI9486_SWRESET 0x01 ///< Software reset register
@@ -44,34 +44,8 @@
 #define ILI9486_RAMWR 0x2C ///< Memory Write
 #define ILI9486_RAMRD 0x2E ///< Memory Read
 
-#define ILI9486_PTLAR 0x30    ///< Partial Area
-#define ILI9486_VSCRDEF 0x33  ///< Vertical Scrolling Definition
-#define ILI9486_MADCTL 0x36   ///< Memory Access Control
-#define ILI9486_VSCRSADD 0x37 ///< Vertical Scrolling Start Address
-#define ILI9486_PIXFMT 0x3A   ///< COLMOD: Pixel Format Set
-
-#define ILI9486_FRMCTR1 0xB1 ///< Frame Rate Control (In Normal Mode/Full Colors)
-#define ILI9486_FRMCTR2 0xB2 ///< Frame Rate Control (In Idle Mode/8 colors)
-#define ILI9486_FRMCTR3 0xB3 ///< Frame Rate control (In Partial Mode/Full Colors)
-#define ILI9486_INVCTR 0xB4  ///< Display Inversion Control
-#define ILI9486_DFUNCTR 0xB6 ///< Display Function Control
-
-#define ILI9486_PWCTR1 0xC0 ///< Power Control 1
-#define ILI9486_PWCTR2 0xC1 ///< Power Control 2
-#define ILI9486_PWCTR3 0xC2 ///< Power Control 3
-#define ILI9486_PWCTR4 0xC3 ///< Power Control 4
-#define ILI9486_PWCTR5 0xC4 ///< Power Control 5
-#define ILI9486_VMCTR1 0xC5 ///< VCOM Control 1
-#define ILI9486_VMCTR2 0xC7 ///< VCOM Control 2
-
-#define ILI9486_RDID1 0xDA ///< Read ID 1
-#define ILI9486_RDID2 0xDB ///< Read ID 2
-#define ILI9486_RDID3 0xDC ///< Read ID 3
-#define ILI9486_RDID4 0xDD ///< Read ID 4
-
 #define ILI9486_GMCTRP1 0xE0 ///< Positive Gamma Correction
 #define ILI9486_GMCTRN1 0xE1 ///< Negative Gamma Correction
-#define ILI9486_PWCTR6 0xFC
 
 #define ILI9486_MADCTL_MY 0x80  ///< Bottom to top
 #define ILI9486_MADCTL_MX 0x40  ///< Right to left
