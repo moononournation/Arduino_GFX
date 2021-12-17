@@ -24,7 +24,7 @@ void Arduino_ILI9488_3bit::begin(int32_t speed)
   }
   else
   {
-    _bus->sendCommand(ILI9488_SWRST); // 1: Software reset
+    _bus->sendCommand(ILI9488_SWRESET); // 1: Software reset
     delay(ILI9488_RST_DELAY);
   }
 
@@ -102,16 +102,16 @@ void Arduino_ILI9488_3bit::begin(int32_t speed)
   switch (_rotation)
   {
   case 3:
-    r = (ILI9488_MAD_BGR | ILI9488_MAD_MV);
+    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MV);
     break;
   case 2:
-    r = (ILI9488_MAD_BGR | ILI9488_MAD_MX);
+    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MX);
     break;
   case 1:
-    r = (ILI9488_MAD_BGR | ILI9488_MAD_MV | ILI9488_MAD_MX | ILI9488_MAD_MY);
+    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MV | ILI9488_MADCTL_MX | ILI9488_MADCTL_MY);
     break;
   default: // case 0:
-    r = (ILI9488_MAD_BGR | ILI9488_MAD_MY);
+    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MY);
     break;
   }
   _bus->beginWrite();

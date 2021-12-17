@@ -1,15 +1,15 @@
 /*
  * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
+ * https://github.com/nopnop2002/esp-idf-parallel-tft
  */
-#include "Arduino_ILI9488_18bit.h"
+#include "Arduino_ILI9488.h"
 
-Arduino_ILI9488_18bit::Arduino_ILI9488_18bit(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
-    : Arduino_TFT_18bit(bus, rst, r, ips, ILI9488_TFTWIDTH, ILI9488_TFTHEIGHT, 0, 0, 0, 0)
+Arduino_ILI9488::Arduino_ILI9488(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
+    : Arduino_TFT(bus, rst, r, ips, ILI9488_TFTWIDTH, ILI9488_TFTHEIGHT, 0, 0, 0, 0)
 {
 }
 
-void Arduino_ILI9488_18bit::begin(int32_t speed)
+void Arduino_ILI9488::begin(int32_t speed)
 {
   Arduino_TFT::begin(speed);
 }
@@ -20,7 +20,7 @@ void Arduino_ILI9488_18bit::begin(int32_t speed)
     @param   m  The index for rotation, from 0-3 inclusive
 */
 /**************************************************************************/
-void Arduino_ILI9488_18bit::setRotation(uint8_t r)
+void Arduino_ILI9488::setRotation(uint8_t r)
 {
   Arduino_TFT::setRotation(r);
   switch (_rotation)
@@ -44,7 +44,7 @@ void Arduino_ILI9488_18bit::setRotation(uint8_t r)
   _bus->endWrite();
 }
 
-void Arduino_ILI9488_18bit::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
+void Arduino_ILI9488::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
 {
   if ((x != _currentX) || (w != _currentW))
   {
@@ -64,18 +64,18 @@ void Arduino_ILI9488_18bit::writeAddrWindow(int16_t x, int16_t y, uint16_t w, ui
   _bus->writeCommand(ILI9488_RAMWR); // write to RAM
 }
 
-void Arduino_ILI9488_18bit::invertDisplay(bool i)
+void Arduino_ILI9488::invertDisplay(bool i)
 {
   _bus->sendCommand(i ? ILI9488_INVON : ILI9488_INVOFF);
 }
 
-void Arduino_ILI9488_18bit::displayOn(void)
+void Arduino_ILI9488::displayOn(void)
 {
   _bus->sendCommand(ILI9488_SLPOUT);
   delay(ILI9488_SLPOUT_DELAY);
 }
 
-void Arduino_ILI9488_18bit::displayOff(void)
+void Arduino_ILI9488::displayOff(void)
 {
   _bus->sendCommand(ILI9488_SLPIN);
   delay(ILI9488_SLPIN_DELAY);
@@ -83,7 +83,7 @@ void Arduino_ILI9488_18bit::displayOff(void)
 
 // Companion code to the above tables.  Reads and issues
 // a series of LCD commands stored in PROGMEM byte array.
-void Arduino_ILI9488_18bit::tftInit()
+void Arduino_ILI9488::tftInit()
 {
   if (_rst >= 0)
   {
@@ -95,63 +95,33 @@ void Arduino_ILI9488_18bit::tftInit()
     digitalWrite(_rst, HIGH);
     delay(ILI9488_RST_DELAY);
   }
-  else
-  {
-    // Software Rest
-    _bus->sendCommand(ILI9488_SWRESET);
-    delay(ILI9488_RST_DELAY);
-  }
 
   uint8_t ili9488_init_operations[] = {
       BEGIN_WRITE,
+      WRITE_COMMAND_8, ILI9488_SWRESET,
+      END_WRITE,
 
-      WRITE_COMMAND_8, 0xE0,
-      WRITE_BYTES, 15,
-      0x00, 0x03, 0x09, 0x08,
-      0x16, 0x0A, 0x3F, 0x78,
-      0x4C, 0x09, 0x0A, 0x08,
-      0x16, 0x1A, 0x0F,
+      DELAY, ILI9488_RST_DELAY,
 
-      WRITE_COMMAND_8, 0XE1,
-      WRITE_BYTES, 15,
-      0x00, 0x16, 0x19, 0x03,
-      0x0F, 0x05, 0x32, 0x45,
-      0x46, 0x04, 0x0E, 0x0D,
-      0x35, 0x37, 0x0F,
+      BEGIN_WRITE,
+      WRITE_COMMAND_8, 0x28,   //Display Off
+      WRITE_C8_D8, 0x3A, 0x55, //Pixel read=565, write=565.
 
-      WRITE_C8_D16, 0XC0, // Power Control 1
-      0x17,               // Vreg1out
-      0x15,               // Verg2out
-
-      WRITE_C8_D8, 0xC1, // Power Control 2
-      0x41,              // VGH,VGL
-
-      WRITE_COMMAND_8, 0xC5, // Power Control 3
-      WRITE_BYTES, 3,
-      0x00,
-      0x12, // Vcom
-      0x80,
-
-      WRITE_C8_D8, 0x36, 0x48, // Memory Access
-
-      WRITE_C8_D8, 0x3A, 0x66, // Interface Pixel Format, 18 bit
-
-      WRITE_C8_D8, 0xB0, 0x80, // Interface Mode Control, SDO NOT USE
-
-      WRITE_C8_D8, 0xB1, 0xA0, // Frame rate, 60Hz
-
-      WRITE_C8_D8, 0xB4, 0x02, // Display Inversion Control, 2-dot
-
-      WRITE_C8_D16, 0XB6, // Display Function Control  RGB/MCU Interface Control
-      0x02,               // MCU
-      0x02,               // Source,Gate scan dieection
-
-      WRITE_C8_D8, 0XE9, 0x00, // Set Image Function, Disable 24 bit data
-
-      WRITE_COMMAND_8, 0xF7,                  // Adjust Control
-      WRITE_BYTES, 4, 0xA9, 0x51, 0x2C, 0x82, // D7 stream, loose
-
-      WRITE_COMMAND_8, ILI9488_SLPOUT, // Exit Sleep
+      WRITE_C8_D16, 0xC0, 0x10, 0x10,             //Power Control 1 [0E 0E]
+      WRITE_C8_D8, 0xC1, 0x41,                   //Power Control 2 [43]
+      WRITE_COMMAND_8, 0xC5,
+      WRITE_BYTES, 4, 0x00, 0x22, 0x80, 0x40, //VCOM  Control 1 [00 40 00 40]
+      WRITE_C8_D8, 0x36, 0x98,                   //Memory Access [00]
+      WRITE_C8_D8, 0xB0, 0x00,                   //Interface     [00]
+      WRITE_C8_D16, 0xB1, 0xB0, 0x11,             //Frame Rate Control [B0 11]
+      WRITE_C8_D8, 0xB4, 0x02,                   //Inversion Control [02]
+      WRITE_COMMAND_8, 0xB6,
+      WRITE_BYTES, 3, 0x02, 0x02, 0x3B,       // Display Function Control [02 02 3B] .kbv NL=480
+      WRITE_C8_D8, 0xB7, 0xC6,                   //Entry Mode      [06]
+      WRITE_C8_D8, 0x3A, 0x55,                   //Interlace Pixel Format [XX]
+      WRITE_COMMAND_8, 0xF7,
+      WRITE_BYTES, 4, 0xA9, 0x51, 0x2C, 0x82, //Adjustment Control 3 [A9 51 2C 82]
+      WRITE_COMMAND_8, ILI9488_SLPOUT, // Sleep Out
       END_WRITE,
 
       DELAY, ILI9488_SLPOUT_DELAY,

@@ -231,7 +231,10 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 // ILI9486 SPI LCD 320x480
 // Arduino_GFX *gfx = new Arduino_ILI9486_18bit(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
 
-// ILI9488 LCD 320x480
+// ILI9488 8-bit LCD 320x480
+// Arduino_GFX *gfx = new Arduino_ILI9488(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
+
+// ILI9488 SPI LCD 320x480
 // Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
 
 // ILI9806 LCD 480x854
