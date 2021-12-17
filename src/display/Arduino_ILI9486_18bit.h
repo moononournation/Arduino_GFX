@@ -7,46 +7,8 @@
 
 #include <Arduino.h>
 #include <Print.h>
-#include "../Arduino_GFX.h"
-#include "../Arduino_TFT.h"
+#include "Arduino_ILI9486.h"
 #include "../Arduino_TFT_18bit.h"
-
-#define ILI9486_TFTWIDTH 320  ///< ILI9486 max TFT width
-#define ILI9486_TFTHEIGHT 480 ///< ILI9486 max TFT height
-
-#define ILI9486_RST_DELAY 120    ///< delay ms wait for reset finish
-#define ILI9486_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
-#define ILI9486_SLPOUT_DELAY 120 ///< delay ms wait for sleep out finish
-
-#define ILI9486_NOP     0x00
-#define ILI9486_SWRST   0x01
-
-#define ILI9486_SLPIN   0x10
-#define ILI9486_SLPOUT  0x11
-
-#define ILI9486_INVOFF  0x20
-#define ILI9486_INVON   0x21
-
-#define ILI9486_DISPOFF 0x28
-#define ILI9486_DISPON  0x29
-
-#define ILI9486_CASET   0x2A
-#define ILI9486_PASET   0x2B
-#define ILI9486_RAMWR   0x2C
-
-#define ILI9486_RAMRD   0x2E
-
-#define ILI9486_MADCTL  0x36
-
-#define ILI9486_MAD_MY  0x80
-#define ILI9486_MAD_MX  0x40
-#define ILI9486_MAD_MV  0x20
-#define ILI9486_MAD_ML  0x10
-#define ILI9486_MAD_RGB 0x00
-#define ILI9486_MAD_BGR 0x08
-#define ILI9486_MAD_MH  0x04
-#define ILI9486_MAD_SS  0x02
-#define ILI9486_MAD_GS  0x01
 
 class Arduino_ILI9486_18bit : public Arduino_TFT_18bit
 {

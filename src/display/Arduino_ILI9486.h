@@ -57,6 +57,8 @@
 #define ILI9486_MADCTL_RGB 0x00 ///< Red-Green-Blue pixel order
 #define ILI9486_MADCTL_BGR 0x08 ///< Blue-Green-Red pixel order
 #define ILI9486_MADCTL_MH 0x04  ///< LCD refresh right to left
+#define ILI9486_MADCTL_SS  0x02
+#define ILI9486_MADCTL_GS  0x01
 
 class Arduino_ILI9486 : public Arduino_TFT
 {

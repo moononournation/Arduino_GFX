@@ -31,7 +31,7 @@ void Arduino_ILI9486_18bit::tftInit()
   else
   {
     // Software Rest
-    _bus->sendCommand(ILI9486_SWRST);
+    _bus->sendCommand(ILI9486_SWRESET);
     delay(ILI9486_RST_DELAY);
   }
 
@@ -141,16 +141,16 @@ void Arduino_ILI9486_18bit::setRotation(uint8_t r)
   switch (_rotation)
   {
   case 0:
-    r = (ILI9486_MAD_BGR | ILI9486_MAD_MX);
+    r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MX);
     break;
   case 1:
-    r = (ILI9486_MAD_BGR | ILI9486_MAD_MV);
+    r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MV);
     break;
   case 2:
-    r = (ILI9486_MAD_BGR | ILI9486_MAD_MY);
+    r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MY);
     break;
   case 3:
-    r = (ILI9486_MAD_BGR | ILI9486_MAD_MV | ILI9486_MAD_MX | ILI9486_MAD_MY);
+    r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MV | ILI9486_MADCTL_MX | ILI9486_MADCTL_MY);
     break;
   }
 
