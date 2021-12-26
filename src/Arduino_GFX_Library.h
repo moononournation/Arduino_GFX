@@ -62,6 +62,7 @@
 #include "display/Arduino_ST7789.h"
 #include "display/Arduino_ST7796.h"
 
+#ifndef NO_TFT_SPI_PIN_DEFAULTS
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #define DISPLAY_DEV_KIT
 #define WIO_TERMINAL
@@ -168,6 +169,7 @@
 #define TFT_DC 8
 #define TFT_RST 7
 #define TFT_BL 6
+#endif
 #endif
 
 Arduino_DataBus *create_default_Arduino_DataBus();
