@@ -153,11 +153,21 @@
 #define TFT_DC 4
 #define TFT_RST 2
 #define TFT_BL 5
-#elif defined(RTL8722DM)
+#elif defined(BOARD_RTL8722DM)
 #define TFT_CS 18
 #define TFT_DC 17
 #define TFT_RST 2
 #define TFT_BL 23
+#elif defined(BOARD_RTL8722DM_MINI)
+#define TFT_CS 12
+#define TFT_DC 14
+#define TFT_RST 15
+#define TFT_BL 13
+#elif defined(BOARD_RTL8720DN_BW16)
+#define TFT_CS 9
+#define TFT_DC 6
+#define TFT_RST 2
+#define TFT_BL 3
 #elif defined(SEEED_XIAO_M0)
 #define TFT_CS 3 // -1 for display without CS pin
 #define TFT_DC 2
