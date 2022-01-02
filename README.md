@@ -81,6 +81,8 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - FastLED
 
 ## Currently Supported Dev Board
+- Ameba RTL8722DM Board (AMB 21)
+- Ameba RTL8722DM MINI Board (AMB 23)
 - Arduino Nano
 - Arduino Nano BLE 33
 - Arduino Pro Micro
@@ -89,7 +91,7 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - ESP32-C3 Series
 - ESP32-S2 Series
 - Raspberry Pi Pico
-- rtlduino
+- rtlduino BW16 (by Ai-Thinker)
 - Sony Spresense
 - WeAct BlackPill V2.0 (BlackPill F411CE)
 

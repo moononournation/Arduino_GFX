@@ -43,7 +43,10 @@
  * ESP32-S2 various dev board  : TFT_CS: 34, TFT_DC: 26, TFT_RST: 33, TFT_BL: 21
  * ESP8266 various dev board   : TFT_CS: 15, TFT_DC:  4, TFT_RST:  2, TFT_BL:  5
  * Raspberry Pi Pico dev board : TFT_CS: 17, TFT_DC: 27, TFT_RST: 26, TFT_BL: 28
- * RTL872x various dev board   : TFT_CS: 18, TFT_DC: 17, TFT_RST:  2, TFT_BL: 23
+ * RTL8720 BW16 old patch core : TFT_CS: 18, TFT_DC: 17, TFT_RST:  2, TFT_BL: 23
+ * RTL8720_BW16 Official core  : TFT_CS:  9, TFT_DC:  8, TFT_RST:  6, TFT_BL:  3
+ * RTL8722 dev board           : TFT_CS: 18, TFT_DC: 17, TFT_RST: 22, TFT_BL: 23
+ * RTL8722_mini dev board      : TFT_CS: 12, TFT_DC: 14, TFT_RST: 15, TFT_BL: 13
  * Seeeduino XIAO dev board    : TFT_CS:  3, TFT_DC:  2, TFT_RST:  1, TFT_BL:  0
  * Teensy 4.1 dev board        : TFT_CS: 39, TFT_DC: 41, TFT_RST: 40, TFT_BL: 22
  ******************************************************************************/
