@@ -92,9 +92,9 @@ void setup()
   pinMode(LCD_PWR_PIN, OUTPUT);    // sets the pin as output
   digitalWrite(LCD_PWR_PIN, HIGH); // power on
 #endif
-#if defined(TFT_BL)
-  pinMode(TFT_BL, OUTPUT);    // sets the pin as output
-  digitalWrite(TFT_BL, HIGH); // power on
+#if defined(DF_GFX_BL)
+  pinMode(DF_GFX_BL, OUTPUT);    // sets the pin as output
+  digitalWrite(DF_GFX_BL, HIGH); // power on
 #endif
 
   // init LCD
@@ -288,8 +288,8 @@ void loop()
 #if defined(LCD_PWR_PIN)
     pinMode(LCD_PWR_PIN, INPUT); // disable pin
 #endif
-#if defined(TFT_BL)
-    pinMode(TFT_BL, INPUT); // disable pin
+#if defined(DF_GFX_BL)
+    pinMode(DF_GFX_BL, INPUT); // disable pin
 #endif
   }
 #endif // defined(SCAN_COUNT_SLEEP)

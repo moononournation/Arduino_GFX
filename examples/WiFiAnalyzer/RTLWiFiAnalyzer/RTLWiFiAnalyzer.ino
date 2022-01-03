@@ -9,10 +9,10 @@
  * https://github.com/mikey60/BW16-RTL8720DN-Module-Arduino
  * 
  * Defalult pin list for non display dev kit:
- * RTL8720 BW16 old patch core : TFT_CS: 18, TFT_DC: 17, TFT_RST:  2, TFT_BL: 23
- * RTL8720_BW16 Official core  : TFT_CS:  9, TFT_DC:  8, TFT_RST:  6, TFT_BL:  3
- * RTL8722 dev board           : TFT_CS: 18, TFT_DC: 17, TFT_RST: 22, TFT_BL: 23
- * RTL8722_mini dev board      : TFT_CS: 12, TFT_DC: 14, TFT_RST: 15, TFT_BL: 13
+ * RTL8720 BW16 old patch core : CS: 18, DC: 17, RST:  2, BL: 23
+ * RTL8720_BW16 Official core  : CS:  9, DC:  8, RST:  6, BL:  3
+ * RTL8722 dev board           : CS: 18, DC: 17, RST: 22, BL: 23
+ * RTL8722_mini dev board      : CS: 12, DC: 14, RST: 15, BL: 13
  ******************************************************************************/
 
 #define SCAN_INTERVAL 3000
@@ -27,7 +27,7 @@
 #include <Arduino_GFX_Library.h>
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 3 /* rotation */, false /* IPS */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
 
 static int16_t w, h, text_size, banner_height, graph24_baseline, graph50_baseline, graph_baseline, graph_height, channel24_width, channel50_width, channel_width, signal_width;
 
@@ -148,9 +148,9 @@ void setup()
   pinMode(LCD_PWR_PIN, OUTPUT);    // sets the pin as output
   digitalWrite(LCD_PWR_PIN, HIGH); // power on
 #endif
-#if defined(TFT_BL)
-  pinMode(TFT_BL, OUTPUT);    // sets the pin as output
-  digitalWrite(TFT_BL, HIGH); // power on
+#if defined(DF_GFX_BL)
+  pinMode(DF_GFX_BL, OUTPUT);    // sets the pin as output
+  digitalWrite(DF_GFX_BL, HIGH); // power on
 #endif
 
   // init LCD
