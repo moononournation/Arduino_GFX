@@ -34,19 +34,19 @@ void Arduino_ST7789::setRotation(uint8_t r)
   switch (_rotation)
   {
   case 0:
-    r = ST7789_MADCTL_MX | ST7789_MADCTL_MY | ST7789_MADCTL_RGB;
-    break;
-
-  case 1:
-    r = ST7789_MADCTL_MY | ST7789_MADCTL_MV | ST7789_MADCTL_RGB;
-    break;
-
-  case 2:
     r = ST7789_MADCTL_RGB;
     break;
 
-  case 3:
+  case 1:
     r = ST7789_MADCTL_MX | ST7789_MADCTL_MV | ST7789_MADCTL_RGB;
+    break;
+
+  case 2:
+    r = ST7789_MADCTL_MX | ST7789_MADCTL_MY | ST7789_MADCTL_RGB;
+    break;
+
+  case 3:
+    r = ST7789_MADCTL_MY | ST7789_MADCTL_MV | ST7789_MADCTL_RGB;
     break;
   }
 

@@ -25,7 +25,7 @@ Arduino_GFX *create_default_Arduino_GFX()
 #elif defined(ODROID_GO)
     return new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */);
 #elif defined(TTGO_T_WATCH)
-    return new Arduino_ST7789(bus, DF_GFX_RST, 2 /* rotation */, true /* IPS */, 240, 240, 0, 80);
+    return new Arduino_ST7789(bus, DF_GFX_RST, 0 /* rotation */, true /* IPS */, 240, 240, 0, 80);
 #else
     return new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */);
 #endif
