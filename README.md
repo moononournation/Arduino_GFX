@@ -4,6 +4,14 @@ Arduino_GFX is a Arduino graphics library supporting various displays with vario
 
 This library start rewrite from Adafruit_GFX, LovyanGFX, TFT_eSPI, Ucglib, and more...
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/moononournation/Arduino_GFX)
+![GitHub Release Date](https://img.shields.io/github/release-date/moononournation/Arduino_GFX)
+![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/moononournation/Arduino_GFX/latest)
+![GitHub last commit](https://img.shields.io/github/last-commit/moononournation/Arduino_GFX)
+
+![GitHub Sponsors](https://img.shields.io/github/sponsors/moononournation)
+![Twitter Follow](https://img.shields.io/twitter/follow/moononournation)
+
 ## Various data bus interfaces
 
 Arduino_GFX utilize Arduino Built-in SPI class to support 8-bit SPI for most platform.
