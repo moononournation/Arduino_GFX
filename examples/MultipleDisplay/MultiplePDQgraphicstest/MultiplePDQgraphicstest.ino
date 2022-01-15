@@ -21,9 +21,11 @@ Arduino_GFX *gfx3 = new Arduino_ST7789(bus3, -1 /* RST */, 0 /* rotation */, tru
 
 Arduino_DataBus *bus4 = new Arduino_HWSPI(DF_GFX_DC, 5 /* CS */);
 Arduino_GFX *gfx4 = new Arduino_ILI9341(bus4, -1 /* RST */, 0 /* rotation */, false /* IPS */);
+/*******************************************************************************
+ * End of Arduino_GFX setting
+ ******************************************************************************/
 
 Arduino_GFX *gfx = gfx1;
-
 int32_t w, h, n, n1, cx, cy, cx1, cy1, cn, cn1;
 uint8_t tsa, tsb, tsc, ds;
 
