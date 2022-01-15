@@ -82,7 +82,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 #include <SD.h>
 #elif defined(ESP32)
 #include <FFat.h>
-// #include <LittleFS.h>
+#include <LittleFS.h>
 #include <SPIFFS.h>
 #include <SD.h>
 #elif defined(ESP8266)
@@ -115,8 +115,8 @@ void setup()
   if (!LittleFS.begin())
   // if (!SD.begin(SS))
 #elif defined(ESP32)
-  if (!FFat.begin())
-  // if (!LittleFS.begin())
+  // if (!FFat.begin())
+  if (!LittleFS.begin())
   // if (!SPIFFS.begin())
   // if (!SD.begin(SS))
 #elif defined(ESP8266)
@@ -141,8 +141,8 @@ void loop()
   File gifFile = LittleFS.open(GIF_FILENAME, "r");
   // File gifFile = SD.open(GIF_FILENAME, "r");
 #elif defined(ESP32)
-  File gifFile = FFat.open(GIF_FILENAME, "r");
-  // File gifFile = LittleFS.open(GIF_FILENAME, "r");
+  // File gifFile = FFat.open(GIF_FILENAME, "r");
+  File gifFile = LittleFS.open(GIF_FILENAME, "r");
   // File gifFile = SPIFFS.open(GIF_FILENAME, "r");
   // File gifFile = SD.open(GIF_FILENAME, "r");
 #elif defined(ESP8266)
