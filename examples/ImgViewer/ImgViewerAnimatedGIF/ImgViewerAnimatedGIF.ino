@@ -178,9 +178,9 @@ void loop()
 
         Serial.println(F("GIF video start"));
         uint32_t t_fstart, t_delay = 0, t_real_delay, delay_until;
-        int32_t res;
+        int32_t res = 1;
         uint32_t duration = 0, remain = 0;
-        while (1)
+        while (res > 0)
         {
           t_fstart = millis();
           t_delay = gif->gce.delay * 10;
@@ -190,31 +190,19 @@ void loop()
             Serial.println(F("ERROR: gd_get_frame() failed!"));
             break;
           }
-          else if (res == 0)
+          else if (res > 0)
           {
-            Serial.print(F("rewind, duration: "));
-            Serial.print(duration);
-            Serial.print(F(", remain: "));
-            Serial.print(remain);
-            Serial.print(F(" ("));
-            Serial.print(100.0 * remain / duration);
-            Serial.println(F("%)"));
-            duration = 0;
-            remain = 0;
-            gifClass.gd_rewind(gif);
-            continue;
+            gfx->drawIndexedBitmap(x, y, buf, gif->palette->colors, gif->width, gif->height);
+
+            t_real_delay = t_delay - (millis() - t_fstart);
+            duration += t_delay;
+            remain += t_real_delay;
+            delay_until = millis() + t_real_delay;
+            do
+            {
+              delay(1);
+            } while (millis() < delay_until);
           }
-
-          gfx->drawIndexedBitmap(x, y, buf, gif->palette->colors, gif->width, gif->height);
-
-          t_real_delay = t_delay - (millis() - t_fstart);
-          duration += t_delay;
-          remain += t_real_delay;
-          delay_until = millis() + t_real_delay;
-          do
-          {
-            delay(1);
-          } while (millis() < delay_until);
         }
         Serial.println(F("GIF video end"));
         Serial.print(F("duration: "));
