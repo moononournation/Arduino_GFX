@@ -18,6 +18,12 @@ void Arduino_DataBus::writeC8D16(uint8_t c, uint16_t d)
   write16(d);
 }
 
+void Arduino_DataBus::writeC16D16(uint16_t c, uint16_t d)
+{
+  writeCommand16(c);
+  write16(d);
+}
+
 void Arduino_DataBus::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 {
   writeCommand(c);
