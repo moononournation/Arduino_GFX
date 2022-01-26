@@ -24,14 +24,14 @@ void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
     _dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_dc >= 0)
+  else if (_dc != GFX_NOT_DEFINED)
   {
     _dcPinMask = digitalPinToBitMask(_dc);
     _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
 
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH); // disable chip select
@@ -42,7 +42,7 @@ void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_cs >= 0)
+  else if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -63,14 +63,14 @@ void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
     _wrPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _wrPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_wr >= 0)
+  else if (_wr != GFX_NOT_DEFINED)
   {
     _wrPinMask = digitalPinToBitMask(_wr);
     _wrPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _wrPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
 
-  if (_rd >= 0)
+  if (_rd != GFX_NOT_DEFINED)
   {
     pinMode(_rd, OUTPUT);
     digitalWrite(_rd, HIGH);
@@ -81,7 +81,7 @@ void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
     _rdPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _rdPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_rd >= 0)
+  else if (_rd != GFX_NOT_DEFINED)
   {
     _rdPinMask = digitalPinToBitMask(_rd);
     _rdPortSet = (PORTreg_t)&GPIO.out_w1ts;

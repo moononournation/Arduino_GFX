@@ -11,7 +11,7 @@
 class Arduino_ILI9488_3bit : public Arduino_G
 {
 public:
-  Arduino_ILI9488_3bit(Arduino_DataBus *bus, int8_t rst = -1, uint8_t r = 0, bool ips = false);
+  Arduino_ILI9488_3bit(Arduino_DataBus *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0, bool ips = false);
 
   void begin(int32_t speed = 0) override;
   void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg) override;

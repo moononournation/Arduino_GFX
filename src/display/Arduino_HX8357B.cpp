@@ -80,7 +80,7 @@ void Arduino_HX8357B::displayOff(void)
 
 void Arduino_HX8357B::tftInit()
 {
-  if (_rst >= 0)
+  if (_rst != GFX_NOT_DEFINED)
   {
     pinMode(_rst, OUTPUT);
     digitalWrite(_rst, HIGH);

@@ -26,7 +26,7 @@ static spi_t _spi_bus_array[] = {
     {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 0},
     {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 1},
     {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 2}
-#else // !CONFIG_IDF_TARGET_ESP32S2
+#else  // !CONFIG_IDF_TARGET_ESP32S2
     {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), 0},
     {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 1},
     {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 2},
@@ -47,7 +47,7 @@ static spi_t _spi_bus_array[] = {
     {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 2}
 #elif CONFIG_IDF_TARGET_ESP32C3
     {(volatile spi_dev_t *)(&GPSPI2), NULL, FSPI}
-#else // CONFIG_IDF_TARGET_ESP32
+#else  // CONFIG_IDF_TARGET_ESP32
     {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), NULL, 0},
     {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 1},
     {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 2},
@@ -56,11 +56,12 @@ static spi_t _spi_bus_array[] = {
 };
 #endif // CONFIG_DISABLE_HAL_LOCKS
 
-Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = -1 */, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, uint8_t spi_num /* = VSPI for ESP32, FSPI for S2 & C3 */, bool is_shared_interface /* = true */)
+Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = GFX_NOT_DEFINED */, int8_t cs /* = GFX_NOT_DEFINED */, int8_t sck /* = GFX_NOT_DEFINED */, int8_t mosi /* = GFX_NOT_DEFINED */, int8_t miso /* = GFX_NOT_DEFINED */, uint8_t spi_num /* = VSPI for ESP32, FSPI for S2 & C3 */, bool is_shared_interface /* = true */)
     : _dc(dc), _spi_num(spi_num), _is_shared_interface(is_shared_interface)
 {
 #if CONFIG_IDF_TARGET_ESP32
-  if (sck == -1 && miso == -1 && mosi == -1 && cs == -1)
+  if (
+      sck == GFX_NOT_DEFINED && miso == GFX_NOT_DEFINED && mosi == GFX_NOT_DEFINED && cs == GFX_NOT_DEFINED)
   {
     _sck = (_spi_num == VSPI) ? SCK : 14;
     _miso = (_spi_num == VSPI) ? MISO : 12;
@@ -75,7 +76,7 @@ Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = -1 */, int8_t cs /* = -1 */, i
     _cs = cs;
   }
 #else
-  if (sck == -1 && miso == -1 && mosi == -1 && cs == -1)
+  if (sck == GFX_NOT_DEFINED && miso == GFX_NOT_DEFINED && mosi == GFX_NOT_DEFINED && cs == GFX_NOT_DEFINED)
   {
     _sck = SCK;
     _miso = MISO;
@@ -144,12 +145,12 @@ void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
   }
 
   // set pin mode
-  if (_dc >= 0)
+  if (_dc != GFX_NOT_DEFINED)
   {
     pinMode(_dc, OUTPUT);
     digitalWrite(_dc, HIGH); // Data mode
   }
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH); // disable chip select
@@ -162,7 +163,7 @@ void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     _dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_dc >= 0)
+  else if (_dc != GFX_NOT_DEFINED)
   {
     _dcPinMask = digitalPinToBitMask(_dc);
     _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -175,7 +176,7 @@ void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_cs >= 0)
+  else if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -243,12 +244,12 @@ void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
   SPI_MUTEX_LOCK();
   spiInitBus(_spi);
 #if CONFIG_IDF_TARGET_ESP32C3
-    spi->dev->clk_gate.clk_en = 1;
-    spi->dev->clk_gate.mst_clk_sel = 1;
-    spi->dev->clk_gate.mst_clk_active = 1;
-    spi->dev->dma_conf.tx_seg_trans_clr_en = 1;
-    spi->dev->dma_conf.rx_seg_trans_clr_en = 1;
-    spi->dev->dma_conf.dma_seg_trans_en = 0;
+  spi->dev->clk_gate.clk_en = 1;
+  spi->dev->clk_gate.mst_clk_sel = 1;
+  spi->dev->clk_gate.mst_clk_active = 1;
+  spi->dev->dma_conf.tx_seg_trans_clr_en = 1;
+  spi->dev->dma_conf.rx_seg_trans_clr_en = 1;
+  spi->dev->dma_conf.dma_seg_trans_en = 0;
 #endif
   _spi->dev->user.usr_mosi = 1;
   if (_miso < 0)
@@ -272,7 +273,7 @@ void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
 
   spiAttachSCK(_spi, _sck);
 
-  if (_miso >= 0)
+  if (_miso != GFX_NOT_DEFINED)
   {
     spiAttachMISO(_spi, _miso);
   }
@@ -295,7 +296,7 @@ void Arduino_ESP32SPI::beginWrite()
     spiTransaction(_spi, _div, _dataMode, _bitOrder);
   }
 
-  if (_dc >= 0)
+  if (_dc != GFX_NOT_DEFINED)
   {
     DC_HIGH();
   }
@@ -337,7 +338,8 @@ void Arduino_ESP32SPI::writeCommand(uint8_t c)
     _spi->dev->data_buf[0] = c;
 #if CONFIG_IDF_TARGET_ESP32C3
     _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+    while (_spi->dev->cmd.update)
+      ;
 #endif
     _spi->dev->cmd.usr = 1;
     WAIT_SPI_NOT_BUSY;
@@ -368,7 +370,8 @@ void Arduino_ESP32SPI::writeCommand16(uint16_t c)
     MSB_16_SET(_spi->dev->data_buf[0], c);
 #if CONFIG_IDF_TARGET_ESP32C3
     _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+    while (_spi->dev->cmd.update)
+      ;
 #endif
     _spi->dev->cmd.usr = 1;
     WAIT_SPI_NOT_BUSY;
@@ -468,7 +471,7 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
       _data_buf_bit_idx = xferLen * 18;
       MOSI_BIT_LEN = _data_buf_bit_idx - 1;
       MISO_BIT_LEN = 0;
-      if (_miso >= 0)
+      if (_miso != GFX_NOT_DEFINED)
       {
         l = (_data_buf_bit_idx + 31) / 32;
         for (uint32_t i = 0; i < l; i++)
@@ -477,8 +480,9 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
         }
       }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+      _spi->dev->cmd.update = 1;
+      while (_spi->dev->cmd.update)
+        ;
 #endif
       _spi->dev->cmd.usr = 1;
       WAIT_SPI_NOT_BUSY;
@@ -508,7 +512,7 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
       xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
       MOSI_BIT_LEN = (xferLen * 16) - 1;
       MISO_BIT_LEN = 0;
-      if (_miso >= 0)
+      if (_miso != GFX_NOT_DEFINED)
       {
         l = (xferLen + 1) / 2;
         for (uint32_t i = 0; i < l; i++)
@@ -517,8 +521,9 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
         }
       }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+      _spi->dev->cmd.update = 1;
+      while (_spi->dev->cmd.update)
+        ;
 #endif
       _spi->dev->cmd.usr = 1;
       WAIT_SPI_NOT_BUSY;
@@ -560,8 +565,9 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
           MSB_32_16_16_SET(_spi->dev->data_buf[i], p1, p2);
         }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+        _spi->dev->cmd.update = 1;
+        while (_spi->dev->cmd.update)
+          ;
 #endif
         _spi->dev->cmd.usr = 1;
         WAIT_SPI_NOT_BUSY;
@@ -587,8 +593,9 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
         MSB_32_16_16_SET(_spi->dev->data_buf[i], p1, p2);
       }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+      _spi->dev->cmd.update = 1;
+      while (_spi->dev->cmd.update)
+        ;
 #endif
       _spi->dev->cmd.usr = 1;
       WAIT_SPI_NOT_BUSY;
@@ -624,7 +631,8 @@ void Arduino_ESP32SPI::writeC8D8(uint8_t c, uint8_t d)
     _spi->dev->data_buf[0] = c;
 #if CONFIG_IDF_TARGET_ESP32C3
     _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+    while (_spi->dev->cmd.update)
+      ;
 #endif
     _spi->dev->cmd.usr = 1;
     WAIT_SPI_NOT_BUSY;
@@ -636,7 +644,8 @@ void Arduino_ESP32SPI::writeC8D8(uint8_t c, uint8_t d)
     _spi->dev->data_buf[0] = d;
 #if CONFIG_IDF_TARGET_ESP32C3
     _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+    while (_spi->dev->cmd.update)
+      ;
 #endif
     _spi->dev->cmd.usr = 1;
     WAIT_SPI_NOT_BUSY;
@@ -666,7 +675,8 @@ void Arduino_ESP32SPI::writeC8D16(uint8_t c, uint16_t d)
     _spi->dev->data_buf[0] = c;
 #if CONFIG_IDF_TARGET_ESP32C3
     _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+    while (_spi->dev->cmd.update)
+      ;
 #endif
     _spi->dev->cmd.usr = 1;
     WAIT_SPI_NOT_BUSY;
@@ -678,7 +688,8 @@ void Arduino_ESP32SPI::writeC8D16(uint8_t c, uint16_t d)
     MSB_16_SET(_spi->dev->data_buf[0], d);
 #if CONFIG_IDF_TARGET_ESP32C3
     _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+    while (_spi->dev->cmd.update)
+      ;
 #endif
     _spi->dev->cmd.usr = 1;
     WAIT_SPI_NOT_BUSY;
@@ -711,7 +722,8 @@ void Arduino_ESP32SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
     _spi->dev->data_buf[0] = c;
 #if CONFIG_IDF_TARGET_ESP32C3
     _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+    while (_spi->dev->cmd.update)
+      ;
 #endif
     _spi->dev->cmd.usr = 1;
     WAIT_SPI_NOT_BUSY;
@@ -723,7 +735,8 @@ void Arduino_ESP32SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
     MSB_32_16_16_SET(_spi->dev->data_buf[0], d1, d2);
 #if CONFIG_IDF_TARGET_ESP32C3
     _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+    while (_spi->dev->cmd.update)
+      ;
 #endif
     _spi->dev->cmd.usr = 1;
     WAIT_SPI_NOT_BUSY;
@@ -757,8 +770,9 @@ void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
           _spi->dev->data_buf[i] = *p++;
         }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+        _spi->dev->cmd.update = 1;
+        while (_spi->dev->cmd.update)
+          ;
 #endif
         _spi->dev->cmd.usr = 1;
         WAIT_SPI_NOT_BUSY;
@@ -782,8 +796,9 @@ void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
         _spi->dev->data_buf[i] = *p++;
       }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+      _spi->dev->cmd.update = 1;
+      while (_spi->dev->cmd.update)
+        ;
 #endif
       _spi->dev->cmd.usr = 1;
       WAIT_SPI_NOT_BUSY;
@@ -836,8 +851,9 @@ void Arduino_ESP32SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t
           MSB_32_16_16_SET(_spi->dev->data_buf[i], p1, p2);
         }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+        _spi->dev->cmd.update = 1;
+        while (_spi->dev->cmd.update)
+          ;
 #endif
         _spi->dev->cmd.usr = 1;
         WAIT_SPI_NOT_BUSY;
@@ -863,8 +879,9 @@ void Arduino_ESP32SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t
         MSB_32_16_16_SET(_spi->dev->data_buf[i], p1, p2);
       }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+      _spi->dev->cmd.update = 1;
+      while (_spi->dev->cmd.update)
+        ;
 #endif
       _spi->dev->cmd.usr = 1;
       WAIT_SPI_NOT_BUSY;
@@ -915,8 +932,9 @@ void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, ui
           MSB_32_16_16_SET(_spi->dev->data_buf[i], p, p);
         }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+        _spi->dev->cmd.update = 1;
+        while (_spi->dev->cmd.update)
+          ;
 #endif
         _spi->dev->cmd.usr = 1;
         WAIT_SPI_NOT_BUSY;
@@ -940,8 +958,9 @@ void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, ui
         MSB_32_16_16_SET(_spi->dev->data_buf[i], p, p);
       }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+      _spi->dev->cmd.update = 1;
+      while (_spi->dev->cmd.update)
+        ;
 #endif
       _spi->dev->cmd.usr = 1;
       WAIT_SPI_NOT_BUSY;
@@ -966,8 +985,9 @@ void Arduino_ESP32SPI::flush_data_buf()
     _spi->dev->data_buf[i] = _buffer32[i];
   }
 #if CONFIG_IDF_TARGET_ESP32C3
-    _spi->dev->cmd.update = 1;
-    while (_spi->dev->cmd.update);
+  _spi->dev->cmd.update = 1;
+  while (_spi->dev->cmd.update)
+    ;
 #endif
   _spi->dev->cmd.usr = 1;
   WAIT_SPI_NOT_BUSY;

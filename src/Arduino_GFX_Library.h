@@ -69,7 +69,7 @@
 #define WIO_TERMINAL
 #define DF_GFX_CS LCD_SS_PIN
 #define DF_GFX_DC LCD_DC
-#define DF_GFX_RST -1
+#define DF_GFX_RST GFX_NOT_DEFINED
 #define DF_GFX_BL LCD_BACKLIGHT
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define DISPLAY_DEV_KIT
@@ -89,7 +89,7 @@
 #define DF_GFX_MISO 19
 #define DF_GFX_CS 5
 #define DF_GFX_DC 21
-#define DF_GFX_RST -1
+#define DF_GFX_RST GFX_NOT_DEFINED
 #define DF_GFX_BL 14
 /* TTGO T-Watch */
 #elif defined(ARDUINO_T) || defined(ARDUINO_TWATCH_BASE) || defined(ARDUINO_TWATCH_2020_V1) || defined(ARDUINO_TWATCH_2020_V2)
@@ -97,10 +97,10 @@
 #define TTGO_T_WATCH
 #define DF_GFX_SCK 18
 #define DF_GFX_MOSI 19
-#define DF_GFX_MISO -1
+#define DF_GFX_MISO GFX_NOT_DEFINED
 #define DF_GFX_CS 5
 #define DF_GFX_DC 27
-#define DF_GFX_RST -1
+#define DF_GFX_RST GFX_NOT_DEFINED
 #define DF_GFX_BL 12
 #elif defined(ARDUINO_ARCH_NRF52840)
 #define DF_GFX_SCK 13
@@ -112,7 +112,7 @@
 #define DF_GFX_BL 6
 #elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
 // PJRC Teensy 4.x
-#define DF_GFX_CS 39 // -1 for display without CS pin
+#define DF_GFX_CS 39 // GFX_NOT_DEFINED for display without CS pin
 #define DF_GFX_DC 41
 #define DF_GFX_RST 40
 #define DF_GFX_BL 22
@@ -132,7 +132,7 @@
 #elif CONFIG_IDF_TARGET_ESP32
 #define DF_GFX_SCK 18
 #define DF_GFX_MOSI 23
-#define DF_GFX_MISO -1
+#define DF_GFX_MISO GFX_NOT_DEFINED
 #define DF_GFX_CS 5
 #define DF_GFX_DC 27
 #define DF_GFX_RST 33
@@ -140,7 +140,7 @@
 #elif CONFIG_IDF_TARGET_ESP32S2
 #define DF_GFX_SCK 36
 #define DF_GFX_MOSI 35
-#define DF_GFX_MISO -1
+#define DF_GFX_MISO GFX_NOT_DEFINED
 #define DF_GFX_CS 34
 #define DF_GFX_DC 26
 #define DF_GFX_RST 33
@@ -172,13 +172,13 @@
 #define DF_GFX_RST 15
 #define DF_GFX_BL 13
 #else // old version
-#define DF_GFX_CS 18 // -1 for display without CS pin
+#define DF_GFX_CS 18 // GFX_NOT_DEFINED for display without CS pin
 #define DF_GFX_DC 17
 #define DF_GFX_RST 2
 #define DF_GFX_BL 23
 #endif
 #elif defined(SEEED_XIAO_M0)
-#define DF_GFX_CS 3 // -1 for display without CS pin
+#define DF_GFX_CS 3 // GFX_NOT_DEFINED for display without CS pin
 #define DF_GFX_DC 2
 #define DF_GFX_RST 1
 #define DF_GFX_BL 0

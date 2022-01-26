@@ -6,7 +6,7 @@
 
 #include "Arduino_mbedSPI.h"
 
-Arduino_mbedSPI::Arduino_mbedSPI(int8_t dc, int8_t cs /* = -1 */)
+Arduino_mbedSPI::Arduino_mbedSPI(int8_t dc, int8_t cs /* = GFX_NOT_DEFINED */)
     : _dc(dc), _cs(cs)
 {
 }
@@ -22,7 +22,7 @@ void Arduino_mbedSPI::begin(int32_t speed, int8_t dataMode)
   _dcPortSet = &reg->OUTSET;
   _dcPortClr = &reg->OUTCLR;
   _dcPinMask = 1UL << pin;
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     pin = digitalPinToPinName((pin_size_t)_cs);
     reg = nrf_gpio_pin_port_decode(&pin);
@@ -213,7 +213,7 @@ INLINE void Arduino_mbedSPI::DC_LOW(void)
 
 INLINE void Arduino_mbedSPI::CS_HIGH(void)
 {
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     *_csPortSet = _csPinMask;
   }
@@ -221,7 +221,7 @@ INLINE void Arduino_mbedSPI::CS_HIGH(void)
 
 INLINE void Arduino_mbedSPI::CS_LOW(void)
 {
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     *_csPortClr = _csPinMask;
   }

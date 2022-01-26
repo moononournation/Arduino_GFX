@@ -125,7 +125,7 @@ void Arduino_HX8357A::displayOff(void)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_HX8357A::tftInit()
 {
-  if (_rst >= 0)
+  if (_rst != GFX_NOT_DEFINED)
   {
     pinMode(_rst, OUTPUT);
     digitalWrite(_rst, HIGH);

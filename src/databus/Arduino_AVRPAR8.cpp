@@ -18,7 +18,7 @@ void Arduino_AVRPAR8::begin(int32_t speed, int8_t dataMode)
   _dcPinMaskSet = digitalPinToBitMask(_dc);
   _dcPinMaskClr = ~_dcPinMaskSet;
 
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH); // Disable chip select
@@ -38,7 +38,7 @@ void Arduino_AVRPAR8::begin(int32_t speed, int8_t dataMode)
   _wrPinMaskSet = digitalPinToBitMask(_wr);
   _wrPinMaskClr = ~_wrPinMaskSet;
 
-  if (_rd >= 0)
+  if (_rd != GFX_NOT_DEFINED)
   {
     pinMode(_rd, OUTPUT);
     digitalWrite(_rd, HIGH); // Disable RD

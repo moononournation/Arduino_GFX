@@ -85,7 +85,7 @@ void Arduino_ILI9488::displayOff(void)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ILI9488::tftInit()
 {
-  if (_rst >= 0)
+  if (_rst != GFX_NOT_DEFINED)
   {
     pinMode(_rst, OUTPUT);
     digitalWrite(_rst, HIGH);

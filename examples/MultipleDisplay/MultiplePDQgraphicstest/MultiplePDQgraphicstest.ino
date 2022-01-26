@@ -11,16 +11,16 @@
 
 /* all display share same SPI Data Bus with individual CS, RST pins connected to MCU RST pin */
 Arduino_DataBus *bus1 = new Arduino_HWSPI(DF_GFX_DC, 21 /* CS */);
-Arduino_GFX *gfx1 = new Arduino_SSD1331(bus1, -1 /* RST */, 0 /* rotation */);
+Arduino_GFX *gfx1 = new Arduino_SSD1331(bus1, GFX_NOT_DEFINED /* RST */, 0 /* rotation */);
 
 Arduino_DataBus *bus2 = new Arduino_HWSPI(DF_GFX_DC, 32 /* CS */);
-Arduino_GFX *gfx2 = new Arduino_ST7735(bus2, -1 /* RST */, 3 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
+Arduino_GFX *gfx2 = new Arduino_ST7735(bus2, GFX_NOT_DEFINED /* RST */, 3 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
 
 Arduino_DataBus *bus3 = new Arduino_HWSPI(DF_GFX_DC, 22 /* CS */);
-Arduino_GFX *gfx3 = new Arduino_ST7789(bus3, -1 /* RST */, 0 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
+Arduino_GFX *gfx3 = new Arduino_ST7789(bus3, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
 
 Arduino_DataBus *bus4 = new Arduino_HWSPI(DF_GFX_DC, 5 /* CS */);
-Arduino_GFX *gfx4 = new Arduino_ILI9341(bus4, -1 /* RST */, 0 /* rotation */, false /* IPS */);
+Arduino_GFX *gfx4 = new Arduino_ILI9341(bus4, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, false /* IPS */);
 /*******************************************************************************
  * End of Arduino_GFX setting
  ******************************************************************************/

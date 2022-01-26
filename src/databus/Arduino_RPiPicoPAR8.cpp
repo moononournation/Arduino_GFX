@@ -13,7 +13,7 @@ void Arduino_RPiPicoPAR8::begin(int32_t speed, int8_t dataMode)
   digitalWrite(_dc, HIGH); // Data mode
   _dcPinMask = digitalPinToBitMask(_dc);
 
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH); // disable chip select
@@ -29,7 +29,7 @@ void Arduino_RPiPicoPAR8::begin(int32_t speed, int8_t dataMode)
   _wrPinMask = digitalPinToBitMask(_wr);
   _dataClrMask = 0xFF | _wrPinMask;
 
-  if (_rd >= 0)
+  if (_rd != GFX_NOT_DEFINED)
   {
     pinMode(_rd, OUTPUT);
     digitalWrite(_rd, HIGH);

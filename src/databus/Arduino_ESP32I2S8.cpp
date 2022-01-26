@@ -23,7 +23,7 @@ void Arduino_ESP32I2S8::begin(int32_t speed, int8_t dataMode)
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH);
 
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH); // disable chip select
@@ -34,7 +34,7 @@ void Arduino_ESP32I2S8::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_cs >= 0)
+  else if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -44,7 +44,7 @@ void Arduino_ESP32I2S8::begin(int32_t speed, int8_t dataMode)
   pinMode(_wr, OUTPUT);
   digitalWrite(_wr, HIGH);
 
-  if (_rd >= 0)
+  if (_rd != GFX_NOT_DEFINED)
   {
     pinMode(_rd, OUTPUT);
     digitalWrite(_rd, HIGH);
@@ -315,7 +315,7 @@ INLINE void Arduino_ESP32I2S8::wait(void) const
 
 INLINE void Arduino_ESP32I2S8::CS_HIGH(void)
 {
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     *_csPortSet = _csPinMask;
   }
@@ -323,7 +323,7 @@ INLINE void Arduino_ESP32I2S8::CS_HIGH(void)
 
 INLINE void Arduino_ESP32I2S8::CS_LOW(void)
 {
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     *_csPortClr = _csPinMask;
   }

@@ -12,7 +12,7 @@ void Arduino_ILI9488_3bit::begin(int32_t speed)
 {
   _bus->begin(speed);
 
-  if (_rst >= 0)
+  if (_rst != GFX_NOT_DEFINED)
   {
     pinMode(_rst, OUTPUT);
     digitalWrite(_rst, HIGH);

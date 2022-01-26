@@ -24,11 +24,11 @@ static uint8_t mySPCR;
 #endif
 
 #if defined(ESP32)
-Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, int8_t sck /* = -1 */, int8_t mosi /* = -1 */, int8_t miso /* = -1 */, SPIClass *spi, bool is_shared_interface /* = true */)
+Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = GFX_NOT_DEFINED */, int8_t sck /* = GFX_NOT_DEFINED */, int8_t mosi /* = GFX_NOT_DEFINED */, int8_t miso /* = GFX_NOT_DEFINED */, SPIClass *spi, bool is_shared_interface /* = true */)
     : _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso), _spi(spi), _is_shared_interface(is_shared_interface)
 {
 #else
-Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = -1 */, SPIClass *spi, bool is_shared_interface /* = true */)
+Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = GFX_NOT_DEFINED */, SPIClass *spi, bool is_shared_interface /* = true */)
     : _dc(dc), _cs(cs), _spi(spi), _is_shared_interface(is_shared_interface)
 {
 #endif
@@ -41,7 +41,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH); // Deselect
@@ -56,7 +56,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
   _dcPortSet = &reg->OUTSET;
   _dcPortClr = &reg->OUTCLR;
   _dcPinMask = 1UL << pin;
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     pin = digitalPinToPinName((pin_size_t)_cs);
     reg = nrf_gpio_pin_port_decode(&pin);
@@ -69,7 +69,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
   _dcPinMask = digitalPinToBitMask(_dc);
   _dcPortSet = (PORTreg_t)&sio_hw->gpio_set;
   _dcPortClr = (PORTreg_t)&sio_hw->gpio_clr;
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
     _csPortSet = (PORTreg_t)&sio_hw->gpio_set;
@@ -89,7 +89,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
   _dcPinMask = digitalPinToBitMask(_dc);
   _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
   _dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -123,7 +123,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_cs >= 0)
+  else if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -145,7 +145,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 #endif
   _dcPortSet = portSetRegister(_dc);
   _dcPortClr = portClearRegister(_dc);
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
 #if !defined(KINETISK)
     _csPinMask = digitalPinToBitMask(_cs);
@@ -165,7 +165,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
   _dcPinMask = digitalPinToBitMask(_dc);
   _dcPortSet = &(PORT->Group[g_APinDescription[_dc].ulPort].OUTSET.reg);
   _dcPortClr = &(PORT->Group[g_APinDescription[_dc].ulPort].OUTCLR.reg);
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
     _csPortSet = &(PORT->Group[g_APinDescription[_cs].ulPort].OUTSET.reg);
@@ -185,7 +185,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 #else  // !HAS_PORT_SET_CLR
   _dcPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_dc));
   _dcPinMaskSet = digitalPinToBitMask(_dc);
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
     _csPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_cs));
     _csPinMaskSet = digitalPinToBitMask(_cs);
@@ -512,7 +512,7 @@ INLINE void Arduino_HWSPI::DC_LOW(void)
 
 INLINE void Arduino_HWSPI::CS_HIGH(void)
 {
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -532,7 +532,7 @@ INLINE void Arduino_HWSPI::CS_HIGH(void)
 
 INLINE void Arduino_HWSPI::CS_LOW(void)
 {
-  if (_cs >= 0)
+  if (_cs != GFX_NOT_DEFINED)
   {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
