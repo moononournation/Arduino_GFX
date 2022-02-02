@@ -48,9 +48,6 @@ void Arduino_ILI9331::setRotation(uint8_t r)
     ORG = 0x1030;
     break;
   }
-
-  _MC = 0x20, _MP = 0x21, _SC = 0x50, _EC = 0x51, _SP = 0x52, _EP = 0x53;
-
   _bus->beginWrite();
   _bus->writeC16D16(ILI9331_GSC1, GS); // Set the direction of scan by the gate driver
   _bus->writeC16D16(ILI9331_DRVOUTCTL, SS); // Select the shift direction of outputs from the source driver
@@ -66,11 +63,11 @@ void Arduino_ILI9331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
     _currentX = x;
     _currentW = w;
     x += _xStart;
-    _bus->writeC16D16(_MC, x);
+    _bus->writeC16D16(ILI9331_MC, x);
     if (!(x == _currentX && y == _currentY))
     { 
-      _bus->writeC16D16(_SC, x);
-      _bus->writeC16D16(_EC, x + w - 1);
+      _bus->writeC16D16(ILI9331_HSA, x);
+      _bus->writeC16D16(ILI9331_HSE, x + w - 1);
     }
   }
 
@@ -79,11 +76,11 @@ void Arduino_ILI9331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
     _currentY = y;
     _currentH = h;
     y += _yStart;
-    _bus->writeC16D16(_MP, y);
+    _bus->writeC16D16(ILI9331_MP, y);
     if (!(x == _currentX && y == _currentY))
     { 
-      _bus->writeC16D16(_SP, y);
-      _bus->writeC16D16(_EP, y + h - 1);
+      _bus->writeC16D16(ILI9331_VSA, y);
+      _bus->writeC16D16(ILI9331_VSE, y + h - 1);
     }
   }
 
