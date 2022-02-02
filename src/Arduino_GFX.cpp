@@ -2011,17 +2011,17 @@ void Arduino_GFX::setRotation(uint8_t r)
     _rotation = (r & 3);
     switch (_rotation)
     {
-    case 0:
-    case 2:
-        _width = WIDTH;
-        _height = HEIGHT;
-        _max_x = _width - 1;  ///< x zero base bound
-        _max_y = _height - 1; ///< y zero base bound
-        break;
     case 1:
     case 3:
         _width = HEIGHT;
         _height = WIDTH;
+        _max_x = _width - 1;  ///< x zero base bound
+        _max_y = _height - 1; ///< y zero base bound
+        break;
+    case 2:
+    default: // case 0:
+        _width = WIDTH;
+        _height = HEIGHT;
         _max_x = _width - 1;  ///< x zero base bound
         _max_y = _height - 1; ///< y zero base bound
         break;

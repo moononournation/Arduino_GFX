@@ -113,9 +113,6 @@ void Arduino_SSD1331::setRotation(uint8_t r)
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
-  case 0:
-    r = 0b01110010;
-    break;
   case 1:
     r = 0b01110001;
     break;
@@ -125,8 +122,10 @@ void Arduino_SSD1331::setRotation(uint8_t r)
   case 3:
     r = 0b01100011;
     break;
+  default: // case 0:
+    r = 0b01110010;
+    break;
   }
-
   _bus->beginWrite();
   _bus->writeCommand(SSD1331_SETREMAP);
   _bus->writeCommand(r);

@@ -36,7 +36,6 @@ void Arduino_HX8357A::setRotation(uint8_t r)
     r = (HX8357A_MADCTL_MY | HX8357A_MADCTL_BGR);
     break;
   }
-
   _bus->beginWrite();
   _bus->writeC8D8(HX8357A_MEMORY_ACCESS_CONTROL, r);
   _bus->endWrite();

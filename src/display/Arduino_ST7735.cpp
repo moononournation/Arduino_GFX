@@ -108,23 +108,19 @@ void Arduino_ST7735::setRotation(uint8_t r)
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
-  case 0:
-    r = ST7735_MADCTL_MX | ST7735_MADCTL_MY | (_bgr ? ST7735_MADCTL_BGR : ST7735_MADCTL_RGB);
-    break;
-
   case 1:
     r = ST7735_MADCTL_MY | ST7735_MADCTL_MV | (_bgr ? ST7735_MADCTL_BGR : ST7735_MADCTL_RGB);
     break;
-
   case 2:
     r = (_bgr ? ST7735_MADCTL_BGR : ST7735_MADCTL_RGB);
     break;
-
   case 3:
     r = ST7735_MADCTL_MX | ST7735_MADCTL_MV | (_bgr ? ST7735_MADCTL_BGR : ST7735_MADCTL_RGB);
     break;
+  default: // case 0:
+    r = ST7735_MADCTL_MX | ST7735_MADCTL_MY | (_bgr ? ST7735_MADCTL_BGR : ST7735_MADCTL_RGB);
+    break;
   }
-
   _bus->beginWrite();
   _bus->writeCommand(ST7735_MADCTL);
   _bus->write(r);

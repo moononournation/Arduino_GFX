@@ -25,9 +25,6 @@ void Arduino_ILI9486::setRotation(uint8_t r)
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
-  case 0:
-    r = (ILI9486_MADCTL_MX | ILI9486_MADCTL_BGR);
-    break;
   case 1:
     r = (ILI9486_MADCTL_MV | ILI9486_MADCTL_BGR);
     break;
@@ -37,8 +34,10 @@ void Arduino_ILI9486::setRotation(uint8_t r)
   case 3:
     r = (ILI9486_MADCTL_MX | ILI9486_MADCTL_MY | ILI9486_MADCTL_MV | ILI9486_MADCTL_BGR);
     break;
+  default: // case 0:
+    r = (ILI9486_MADCTL_MX | ILI9486_MADCTL_BGR);
+    break;
   }
-
   _bus->beginWrite();
   _bus->writeC8D8(ILI9486_MADCTL, r);
   _bus->endWrite();

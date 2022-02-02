@@ -34,7 +34,6 @@ void Arduino_HX8357B::setRotation(uint8_t r)
     r = (HX8357B_MADCTL_MX | HX8357B_MADCTL_BGR);
     break;
   }
-
   _bus->beginWrite();
   _bus->writeC8D8(HX8357B_SET_ADDRESS_MODE, r);
   _bus->endWrite();

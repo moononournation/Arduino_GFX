@@ -375,12 +375,6 @@ void Arduino_HX8347C::setRotation(uint8_t r)
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
-  case 0:
-    _bus->sendCommand(0x36);
-    _bus->sendData(_invert ? 0x17 : 0x07);
-    _bus->sendCommand(0x16);
-    _bus->sendData(0x40);
-    break;
   case 1:
     _bus->sendCommand(0x36);
     _bus->sendData(_invert ? 0x13 : 0x03);
@@ -398,6 +392,12 @@ void Arduino_HX8347C::setRotation(uint8_t r)
     _bus->sendData(_invert ? 0x17 : 0x07);
     _bus->sendCommand(0x16);
     _bus->sendData(0x20);
+    break;
+  default: // case 0:
+    _bus->sendCommand(0x36);
+    _bus->sendData(_invert ? 0x17 : 0x07);
+    _bus->sendCommand(0x16);
+    _bus->sendData(0x40);
     break;
   }
 }

@@ -62,7 +62,6 @@ void Arduino_NT35310::setRotation(uint8_t r)
     r = NT35310_MADCTL_RGB;
     break;
   }
-
   _bus->beginWrite();
   _bus->writeCommand(NT35310_SET_ADDRESS_MODE);
   _bus->write(r);

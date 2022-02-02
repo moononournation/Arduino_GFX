@@ -140,9 +140,6 @@ void Arduino_ILI9486_18bit::setRotation(uint8_t r)
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
-  case 0:
-    r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MX);
-    break;
   case 1:
     r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MV);
     break;
@@ -152,8 +149,10 @@ void Arduino_ILI9486_18bit::setRotation(uint8_t r)
   case 3:
     r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MV | ILI9486_MADCTL_MX | ILI9486_MADCTL_MY);
     break;
+  default: // case 0:
+    r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MX);
+    break;
   }
-
   _bus->beginWrite();
   _bus->writeCommand(ILI9486_MADCTL);
   _bus->write(r);

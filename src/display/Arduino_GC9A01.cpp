@@ -55,7 +55,6 @@ void Arduino_GC9A01::setRotation(uint8_t r)
     r = 0x08;
     break;
   }
-
   _bus->beginWrite();
   _bus->writeCommand(GC9A01_MADCTL);
   _bus->write(r);

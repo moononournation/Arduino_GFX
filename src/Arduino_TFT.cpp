@@ -199,24 +199,21 @@ void Arduino_TFT::setRotation(uint8_t r)
   Arduino_GFX::setRotation(r);
   switch (_rotation)
   {
-  case 0:
-    _xStart = COL_OFFSET1;
-    _yStart = ROW_OFFSET1;
-    break;
-
   case 1:
     _xStart = ROW_OFFSET1;
     _yStart = COL_OFFSET2;
     break;
-
   case 2:
     _xStart = COL_OFFSET2;
     _yStart = ROW_OFFSET2;
     break;
-
   case 3:
     _xStart = ROW_OFFSET2;
     _yStart = COL_OFFSET1;
+    break;
+  default: // case 0:
+    _xStart = COL_OFFSET1;
+    _yStart = ROW_OFFSET1;
     break;
   }
   _currentX = 0xFFFF;

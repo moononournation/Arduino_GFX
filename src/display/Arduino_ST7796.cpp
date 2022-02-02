@@ -28,27 +28,23 @@ void Arduino_ST7796::setRotation(uint8_t r)
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
-  case 0:
-    // r = ST7796_MADCTL_MX | ST7796_MADCTL_MY | ST7796_MADCTL_BGR | ST7796_MADCTL_MH;
-    r = ST7796_MADCTL_MY | ST7796_MADCTL_BGR;
-    break;
-
   case 1:
     // r = ST7796_MADCTL_MY | ST7796_MADCTL_MV | ST7796_MADCTL_BGR | ST7796_MADCTL_MH;
     r = ST7796_MADCTL_MX | ST7796_MADCTL_MY | ST7796_MADCTL_MV | ST7796_MADCTL_BGR;
     break;
-
   case 2:
     r = ST7796_MADCTL_MX | ST7796_MADCTL_ML | ST7796_MADCTL_BGR | ST7796_MADCTL_MH;
     r = ST7796_MADCTL_MX | ST7796_MADCTL_BGR;
     break;
-
   case 3:
     // r = ST7796_MADCTL_MX | ST7796_MADCTL_MV | ST7796_MADCTL_BGR | ST7796_MADCTL_MH;
     r = ST7796_MADCTL_MV | ST7796_MADCTL_BGR;
     break;
+  default: // case 0:
+    // r = ST7796_MADCTL_MX | ST7796_MADCTL_MY | ST7796_MADCTL_BGR | ST7796_MADCTL_MH;
+    r = ST7796_MADCTL_MY | ST7796_MADCTL_BGR;
+    break;
   }
-
   _bus->beginWrite();
   _bus->writeCommand(ST7796_MADCTL);
   _bus->write(r);

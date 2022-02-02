@@ -55,7 +55,6 @@ void Arduino_GC9106::setRotation(uint8_t r)
     r = GC9106_MADCTL_BGR;
     break;
   }
-
   _bus->beginWrite();
   _bus->writeCommand(GC9106_MADCTL);
   _bus->write(r);
