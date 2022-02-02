@@ -1,7 +1,6 @@
 /*
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
- * https://github.com/adafruit/Adafruit_ILI9331.git
  */
 #include "Arduino_ILI9331.h"
 #include "SPI.h"
@@ -28,11 +27,6 @@ void Arduino_ILI9331::setRotation(uint8_t r)
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
-  case 0:
-    GS = 0x2700;
-    SS = 0x100;
-    ORG = 0x1030;
-    break;
   case 1:
     GS = 0x2700;
     SS = 0;
@@ -48,17 +42,14 @@ void Arduino_ILI9331::setRotation(uint8_t r)
     SS = 0x100;
     ORG = 0x1038;
     break;
+  default: // case 0:
+    GS = 0x2700;
+    SS = 0x100;
+    ORG = 0x1030;
+    break;
   }
 
   _MC = 0x20, _MP = 0x21, _SC = 0x50, _EC = 0x51, _SP = 0x52, _EP = 0x53;
-
-  if ((_rotation & 1))
-  {
-    uint16_t x;
-    x = _MC, _MC = _MP, _MP = x;
-    x = _SC, _SC = _SP, _SP = x; 
-    x = _EC, _EC = _EP, _EP = x; 
-  }
 
   _bus->beginWrite();
   _bus->writeC16D16(ILI9331_GSC1, GS); // Set the direction of scan by the gate driver
@@ -72,6 +63,8 @@ void Arduino_ILI9331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
 {
   if ((x != _currentX) || (w != _currentW))
   {
+    _currentX = x;
+    _currentW = w;
     x += _xStart;
     _bus->writeC16D16(_MC, x);
     if (!(x == _currentX && y == _currentY))
@@ -83,7 +76,8 @@ void Arduino_ILI9331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
 
   if ((y != _currentY) || (h != _currentH))
   {
-    
+    _currentY = y;
+    _currentH = h;
     y += _yStart;
     _bus->writeC16D16(_MP, y);
     if (!(x == _currentX && y == _currentY))
@@ -92,11 +86,7 @@ void Arduino_ILI9331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
       _bus->writeC16D16(_EP, y + h - 1);
     }
   }
-  
-  _currentX = x;
-  _currentW = w;
-  _currentY = y;
-  _currentH = h;
+
   _bus->writeCommand16(ILI9331_MW);
 }
 
@@ -129,7 +119,6 @@ void Arduino_ILI9331::displayOff(void)
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_ILI9331::tftInit()
 {
-
   if (_rst != GFX_NOT_DEFINED)
   {
     pinMode(_rst, OUTPUT);
