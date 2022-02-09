@@ -109,6 +109,7 @@ Below are some figures compare with other 3 Arduino common display libraries.
 
 ## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
 - ESP32 LCDKIT
+- ESPboy [[demo video](https://youtu.be/Cx82XWrc8-0)]
 - Makerfabs ESP32 3.5" TFT Touch with Camera
 - TTGO T-DISPLAY
 - wireless-tag WT-32-SC01
