@@ -1,11 +1,11 @@
 /*******************************************************************************
- * JPEG Image Viewer
- * This is a simple JPEG image viewer example
+ * BMP Image Viewer
+ * This is a simple BMP image viewer example
  * Image Source: https://github.blog/2014-11-24-from-sticker-to-sculpture-the-making-of-the-octocat-figurine/
  *
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
- * 2. Upload JPEG file
+ * 2. Upload BMP file
  *   FFat (ESP32):
  *     upload FFat (FatFS) data with ESP32 Sketch Data Upload:
  *     ESP32: https://github.com/lorol/arduino-esp32fs-plugin
@@ -150,7 +150,7 @@ void setup()
     File bmpFile = SD.open(BMP_FILENAME, FILE_READ);
 #endif
 
-    // read JPEG file header
+    // read BMP file header
     bmpClass.draw(
         &bmpFile, bmpDrawCallback, false /* useBigEndian */,
         0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
