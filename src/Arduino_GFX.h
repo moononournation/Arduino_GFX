@@ -18,6 +18,11 @@
 #define DEGTORAD 0.017453292519943295769236907684886F
 #endif
 
+#if __has_include(<U8g2lib.h>)
+#include <u8g2lib.h>
+#define U8G2_FONT_SUPPORT
+#endif
+
 // Color definitions
 #define BLACK 0x0000       ///<   0,   0,   0
 #define NAVY 0x000F        ///<   0,   0, 123
@@ -189,6 +194,9 @@ public:
 
 #if !defined(ATTINY_CORE)
   void setFont(const GFXfont *f = NULL);
+#if defined(U8G2_FONT_SUPPORT)
+  void setFont(const uint8_t *font);
+#endif // defined(U8G2_FONT_SUPPORT)
   virtual void flush(void);
 #endif // !defined(ATTINY_CORE)
 
@@ -375,9 +383,13 @@ protected:
       wrap,   ///< If set, 'wrap' text at right edge of display
       _cp437; ///< If set, use correct CP437 charset (default is off)
 #if !defined(ATTINY_CORE)
-  GFXfont
-      *gfxFont; ///< Pointer to special font
-#endif          // !defined(ATTINY_CORE)
+  GFXfont *gfxFont; ///< Pointer to special font
+#endif              // !defined(ATTINY_CORE)
+
+#if defined(U8G2_FONT_SUPPORT)
+  uint8_t *u8g2Font;
+#endif // defined(U8G2_FONT_SUPPORT)
+
 #if defined(LITTLE_FOOT_PRINT)
   int16_t
       WIDTH,  ///< This is the 'raw' display width - never changes

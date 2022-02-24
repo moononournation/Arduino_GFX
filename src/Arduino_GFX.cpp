@@ -1832,6 +1832,14 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
   }
   else // 'Classic' built-in font
 #endif // !defined(ATTINY_CORE)
+#if defined(U8G2_FONT_SUPPORT)
+      if (u8g2Font)
+  {
+    u8x8_get_glyph_data(u8x8, encoding, buf, tile);
+    u8x8_DrawTile(u8x8, xx, y, 1, buf);
+  }
+  else // not u8g2Font
+#endif // defined(U8G2_FONT_SUPPORT)
   {
     block_w = 6 * textsize_x;
     block_h = 8 * textsize_y;
@@ -2038,6 +2046,9 @@ void Arduino_GFX::setRotation(uint8_t r)
 void Arduino_GFX::setFont(const GFXfont *f)
 {
   gfxFont = (GFXfont *)f;
+#if defined(U8G2_FONT_SUPPORT)
+  u8g2Font = NULL;
+#endif // defined(U8G2_FONT_SUPPORT)
 }
 
 /**************************************************************************/
@@ -2049,6 +2060,14 @@ void Arduino_GFX::flush()
 {
 }
 #endif // !defined(ATTINY_CORE)
+
+#if defined(U8G2_FONT_SUPPORT)
+void Arduino_GFX::setFont(const uint8_t *font)
+{
+  gfxFont = NULL;
+  u8g2Font = (uint8_t *)font;
+}
+#endif // defined(U8G2_FONT_SUPPORT)
 
 /**************************************************************************/
 /*!
@@ -2119,6 +2138,12 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
   }
   else // not gfxFont
 #endif // !defined(ATTINY_CORE)
+#if defined(U8G2_FONT_SUPPORT)
+      if (u8g2Font)
+  {
+  }
+  else // not u8g2Font
+#endif // defined(U8G2_FONT_SUPPORT)
   {
     if (c == '\n')
     {                       // Newline?

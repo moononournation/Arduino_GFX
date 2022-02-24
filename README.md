@@ -20,7 +20,7 @@ Most tiny displays in hobbyist electronics world support 8-bit SPI, but some req
 
 Larger displays most likely do not support standalone SPI since it is not fast enough to refresh the full screen details. Most of them support 8-bit/16-bit Parallel interface.
 
-Some larger display require 3-bit SPI + RGB combo interface, i.e. require more than 3 + 24 pins. Most dev board do not have enough GPIO to support this. Arduino_GFX will eventually support this combo interface but will be in very low priority. A huge monthly donation may make it happen :P
+Some larger display require 3-bit SPI + RGB combo interface, i.e. require more than 3 + 24 pins. Most dev board do not have enough GPIO to support this. Arduino_GFX will eventually support this combo interface but will be in very low priority. A huge monthly sponsor may make it happen :P
 
 ## Ease of use
 #### Simple Declaration
@@ -84,8 +84,9 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - 8-bit parallel interface (AVRPAR8, ESP32PAR8, ESP32S2PAR8, RPiPicoPAR8, RTLPAR8)
 - 16-bit parallel interface (ESP32PAR16, ESP32S2PAR8, RPiPicoPAR16)
 
-## Tobe Support data bus (Donation can make it happen)
+## Tobe Support data bus (Sponsors can make it happen)
 - ESP32 I2S 8-bit/16-bit parallel interface
+- Arduino ATMega2560 dual 8-bit Port form 16-bit parallel interface
 - FastLED
 
 ## Currently Supported Dev Board
@@ -103,7 +104,7 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - Sony Spresense
 - WeAct BlackPill V2.0 (BlackPill F411CE)
 
-## Tobe Support Dev Board (Donation can make it happen)
+## Tobe Support Dev Board (Sponsors can make it happen)
 - Arduino ATMega2560
 - ESP32-S3 Series
 
@@ -155,7 +156,7 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - ST7789 240x320 [[demo video](https://youtu.be/ZEvc1LkuVuQ)]
 - ST7796 320x480 [[demo video](https://youtu.be/hUL-RuG4MAQ)]
 
-## Tobe Support Display (Donation can make it happen)
+## Tobe Support Display (Sponsors can make it happen)
 - FastLED Martix supported by co-operate with Canvas
 - Mono display supported by co-operate with Canvas
 - Multi-color e-ink display supported by co-operate with Canvas
@@ -165,6 +166,12 @@ Below are some figures compare with other 3 Arduino common display libraries.
 - Canvas_Indexed (half memory space)
 - Canvas_3bit (1/4 memory space framebuffer)
 - Canvas_Mono (1/16 memory space framebuffer)
+
+## Feature wishlist (Sponsors can make it happen)
+- Print UTF8 Characters
+- Print color Emoji Characters
+- Load bitmap font files from flash / SD
+- Fill Gradient
 
 ## Using source code come from:
 - http://elm-chan.org/fsw/tjpgd/00index.html

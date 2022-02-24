@@ -1065,8 +1065,15 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color
       endWrite();
     }
   }
-  else // 'Classic' built-in font
+  else // not gfxFont
 #endif // !defined(ATTINY_CORE)
+#if defined(U8G2_FONT_SUPPORT)
+      if (u8g2Font)
+  {
+    Arduino_GFX::drawChar(x, y, c, color, bg);
+  }
+  else // not u8g2Font
+#endif // defined(U8G2_FONT_SUPPORT)
   {
     block_w = 6 * textsize_x;
     block_h = 8 * textsize_y;
