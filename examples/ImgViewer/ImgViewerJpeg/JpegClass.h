@@ -13,7 +13,7 @@
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #include <Seeed_FS.h>
 #else
-#include <FS.h>
+#include <SD.h>
 #endif
 
 class JpegClass
