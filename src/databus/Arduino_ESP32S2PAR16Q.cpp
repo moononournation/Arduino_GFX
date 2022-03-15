@@ -1,6 +1,6 @@
 #include "Arduino_ESP32S2PAR16Q.h"
 
-#if CONFIG_IDF_TARGET_ESP32S2
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2)
 
 Arduino_ESP32S2PAR16Q::Arduino_ESP32S2PAR16Q(int8_t dc, int8_t cs, int8_t wr, int8_t rd)
     : _dc(dc), _cs(cs), _wr(wr), _rd(rd)
@@ -293,4 +293,4 @@ INLINE void Arduino_ESP32S2PAR16Q::CS_LOW(void)
   *_csPortClr = _csPinMask;
 }
 
-#endif // #if CONFIG_IDF_TARGET_ESP32S2
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2)

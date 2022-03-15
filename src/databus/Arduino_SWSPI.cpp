@@ -117,7 +117,7 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
     _misoPinMask = 0;
     _misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_sck));
   }
-#elif CONFIG_IDF_TARGET_ESP32C3
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)
   _sckPinMask = digitalPinToBitMask(_sck);
   _sckPortSet = (PORTreg_t)&GPIO.out_w1ts;
   _sckPortClr = (PORTreg_t)&GPIO.out_w1tc;

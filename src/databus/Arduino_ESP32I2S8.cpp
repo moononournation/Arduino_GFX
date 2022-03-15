@@ -4,7 +4,7 @@
  */
 #include "Arduino_ESP32I2S8.h"
 
-#if CONFIG_IDF_TARGET_ESP32
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
 
 #include "soc/dport_reg.h"
 
@@ -329,4 +329,4 @@ INLINE void Arduino_ESP32I2S8::CS_LOW(void)
   }
 }
 
-#endif // #if CONFIG_IDF_TARGET_ESP32
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)

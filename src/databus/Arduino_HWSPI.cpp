@@ -85,7 +85,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
     _csPortClr = (PORTreg_t)_dcPortClr;
     _csPinMask = 0;
   }
-#elif CONFIG_IDF_TARGET_ESP32C3
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)
   _dcPinMask = digitalPinToBitMask(_dc);
   _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
   _dcPortClr = (PORTreg_t)&GPIO.out_w1tc;

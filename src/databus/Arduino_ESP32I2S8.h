@@ -4,7 +4,7 @@
  */
 #include "Arduino_DataBus.h"
 
-#if CONFIG_IDF_TARGET_ESP32
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
 
 #ifndef _ARDUINO_ESP32I2S8_H_
 #define _ARDUINO_ESP32I2S8_H_
@@ -65,4 +65,4 @@ private:
 
 #endif // _ARDUINO_ESP32I2S8_H_
 
-#endif // #if CONFIG_IDF_TARGET_ESP32
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)

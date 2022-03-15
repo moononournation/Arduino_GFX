@@ -4,7 +4,7 @@
  */
 #include "Arduino_ESP32SPI.h"
 
-#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
 
 #define WAIT_SPI_NOT_BUSY while (_spi->dev->cmd.usr)
 
@@ -1049,4 +1049,4 @@ INLINE void Arduino_ESP32SPI::CS_LOW(void)
   *_csPortClr = _csPinMask;
 }
 
-#endif // #if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)

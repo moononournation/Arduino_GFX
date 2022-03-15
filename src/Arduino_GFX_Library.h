@@ -129,7 +129,7 @@
 #define DF_GFX_DC 27
 #define DF_GFX_RST 26
 #define DF_GFX_BL 28
-#elif CONFIG_IDF_TARGET_ESP32
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
 #define DF_GFX_SCK 18
 #define DF_GFX_MOSI 23
 #define DF_GFX_MISO GFX_NOT_DEFINED
@@ -137,7 +137,7 @@
 #define DF_GFX_DC 27
 #define DF_GFX_RST 33
 #define DF_GFX_BL 22
-#elif CONFIG_IDF_TARGET_ESP32S2
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2)
 #define DF_GFX_SCK 36
 #define DF_GFX_MOSI 35
 #define DF_GFX_MISO GFX_NOT_DEFINED
@@ -145,7 +145,7 @@
 #define DF_GFX_DC 26
 #define DF_GFX_RST 33
 #define DF_GFX_BL 21
-#elif CONFIG_IDF_TARGET_ESP32C3
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)
 #define DF_GFX_CS 7
 #define DF_GFX_DC 2
 #define DF_GFX_RST 1
