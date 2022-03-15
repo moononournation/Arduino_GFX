@@ -67,7 +67,7 @@ public:
     }
 
     void draw(
-        FS *fs, char *filename, JPEG_DRAW_CALLBACK *jpegDrawCallback, bool useBigEndian,
+        File &f, JPEG_DRAW_CALLBACK *jpegDrawCallback, bool useBigEndian,
         int x, int y, int widthLimit, int heightLimit)
     {
         _jpegDrawCallback = jpegDrawCallback;
@@ -75,18 +75,6 @@ public:
         _y = y;
         _x_bound = _x + widthLimit - 1;
         _y_bound = _y + heightLimit - 1;
-
-#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-        File f = fs->open(filename, "r");
-#elif defined(ARDUINO_RASPBERRY_PI_PICO)
-        File f = fs->open(filename, "r");
-#elif defined(ESP32)
-        File f = fs->open(filename, "r");
-#elif defined(ESP8266)
-        File f = fs->open(filename, "r");
-#else
-        File f = fs->open(filename, FILE_READ);
-#endif
 
         _jpeg.open(f, jpegDrawCallback);
 

@@ -135,26 +135,25 @@ void setup()
   {
     unsigned long start = millis();
 
-    // read JPEG file header
-    jpegClass.draw(
-/* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-        &SD,
+        File f = SD.open(JPEG_FILENAME, "r");
 #elif defined(ARDUINO_RASPBERRY_PI_PICO)
-        &LittleFS,
-    // &SDFS,
+        File f = LittleFS.open(JPEG_FILENAME, "r");
+        // File f = SDFS.open(JPEG_FILENAME, "r");
 #elif defined(ESP32)
-        // &FFat,
-        &LittleFS,
-    // &SPIFFS,
-    // &SD,
+        // File f = FFat.open(JPEG_FILENAME, "r");
+        File f = LittleFS.open(JPEG_FILENAME, "r");
+        // File f = SPIFFS.open(JPEG_FILENAME, "r");
+        // File f = SD.open(JPEG_FILENAME, "r");
 #elif defined(ESP8266)
-        &LittleFS,
-    // &SDFS,
+        File f = LittleFS.open(JPEG_FILENAME, "r");
+        // File f = SD.open(JPEG_FILENAME, "r");
 #else
-        &SD,
+        File f = SD.open(JPEG_FILENAME, FILE_READ);
 #endif
-        (char *)JPEG_FILENAME, jpegDrawCallback, true /* useBigEndian */,
+
+    // read JPEG file header
+    jpegClass.draw(f, jpegDrawCallback, true /* useBigEndian */,
         0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
 
     Serial.printf("Time used: %lu\n", millis() - start);
