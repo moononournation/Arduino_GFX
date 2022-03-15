@@ -23,35 +23,35 @@ void Arduino_ILI9331::begin(int32_t speed)
 /**************************************************************************/
 void Arduino_ILI9331::setRotation(uint8_t r)
 {
-  uint16_t GS, SS, ORG;
+  uint16_t gsc1, drvoutctl, entry_mode;
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
   case 1:
-    GS = 0x2700;
-    SS = 0;
-    ORG = 0x1038;
+    gsc1 = 0x2700;
+    drvoutctl = 0;
+    entry_mode = 0x1038;
     break;
   case 2:
-    GS = 0xA700;
-    SS = 0;
-    ORG = 0x1030;
+    gsc1 = 0xA700;
+    drvoutctl = 0;
+    entry_mode = 0x1030;
     break;
   case 3:
-    GS = 0xA700;
-    SS = 0x100;
-    ORG = 0x1038;
+    gsc1 = 0xA700;
+    drvoutctl = 0x100;
+    entry_mode = 0x1038;
     break;
   default: // case 0:
-    GS = 0x2700;
-    SS = 0x100;
-    ORG = 0x1030;
+    gsc1 = 0x2700;
+    drvoutctl = 0x100;
+    entry_mode = 0x1030;
     break;
   }
   _bus->beginWrite();
-  _bus->writeC16D16(ILI9331_GSC1, GS); // Set the direction of scan by the gate driver
-  _bus->writeC16D16(ILI9331_DRVOUTCTL, SS); // Select the shift direction of outputs from the source driver
-  _bus->writeC16D16(ILI9331_ENTRY_MODE, ORG); // Set GRAM write direction
+  _bus->writeC16D16(ILI9331_GSC1, gsc1); // Set the direction of scan by the gate driver
+  _bus->writeC16D16(ILI9331_DRVOUTCTL, drvoutctl); // Select the shift direction of outputs from the source driver
+  _bus->writeC16D16(ILI9331_ENTRY_MODE, entry_mode); // Set GRAM write direction
   _bus->writeCommand16(ILI9331_MW); // Write to GRAM
   _bus->endWrite();
 }
