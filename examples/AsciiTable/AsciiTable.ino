@@ -1,3 +1,9 @@
+/*
+   ASCII Table
+   Arduino_GFX using the 'classic' fixed-space bitmap font for Adafruit_GFX
+   This font using CP437 encoding (Extended ASCII)
+   https://en.wikipedia.org/wiki/Extended_ASCII
+*/
 /*******************************************************************************
  * Start of Arduino_GFX setting
  * 
@@ -39,6 +45,7 @@ void setup(void)
 {
     gfx->begin();
     gfx->fillScreen(BLACK);
+    gfx->cp437(true);
 
 #ifdef DF_GFX_BL
     pinMode(DF_GFX_BL, OUTPUT);
