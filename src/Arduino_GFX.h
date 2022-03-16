@@ -287,22 +287,6 @@ public:
   /**********************************************************************/
   void setTextWrap(bool w) { wrap = w; }
 
-  /**********************************************************************/
-  /*!
-    @brief  Enable (or disable) Code Page 437-compatible charset.
-            There was an error in glcdfont.c for the longest time -- one
-            character (#176, the 'light shade' block) was missing -- this
-            threw off the index of every character that followed it.
-            But a TON of code has been written with the erroneous
-            character indices. By default, the library uses the original
-            'wrong' behavior and old sketches will still work. Pass
-            'true' to this function to use correct CP437 character values
-            in your code.
-    @param  x  true = enable (new behavior), false = disable (old behavior)
-  */
-  /**********************************************************************/
-  void cp437(bool x = true) { _cp437 = x; }
-
   virtual size_t write(uint8_t);
 
   /************************************************************************/
@@ -381,7 +365,6 @@ protected:
       _rotation;         ///< Display rotation (0 thru 3)
   bool
       wrap,   ///< If set, 'wrap' text at right edge of display
-      _cp437; ///< If set, use correct CP437 charset (default is off)
 #if !defined(ATTINY_CORE)
   GFXfont *gfxFont; ///< Pointer to special font
 #endif              // !defined(ATTINY_CORE)

@@ -1089,11 +1089,6 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color
     }
     else
     {
-      if (!_cp437 && (c >= 176))
-      {
-        c++; // Handle 'classic' charset behavior
-      }
-
       uint8_t col[5];
       for (int8_t i = 0; i < 5; i++)
       {

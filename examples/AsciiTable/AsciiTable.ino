@@ -45,7 +45,6 @@ void setup(void)
 {
     gfx->begin();
     gfx->fillScreen(BLACK);
-    gfx->cp437(true);
 
 #ifdef DF_GFX_BL
     pinMode(DF_GFX_BL, OUTPUT);

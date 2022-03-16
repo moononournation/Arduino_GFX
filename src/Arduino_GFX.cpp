@@ -38,7 +38,6 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : Arduino_G(w, h)
   text_pixel_margin = 0;
   textcolor = textbgcolor = 0xFFFF;
   wrap = true;
-  _cp437 = false;
 #if !defined(ATTINY_CORE)
   gfxFont = NULL;
 #endif // !defined(ATTINY_CORE)
@@ -1835,8 +1834,6 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 #if defined(U8G2_FONT_SUPPORT)
       if (u8g2Font)
   {
-    u8x8_get_glyph_data(u8x8, encoding, buf, tile);
-    u8x8_DrawTile(u8x8, xx, y, 1, buf);
   }
   else // not u8g2Font
 #endif // defined(U8G2_FONT_SUPPORT)
@@ -1851,11 +1848,6 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
     )
     {
       return;
-    }
-
-    if (!_cp437 && (c >= 176))
-    {
-      c++; // Handle 'classic' charset behavior
     }
 
     startWrite();
