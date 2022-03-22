@@ -364,7 +364,7 @@ protected:
       text_pixel_margin, ///< Margin for each text pixel
       _rotation;         ///< Display rotation (0 thru 3)
   bool
-      wrap,   ///< If set, 'wrap' text at right edge of display
+      wrap;   ///< If set, 'wrap' text at right edge of display
 #if !defined(ATTINY_CORE)
   GFXfont *gfxFont; ///< Pointer to special font
 #endif              // !defined(ATTINY_CORE)
