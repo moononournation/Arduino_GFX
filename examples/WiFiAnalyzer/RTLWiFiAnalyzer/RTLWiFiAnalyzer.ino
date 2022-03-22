@@ -25,6 +25,9 @@
 #include <wl_types.h>
 
 #include <Arduino_GFX_Library.h>
+
+#define GFX_BL DF_GFX_BL // default backlight pin, you may replace DF_GFX_BL to actual backlight pin
+
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
@@ -148,9 +151,10 @@ void setup()
   pinMode(LCD_PWR_PIN, OUTPUT);    // sets the pin as output
   digitalWrite(LCD_PWR_PIN, HIGH); // power on
 #endif
-#if defined(DF_GFX_BL)
-  pinMode(DF_GFX_BL, OUTPUT);    // sets the pin as output
-  digitalWrite(DF_GFX_BL, HIGH); // power on
+
+#ifdef GFX_BL
+    pinMode(GFX_BL, OUTPUT);
+    digitalWrite(GFX_BL, HIGH);
 #endif
 
   // init LCD

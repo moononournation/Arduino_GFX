@@ -34,6 +34,8 @@
  ******************************************************************************/
 #include <Arduino_GFX_Library.h>
 
+#define GFX_BL DF_GFX_BL // default backlight pin, you may replace DF_GFX_BL to actual backlight pin
+
 /* More dev device declaration: https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration */
 #if defined(DISPLAY_DEV_KIT)
 Arduino_GFX *gfx = create_default_Arduino_GFX();
@@ -60,9 +62,9 @@ void setup()
   gfx->begin();
   gfx->fillScreen(BLACK);
 
-#ifdef DF_GFX_BL
-  pinMode(DF_GFX_BL, OUTPUT);
-  digitalWrite(DF_GFX_BL, HIGH);
+#ifdef GFX_BL
+    pinMode(GFX_BL, OUTPUT);
+    digitalWrite(GFX_BL, HIGH);
 #endif
 
   gfx->draw16bitRGBBitmap(0, 0, (const uint16_t*)Arduino_UNO_Rev3_Ok, IMG_WIDTH, IMG_HEIGHT);

@@ -29,6 +29,8 @@
  ******************************************************************************/
 #include <Arduino_GFX_Library.h>
 
+#define GFX_BL DF_GFX_BL // default backlight pin, you may replace DF_GFX_BL to actual backlight pin
+
 /* More dev device declaration: https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration */
 #if defined(DISPLAY_DEV_KIT)
 Arduino_GFX *gfx = create_default_Arduino_GFX();
@@ -76,9 +78,10 @@ void setup()
   pinMode(LCD_PWR_PIN, OUTPUT);    // sets the pin as output
   digitalWrite(LCD_PWR_PIN, HIGH); // power on
 #endif
-#if defined(DF_GFX_BL)
-  pinMode(DF_GFX_BL, OUTPUT);    // sets the pin as output
-  digitalWrite(DF_GFX_BL, HIGH); // power on
+
+#ifdef GFX_BL
+    pinMode(GFX_BL, OUTPUT);
+    digitalWrite(GFX_BL, HIGH);
 #endif
 
   // init LCD
@@ -341,8 +344,9 @@ void loop()
 #if defined(LCD_PWR_PIN)
     pinMode(LCD_PWR_PIN, INPUT); // disable pin
 #endif
-#if defined(DF_GFX_BL)
-    pinMode(DF_GFX_BL, INPUT); // disable pin
+
+#if defined(GFX_BL)
+    pinMode(GFX_BL, INPUT); // disable pin
 #endif
 
 #if defined(ESP32)
