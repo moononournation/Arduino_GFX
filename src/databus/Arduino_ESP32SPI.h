@@ -4,14 +4,16 @@
  */
 #include "Arduino_DataBus.h"
 
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32C3)
 
 #ifndef _ARDUINO_ESP32SPI_H_
 #define _ARDUINO_ESP32SPI_H_
 
 #include "soc/spi_struct.h"
 #if CONFIG_IDF_TARGET_ESP32C3
+#include "driver/periph_ctrl.h"
 #include "esp32c3/rom/gpio.h"
+#include "soc/periph_defs.h"
 #else
 #include "soc/dport_reg.h"
 #endif
@@ -94,4 +96,4 @@ private:
 
 #endif // _ARDUINO_ESP32SPI_H_
 
-#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32C3)
