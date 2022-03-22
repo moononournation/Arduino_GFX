@@ -147,7 +147,9 @@ Arduino_DataBus *bus = new Arduino_RPiPicoSPI(TFT_DC, TFT_CS, PIN_SPI0_SCK /* SC
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, GFX_NOT_DEFINED /* MISO */, VSPI /* spi_num */);
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2)
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 36 /* SCK */, 35 /* MOSI */, 37 /* MISO */, HSPI /* spi_num */);
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 36 /* SCK */, 35 /* MOSI */, GFX_NOT_DEFINED /* MISO */, HSPI /* spi_num */);
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 4 /* SCK */, 6 /* MOSI */, GFX_NOT_DEFINED /* MISO */, FSPI /* spi_num */);
 #elif defined(ESP8266)
 Arduino_DataBus *bus = new Arduino_ESP8266SPI(TFT_DC, TFT_CS);
 #else
