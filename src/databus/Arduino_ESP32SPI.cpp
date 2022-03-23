@@ -17,30 +17,43 @@ struct spi_struct_t
   uint8_t num;
 };
 
+#if CONFIG_DISABLE_HAL_LOCKS
+#define SPI_MUTEX_LOCK()
+#define SPI_MUTEX_UNLOCK()
+
 static spi_t _spi_bus_array[] = {
 #if CONFIG_IDF_TARGET_ESP32S2
     {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 0},
     {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 1},
     {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 2}
-#elif CONFIG_IDF_TARGET_ESP32C3
-    {(volatile spi_dev_t *)(&GPSPI2), NULL, FSPI}
-#else  // CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S3
+#else
     {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), 0},
     {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 1},
     {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 2},
     {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 3}
-#endif // CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S3
+#endif
 };
-
-#if CONFIG_DISABLE_HAL_LOCKS
-#define SPI_MUTEX_LOCK()
-#define SPI_MUTEX_UNLOCK()
 #else // !CONFIG_DISABLE_HAL_LOCKS
 #define SPI_MUTEX_LOCK() \
   do                     \
   {                      \
   } while (xSemaphoreTake(_spi->lock, portMAX_DELAY) != pdPASS)
 #define SPI_MUTEX_UNLOCK() xSemaphoreGive(_spi->lock)
+
+static spi_t _spi_bus_array[] = {
+#if CONFIG_IDF_TARGET_ESP32S2
+    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 0},
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 1},
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 2}
+#elif CONFIG_IDF_TARGET_ESP32C3
+    {(volatile spi_dev_t *)(&GPSPI2), NULL, FSPI}
+#else
+    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), NULL, 0},
+    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 1},
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 2},
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 3}
+#endif
+};
 #endif // CONFIG_DISABLE_HAL_LOCKS
 
 Arduino_ESP32SPI::Arduino_ESP32SPI(int8_t dc /* = GFX_NOT_DEFINED */, int8_t cs /* = GFX_NOT_DEFINED */, int8_t sck /* = GFX_NOT_DEFINED */, int8_t mosi /* = GFX_NOT_DEFINED */, int8_t miso /* = GFX_NOT_DEFINED */, uint8_t spi_num /* = VSPI for ESP32, FSPI for S2 & C3 */, bool is_shared_interface /* = true */)
