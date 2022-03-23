@@ -19,7 +19,7 @@
 #endif
 
 #if __has_include(<U8g2lib.h>)
-#include <u8g2lib.h>
+#include <U8g2lib.h>
 #define U8G2_FONT_SUPPORT
 #endif
 
