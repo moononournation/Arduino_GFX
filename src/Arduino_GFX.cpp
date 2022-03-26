@@ -40,6 +40,9 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : Arduino_G(w, h)
   wrap = true;
 #if !defined(ATTINY_CORE)
   gfxFont = NULL;
+#if defined(U8G2_FONT_SUPPORT)
+  u8g2Font = NULL;
+#endif // defined(U8G2_FONT_SUPPORT)
 #endif // !defined(ATTINY_CORE)
 }
 
@@ -1739,6 +1742,121 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
   endWrite();
 }
 
+#if defined(U8G2_FONT_SUPPORT)
+uint16_t Arduino_GFX::u8g2_font_get_word(const uint8_t *font, uint8_t offset)
+{
+  uint16_t pos;
+  font += offset;
+  pos = pgm_read_byte(font);
+  font++;
+  pos <<= 8;
+  pos += pgm_read_byte(font);
+
+  return pos;
+}
+
+uint8_t Arduino_GFX::u8g2_font_decode_get_unsigned_bits(uint8_t cnt)
+{
+  uint8_t val;
+  uint8_t bit_pos = _u8g2_decode_bit_pos;
+  uint8_t bit_pos_plus_cnt;
+
+  val = pgm_read_byte(_u8g2_decode_ptr);
+
+  val >>= bit_pos;
+  bit_pos_plus_cnt = bit_pos;
+  bit_pos_plus_cnt += cnt;
+  if (bit_pos_plus_cnt >= 8)
+  {
+    uint8_t s = 8;
+    s -= bit_pos;
+    _u8g2_decode_ptr++;
+    val |= pgm_read_byte(_u8g2_decode_ptr) << (s);
+    bit_pos_plus_cnt -= 8;
+  }
+  val &= (1U << cnt) - 1;
+
+  _u8g2_decode_bit_pos = bit_pos_plus_cnt;
+
+  return val;
+}
+
+int8_t Arduino_GFX::u8g2_font_decode_get_signed_bits(uint8_t cnt)
+{
+  int8_t v, d;
+  v = (int8_t)u8g2_font_decode_get_unsigned_bits(cnt);
+  d = 1;
+  cnt--;
+  d <<= cnt;
+  v -= d;
+
+  return v;
+}
+
+void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint16_t color, uint16_t bg)
+{
+  uint8_t cnt;     /* total number of remaining pixels, which have to be drawn */
+  uint8_t rem;     /* remaining pixel to the right edge of the glyph */
+  uint8_t current; /* number of pixels, which need to be drawn for the draw procedure */
+  /* current is either equal to cnt or equal to rem */
+
+  /* target position on the screen */
+  uint16_t x, y;
+
+  cnt = len;
+
+  /* get the local position */
+  uint8_t lx = _u8g2_dx;
+  uint8_t ly = _u8g2_dy;
+
+  for (;;)
+  {
+    /* calculate the number of pixel to the right edge of the glyph */
+    rem = _u8g2_char_width;
+    rem -= lx;
+
+    /* calculate how many pixel to draw. This is either to the right edge */
+    /* or lesser, if not enough pixel are left */
+    current = rem;
+    if (cnt < rem)
+      current = cnt;
+
+    /* now draw the line, but apply the rotation around the glyph target position */
+    // u8g2_font_decode_draw_pixel(u8g2, lx,ly,current, is_foreground);
+
+    /* get target position */
+    x = _u8g2_target_x;
+    y = _u8g2_target_y;
+
+    x += lx;
+    y += ly;
+
+    // log_e("rem: %d, current: %d, x: %d, y: %d", rem, current, x, y);
+
+    /* draw foreground and background (if required) */
+    if (is_foreground)
+    {
+      writeFastHLine(x, y, current, color);
+    }
+    else if (bg != color)
+    {
+      writeFastHLine(x, y, current, bg);
+    }
+
+    /* check, whether the end of the run length code has been reached */
+    if (cnt < rem)
+      break;
+    cnt -= rem;
+    lx = 0;
+    ly++;
+  }
+  lx += cnt;
+
+  _u8g2_dx = lx;
+  _u8g2_dy = ly;
+}
+#endif // defined(U8G2_FONT_SUPPORT)
+
 // TEXT- AND CHARACTER-HANDLING FUNCTIONS ----------------------------------
 
 // Draw a character
@@ -1834,8 +1952,37 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 #if defined(U8G2_FONT_SUPPORT)
       if (u8g2Font)
   {
+    if ((_u8g2_decode_ptr) && (_u8g2_char_width > 0))
+    {
+      uint8_t a, b;
+
+      _u8g2_target_x = x + _u8g2_char_x;
+      _u8g2_target_y = y - _u8g2_char_height + _u8g2_char_y;
+      // log_e("_u8g2_target_x: %d, _u8g2_target_y: %d", _u8g2_target_x, _u8g2_target_y);
+
+      /* reset local x/y position */
+      _u8g2_dx = 0;
+      _u8g2_dy = 0;
+      /* decode glyph */
+      startWrite();
+      for (;;)
+      {
+        a = u8g2_font_decode_get_unsigned_bits(_u8g2_bits_per_0);
+        b = u8g2_font_decode_get_unsigned_bits(_u8g2_bits_per_1);
+        // log_e("a: %d, b: %d", a, b);
+        do
+        {
+          u8g2_font_decode_len(a, 0, color, bg);
+          u8g2_font_decode_len(b, 1, color, bg);
+        } while (u8g2_font_decode_get_unsigned_bits(1) != 0);
+
+        if (_u8g2_dy >= _u8g2_char_height)
+          break;
+      }
+      endWrite();
+    }
   }
-  else // not u8g2Font
+  else // glcdfont
 #endif // defined(U8G2_FONT_SUPPORT)
   {
     block_w = 6 * textsize_x;
@@ -1942,6 +2089,113 @@ size_t Arduino_GFX::write(uint8_t c)
   }
   else // 'Classic' built-in font
 #endif // !defined(ATTINY_CORE)
+#if defined(U8G2_FONT_SUPPORT)
+      if (u8g2Font)
+  {
+    _u8g2_decode_ptr = 0;
+
+    if ((c >= _u8g2_first_char) && (c <= (_u8g2_first_char + _u8g2_glyph_cnt - 1)))
+    {
+      if (c == '\n')
+      {
+        cursor_x = 0;
+        cursor_y += (int16_t)textsize_y * _u8g2_max_char_height;
+      }
+      else if (c != '\r')
+      { // Ignore carriage returns
+        uint8_t *font = u8g2Font;
+        const uint8_t *glyph_data = 0;
+
+        // extract from u8g2_font_get_glyph_data()
+        font += 23; // U8G2_FONT_DATA_STRUCT_SIZE
+        if (c <= 255)
+        {
+          if (c >= 'a')
+          {
+            font += _u8g2_start_pos_lower_a;
+          }
+          else if (c >= 'A')
+          {
+            font += _u8g2_start_pos_upper_A;
+          }
+
+          for (;;)
+          {
+            if (pgm_read_byte(font + 1) == 0)
+              break;
+            if (pgm_read_byte(font) == c)
+            {
+              glyph_data = font + 2; /* skip encoding and glyph size */
+            }
+            font += pgm_read_byte(font + 1);
+          }
+        }
+#ifdef U8G2_WITH_UNICODE
+        else
+        {
+          uint16_t e;
+          const uint8_t *unicode_lookup_table;
+
+          font += _u8g2_start_pos_unicode;
+          unicode_lookup_table = font;
+
+          /* issue 596: search for the glyph start in the unicode lookup table */
+          do
+          {
+            font += u8g2_font_get_word(unicode_lookup_table, 0);
+            e = u8g2_font_get_word(unicode_lookup_table, 2);
+            unicode_lookup_table += 4;
+          } while (e < c);
+
+          for (;;)
+          {
+            e = pgm_read_byte(font);
+            e <<= 8;
+            e |= pgm_read_byte(font + 1);
+
+            if (e == 0)
+              break;
+
+            if (e == c)
+            {
+              glyph_data = font + 3; /* skip encoding and glyph size */
+            }
+            font += pgm_read_byte(font + 2);
+          }
+        }
+#endif
+
+        if (glyph_data)
+        {
+          // u8g2_font_decode_glyph
+          _u8g2_decode_ptr = glyph_data;
+          _u8g2_decode_bit_pos = 0;
+
+          _u8g2_char_width = u8g2_font_decode_get_unsigned_bits(_u8g2_bits_per_char_width);
+          _u8g2_char_height = u8g2_font_decode_get_unsigned_bits(_u8g2_bits_per_char_height);
+          _u8g2_char_x = u8g2_font_decode_get_signed_bits(_u8g2_bits_per_char_x);
+          _u8g2_char_y = u8g2_font_decode_get_signed_bits(_u8g2_bits_per_char_y);
+          _u8g2_delta_x = u8g2_font_decode_get_signed_bits(_u8g2_bits_per_delta_x);
+          // log_e("c: %c, _u8g2_char_width: %d, _u8g2_char_height: %d, _u8g2_char_x: %d, _u8g2_char_y: %d, _u8g2_delta_x: %d",
+          //       c, _u8g2_char_width, _u8g2_char_height, _u8g2_char_x, _u8g2_char_y, _u8g2_delta_x);
+
+          if (_u8g2_char_width > 0)
+          {
+            if (wrap && ((cursor_x + (textsize_x * _u8g2_char_width) - 1) > _max_x))
+            {
+              cursor_x = 0;
+              cursor_y += (int16_t)textsize_y * _u8g2_max_char_height;
+            }
+          }
+
+          drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor);
+          cursor_x += textsize_x * _u8g2_delta_x;
+        }
+      }
+    }
+  }
+  else // glcdfont
+#endif // defined(U8G2_FONT_SUPPORT)
   {
     if (c == '\n')
     {                             // Newline?
@@ -2058,6 +2312,50 @@ void Arduino_GFX::setFont(const uint8_t *font)
 {
   gfxFont = NULL;
   u8g2Font = (uint8_t *)font;
+
+  // extract from u8g2_read_font_info()
+  /* offset 0 */
+  _u8g2_glyph_cnt = pgm_read_byte(font);
+  // uint8_t bbx_mode = pgm_read_byte(font + 1);
+  _u8g2_bits_per_0 = pgm_read_byte(font + 2);
+  _u8g2_bits_per_1 = pgm_read_byte(font + 3);
+  // log_e("_u8g2_glyph_cnt: %d, bbx_mode: %d, _u8g2_bits_per_0: %d, _u8g2_bits_per_1: %d",
+  //       _u8g2_glyph_cnt, bbx_mode, _u8g2_bits_per_0, _u8g2_bits_per_1);
+
+  /* offset 4 */
+  _u8g2_bits_per_char_width = pgm_read_byte(font + 4);
+  _u8g2_bits_per_char_height = pgm_read_byte(font + 5);
+  _u8g2_bits_per_char_x = pgm_read_byte(font + 6);
+  _u8g2_bits_per_char_y = pgm_read_byte(font + 7);
+  _u8g2_bits_per_delta_x = pgm_read_byte(font + 8);
+  // log_e("_u8g2_bits_per_char_width: %d, _u8g2_bits_per_char_height: %d, _u8g2_bits_per_char_x: %d, _u8g2_bits_per_char_y: %d, _u8g2_bits_per_delta_x: %d",
+  //       _u8g2_bits_per_char_width, _u8g2_bits_per_char_height, _u8g2_bits_per_char_x, _u8g2_bits_per_char_y, _u8g2_bits_per_delta_x);
+
+  /* offset 9 */
+  _u8g2_max_char_width = pgm_read_byte(font + 9);
+  _u8g2_max_char_height = pgm_read_byte(font + 10);
+  // int8_t x_offset = pgm_read_byte(font + 11);
+  // int8_t y_offset = pgm_read_byte(font + 12);
+  // log_e("_u8g2_max_char_width: %d, _u8g2_max_char_height: %d, x_offset: %d, y_offset: %d",
+  //       _u8g2_max_char_width, _u8g2_max_char_height, x_offset, y_offset);
+
+  /* offset 13 */
+  // int8_t ascent_A = pgm_read_byte(font + 13);
+  // int8_t descent_g = pgm_read_byte(font + 14);
+  // int8_t ascent_para = pgm_read_byte(font + 15);
+  // int8_t descent_para = pgm_read_byte(font + 16);
+  // log_e("ascent_A: %d, descent_g: %d, ascent_para: %d, descent_para: %d",
+  //       ascent_A, descent_g, ascent_para, descent_para);
+
+  /* offset 17 */
+  _u8g2_start_pos_upper_A = u8g2_font_get_word(font, 17);
+  _u8g2_start_pos_lower_a = u8g2_font_get_word(font, 19);
+#ifdef U8G2_WITH_UNICODE
+  _u8g2_start_pos_unicode = u8g2_font_get_word(font, 21);
+#endif
+  _u8g2_first_char = pgm_read_byte(font + 23);
+  // log_e("_u8g2_start_pos_upper_A: %d, _u8g2_start_pos_lower_a: %d, _u8g2_start_pos_unicode: %d, _u8g2_first_char: %d",
+  //       _u8g2_start_pos_upper_A, _u8g2_start_pos_lower_a, _u8g2_start_pos_unicode, _u8g2_first_char);
 }
 #endif // defined(U8G2_FONT_SUPPORT)
 
@@ -2133,8 +2431,9 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
 #if defined(U8G2_FONT_SUPPORT)
       if (u8g2Font)
   {
+    // not yet implement
   }
-  else // not u8g2Font
+  else // glcdfont
 #endif // defined(U8G2_FONT_SUPPORT)
   {
     if (c == '\n')

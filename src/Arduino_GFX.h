@@ -196,6 +196,10 @@ public:
   void setFont(const GFXfont *f = NULL);
 #if defined(U8G2_FONT_SUPPORT)
   void setFont(const uint8_t *font);
+  uint16_t u8g2_font_get_word(const uint8_t *font, uint8_t offset);
+  uint8_t u8g2_font_decode_get_unsigned_bits(uint8_t cnt);
+  int8_t u8g2_font_decode_get_signed_bits(uint8_t cnt);
+  void u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint16_t color, uint16_t bg);
 #endif // defined(U8G2_FONT_SUPPORT)
   virtual void flush(void);
 #endif // !defined(ATTINY_CORE)
@@ -364,13 +368,42 @@ protected:
       text_pixel_margin, ///< Margin for each text pixel
       _rotation;         ///< Display rotation (0 thru 3)
   bool
-      wrap;   ///< If set, 'wrap' text at right edge of display
+      wrap; ///< If set, 'wrap' text at right edge of display
 #if !defined(ATTINY_CORE)
   GFXfont *gfxFont; ///< Pointer to special font
 #endif              // !defined(ATTINY_CORE)
 
 #if defined(U8G2_FONT_SUPPORT)
   uint8_t *u8g2Font;
+
+  uint8_t _u8g2_glyph_cnt;
+  uint8_t _u8g2_bits_per_0;
+  uint8_t _u8g2_bits_per_1;
+  uint8_t _u8g2_bits_per_char_width;
+  uint8_t _u8g2_bits_per_char_height;
+  uint8_t _u8g2_bits_per_char_x;
+  uint8_t _u8g2_bits_per_char_y;
+  uint8_t _u8g2_bits_per_delta_x;
+  int8_t _u8g2_max_char_width;
+  int8_t _u8g2_max_char_height;
+  uint16_t _u8g2_start_pos_upper_A;
+  uint16_t _u8g2_start_pos_lower_a;
+  uint16_t _u8g2_start_pos_unicode;
+  uint8_t _u8g2_first_char;
+
+  uint8_t _u8g2_char_width;
+  uint8_t _u8g2_char_height;
+  int8_t _u8g2_char_x;
+  int8_t _u8g2_char_y;
+  int8_t _u8g2_delta_x;
+
+  int8_t _u8g2_dx;
+  int8_t _u8g2_dy;
+  uint16_t _u8g2_target_x;
+  uint16_t _u8g2_target_y;
+
+  const uint8_t *_u8g2_decode_ptr;
+  uint8_t _u8g2_decode_bit_pos;
 #endif // defined(U8G2_FONT_SUPPORT)
 
 #if defined(LITTLE_FOOT_PRINT)
