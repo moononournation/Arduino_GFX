@@ -57,10 +57,10 @@ Arduino_GFX *gfx = create_default_Arduino_GFX();
 #else /* !defined(DISPLAY_DEV_KIT) */
 
 /* More data bus class: https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class */
-Arduino_DataBus *bus = create_default_Arduino_DataBus();
+Arduino_DataBus *bus = new Arduino_HWSPI(30 /* DC */, 27 /* CS */);
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
+Arduino_GFX *gfx = new Arduino_GC9A01(bus, 7 /* RST */, 0 /* rotation */, true /* IPS */);
 
 #endif /* !defined(DISPLAY_DEV_KIT) */
 /*******************************************************************************
@@ -127,7 +127,7 @@ void setup()
   if (!LittleFS.begin())
   // if (!SD.begin(SS))
 #else
-  if (!SD.begin())
+  if (!SD.begin(11))
 #endif
   {
     Serial.println(F("ERROR: File System Mount Failed!"));
@@ -155,7 +155,7 @@ void setup()
 #endif
 
     // read JPEG file header
-    jpegClass.draw(f, jpegDrawCallback, true /* useBigEndian */,
+    jpegClass.draw(f,(char *)JPEG_FILENAME,jpegDrawCallback, true /* useBigEndian */,
         0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
 
     Serial.printf("Time used: %lu\n", millis() - start);

@@ -1,8 +1,8 @@
 /*******************************************************************************
- * JPEGDEC Wrapper Class
- * 
- * Dependent libraries:
- * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
+   JPEGDEC Wrapper Class
+
+   Dependent libraries:
+   JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
  ******************************************************************************/
 #ifndef _JPEGCLASS_H_
 #define _JPEGCLASS_H_
@@ -20,98 +20,126 @@
 #include <FS.h>
 #else
 #include <SD.h>
+#define _SD_H
 #endif
 
+static File f;
 class JpegClass
 {
-public:
+  public:
     int jpegDrawCallback(JPEGDRAW *pDraw)
     {
-        if (pDraw->y <= _y_bound)
+      if (pDraw->y <= _y_bound)
+      {
+        if ((pDraw->y + pDraw->iHeight - 1) > _y_bound)
         {
-            if ((pDraw->y + pDraw->iHeight - 1) > _y_bound)
+          pDraw->iHeight = _y_bound - pDraw->y + 1;
+        }
+        if (pDraw->x <= _x_bound)
+        {
+          if ((pDraw->x + pDraw->iWidth - 1) > _x_bound)
+          {
+            int16_t w = pDraw->iWidth;
+            int16_t h = pDraw->iHeight;
+            pDraw->iWidth = _x_bound - pDraw->x + 1;
+            pDraw->iHeight = 1;
+            while (h--)
             {
-                pDraw->iHeight = _y_bound - pDraw->y + 1;
+              _jpegDrawCallback(pDraw);
+              pDraw->y++;
+              pDraw->pPixels += w;
             }
-            if (pDraw->x <= _x_bound)
-            {
-                if ((pDraw->x + pDraw->iWidth - 1) > _x_bound)
-                {
-                    int16_t w = pDraw->iWidth;
-                    int16_t h = pDraw->iHeight;
-                    pDraw->iWidth = _x_bound - pDraw->x + 1;
-                    pDraw->iHeight = 1;
-                    while (h--)
-                    {
-                        _jpegDrawCallback(pDraw);
-                        pDraw->y++;
-                        pDraw->pPixels += w;
-                    }
 
-                    return 1;
-                }
-                else
-                {
-                    return _jpegDrawCallback(pDraw);
-                }
-            }
-            else
-            {
-                return 1;
-            }
+            return 1;
+          }
+          else
+          {
+            return _jpegDrawCallback(pDraw);
+          }
         }
         else
         {
-            return 0;
+          return 1;
         }
+      }
+      else
+      {
+        return 0;
+      }
     }
 
     void draw(
-        File &f, JPEG_DRAW_CALLBACK *jpegDrawCallback, bool useBigEndian,
-        int x, int y, int widthLimit, int heightLimit)
+      File &f, char *filename, JPEG_DRAW_CALLBACK *jpegDrawCallback, bool useBigEndian,
+      int x, int y, int widthLimit, int heightLimit)
     {
-        _jpegDrawCallback = jpegDrawCallback;
-        _x = x;
-        _y = y;
-        _x_bound = _x + widthLimit - 1;
-        _y_bound = _y + heightLimit - 1;
+      _jpegDrawCallback = jpegDrawCallback;
+      _x = x;
+      _y = y;
+      _x_bound = _x + widthLimit - 1;
+      _y_bound = _y + heightLimit - 1;
+#ifdef _SD_H
+      _jpeg.open(filename, openJPGFile, closeJPGFile, readJPGFile, seekJPGFile, jpegDrawCallback);
+#else
+      _jpeg.open(f, jpegDrawCallback);
+#endif
 
-        _jpeg.open(f, jpegDrawCallback);
-
-        // scale to fit height
-        int _scale;
-        int iMaxMCUs;
-        float ratio = (float)_jpeg.getHeight() / heightLimit;
-        if (ratio <= 1)
-        {
-            _scale = 0;
-            iMaxMCUs = widthLimit / 16;
-        }
-        else if (ratio <= 2)
-        {
-            _scale = JPEG_SCALE_HALF;
-            iMaxMCUs = widthLimit / 8;
-        }
-        else if (ratio <= 4)
-        {
-            _scale = JPEG_SCALE_QUARTER;
-            iMaxMCUs = widthLimit / 4;
-        }
-        else
-        {
-            _scale = JPEG_SCALE_EIGHTH;
-            iMaxMCUs = widthLimit / 2;
-        }
-        _jpeg.setMaxOutputSize(iMaxMCUs);
-        if (useBigEndian)
-        {
-            _jpeg.setPixelType(RGB565_BIG_ENDIAN);
-        }
-        _jpeg.decode(x, y, _scale);
-        _jpeg.close();
+      // scale to fit height
+      int _scale;
+      int iMaxMCUs;
+      float ratio = (float)_jpeg.getHeight() / heightLimit;
+      if (ratio <= 1)
+      {
+        _scale = 0;
+        iMaxMCUs = widthLimit / 16;
+      }
+      else if (ratio <= 2)
+      {
+        _scale = JPEG_SCALE_HALF;
+        iMaxMCUs = widthLimit / 8;
+      }
+      else if (ratio <= 4)
+      {
+        _scale = JPEG_SCALE_QUARTER;
+        iMaxMCUs = widthLimit / 4;
+      }
+      else
+      {
+        _scale = JPEG_SCALE_EIGHTH;
+        iMaxMCUs = widthLimit / 2;
+      }
+      _jpeg.setMaxOutputSize(iMaxMCUs);
+      if (useBigEndian)
+      {
+        _jpeg.setPixelType(RGB565_BIG_ENDIAN);
+      }
+      _jpeg.decode(x, y, _scale);
+      _jpeg.close();
     }
 
-private:
+  private:
+    static void *openJPGFile(const char *filename, int32_t *size)
+    {
+      f = SD.open(filename);
+      *size = f.size();
+      return &f;
+    }
+
+    static void closeJPGFile(void *pHandle)
+    {
+      if (f) f.close();
+    }
+
+    static int32_t readJPGFile(JPEGFILE *pFile, uint8_t *buffer, int32_t length)
+    {
+      if (!f) return 0;
+      return f.read(buffer, length);
+    }
+
+    static int32_t seekJPGFile(JPEGFILE *pFile, int32_t position)
+    {
+      if (!f) return 0;
+      return f.seek(position);
+    }
     JPEGDEC _jpeg;
     JPEG_DRAW_CALLBACK *_jpegDrawCallback;
     int _x, _y, _x_bound, _y_bound;
