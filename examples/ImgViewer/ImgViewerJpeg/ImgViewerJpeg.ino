@@ -5,7 +5,7 @@
  *
  * Dependent libraries:
  * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
- * 
+ *
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
  * 2. Upload JPEG file
@@ -30,7 +30,7 @@
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
- * 
+ *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
  * Defalult pin list for non display dev kit:
@@ -86,8 +86,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 #include <SD.h>
 #endif
 
-#include "JpegClass.h"
-static JpegClass jpegClass;
+#include "JpegFunc.h"
 
 // pixel drawing callback
 static int jpegDrawCallback(JPEGDRAW *pDraw)
@@ -108,8 +107,8 @@ void setup()
   gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
 /* Wio Terminal */
@@ -136,32 +135,22 @@ void setup()
   else
   {
     unsigned long start = millis();
-
-#if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-        File f = SD.open(JPEG_FILENAME, "r");
-#elif defined(ARDUINO_RASPBERRY_PI_PICO)
-        File f = LittleFS.open(JPEG_FILENAME, "r");
-        // File f = SDFS.open(JPEG_FILENAME, "r");
-#elif defined(ESP32)
-        // File f = FFat.open(JPEG_FILENAME, "r");
-        File f = LittleFS.open(JPEG_FILENAME, "r");
-        // File f = SPIFFS.open(JPEG_FILENAME, "r");
-        // File f = SD.open(JPEG_FILENAME, "r");
-#elif defined(ESP8266)
-        File f = LittleFS.open(JPEG_FILENAME, "r");
-        // File f = SD.open(JPEG_FILENAME, "r");
-#else
-        File f = SD.open(JPEG_FILENAME, FILE_READ);
-#endif
-
     // read JPEG file header
-    jpegClass.draw(f, jpegDrawCallback, true /* useBigEndian */,
-        0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
+    jpegDraw(JPEG_FILENAME, jpegDrawCallback, true /* useBigEndian */,
+            0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
 
     Serial.printf("Time used: %lu\n", millis() - start);
   }
+
+  delay(5000);
 }
 
 void loop()
 {
+  jpegDraw(JPEG_FILENAME, jpegDrawCallback, true /* useBigEndian */,
+          random(gfx->width() * 2) - gfx->width() /* x */,
+          random(gfx->height() * 2) - gfx->height() /* y */,
+          gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
+
+  delay(1000);
 }
