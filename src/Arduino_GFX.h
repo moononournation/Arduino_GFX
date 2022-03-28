@@ -196,6 +196,7 @@ public:
   void setFont(const GFXfont *f = NULL);
 #if defined(U8G2_FONT_SUPPORT)
   void setFont(const uint8_t *font);
+  void setUTF8Print(bool isEnable);
   uint16_t u8g2_font_get_word(const uint8_t *font, uint8_t offset);
   uint8_t u8g2_font_decode_get_unsigned_bits(uint8_t cnt);
   int8_t u8g2_font_decode_get_signed_bits(uint8_t cnt);
@@ -375,6 +376,9 @@ protected:
 
 #if defined(U8G2_FONT_SUPPORT)
   uint8_t *u8g2Font;
+  bool _enableUTF8Print = false;
+  uint8_t _utf8_state = 0;
+  uint16_t _encoding;
 
   uint8_t _u8g2_glyph_cnt;
   uint8_t _u8g2_bits_per_0;
