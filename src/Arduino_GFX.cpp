@@ -2192,9 +2192,7 @@ size_t Arduino_GFX::write(uint8_t c)
 
           for (;;)
           {
-            e = pgm_read_byte(font);
-            e <<= 8;
-            e |= pgm_read_byte(font + 1);
+            e = u8g2_font_get_word(font, 0);
 
             if (e == 0)
               break;
@@ -2202,6 +2200,7 @@ size_t Arduino_GFX::write(uint8_t c)
             if (e == _encoding)
             {
               glyph_data = font + 3; /* skip encoding and glyph size */
+              break;
             }
             font += pgm_read_byte(font + 2);
           }
