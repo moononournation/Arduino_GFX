@@ -1824,23 +1824,39 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
     /* now draw the line, but apply the rotation around the glyph target position */
     // u8g2_font_decode_draw_pixel(u8g2, lx,ly,current, is_foreground);
 
-    /* get target position */
-    x = _u8g2_target_x;
-    y = _u8g2_target_y;
-
-    x += lx;
-    y += ly;
-
-    // log_d("rem: %d, current: %d, x: %d, y: %d", rem, current, x, y);
-
-    /* draw foreground and background (if required) */
-    if (is_foreground)
+    if (textsize_x == 1 && textsize_y == 1)
     {
-      writeFastHLine(x, y, current, color);
+      /* get target position */
+      x = _u8g2_target_x + lx;
+      y = _u8g2_target_y + ly;
+
+      /* draw foreground and background (if required) */
+      if (is_foreground)
+      {
+        writeFastHLine(x, y, current, color);
+      }
+      else if (bg != color)
+      {
+        writeFastHLine(x, y, current, bg);
+      }
     }
-    else if (bg != color)
+    else
     {
-      writeFastHLine(x, y, current, bg);
+      /* get target position */
+      x = _u8g2_target_x + (lx * textsize_x);
+      y = _u8g2_target_y + (ly * textsize_y);
+
+      /* draw foreground and background (if required) */
+      if (is_foreground)
+      {
+        writeFillRect(x, y, (current * textsize_x) - text_pixel_margin,
+                      textsize_y - text_pixel_margin, color);
+      }
+      else if (bg != color)
+      {
+        writeFillRect(x, y, (current * textsize_x) - text_pixel_margin,
+                      textsize_y - text_pixel_margin, bg);
+      }
     }
 
     /* check, whether the end of the run length code has been reached */
@@ -1956,8 +1972,8 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
     {
       uint8_t a, b;
 
-      _u8g2_target_x = x + _u8g2_char_x;
-      _u8g2_target_y = y - _u8g2_char_height - _u8g2_char_y;
+      _u8g2_target_x = x + (_u8g2_char_x * textsize_x);
+      _u8g2_target_y = y - ((_u8g2_char_height + _u8g2_char_y) * textsize_y);
       // log_d("_u8g2_target_x: %d, _u8g2_target_y: %d", _u8g2_target_x, _u8g2_target_y);
 
       /* reset local x/y position */
