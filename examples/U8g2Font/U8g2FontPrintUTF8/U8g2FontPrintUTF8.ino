@@ -53,35 +53,37 @@ void setup(void)
 
     /* U8g2 font list: https://github.com/olikraus/u8g2/wiki/fntlistall */
     /* U8g2 Unifont list: https://github.com/olikraus/u8g2/wiki/fntgrpunifont */
-    gfx->setFont(u8g2_font_unifont_t_chinese2);
-    gfx->setTextColor(RED);
-    gfx->setCursor(10, 20);
-    gfx->println("世界你好!");
-
     gfx->setFont(u8g2_font_unifont_tr);
-    gfx->setTextColor(ORANGE);
-    gfx->setCursor(10, 40);
+    gfx->setTextColor(RED);
+    gfx->setCursor(0, 16);
     gfx->println("Hello World!");
 
-    gfx->setFont(u8g2_font_unifont_t_greek);
+    gfx->setFont(u8g2_font_unifont_t_polish);
     gfx->setTextColor(YELLOW);
-    gfx->setCursor(10, 60);
-    gfx->println("Γειά σου Κόσμε!");
+    gfx->setCursor(0, 32);
+    gfx->println("Witaj świecie!");
+
+    gfx->setFont(u8g2_font_unifont_t_vietnamese1);
+    gfx->setTextColor(GREEN);
+    gfx->setCursor(0, 48);
+    gfx->println("Chào thế giới!");
+
+#ifdef U8G2_USE_LARGE_FONTS
+    gfx->setFont(u8g2_font_unifont_t_chinese2);
+    gfx->setTextColor(CYAN);
+    gfx->setCursor(0, 64);
+    gfx->println("世界你好!");
 
     gfx->setFont(u8g2_font_unifont_t_japanese1);
-    gfx->setTextColor(GREEN);
-    gfx->setCursor(10, 80);
+    gfx->setTextColor(BLUE);
+    gfx->setCursor(0, 80);
     gfx->println("こんにちは世界!");
 
     gfx->setFont(u8g2_font_unifont_t_korean1);
-    gfx->setTextColor(BLUE);
-    gfx->setCursor(10, 100);
-    gfx->println("안녕하세요, 세계입니다!");
-
-    gfx->setFont(u8g2_font_unifont_t_polish);
     gfx->setTextColor(MAGENTA);
-    gfx->setCursor(10, 120);
-    gfx->println("Witaj świecie!");
+    gfx->setCursor(0, 96);
+    gfx->println("안녕하세요, 세계입니다!");
+#endif // U8G2_USE_LARGE_FONTS
 }
 
 void loop()
