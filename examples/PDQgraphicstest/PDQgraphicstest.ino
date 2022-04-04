@@ -12,6 +12,7 @@
 #include <Arduino_GFX_Library.h>
 
 // #define ESP32_LCDKIT_SPI
+// #define ESP32_S3_EYE
 // #define MAKERFABS_TFT_TOUCH_3_5
 // #define TTGO_T_DISPLAY
 // #define WT32_SC01
@@ -19,6 +20,10 @@
 #define TFT_BL 23
 Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 5 /* CS */, 22 /* SCK */, 21 /* MOSI */, 27 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
+
+#elif defined(ESP32_S3_EYE)
+Arduino_DataBus *bus = new Arduino_ESP32SPI(43 /* DC */, 44 /* CS */, 21 /* SCK */, 47 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED, 0 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
 
 #elif defined(MAKERFABS_TFT_TOUCH_3_5)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(33 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */);
@@ -82,7 +87,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotat
 #define TFT_DC 27 // GFX_NOT_DEFINED for display without DC pin (9-bit SPI)
 #define TFT_RST 33
 #define TFT_BL 22
-#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2)
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
 #define TFT_CS 34 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 26
 #define TFT_RST 33
@@ -146,7 +151,7 @@ Arduino_DataBus *bus = new Arduino_NRFXSPI(TFT_DC, TFT_CS, 13 /* SCK */, 11 /* M
 Arduino_DataBus *bus = new Arduino_RPiPicoSPI(TFT_DC, TFT_CS, PIN_SPI0_SCK /* SCK */, PIN_SPI0_MOSI /* MOSI */, PIN_SPI0_MISO /* MISO */, spi0 /* spi */);
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, GFX_NOT_DEFINED /* MISO */, VSPI /* spi_num */);
-#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2)
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 36 /* SCK */, 35 /* MOSI */, GFX_NOT_DEFINED /* MISO */, HSPI /* spi_num */);
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 4 /* SCK */, 6 /* MOSI */, GFX_NOT_DEFINED /* MISO */, FSPI /* spi_num */);

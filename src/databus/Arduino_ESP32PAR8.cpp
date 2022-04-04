@@ -4,7 +4,7 @@
  */
 #include "Arduino_ESP32PAR8.h"
 
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
 
 Arduino_ESP32PAR8::Arduino_ESP32PAR8(
     int8_t dc, int8_t cs, int8_t wr, int8_t rd,
@@ -345,4 +345,4 @@ INLINE void Arduino_ESP32PAR8::CS_LOW(void)
   *_csPortClr = _csPinMask;
 }
 
-#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
