@@ -270,6 +270,7 @@ void loop()
         }
         else
         {
+          offset = (channel - 1) * channel_width;
           if ((offset + text_width) > w)
           {
             offset = w - text_width;

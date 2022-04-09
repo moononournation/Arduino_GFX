@@ -90,7 +90,7 @@ void setup()
   // init LCD
   gfx->begin();
   gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
-  gfx->setFont(u8g2_font_unifont_t_chinese);
+  gfx->setFont(u8g2_font_unifont_t_cjk);
 
   w = gfx->width();
   h = gfx->height();
@@ -105,7 +105,7 @@ void setup()
   gfx->setTextSize(text_size);
   gfx->fillScreen(BLACK);
   gfx->setTextColor(RED);
-  gfx->setCursor(0, 26);
+  gfx->setCursor(0, 28);
   gfx->print("ESP");
   gfx->setTextColor(WHITE);
   gfx->print(" WiFi分析儀");
@@ -151,7 +151,7 @@ void loop()
   if (n == 0)
   {
     gfx->setTextColor(WHITE);
-    gfx->setCursor(0, banner_height + 13);
+    gfx->setCursor(0, banner_height + 14);
     gfx->println("找不到WiFi");
   }
   else
@@ -256,7 +256,7 @@ void loop()
         {
           ssid = WiFi.BSSIDstr(i);
         }
-        text_width = (ssid.length() + 6) * 6;
+        text_width = (ssid.length() + 6) * 8;
         if (text_width > w)
         {
           offset = 0;
@@ -289,7 +289,7 @@ void loop()
 
   // print WiFi stat
   gfx->setTextColor(WHITE);
-  gfx->setCursor(0, banner_height + 13);
+  gfx->setCursor(0, banner_height + 14);
   gfx->print("找到");
   gfx->print(n);
   gfx->print("個WiFi，訊噪比較好：");
@@ -330,11 +330,11 @@ void loop()
     idx = channel - 1;
     offset = (channel + 1) * channel_width;
     gfx->setTextColor(channel_color[idx]);
-    gfx->setCursor(offset - ((channel < 10) ? 4 : 8), graph_baseline + 1 + 13);
+    gfx->setCursor(offset - ((channel < 10) ? 4 : 8), graph_baseline + 14);
     gfx->print(channel);
     if (ap_count_list[idx] > 0)
     {
-      gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 12 : 16), graph_baseline + 16 + 1 + 13);
+      gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 12 : 16), graph_baseline + 16 + 14);
       gfx->print('{');
       gfx->print(ap_count_list[idx]);
       gfx->print('}');
