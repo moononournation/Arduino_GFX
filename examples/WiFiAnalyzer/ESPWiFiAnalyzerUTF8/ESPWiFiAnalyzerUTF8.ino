@@ -90,7 +90,7 @@ void setup()
   // init LCD
   gfx->begin();
   gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
-  gfx->setFont(u8g2_font_unifont_t_chinese3);
+  gfx->setFont(u8g2_font_unifont_t_chinese);
 
   w = gfx->width();
   h = gfx->height();
@@ -108,7 +108,7 @@ void setup()
   gfx->setCursor(0, 26);
   gfx->print("ESP");
   gfx->setTextColor(WHITE);
-  gfx->print(" WiFi搜索器");
+  gfx->print(" WiFi分析儀");
 }
 
 bool matchBssidPrefix(uint8_t *a, uint8_t *b)
@@ -290,9 +290,9 @@ void loop()
   // print WiFi stat
   gfx->setTextColor(WHITE);
   gfx->setCursor(0, banner_height + 13);
-  gfx->print("找到WiFi: ");
+  gfx->print("找到");
   gfx->print(n);
-  gfx->print(", 少用: ");
+  gfx->print("個WiFi，訊噪比較好：");
   bool listed_first_channel = false;
   int32_t min_noise = noise_list[0];          // init with channel 1 value
   for (channel = 2; channel <= 11; channel++) // channels 12-14 may not available
