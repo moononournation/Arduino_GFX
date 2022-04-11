@@ -9,9 +9,8 @@ Arduino_ST7735::Arduino_ST7735(
     bool ips, int16_t w, int16_t h,
     uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2,
     bool bgr)
-    : Arduino_TFT(bus, rst, r, ips, w, h, col_offset1, row_offset1, col_offset2, row_offset2)
+    : Arduino_TFT(bus, rst, r, ips, w, h, col_offset1, row_offset1, col_offset2, row_offset2), _bgr(bgr)
 {
-  _bgr = bgr;
 }
 
 void Arduino_ST7735::begin(int32_t speed)
