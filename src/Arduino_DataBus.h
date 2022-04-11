@@ -157,7 +157,7 @@ public:
 
     void unused() { UNUSED(_data16); } // avoid compiler warning
 
-    virtual void begin(int32_t speed, int8_t dataMode = GFX_NOT_DEFINED) = 0;
+    virtual void begin(int32_t speed = SPI_DEFAULT_FREQ, int8_t dataMode = GFX_NOT_DEFINED) = 0;
     virtual void beginWrite() = 0;
     virtual void endWrite() = 0;
     virtual void writeCommand(uint8_t c) = 0;
