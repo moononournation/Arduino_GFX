@@ -12,6 +12,7 @@
 #include <Arduino_GFX_Library.h>
 
 // #define ESP32_LCDKIT_SPI
+// #define ESP32_S3_RGB
 // #define ESP32_S3_EYE
 // #define MAKERFABS_TFT_TOUCH_3_5
 // #define TTGO_T_DISPLAY
@@ -20,6 +21,17 @@
 #define TFT_BL 23
 Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 5 /* CS */, 22 /* SCK */, 21 /* MOSI */, 27 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
+
+#elif defined(ESP32_S3_RGB)
+#define TFT_BL 38
+Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
+  39 /* CS */, 48 /* SCK */, 47 /* SDA */,
+  18 /* DE */, 17 /* VSYNC */, 16 /* HSYNC */, 21 /* PCLK */,
+  4 /* R0 */, 3 /* R1 */, 2 /* R2 */, 1 /* R3 */, 0 /* R4 */,
+  10 /* G0 */, 9 /* G1 */, 8 /* G2 */, 7 /* G3 */, 6 /* G4 */, 5 /* G5 */,
+  15 /* B0 */, 14 /* B1 */, 13 /* B2 */, 12 /* B3 */, 11 /* B4 */
+);
+Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(bus, GFX_NOT_DEFINED, 480, 480);
 
 #elif defined(ESP32_S3_EYE)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(43 /* DC */, 44 /* CS */, 21 /* SCK */, 47 /* MOSI */, GFX_NOT_DEFINED /* MISO */);

@@ -14,7 +14,6 @@ This library start rewrite from Adafruit_GFX, LovyanGFX, TFT_eSPI, Ucglib, and m
 
 ## Ease of use
 #### Simple Declaration
-(not require touch the header files in libraries folder)
 ```C
 #include <Arduino_GFX_Library.h>
 Arduino_DataBus *bus = new Arduino_HWSPI(16 /* DC */, 5 /* CS */);
@@ -22,7 +21,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, 17 /* RST */);
 ```
 
 #### And Simple Usage
-```
+```C
 gfx->begin();
 gfx->fillScreen(BLACK);
 gfx->setCursor(10, 10);
@@ -31,28 +30,31 @@ gfx->println("Hello World!");
 ```
 
 ## U8g2 Font Support
-[[U8g2](https://github.com/olikraus/u8g2.git)] proivided various font type and stored in compressed format. So U8g2 font gives more UI design possibilities and still can fit in the MCU limited storage space. Using U8g2 font in Arduino_GFX simply include U8g2lib.h before Arduino_GFX_Library.h:
-```
+[U8g2](https://github.com/olikraus/u8g2.git) proivided various font type and stored in compressed format. So U8g2 font gives more UI design possibilities and still can fit in the MCU limited storage space. Using U8g2 font in Arduino_GFX simply include U8g2lib.h before Arduino_GFX_Library.h:
+```C
 #include <U8g2lib.h>
 #include <Arduino_GFX_Library.h>
 ```
+
 And then setfont file to use:
-```
+```C
 gfx->setCursor(10, 20);
 gfx->setFont(u8g2_font_maniac_tr);
 gfx->println("Hello World!");
 ```
+
 U8g2 font list can be found at: https://github.com/olikraus/u8g2/wiki/fntlistall
 
 ### U8g2 Font UTF8 Support
 Another U8g2 font advantage is the font support Unicode glyphs. Simply enable setUTF8Print:
-```
+```C
     gfx->begin();
     gfx->fillScreen(BLACK);
     gfx->setUTF8Print(true);
 ```
+
 And then print UTF8 string as usual:
-```
+```C
     gfx->setCursor(0, 16);
 
     gfx->setFont(u8g2_font_unifont_tr);
@@ -75,13 +77,14 @@ And then print UTF8 string as usual:
 ```
 U8g2 Unifont list can be found at: https://github.com/olikraus/u8g2/wiki/fntgrpunifont
 
-Besides U8g2 generated font, Arduino_GFX also generated some useful font set from latest [unifont_jp-14.0.02](http://unifoundry.com/pub/unifont/unifont-14.0.02/font-builds/unifont_jp-14.0.02.bdf.gz)]:
+### Extra Fonts
+Besides U8g2 generated font, Arduino_GFX also generated some useful font set from latest [unifont_jp-14.0.02](http://unifoundry.com/pub/unifont/unifont-14.0.02/font-builds/unifont_jp-14.0.02.bdf.gz):
 
 #### u8g2_font_unifont_h_utf8
  * Glyphs: 57389/57389
  * Size: 2,250,360
  * Generation script:
-```
+```console
 u8g2/tools/font/bdfconv/./bdfconv -v -f 1 -b 1 -m "0-1114111" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_h_utf8.h -n u8g2_font_unifont_h_utf8
 ```
 
@@ -89,7 +92,7 @@ u8g2/tools/font/bdfconv/./bdfconv -v -f 1 -b 1 -m "0-1114111" unifont_jp-14.0.02
  * Glyphs: 22145/57389
  * Size: 1,024,137
  * Generation script:
-```
+```console
 u8g2/tools/font/bdfconv/bdfconv -v -f 1 -b 1 -m "32-127,11904-12351,19968-40959,63744-64255,65280-65376" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese.h -n u8g2_font_unifont_t_chinese
 ```
 
@@ -97,7 +100,7 @@ u8g2/tools/font/bdfconv/bdfconv -v -f 1 -b 1 -m "32-127,11904-12351,19968-40959,
  * Glyphs: 41667/57389
  * Size: 1,718,037
  * Generation script:
-```
+```console
  u8g2/tools/font/bdfconv/bdfconv -v -f 1 -m "32-127,4352-4607,11904-12255,12288-19903,19968-40943,43360-43391,44032-55203,55216-55295,63744-64255,65072-65103,65280-65519,110592-110959,127488-127743,131072-173791" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_cjk.h -n u8g2_font_unifont_t_cjk
 ```
 
@@ -153,6 +156,7 @@ Some larger display require 3-bit SPI + RGB combo interface, i.e. require more t
 - 8-bit and 9-bit software SPI (SWSPI)
 - 8-bit parallel interface (AVRPAR8, ESP32PAR8, ESP32S2PAR8, RPiPicoPAR8, RTLPAR8)
 - 16-bit parallel interface (ESP32PAR16, ESP32S2PAR8, RPiPicoPAR16)
+- RGB565+SPI interface (ESP32RGBPanel)
 
 ## Tobe Support data bus (Sponsors can make it happen)
 - ESP32 I2S 8-bit/16-bit parallel interface
@@ -177,7 +181,6 @@ Some larger display require 3-bit SPI + RGB combo interface, i.e. require more t
 
 ## Tobe Support Dev Board (Sponsors can make it happen)
 - Arduino ATMega2560
-- ESP32-S3 Series
 
 ## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
 - ESP32 LCDKIT
@@ -221,6 +224,7 @@ Some larger display require 3-bit SPI + RGB combo interface, i.e. require more t
 - ST7735 128x160 (various tabs) [[demo video](https://youtu.be/eRBSSD_N9II)]
 - ST7735 128x128 (various tabs) [[demo video](https://youtu.be/6rueSV2Ee6c)]
 - ST7735 80x160 [[demo video](https://youtu.be/qESHDuYo_Mk)]
+- ST7701 480x480 [[demo video]()]
 - ST7789 TTGO T-Display 135x240 [[demo video](https://youtu.be/Zk81_T8c20E)]
 - ST7789 240x240 [[demo video](https://youtu.be/Z27zYg5uAsk)]
 - ST7789 TTGO T-Watch 240x240 [[demo video](https://youtu.be/9AqsXMB8Qbk)]
@@ -240,7 +244,6 @@ Some larger display require 3-bit SPI + RGB combo interface, i.e. require more t
 - Canvas_Mono (1/16 memory space framebuffer)
 
 ## Feature wishlist (Sponsors can make it happen)
-- Print UTF8 Characters
 - Print color Emoji Characters
 - Load bitmap font files from flash / SD
 - Fill Gradient
@@ -255,6 +258,7 @@ Some larger display require 3-bit SPI + RGB combo interface, i.e. require more t
 - https://github.com/Bodmer/TFT_eSPI.git
 - https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test.git
 - https://github.com/espressif/arduino-esp32.git
+- https://github.com/espressif/esp-idf.git
 - https://github.com/gitcnd/LCDWIKI_SPI.git
 - https://github.com/hi631/LCD_NT35510-MRB3971.git
 - https://github.com/lcdwiki/LCDWIKI_SPI.git
