@@ -285,9 +285,9 @@ void Arduino_GFX::writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16
                                           uint16_t color)
 {
   // Overwrite in subclasses if desired!
-  for (int16_t i = x; i < x + w; i++)
+  for (int16_t i = y; i < y + h; i++)
   {
-    writeFastVLine(i, y, h, color);
+    writeFastHLine(x, i, w, color);
   }
 }
 
