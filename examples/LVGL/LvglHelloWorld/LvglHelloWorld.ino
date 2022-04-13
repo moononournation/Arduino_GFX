@@ -1,15 +1,20 @@
 /*******************************************************************************
  * LVGL Hello World
- * This is a simple examplle for LVGL - Light and Versatile Graphics Library
+ * This is a simple example for LVGL - Light and Versatile Graphics Library
+ * import from: https://github.com/lvgl/lv_demos.git
  *
  * Dependent libraries:
  * LVGL: https://github.com/lvgl/lvgl.git
+ *
+ * Settings in lv_conf.h
+ * #define LV_COLOR_DEPTH     16
+ * #define LV_COLOR_16_SWAP   1
  ******************************************************************************/
 #include <lvgl.h>
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
- * 
+ *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
  * Defalult pin list for non display dev kit:
@@ -75,8 +80,8 @@ void setup()
    gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+   pinMode(GFX_BL, OUTPUT);
+   digitalWrite(GFX_BL, HIGH);
 #endif
 
    lv_init();
