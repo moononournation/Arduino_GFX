@@ -135,10 +135,8 @@ void setup()
   else
   {
     unsigned long start = millis();
-    // read JPEG file header
     jpegDraw(JPEG_FILENAME, jpegDrawCallback, true /* useBigEndian */,
-            0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
-
+             0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
     Serial.printf("Time used: %lu\n", millis() - start);
   }
 
@@ -147,10 +145,15 @@ void setup()
 
 void loop()
 {
+  int w2 = gfx->width() * 2;
+  int h2 = gfx->height() * 2;
+
+  unsigned long start = millis();
   jpegDraw(JPEG_FILENAME, jpegDrawCallback, true /* useBigEndian */,
-          random(gfx->width() * 2) - gfx->width() /* x */,
-          random(gfx->height() * 2) - gfx->height() /* y */,
-          gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
+           random(w2) - gfx->width() /* x */,
+           random(h2) - gfx->height() /* y */,
+           w2 /* widthLimit */, h2 /* heightLimit */);
+  Serial.printf("Time used: %lu\n", millis() - start);
 
   delay(1000);
 }
