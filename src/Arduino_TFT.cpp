@@ -11,18 +11,11 @@ Arduino_TFT::Arduino_TFT(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
     bool ips, int16_t w, int16_t h,
     uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2)
-    : Arduino_GFX(w, h)
+    : Arduino_GFX(w, h), _bus(bus), _rst(rst), _ips(ips),
+      COL_OFFSET1(col_offset1), ROW_OFFSET1(row_offset1),
+      COL_OFFSET2(col_offset2), ROW_OFFSET2(row_offset2)
 {
-  _bus = bus;
-  _rst = rst;
   _rotation = r;
-  _ips = ips;
-  WIDTH = w;
-  HEIGHT = h;
-  COL_OFFSET1 = col_offset1;
-  ROW_OFFSET1 = row_offset1;
-  COL_OFFSET2 = col_offset2;
-  ROW_OFFSET2 = row_offset2;
 }
 
 void Arduino_TFT::begin(int32_t speed)
