@@ -224,7 +224,7 @@ Some larger display require 3-bit SPI + RGB combo interface, i.e. require more t
 - ST7735 128x160 (various tabs) [[demo video](https://youtu.be/eRBSSD_N9II)]
 - ST7735 128x128 (various tabs) [[demo video](https://youtu.be/6rueSV2Ee6c)]
 - ST7735 80x160 [[demo video](https://youtu.be/qESHDuYo_Mk)]
-- ST7701 480x480 [[demo video](https://youtube.com/shorts/laQrNuFesto)]
+- ST7701 480x480 [[demo video](https://youtube.com/shorts/JV8Rzxop5EQ)]
 - ST7789 TTGO T-Display 135x240 [[demo video](https://youtu.be/Zk81_T8c20E)]
 - ST7789 240x240 [[demo video](https://youtu.be/Z27zYg5uAsk)]
 - ST7789 TTGO T-Watch 240x240 [[demo video](https://youtu.be/9AqsXMB8Qbk)]
@@ -245,7 +245,7 @@ Some larger display require 3-bit SPI + RGB combo interface, i.e. require more t
 
 ## LVGL Support
 3 LVGL demo provide in examples folder:
-- LvglBenchmark [[demo video](https://youtu.be/uUQoCpo6EDk)]
+- LvglBenchmark [[demo video](https://youtu.be/75Qx-UEgabY)]
 - LvglHelloWorld
 - LvglWidgets
 
