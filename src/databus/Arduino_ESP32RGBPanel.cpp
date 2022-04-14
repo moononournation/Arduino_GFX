@@ -178,7 +178,7 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
   _panel_config->timings.vsync_back_porch = 20;
   _panel_config->timings.vsync_front_porch = 10;
   _panel_config->timings.vsync_pulse_width = 8;
-  _panel_config->timings.flags.pclk_active_neg = 1; // RGB data is clocked out on falling edge
+  _panel_config->timings.flags.pclk_active_neg = 0; // RGB data is clocked out on falling edge
   _panel_config->flags.fb_in_psram = 1;             // allocate frame buffer in PSRAM
   _panel_config->flags.relax_on_idle = 0;
 
