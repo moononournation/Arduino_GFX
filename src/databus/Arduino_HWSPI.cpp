@@ -52,7 +52,6 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 #if defined(ARDUINO_ARCH_NRF52840)
   uint32_t pin = digitalPinToPinName((pin_size_t)_dc);
   NRF_GPIO_Type *reg = nrf_gpio_pin_port_decode(&pin);
-  nrf_gpio_cfg_output(pin);
   _dcPortSet = &reg->OUTSET;
   _dcPortClr = &reg->OUTCLR;
   _dcPinMask = 1UL << pin;
@@ -60,7 +59,6 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
   {
     pin = digitalPinToPinName((pin_size_t)_cs);
     reg = nrf_gpio_pin_port_decode(&pin);
-    nrf_gpio_cfg_output(pin);
     _csPortSet = &reg->OUTSET;
     _csPortClr = &reg->OUTCLR;
     _csPinMask = 1UL << pin;

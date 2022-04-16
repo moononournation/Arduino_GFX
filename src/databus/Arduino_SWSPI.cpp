@@ -43,7 +43,6 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
   _sckPinMask = 1UL << pin;
   pin = digitalPinToPinName((pin_size_t)_mosi);
   reg = nrf_gpio_pin_port_decode(&pin);
-  nrf_gpio_cfg_output(pin);
   _mosiPortSet = &reg->OUTSET;
   _mosiPortClr = &reg->OUTCLR;
   _mosiPinMask = 1UL << pin;
@@ -51,7 +50,6 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
   {
     pin = digitalPinToPinName((pin_size_t)_dc);
     reg = nrf_gpio_pin_port_decode(&pin);
-    nrf_gpio_cfg_output(pin);
     _dcPortSet = &reg->OUTSET;
     _dcPortClr = &reg->OUTCLR;
     _dcPinMask = 1UL << pin;
@@ -60,7 +58,6 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
   {
     pin = digitalPinToPinName((pin_size_t)_cs);
     reg = nrf_gpio_pin_port_decode(&pin);
-    nrf_gpio_cfg_output(pin);
     _csPortSet = &reg->OUTSET;
     _csPortClr = &reg->OUTCLR;
     _csPinMask = 1UL << pin;
