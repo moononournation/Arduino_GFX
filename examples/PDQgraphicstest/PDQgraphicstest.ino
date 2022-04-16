@@ -174,6 +174,9 @@ Arduino_DataBus *bus = new Arduino_ESP8266SPI(TFT_DC, TFT_CS);
 Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 #endif
 
+// General Software parallel 8-bit
+// Arduino_DataBus *bus = new Arduino_SWPAR8(TFT_DC, TFT_CS, 25 /* WR */, 32 /* RD */, 23 /* D0 */, 19 /* D1 */, 18 /* D2 */, 26 /* D3 */, 21 /* D4 */, 4 /* D5 */, 0 /* D6 */, 2 /* D7 */);
+
 // AVR parallel 8-bit
 // Arduino Pro Micro port 2(PB): 17, 15, 16, 14, 8, 9, 10, 11
 // Arduino_DataBus *bus = new Arduino_AVRPAR8(4 /* DC */, 5 /* CS */, 18 /* WR */, 19 /* RD */, 2 /* PORT */);

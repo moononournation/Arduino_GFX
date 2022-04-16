@@ -24,6 +24,7 @@
 #include "databus/Arduino_RPiPicoSPI.h"
 #include "databus/Arduino_RTLPAR8.h"
 #include "databus/Arduino_STM32PAR8.h"
+#include "databus/Arduino_SWPAR8.h"
 #include "databus/Arduino_SWSPI.h"
 
 #include "Arduino_GFX.h" // Core graphics library
