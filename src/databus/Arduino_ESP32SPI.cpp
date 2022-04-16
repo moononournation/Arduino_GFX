@@ -827,6 +827,7 @@ void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
         WAIT_SPI_NOT_BUSY;
 
         len -= 64;
+        data += 64;
       }
     }
 
