@@ -96,6 +96,17 @@ u8g2/tools/font/bdfconv/./bdfconv -v -f 1 -b 1 -m "0-1114111" unifont_jp-14.0.02
 u8g2/tools/font/bdfconv/bdfconv -v -f 1 -b 1 -m "32-127,11904-12351,19968-40959,63744-64255,65280-65376" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese.h -n u8g2_font_unifont_t_chinese
 ```
 
+#### u8g2_font_unifont_t_chinese4
+ * Glyphs: 7199/57389
+ * Size: 317,663
+ * Traditional Chinese common font list: https://raw.githubusercontent.com/ButTaiwan/cjktables/master/taiwan/edu_standard_1.txt
+ * Simplified Chinese common font list: http://zht.glyphwiki.org/font/gw1197839.source
+ * extra font list: 32-127,11904-12351,63744-64255,65280-65376
+ * Generation script:
+```console
+./bdfconv -v -f 1 -b 1 -M common.txt unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese4.c -n u8g2_font_unifont_t_chinese4
+```
+
 #### u8g2_font_unifont_t_cjk
  * Glyphs: 41667/57389
  * Size: 1,718,037

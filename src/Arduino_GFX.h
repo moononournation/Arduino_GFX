@@ -23,6 +23,7 @@
 #define U8G2_FONT_SUPPORT
 #include "font/u8g2_font_unifont_h_utf8.h"
 #include "font/u8g2_font_unifont_t_chinese.h"
+#include "font/u8g2_font_unifont_t_chinese4.h"
 #include "font/u8g2_font_unifont_t_cjk.h"
 #endif
 
