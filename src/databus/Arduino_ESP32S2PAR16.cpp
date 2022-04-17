@@ -41,12 +41,6 @@ void Arduino_ESP32S2PAR16::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
-  else
-  {
-    _csPinMask = 0;
-    _csPortSet = _dcPortSet;
-    _csPortClr = _dcPortClr;
-  }
 
   pinMode(_wr, OUTPUT);
   digitalWrite(_wr, HIGH); // Set write strobe high (inactive)
@@ -290,12 +284,18 @@ INLINE void Arduino_ESP32S2PAR16::DC_LOW(void)
 
 INLINE void Arduino_ESP32S2PAR16::CS_HIGH(void)
 {
-  *_csPortSet = _csPinMask;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    *_csPortSet = _csPinMask;
+  }
 }
 
 INLINE void Arduino_ESP32S2PAR16::CS_LOW(void)
 {
-  *_csPortClr = _csPinMask;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    *_csPortClr = _csPinMask;
+  }
 }
 
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)

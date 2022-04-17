@@ -34,15 +34,6 @@ void Arduino_ESP8266SPI::begin(int32_t speed, int8_t dataMode)
     _csPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_cs));
     _csPinMaskSet = digitalPinToBitMask(_cs);
   }
-  else
-  {
-    // No chip-select line defined; might be permanently tied to GND.
-    // Assign a valid GPIO register (though not used for CS), and an
-    // empty pin bitmask...the nonsense bit-twiddling might be faster
-    // than checking _cs and possibly branching.
-    _csPort = _dcPort;
-    _csPinMaskSet = 0;
-  }
   _csPinMaskClr = ~_csPinMaskSet;
   _dcPinMaskClr = ~_dcPinMaskSet;
 

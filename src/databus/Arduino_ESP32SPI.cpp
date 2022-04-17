@@ -194,12 +194,6 @@ void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
-  else
-  {
-    _csPinMask = 0;
-    _csPortSet = _dcPortSet;
-    _csPortClr = _dcPortClr;
-  }
 
   // SPI.begin(_sck, _miso, _mosi);
   // _spi = spiStartBus(_spi_num, _div, SPI_MODE0, SPI_MSBFIRST);
@@ -1103,12 +1097,18 @@ INLINE void Arduino_ESP32SPI::DC_LOW(void)
 
 INLINE void Arduino_ESP32SPI::CS_HIGH(void)
 {
-  *_csPortSet = _csPinMask;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    *_csPortSet = _csPinMask;
+  }
 }
 
 INLINE void Arduino_ESP32SPI::CS_LOW(void)
 {
-  *_csPortClr = _csPinMask;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    *_csPortClr = _csPinMask;
+  }
 }
 
 #endif // #if defined(ESP32)

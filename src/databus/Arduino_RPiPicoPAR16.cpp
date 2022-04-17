@@ -19,10 +19,6 @@ void Arduino_RPiPicoPAR16::begin(int32_t speed, int8_t dataMode)
     digitalWrite(_cs, HIGH); // disable chip select
     _csPinMask = digitalPinToBitMask(_cs);
   }
-  else
-  {
-    _csPinMask = 0;
-  }
 
   pinMode(_wr, OUTPUT);
   digitalWrite(_wr, HIGH); // Set write strobe high (inactive)
@@ -232,12 +228,18 @@ INLINE void Arduino_RPiPicoPAR16::DC_LOW(void)
 
 INLINE void Arduino_RPiPicoPAR16::CS_HIGH(void)
 {
-  sio_hw->gpio_set = _csPinMask;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    sio_hw->gpio_set = _csPinMask;
+  }
 }
 
 INLINE void Arduino_RPiPicoPAR16::CS_LOW(void)
 {
-  sio_hw->gpio_clr = _csPinMask;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    sio_hw->gpio_clr = _csPinMask;
+  }
 }
 
 #endif // #ifdef ARDUINO_RASPBERRY_PI_PICO

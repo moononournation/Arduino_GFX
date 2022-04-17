@@ -123,16 +123,6 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&sio_hw->gpio_set;
     _csPortClr = (PORTreg_t)&sio_hw->gpio_clr;
   }
-  else
-  {
-    // No chip-select line defined; might be permanently tied to GND.
-    // Assign a valid GPIO register (though not used for CS), and an
-    // empty pin bitmask...the nonsense bit-twiddling might be faster
-    // than checking _cs and possibly branching.
-    _csPortSet = (PORTreg_t)_dcPortSet;
-    _csPortClr = (PORTreg_t)_dcPortClr;
-    _csPinMask = 0;
-  }
   _wrPinMask = digitalPinToBitMask(_wr);
   _wrPortSet = (PORTreg_t)&sio_hw->gpio_set;
   _wrPortClr = (PORTreg_t)&sio_hw->gpio_clr;
@@ -141,12 +131,6 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
     _rdPinMask = digitalPinToBitMask(_rd);
     _rdPortSet = (PORTreg_t)&sio_hw->gpio_set;
     _rdPortClr = (PORTreg_t)&sio_hw->gpio_clr;
-  }
-  else
-  {
-    _rdPortSet = (PORTreg_t)_dcPortSet;
-    _rdPortClr = (PORTreg_t)_dcPortClr;
-    _rdPinMask = 0;
   }
   _d0PinMask = digitalPinToBitMask(_d0);
   _d0PortSet = (PORTreg_t)&sio_hw->gpio_set;
@@ -182,16 +166,6 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
-  else
-  {
-    // No chip-select line defined; might be permanently tied to GND.
-    // Assign a valid GPIO register (though not used for CS), and an
-    // empty pin bitmask...the nonsense bit-twiddling might be faster
-    // than checking _cs and possibly branching.
-    _csPortSet = _dcPortSet;
-    _csPortClr = _dcPortClr;
-    _csPinMask = 0;
-  }
   _wrPinMask = digitalPinToBitMask(_wr);
   _wrPortSet = (PORTreg_t)&GPIO.out_w1ts;
   _wrPortClr = (PORTreg_t)&GPIO.out_w1tc;
@@ -200,12 +174,6 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
     _rdPinMask = digitalPinToBitMask(_rd);
     _rdPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _rdPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  }
-  else
-  {
-    _rdPortSet = _dcPortSet;
-    _rdPortClr = _dcPortClr;
-    _rdPinMask = 0;
   }
   _d0PinMask = digitalPinToBitMask(_d0);
   _d0PortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -255,16 +223,6 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
-  else
-  {
-    // No chip-select line defined; might be permanently tied to GND.
-    // Assign a valid GPIO register (though not used for CS), and an
-    // empty pin bitmask...the nonsense bit-twiddling might be faster
-    // than checking _cs and possibly branching.
-    _csPortSet = (PORTreg_t)_dcPortSet;
-    _csPortClr = (PORTreg_t)_dcPortClr;
-    _csPinMask = 0;
-  }
   _wrPinMask = digitalPinToBitMask(_wr);
   if (_wr >= 32)
   {
@@ -287,12 +245,6 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
     _rdPinMask = digitalPinToBitMask(_rd);
     _rdPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _rdPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  }
-  else
-  {
-    _rdPortSet = (PORTreg_t)_dcPortSet;
-    _rdPortClr = (PORTreg_t)_dcPortClr;
-    _rdPinMask = 0;
   }
   _d0PinMask = digitalPinToBitMask(_d0);
   if (_d0 >= 32)
@@ -396,14 +348,6 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
     _csPortSet = portSetRegister(_cs);
     _csPortClr = portClearRegister(_cs);
   }
-  else
-  {
-#if !defined(KINETISK)
-    _csPinMask = 0;
-#endif
-    _csPortSet = _dcPortSet;
-    _csPortClr = _dcPortClr;
-  }
 #if !defined(KINETISK)
   _wrPinMask = digitalPinToBitMask(_wr);
 #endif
@@ -416,14 +360,6 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
 #endif
     _rdPortSet = portSetRegister(_rd);
     _rdPortClr = portClearRegister(_rd);
-  }
-  else
-  {
-#if !defined(KINETISK)
-    _rdPinMask = 0;
-#endif
-    _rdPortSet = _dcPortSet;
-    _rdPortClr = _dcPortClr;
   }
 #if !defined(KINETISK)
   _d0PinMask = digitalPinToBitMask(_d0);
@@ -475,16 +411,6 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
     _csPortSet = &(PORT->Group[g_APinDescription[_cs].ulPort].OUTSET.reg);
     _csPortClr = &(PORT->Group[g_APinDescription[_cs].ulPort].OUTCLR.reg);
   }
-  else
-  {
-    // No chip-select line defined; might be permanently tied to GND.
-    // Assign a valid GPIO register (though not used for CS), and an
-    // empty pin bitmask...the nonsense bit-twiddling might be faster
-    // than checking _cs and possibly branching.
-    _csPortSet = _dcPortSet;
-    _csPortClr = _dcPortClr;
-    _csPinMask = 0;
-  }
   _wrPinMask = digitalPinToBitMask(_wr);
   _wrPortSet = &(PORT->Group[g_APinDescription[_wr].ulPort].OUTSET.reg);
   _wrPortClr = &(PORT->Group[g_APinDescription[_wr].ulPort].OUTCLR.reg);
@@ -493,12 +419,6 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
     _rdPinMask = digitalPinToBitMask(_rd);
     _rdPortSet = &(PORT->Group[g_APinDescription[_rd].ulPort].OUTSET.reg);
     _rdPortClr = &(PORT->Group[g_APinDescription[_rd].ulPort].OUTCLR.reg);
-  }
-  else
-  {
-    _rdPortSet = _dcPortSet;
-    _rdPortClr = _dcPortClr;
-    _rdPinMask = 0;
   }
   _d0PinMask = digitalPinToBitMask(_d0);
   _d0PortSet = &(PORT->Group[g_APinDescription[_d0].ulPort].OUTSET.reg);
@@ -528,60 +448,45 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
 #else  // !HAS_PORT_SET_CLR
   _dcPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_dc));
   _dcPinMaskSet = digitalPinToBitMask(_dc);
+  _dcPinMaskClr = ~_dcPinMaskSet;
   if (_cs != GFX_NOT_DEFINED)
   {
     _csPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_cs));
     _csPinMaskSet = digitalPinToBitMask(_cs);
-  }
-  else
-  {
-    // No chip-select line defined; might be permanently tied to GND.
-    // Assign a valid GPIO register (though not used for CS), and an
-    // empty pin bitmask...the nonsense bit-twiddling might be faster
-    // than checking _cs and possibly branching.
-    _csPort = _dcPort;
-    _csPinMaskSet = 0;
+  _csPinMaskClr = ~_csPinMaskSet;
   }
   _wrPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_wr));
   _wrPinMaskSet = digitalPinToBitMask(_wr);
+  _wrPinMaskClr = ~_wrPinMaskSet;
   if (_rd != GFX_NOT_DEFINED)
   {
     _rdPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_rd));
     _rdPinMaskSet = digitalPinToBitMask(_rd);
-  }
-  else
-  {
-    _rdPort = _dcPort;
-    _rdPinMaskSet = 0;
+  _rdPinMaskClr = ~_rdPinMaskSet;
   }
   _d0Port = (PORTreg_t)portOutputRegister(digitalPinToPort(_d0));
   _d0PinMaskSet = digitalPinToBitMask(_d0);
+  _d0PinMaskClr = ~_d0PinMaskSet;
   _d1Port = (PORTreg_t)portOutputRegister(digitalPinToPort(_d1));
   _d1PinMaskSet = digitalPinToBitMask(_d1);
+  _d1PinMaskClr = ~_d1PinMaskSet;
   _d2Port = (PORTreg_t)portOutputRegister(digitalPinToPort(_d2));
   _d2PinMaskSet = digitalPinToBitMask(_d2);
+  _d2PinMaskClr = ~_d2PinMaskSet;
   _d3Port = (PORTreg_t)portOutputRegister(digitalPinToPort(_d3));
   _d3PinMaskSet = digitalPinToBitMask(_d3);
+  _d3PinMaskClr = ~_d3PinMaskSet;
   _d4Port = (PORTreg_t)portOutputRegister(digitalPinToPort(_d4));
   _d4PinMaskSet = digitalPinToBitMask(_d4);
+  _d4PinMaskClr = ~_d4PinMaskSet;
   _d5Port = (PORTreg_t)portOutputRegister(digitalPinToPort(_d5));
   _d5PinMaskSet = digitalPinToBitMask(_d5);
+  _d5PinMaskClr = ~_d5PinMaskSet;
   _d6Port = (PORTreg_t)portOutputRegister(digitalPinToPort(_d6));
   _d6PinMaskSet = digitalPinToBitMask(_d6);
+  _d6PinMaskClr = ~_d6PinMaskSet;
   _d7Port = (PORTreg_t)portOutputRegister(digitalPinToPort(_d7));
   _d7PinMaskSet = digitalPinToBitMask(_d7);
-
-  _dcPinMaskClr = ~_dcPinMaskSet;
-  _csPinMaskClr = ~_csPinMaskSet;
-  _wrPinMaskClr = ~_wrPinMaskSet;
-  _rdPinMaskClr = ~_rdPinMaskSet;
-  _d0PinMaskClr = ~_d0PinMaskSet;
-  _d1PinMaskClr = ~_d1PinMaskSet;
-  _d2PinMaskClr = ~_d2PinMaskSet;
-  _d3PinMaskClr = ~_d3PinMaskSet;
-  _d4PinMaskClr = ~_d4PinMaskSet;
-  _d5PinMaskClr = ~_d5PinMaskSet;
-  _d6PinMaskClr = ~_d6PinMaskSet;
   _d7PinMaskClr = ~_d7PinMaskSet;
 #endif // !HAS_PORT_SET_CLR
 #endif // USE_FAST_PINIO

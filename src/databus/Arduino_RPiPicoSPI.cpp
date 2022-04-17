@@ -208,12 +208,18 @@ INLINE void Arduino_RPiPicoSPI::DC_LOW(void)
 
 INLINE void Arduino_RPiPicoSPI::CS_HIGH(void)
 {
-  *_csPortSet = _csPinMask;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    *_csPortSet = _csPinMask;
+  }
 }
 
 INLINE void Arduino_RPiPicoSPI::CS_LOW(void)
 {
-  *_csPortClr = _csPinMask;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    *_csPortClr = _csPinMask;
+  }
 }
 
 #endif // #ifdef ARDUINO_RASPBERRY_PI_PICO

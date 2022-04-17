@@ -24,11 +24,7 @@ void Arduino_STM32PAR8::begin(int32_t speed, int8_t dataMode)
     _csPinMaskSet = digitalPinToBitMask(_cs);
     _csPORT = digitalPinToPort(_cs);
   }
-  else
-  {
-    _csPinMaskSet = 0;
-  }
-  
+
   pinMode(_wr, OUTPUT);
   digitalWrite(_wr, HIGH); // Set write strobe high (inactive)
   _wrPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_wr));
@@ -47,8 +43,8 @@ void Arduino_STM32PAR8::begin(int32_t speed, int8_t dataMode)
     _rdPinMaskSet = 0;
   }
 
-  *(portModeRegister(_port)) = 0x33333333;  // Set data port to output at max speed
-  _port->BSRR = 0xFF << 16; //Clear data port
+  *(portModeRegister(_port)) = 0x33333333; // Set data port to output at max speed
+  _port->BSRR = 0xFF << 16;                // Clear data port
 }
 
 void Arduino_STM32PAR8::beginWrite()
@@ -222,8 +218,8 @@ INLINE void Arduino_STM32PAR8::WRITE(uint8_t d)
 {
   _port->BSRR = 0xFF << 16;
   _port->BSRR = (d)&0xFF;
-  _wrPORT->BSRR = _wrPinMaskSet << 16;  //Set WR LOW
-  _wrPORT->BSRR = _wrPinMaskSet;  //Set WR HIGH
+  _wrPORT->BSRR = _wrPinMaskSet << 16; // Set WR LOW
+  _wrPORT->BSRR = _wrPinMaskSet;       // Set WR HIGH
 }
 
 /******** low level bit twiddling **********/
@@ -240,12 +236,18 @@ INLINE void Arduino_STM32PAR8::DC_LOW(void)
 
 INLINE void Arduino_STM32PAR8::CS_HIGH(void)
 {
-  _csPORT->BSRR = _csPinMaskSet;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    _csPORT->BSRR = _csPinMaskSet;
+  }
 }
 
 INLINE void Arduino_STM32PAR8::CS_LOW(void)
 {
-  _csPORT->BSRR = _csPinMaskSet << 16;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    _csPORT->BSRR = _csPinMaskSet << 16;
+  }
 }
 
 #endif // #ifdef ARDUINO_ARCH_STM32
