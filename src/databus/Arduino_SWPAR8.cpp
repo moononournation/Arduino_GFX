@@ -789,10 +789,9 @@ INLINE void Arduino_SWPAR8::WRITEREPEAT(uint16_t p, uint32_t len)
   if (_data16.msb == _data16.lsb)
   {
     WRITE(_data16.msb);
+    len <<= 1;
     while (--len)
     {
-      WR_LOW();
-      WR_HIGH();
       WR_LOW();
       WR_HIGH();
     }
