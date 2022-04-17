@@ -65,12 +65,12 @@ protected:
 
   Arduino_DataBus *_bus;
   int8_t _rst;
+  bool _ips;
   uint8_t COL_OFFSET1, ROW_OFFSET1;
   uint8_t COL_OFFSET2, ROW_OFFSET2;
   uint8_t _xStart, _yStart;
   int16_t _currentX, _currentY;
   uint16_t _currentW, _currentH;
-  bool _ips;
   int8_t _override_datamode = GFX_NOT_DEFINED;
 
 private:
