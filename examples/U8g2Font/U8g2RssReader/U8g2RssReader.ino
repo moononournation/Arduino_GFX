@@ -3,7 +3,7 @@
  * This is a simple RSS Reader sample with UTF-8 support
  *
  * Setup steps:
- * 1. Fill your own SSID_NAME, SSID_PASSWORD, RSS_HOST, RSS_PATH
+ * 1. Fill your own SSID_NAME, SSID_PASSWORD, RSS_HOST, RSS_PORT, RSS_PATH
  * 2. Change your LCD parameters in Arduino_GFX setting
  ******************************************************************************/
 
@@ -11,6 +11,7 @@
 #define SSID_NAME "YourAP"
 #define SSID_PASSWORD "PleaseInputYourPasswordHere"
 #define RSS_HOST "rss.weather.gov.hk"
+#define RSS_PORT 80
 #define RSS_PATH "/rss/LocalWeatherForecast_uc.xml"
 
 /*******************************************************************************
@@ -120,7 +121,7 @@ void loop(void)
 #if defined(ESP32) || defined(ESP8266)
         HTTPClient http;
 
-        if (http.begin(RSS_HOST, RSS_PATH))
+        if (http.begin(RSS_HOST, RSS_PORT, RSS_PATH))
         {
             printf("[HTTP] GET...\n");
             // start connection and send HTTP header
@@ -150,7 +151,7 @@ void loop(void)
         {
             printf("[HTTP] GET...\n");
             // start connection and send HTTP header
-            int err = http.get(RSS_HOST, RSS_PATH);
+            int err = http.get(RSS_HOST, RSS_PORT, RSS_PATH);
             if (err == 0)
             {
                 if (true)
