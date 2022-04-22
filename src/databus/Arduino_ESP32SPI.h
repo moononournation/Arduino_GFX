@@ -22,9 +22,12 @@
 
 #define SPI_MAX_PIXELS_AT_ONCE 32
 
-#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2)
+#if (CONFIG_IDF_TARGET_ESP32)
 #define MOSI_BIT_LEN _spi->dev->mosi_dlen.usr_mosi_dbitlen
 #define MISO_BIT_LEN _spi->dev->miso_dlen.usr_miso_dbitlen
+#elif (CONFIG_IDF_TARGET_ESP32S2)
+#define MOSI_BIT_LEN _spi->dev->mosi_dlen.usr_mosi_bit_len
+#define MISO_BIT_LEN _spi->dev->miso_dlen.usr_miso_bit_len
 #elif (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3)
 #define MOSI_BIT_LEN _spi->dev->ms_dlen.ms_data_bitlen
 #define MISO_BIT_LEN _spi->dev->ms_dlen.ms_data_bitlen
