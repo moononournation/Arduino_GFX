@@ -389,9 +389,9 @@ void Arduino_ST7701_RGBPanel::draw16bitBeRGBBitmap(int16_t x, int16_t y,
             {
                 row[i] = *bitmap++;
             }
-            Cache_WriteBack_Addr((uint32_t)row, w * 2);
             row += WIDTH;
         }
+        Cache_WriteBack_Addr((uint32_t)_framebuffer + (y * WIDTH), WIDTH * h * 2);
     }
 }
 
