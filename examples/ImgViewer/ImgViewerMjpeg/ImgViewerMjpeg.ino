@@ -187,10 +187,9 @@ void setup()
             &mjpegFile, mjpeg_buf, jpegDrawCallback, true /* useBigEndian */,
             0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
 
-        while (mjpegFile.available())
+        while (mjpegFile.available() && mjpeg.readMjpegBuf())
         {
           // Read video
-          mjpeg.readMjpegBuf();
           total_read_video += millis() - curr_ms;
           curr_ms = millis();
 
