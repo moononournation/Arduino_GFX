@@ -251,7 +251,7 @@ void Arduino_ST7701_RGBPanel::begin(int32_t speed)
     _bus->sendCommand(0x29); // Display On
     delay(50);
 
-    _framebuffer = _bus->getFrameBuffer(WIDTH, HEIGHT);
+    _framebuffer = _bus->getFrameBuffer(_width, _height);
 }
 
 void Arduino_ST7701_RGBPanel::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
@@ -345,15 +345,70 @@ void Arduino_ST7701_RGBPanel::writeFillRectPreclipped(int16_t x, int16_t y,
 {
     uint16_t *row = _framebuffer;
     row += x;
-    row += y * WIDTH;
+    row += y * _width;
     for (int j = 0; j < h; j++)
     {
         for (int i = 0; i < w; i++)
         {
             MSB_16_SET(row[i], color);
         }
-        Cache_WriteBack_Addr((uint32_t)row, w * 2);
-        row += WIDTH;
+        row += _width;
+    }
+    Cache_WriteBack_Addr((uint32_t)_framebuffer + (y * _width), _width * h * 2);
+}
+
+void Arduino_ST7701_RGBPanel::draw16bitRGBBitmap(int16_t x, int16_t y,
+                                                 uint16_t *bitmap, int16_t w, int16_t h)
+{
+    if (
+        ((x + w - 1) < 0) || // Outside left
+        ((y + h - 1) < 0) || // Outside top
+        (x > _max_x) ||      // Outside right
+        (y > _max_y)         // Outside bottom
+    )
+    {
+        return;
+    }
+    else
+    {
+        int16_t xskip = 0;
+        if ((y + h - 1) > _max_y)
+        {
+            h -= (y + h - 1) - _max_y;
+        }
+        if (y < 0)
+        {
+            bitmap -= y * w;
+            h += y;
+            y = 0;
+        }
+        if ((x + w - 1) > _max_x)
+        {
+            xskip = (x + w - 1) - _max_x;
+            w -= xskip;
+        }
+        if (x < 0)
+        {
+            bitmap -= x;
+            xskip -= x;
+            w += x;
+            x = 0;
+        }
+        uint16_t *row = _framebuffer;
+        uint16_t color;
+        row += x;
+        row += y * _width;
+        for (int j = 0; j < h; j++)
+        {
+            for (int i = 0; i < w; i++)
+            {
+                color = *bitmap++;
+                MSB_16_SET(row[i], color);
+            }
+            bitmap += xskip;
+            row += _width;
+        }
+        Cache_WriteBack_Addr((uint32_t)(_framebuffer + (y * _width)), _width * h * 2);
     }
 }
 
@@ -369,29 +424,44 @@ void Arduino_ST7701_RGBPanel::draw16bitBeRGBBitmap(int16_t x, int16_t y,
     {
         return;
     }
-    else if (
-        (x < 0) ||                // Clip left
-        (y < 0) ||                // Clip top
-        ((x + w - 1) > _max_x) || // Clip right
-        ((y + h - 1) > _max_y)    // Clip bottom
-    )
-    {
-        Arduino_GFX::draw16bitBeRGBBitmap(x, y, bitmap, w, h);
-    }
     else
     {
+        int16_t xskip = 0;
+        if ((y + h - 1) > _max_y)
+        {
+            h -= (y + h - 1) - _max_y;
+        }
+        if (y < 0)
+        {
+            bitmap -= y * w;
+            h += y;
+            y = 0;
+        }
+        if ((x + w - 1) > _max_x)
+        {
+            xskip = (x + w - 1) - _max_x;
+            w -= xskip;
+        }
+        if (x < 0)
+        {
+            bitmap -= x;
+            xskip -= x;
+            w += x;
+            x = 0;
+        }
         uint16_t *row = _framebuffer;
         row += x;
-        row += y * WIDTH;
+        row += y * _width;
         for (int j = 0; j < h; j++)
         {
             for (int i = 0; i < w; i++)
             {
                 row[i] = *bitmap++;
             }
-            row += WIDTH;
+            bitmap += xskip;
+            row += _width;
         }
-        Cache_WriteBack_Addr((uint32_t)_framebuffer + (y * WIDTH), WIDTH * h * 2);
+        Cache_WriteBack_Addr((uint32_t)(_framebuffer + (y * _width)), _width * h * 2);
     }
 }
 
