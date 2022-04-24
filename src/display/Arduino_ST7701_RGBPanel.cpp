@@ -344,8 +344,9 @@ void Arduino_ST7701_RGBPanel::writeFillRectPreclipped(int16_t x, int16_t y,
                                                       int16_t w, int16_t h, uint16_t color)
 {
     uint16_t *row = _framebuffer;
-    row += x;
     row += y * _width;
+    uint32_t cachePos = (uint32_t)row;
+    row += x;
     for (int j = 0; j < h; j++)
     {
         for (int i = 0; i < w; i++)
@@ -354,7 +355,7 @@ void Arduino_ST7701_RGBPanel::writeFillRectPreclipped(int16_t x, int16_t y,
         }
         row += _width;
     }
-    Cache_WriteBack_Addr((uint32_t)_framebuffer + (y * _width), _width * h * 2);
+    Cache_WriteBack_Addr(cachePos, _width * h * 2);
 }
 
 void Arduino_ST7701_RGBPanel::draw16bitRGBBitmap(int16_t x, int16_t y,
@@ -395,9 +396,10 @@ void Arduino_ST7701_RGBPanel::draw16bitRGBBitmap(int16_t x, int16_t y,
             x = 0;
         }
         uint16_t *row = _framebuffer;
-        uint16_t color;
-        row += x;
         row += y * _width;
+        uint32_t cachePos = (uint32_t)row;
+        row += x;
+        uint16_t color;
         for (int j = 0; j < h; j++)
         {
             for (int i = 0; i < w; i++)
@@ -408,7 +410,7 @@ void Arduino_ST7701_RGBPanel::draw16bitRGBBitmap(int16_t x, int16_t y,
             bitmap += xskip;
             row += _width;
         }
-        Cache_WriteBack_Addr((uint32_t)(_framebuffer + (y * _width)), _width * h * 2);
+        Cache_WriteBack_Addr(cachePos, _width * h * 2);
     }
 }
 
@@ -450,8 +452,9 @@ void Arduino_ST7701_RGBPanel::draw16bitBeRGBBitmap(int16_t x, int16_t y,
             x = 0;
         }
         uint16_t *row = _framebuffer;
-        row += x;
         row += y * _width;
+        uint32_t cachePos = (uint32_t)row;
+        row += x;
         for (int j = 0; j < h; j++)
         {
             for (int i = 0; i < w; i++)
@@ -461,7 +464,7 @@ void Arduino_ST7701_RGBPanel::draw16bitBeRGBBitmap(int16_t x, int16_t y,
             bitmap += xskip;
             row += _width;
         }
-        Cache_WriteBack_Addr((uint32_t)(_framebuffer + (y * _width)), _width * h * 2);
+        Cache_WriteBack_Addr(cachePos, _width * h * 2);
     }
 }
 
