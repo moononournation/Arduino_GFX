@@ -9,6 +9,7 @@
  * Settings in lv_conf.h
  * #define LV_COLOR_DEPTH     16
  * #define LV_COLOR_16_SWAP   1
+ * #define LV_TICK_CUSTOM     1
  ******************************************************************************/
 #include "lv_demo_benchmark.h"
 
@@ -127,8 +128,5 @@ void setup()
 void loop()
 {
    lv_timer_handler(); /* let the GUI do its work */
-   unsigned long current_ms = millis();
-   lv_tick_inc(current_ms - last_ms);
-   last_ms = current_ms;
    delay(5);
 }

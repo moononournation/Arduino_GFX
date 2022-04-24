@@ -679,7 +679,7 @@ static void scene_next_task_cb(lv_timer_t * timer)
     if(opa_mode) {
         if(scene_act >= 0) {
             if(scenes[scene_act].time_sum_opa == 0) scenes[scene_act].time_sum_opa = 1;
-            scenes[scene_act].fps_opa = (scenes[scene_act].refr_cnt_opa) / scenes[scene_act].time_sum_opa;
+            scenes[scene_act].fps_opa = (1000 * scenes[scene_act].refr_cnt_opa) / scenes[scene_act].time_sum_opa;
             if(scenes[scene_act].create_cb) scene_act++;    /*If still there are scenes go to the next*/
         } else {
             scene_act ++;
@@ -687,7 +687,7 @@ static void scene_next_task_cb(lv_timer_t * timer)
         opa_mode = false;
     } else {
         if(scenes[scene_act].time_sum_normal == 0) scenes[scene_act].time_sum_normal = 1;
-        scenes[scene_act].fps_normal = (scenes[scene_act].refr_cnt_normal) / scenes[scene_act].time_sum_normal;
+        scenes[scene_act].fps_normal = (1000 * scenes[scene_act].refr_cnt_normal) / scenes[scene_act].time_sum_normal;
         opa_mode = true;
     }
 

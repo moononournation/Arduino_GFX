@@ -9,6 +9,7 @@
  * Settings in lv_conf.h
  * #define LV_COLOR_DEPTH     16
  * #define LV_COLOR_16_SWAP   1
+ * #define LV_TICK_CUSTOM     1
  ******************************************************************************/
 #include "lv_demo_widgets.h"
 
