@@ -57,16 +57,13 @@ private:
   PORTreg_t _wrPortClr; ///< PORT register CLEAR
   uint32_t _wrPinMask;  ///< Bitmask
 
-  PORTreg_t _rdPortSet; ///< PORT register SET
-  PORTreg_t _rdPortClr; ///< PORT register CLEAR
-  uint32_t _rdPinMask;  ///< Bitmask
-
-  PORTreg_t _dataPortSet; ///< PORT register SET
-  PORTreg_t _dataPortClr; ///< PORT register CLEAR
-  uint32_t _dataClrMask;
-  // Lookup table for ESP32 parallel bus interface uses 2kbyte RAM,
-  uint32_t _xset_mask_lo[256];
-  uint32_t _xset_mask_hi[256];
+  uint32_t _data1ClrMask;
+  uint32_t _data2ClrMask;
+  // Lookup table for ESP32 parallel bus interface uses 4kbyte RAM
+  uint32_t _xset_mask1_lo[256];
+  uint32_t _xset_mask1_hi[256];
+  uint32_t _xset_mask2_lo[256];
+  uint32_t _xset_mask2_hi[256];
 };
 
 #endif // _ARDUINO_ESP32PAR16_H_
