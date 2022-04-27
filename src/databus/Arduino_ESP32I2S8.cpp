@@ -4,7 +4,7 @@
  */
 #include "Arduino_ESP32I2S8.h"
 
-#if defined(ESP32)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
 
 #include "soc/dport_reg.h"
 
@@ -59,11 +59,7 @@ void Arduino_ESP32I2S8::begin(int32_t speed, int8_t dataMode)
   gpio_pad_select_gpio(_d6);
   gpio_pad_select_gpio(_d7);
 
-#if SOC_I2S_NUM > 1
   auto idx_base = (_i2s_port == I2S_NUM_0) ? I2S0O_DATA_OUT0_IDX : I2S1O_DATA_OUT0_IDX;
-#else
-  auto idx_base = I2S0O_DATA_OUT0_IDX;
-#endif
   gpio_matrix_out(_dc, idx_base + 8, 0, 0);
   gpio_matrix_out(_d7, idx_base + 7, 0, 0);
   gpio_matrix_out(_d6, idx_base + 6, 0, 0);
@@ -77,7 +73,6 @@ void Arduino_ESP32I2S8::begin(int32_t speed, int8_t dataMode)
   uint32_t dport_clk_en;
   uint32_t dport_rst;
 
-#if SOC_I2S_NUM > 1
   if (_i2s_port == I2S_NUM_0)
   {
     idx_base = I2S0O_WS_OUT_IDX;
@@ -90,11 +85,6 @@ void Arduino_ESP32I2S8::begin(int32_t speed, int8_t dataMode)
     dport_clk_en = DPORT_I2S1_CLK_EN;
     dport_rst = DPORT_I2S1_RST;
   }
-#else
-  idx_base = I2S0O_WS_OUT_IDX;
-  dport_clk_en = DPORT_I2S0_CLK_EN;
-  dport_rst = DPORT_I2S0_RST;
-#endif
   gpio_matrix_out(_wr, idx_base, 1, 0); // WR (Write-strobe in 8080 mode, Active-low)
 
   DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, dport_clk_en);
@@ -124,11 +114,7 @@ void Arduino_ESP32I2S8::begin(int32_t speed, int8_t dataMode)
   // clock = 80MHz(apb_freq) / I2S_CLKM_DIV_NUM
   // I2S_CLKM_DIV_NUM 4=20MHz  /  5=16MHz  /  8=10MHz  /  10=8MHz
   uint32_t div_num = min(32ul, max(4ul, 1 + (apb_freq / (1 + 20000000ul))));
-#ifdef I2S_CLKA_ENA
   _clkdiv_write = I2S_CLKA_ENA | I2S_CLK_EN | 1 << I2S_CLKM_DIV_A_S | 0 << I2S_CLKM_DIV_B_S | div_num << I2S_CLKM_DIV_NUM_S;
-#else
-  _clkdiv_write = I2S_CLK_EN | 1 << I2S_CLKM_DIV_A_S | 0 << I2S_CLKM_DIV_B_S | div_num << I2S_CLKM_DIV_NUM_S;
-#endif
 }
 
 void Arduino_ESP32I2S8::beginWrite()
@@ -343,4 +329,4 @@ INLINE void Arduino_ESP32I2S8::CS_LOW(void)
   }
 }
 
-#endif // #if defined(ESP32)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
