@@ -12,6 +12,9 @@
 #include <Arduino_GFX_Library.h>
 
 // #define ESP32_LCDKIT_SPI
+// #define ESP32_LCDKIT_PAR8A
+// #define ESP32_LCDKIT_PAR8B
+// #define ESP32_LCDKIT_PAR16
 // #define ESP32_S3_RGB
 // #define ESP32_S3_EYE
 // #define MAKERFABS_TFT_TOUCH_3_5
@@ -21,6 +24,21 @@
 #define TFT_BL 23
 Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 5 /* CS */, 22 /* SCK */, 21 /* MOSI */, 27 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
+
+#elif defined(ESP32_LCDKIT_PAR8A)
+Arduino_DataBus *bus = new Arduino_ESP32I2S8(5 /* DC */, GFX_NOT_DEFINED /* CS */, 18 /* WR */, GFX_NOT_DEFINED /* RD */, 19 /* D0 */, 21 /* D1 */, 0 /* D2 */, 22 /* D3 */, 23 /* D4 */, 33 /* D5 */, 32 /* D6 */, 27 /* D7 */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */);
+
+#elif defined(ESP32_LCDKIT_PAR8B)
+Arduino_DataBus *bus = new Arduino_ESP32PAR8(5 /* DC */, GFX_NOT_DEFINED /* CS */, 18 /* WR */, GFX_NOT_DEFINED /* RD */, 25 /* D0 */, 26 /* D1 */, 12 /* D2 */, 13 /* D3 */, 14 /* D4 */, 15 /* D5 */, 2 /* D6 */, 4 /* D7 */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */);
+
+#elif defined(ESP32_LCDKIT_PAR16)
+Arduino_DataBus *bus = new Arduino_ESP32PAR16(
+  5 /* DC */, GFX_NOT_DEFINED /* CS */, 18 /* WR */, GFX_NOT_DEFINED /* RD */,
+  19 /* D0 */, 21 /* D1 */, 0 /* D2 */, 22 /* D3 */, 23 /* D4 */, 33 /* D5 */, 32 /* D6 */, 27 /* D7 */,
+  25 /* D8 */, 26 /* D9 */, 12 /* D10 */, 13 /* D11 */, 14 /* D12 */, 15 /* D13 */, 2 /* D14 */, 4 /* D15 */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */);
 
 #elif defined(ESP32_S3_RGB)
 #define TFT_BL 38
