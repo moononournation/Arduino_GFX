@@ -146,14 +146,14 @@ void setup()
 
 void loop()
 {
-  int w2 = gfx->width() * 2;
-  int h2 = gfx->height() * 2;
+  int w = gfx->width();
+  int h = gfx->height();
 
   unsigned long start = millis();
   jpegDraw(JPEG_FILENAME, jpegDrawCallback, true /* useBigEndian */,
-           random(w2) - gfx->width() /* x */,
-           random(h2) - gfx->height() /* y */,
-           w2 /* widthLimit */, h2 /* heightLimit */);
+           random(w * 2) - w /* x */,
+           random(h * 2) - h /* y */,
+           w /* widthLimit */, h /* heightLimit */);
   Serial.printf("Time used: %lu\n", millis() - start);
 
   delay(1000);

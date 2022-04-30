@@ -10,50 +10,8 @@
 #include <JPEGDEC.h>
 
 static JPEGDEC _jpeg;
-static JPEG_DRAW_CALLBACK *_jpegDrawCallback;
 static File _f;
 static int _x, _y, _x_bound, _y_bound;
-
-static int jpegDrawCallbackWapper(JPEGDRAW *pDraw)
-{
-    if (pDraw->y <= _y_bound)
-    {
-        if ((pDraw->y + pDraw->iHeight - 1) > _y_bound)
-        {
-            pDraw->iHeight = _y_bound - pDraw->y + 1;
-        }
-        if (pDraw->x <= _x_bound)
-        {
-            if ((pDraw->x + pDraw->iWidth - 1) > _x_bound)
-            {
-                int16_t w = pDraw->iWidth;
-                int16_t h = pDraw->iHeight;
-                pDraw->iWidth = _x_bound - pDraw->x + 1;
-                pDraw->iHeight = 1;
-                while (h--)
-                {
-                    _jpegDrawCallback(pDraw);
-                    pDraw->y++;
-                    pDraw->pPixels += w;
-                }
-
-                return 1;
-            }
-            else
-            {
-                return _jpegDrawCallback(pDraw);
-            }
-        }
-        else
-        {
-            return 1;
-        }
-    }
-    else
-    {
-        return 0;
-    }
-}
 
 static void *jpegOpenFile(const char *szFilename, int32_t *pFileSize)
 {
@@ -105,13 +63,12 @@ static void jpegDraw(
     const char *filename, JPEG_DRAW_CALLBACK *jpegDrawCallback, bool useBigEndian,
     int x, int y, int widthLimit, int heightLimit)
 {
-    _jpegDrawCallback = jpegDrawCallback;
     _x = x;
     _y = y;
     _x_bound = _x + widthLimit - 1;
     _y_bound = _y + heightLimit - 1;
 
-    _jpeg.open(filename, jpegOpenFile, jpegCloseFile, jpegReadFile, jpegSeekFile, jpegDrawCallbackWapper);
+    _jpeg.open(filename, jpegOpenFile, jpegCloseFile, jpegReadFile, jpegSeekFile, jpegDrawCallback);
 
     // scale to fit height
     int _scale;
