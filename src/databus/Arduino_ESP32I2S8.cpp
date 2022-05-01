@@ -59,16 +59,16 @@ void Arduino_ESP32I2S8::begin(int32_t speed, int8_t dataMode)
   gpio_pad_select_gpio(_d6);
   gpio_pad_select_gpio(_d7);
 
-  auto idx_base = (_i2s_port == I2S_NUM_0) ? I2S0O_DATA_OUT0_IDX : I2S1O_DATA_OUT0_IDX;
-  gpio_matrix_out(_dc, idx_base + 8, 0, 0);
-  gpio_matrix_out(_d7, idx_base + 7, 0, 0);
-  gpio_matrix_out(_d6, idx_base + 6, 0, 0);
-  gpio_matrix_out(_d5, idx_base + 5, 0, 0);
-  gpio_matrix_out(_d4, idx_base + 4, 0, 0);
-  gpio_matrix_out(_d3, idx_base + 3, 0, 0);
-  gpio_matrix_out(_d2, idx_base + 2, 0, 0);
-  gpio_matrix_out(_d1, idx_base + 1, 0, 0);
+  auto idx_base = (_i2s_port == I2S_NUM_0) ? I2S0O_DATA_OUT8_IDX : I2S1O_DATA_OUT8_IDX;
   gpio_matrix_out(_d0, idx_base, 0, 0);
+  gpio_matrix_out(_d1, idx_base + 1, 0, 0);
+  gpio_matrix_out(_d2, idx_base + 2, 0, 0);
+  gpio_matrix_out(_d3, idx_base + 3, 0, 0);
+  gpio_matrix_out(_d4, idx_base + 4, 0, 0);
+  gpio_matrix_out(_d5, idx_base + 5, 0, 0);
+  gpio_matrix_out(_d6, idx_base + 6, 0, 0);
+  gpio_matrix_out(_d7, idx_base + 7, 0, 0);
+  gpio_matrix_out(_dc, idx_base + 8, 0, 0);
 
   uint32_t dport_clk_en;
   uint32_t dport_rst;
@@ -110,10 +110,14 @@ void Arduino_ESP32I2S8::begin(int32_t speed, int8_t dataMode)
   *reg(I2S_IN_LINK_REG(_i2s_port)) = 0;
   *reg(I2S_TIMING_REG(_i2s_port)) = 0;
 
+  if (speed == 0)
+  {
+    speed = 20000000;
+  }
   uint32_t apb_freq = getApbFrequency();
   // clock = 80MHz(apb_freq) / I2S_CLKM_DIV_NUM
   // I2S_CLKM_DIV_NUM 4=20MHz  /  5=16MHz  /  8=10MHz  /  10=8MHz
-  uint32_t div_num = min(32ul, max(4ul, 1 + (apb_freq / (1 + 20000000ul))));
+  uint32_t div_num = min(32ul, max(4ul, 1 + (apb_freq / (1ul + speed))));
   _clkdiv_write = I2S_CLKA_ENA | I2S_CLK_EN | 1 << I2S_CLKM_DIV_A_S | 0 << I2S_CLKM_DIV_B_S | div_num << I2S_CLKM_DIV_NUM_S;
 }
 
@@ -131,6 +135,7 @@ void Arduino_ESP32I2S8::endWrite()
     writeCommand(0); // NOP command
   }
   wait_i2s();
+
   CS_HIGH();
 }
 
