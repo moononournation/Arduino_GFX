@@ -11,7 +11,7 @@ Arduino_Canvas_Mono::Arduino_Canvas_Mono(int16_t w, int16_t h, Arduino_G *output
 
 void Arduino_Canvas_Mono::begin(int32_t speed)
 {
-    size_t s = (_width * _height +  7) / 8;
+    size_t s = (_width +  7) / 8 * _height;
 #if defined(ESP32)
     if (psramFound())
     {
@@ -34,14 +34,15 @@ void Arduino_Canvas_Mono::begin(int32_t speed)
 
 void Arduino_Canvas_Mono::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
-    int32_t pos = x + (y * _width);
+    int16_t w = (_width + 7) / 8;
+    int32_t pos = y * w + x / 8;
     if (color & 0b1000010000010000)
     {
-        _framebuffer[pos >> 3] |= 0x80 >> (pos & 7);
+        _framebuffer[pos] |= 0x80 >> (x & 7);
     }
     else
     {
-        _framebuffer[pos >> 3] &= ~(0x80 >> (pos & 7));
+        _framebuffer[pos] &= ~(0x80 >> (x & 7));
     }
 }
 
