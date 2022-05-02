@@ -108,11 +108,11 @@ bdfconv -v -f 1 -M common.txt unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chin
 ```
 
 #### u8g2_font_unifont_t_cjk
- * Glyphs: 41667/57389
- * Size: 1,718,037
+ * Glyphs: 41364/57389
+ * Size: 1,704,862
  * Generation script:
 ```console
- bdfconv -v -f 1 -m "32-127,4352-4607,11904-12255,12288-19903,19968-40943,43360-43391,44032-55203,55216-55295,63744-64255,65072-65103,65280-65519,110592-110959,127488-127743,131072-173791" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_cjk.h -n u8g2_font_unifont_t_cjk
+ bdfconv -v -f 1 -m "32-127,4352-4607,11904-12255,12288-19903,19968-40943,43360-43391,44032-55203,55216-55295,63744-64255,65072-65103,65280-65519" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_cjk.h -n u8g2_font_unifont_t_cjk
 ```
 
 ## Performance
