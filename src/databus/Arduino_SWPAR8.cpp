@@ -48,7 +48,7 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
 #if defined(HAS_PORT_SET_CLR)
 #if defined(ARDUINO_ARCH_NRF52840)
   uint32_t pin = digitalPinToPinName((pin_size_t)_dc);
-  reg = nrf_gpio_pin_port_decode(&pin);
+  NRF_GPIO_Type *reg = nrf_gpio_pin_port_decode(&pin);
   _dcPortSet = &reg->OUTSET;
   _dcPortClr = &reg->OUTCLR;
   _dcPinMask = 1UL << pin;

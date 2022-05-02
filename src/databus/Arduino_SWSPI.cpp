@@ -36,6 +36,8 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
 #if defined(ARDUINO_ARCH_NRF52840)
+  uint32_t pin;
+  NRF_GPIO_Type *reg;
   if (_dc != GFX_NOT_DEFINED)
   {
     pin = digitalPinToPinName((pin_size_t)_dc);
@@ -47,13 +49,13 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
   if (_cs != GFX_NOT_DEFINED)
   {
     pin = digitalPinToPinName((pin_size_t)_cs);
-    reg = nrf_gpio_pin_port_decode(&pin);
+    NRF_GPIO_Type *reg = nrf_gpio_pin_port_decode(&pin);
     _csPinMask = 1UL << pin;
     _csPortSet = &reg->OUTSET;
     _csPortClr = &reg->OUTCLR;
   }
-  uint32_t pin = digitalPinToPinName((pin_size_t)_sck);
-  NRF_GPIO_Type *reg = nrf_gpio_pin_port_decode(&pin);
+  pin = digitalPinToPinName((pin_size_t)_sck);
+  reg = nrf_gpio_pin_port_decode(&pin);
   _sckPinMask = 1UL << pin;
   _sckPortSet = &reg->OUTSET;
   _sckPortClr = &reg->OUTCLR;
