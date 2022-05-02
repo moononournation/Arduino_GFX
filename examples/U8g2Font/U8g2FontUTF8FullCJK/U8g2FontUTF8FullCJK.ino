@@ -39,7 +39,7 @@ Arduino_GFX *gfx = create_default_Arduino_GFX();
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false /* IPS */);
 
 #endif /* !defined(DISPLAY_DEV_KIT) */
 /*******************************************************************************
@@ -60,24 +60,25 @@ void setup(void)
 #endif
 
     gfx->setFont(u8g2_font_unifont_t_cjk);
-    gfx->setTextColor(RED);
-    gfx->setCursor(10, 20);
-    gfx->println("世界你好，今天的天氣真好啊！");
+    gfx->setCursor(0, 14);
 
-    gfx->setTextColor(ORANGE);
-    gfx->setCursor(10, 40);
-    gfx->println("世界你好，今天的天气真好啊！");
+    gfx->setTextColor(RED);
+    gfx->println("世界你好，今天的天氣真好啊！");
+    gfx->println();
 
     gfx->setTextColor(YELLOW);
-    gfx->setCursor(10, 60);
-    gfx->println("こんにちは世界、今日はいいお天気ですね！");
+    gfx->println("世界你好，今天的天气真好啊！");
+    gfx->println();
 
     gfx->setTextColor(GREEN);
-    gfx->setCursor(10, 80);
+    gfx->println("こんにちは世界、今日はいいお天気ですね！");
+    gfx->println();
+
+    gfx->setTextColor(BLUE);
     gfx->println("안녕하세요 세계, 오늘 날씨가 너무 좋습니다!");
+    gfx->println();
 
     gfx->setTextColor(MAGENTA);
-    gfx->setCursor(10, 80);
     gfx->println("Hello world, the weather is so nice today!");
 }
 
