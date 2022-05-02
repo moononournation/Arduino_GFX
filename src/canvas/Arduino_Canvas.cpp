@@ -12,6 +12,8 @@ Arduino_Canvas::Arduino_Canvas(
 
 void Arduino_Canvas::begin(int32_t speed)
 {
+    _output->begin(speed);
+
     size_t s = _width * _height * 2;
 #if defined(ESP32)
     if (psramFound())
@@ -38,7 +40,6 @@ void Arduino_Canvas::begin(int32_t speed)
     {
         Serial.println(F("_framebuffer allocation failed."));
     }
-    _output->begin(speed);
 }
 
 void Arduino_Canvas::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)

@@ -11,6 +11,8 @@ Arduino_Canvas_Mono::Arduino_Canvas_Mono(int16_t w, int16_t h, Arduino_G *output
 
 void Arduino_Canvas_Mono::begin(int32_t speed)
 {
+    _output->begin(speed);
+
     size_t s = (_width +  7) / 8 * _height;
 #if defined(ESP32)
     if (psramFound())
@@ -28,8 +30,6 @@ void Arduino_Canvas_Mono::begin(int32_t speed)
     {
         Serial.println(F("_framebuffer allocation failed."));
     }
-
-    _output->begin(speed);
 }
 
 void Arduino_Canvas_Mono::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
