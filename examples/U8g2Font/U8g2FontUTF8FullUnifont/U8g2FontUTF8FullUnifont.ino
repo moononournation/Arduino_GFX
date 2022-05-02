@@ -41,7 +41,7 @@ Arduino_GFX *gfx = create_default_Arduino_GFX();
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false /* IPS */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
 
 #endif /* !defined(DISPLAY_DEV_KIT) */
 /*******************************************************************************
@@ -138,19 +138,18 @@ void setup(void)
     digitalWrite(GFX_BL, HIGH);
 #endif
 
-    gfx->setCursor(10, 20);
+    gfx->setCursor(0, 14);
     gfx->setFont(u8g2_font_unifont_h_utf8);
-    gfx->setTextColor(RED);
-    gfx->println("Hello World!");
+    gfx->println("Hello world in multiple languages");
 
     delay(2000); // 2 seconds
 }
 
 void loop()
 {
-    gfx->setCursor(random(gfx->width()), random(gfx->height()));
+    gfx->setCursor(random(gfx->width() / 2), random(gfx->height() - 16));
     gfx->setTextColor(random(0xffff), random(0xffff));
-    gfx->setTextSize(random(4) /* x scale */, random(4) /* y scale */);
+    gfx->setTextSize(random(2) + 2 /* x scale */, random(2) + 2 /* y scale */);
     gfx->println(helloWorldStrings[random(74)]);
 
     delay(1000); // 1 second
