@@ -147,10 +147,10 @@ void setup(void)
 
 void loop()
 {
-    gfx->setCursor(random(gfx->width() / 2), random(gfx->height() - 16));
+    gfx->setCursor(random(gfx->width() / 4), random(gfx->height() - 32) + 16);
     gfx->setTextColor(random(0xffff), random(0xffff));
     gfx->setTextSize(random(2) + 2 /* x scale */, random(2) + 2 /* y scale */);
     gfx->println(helloWorldStrings[random(74)]);
 
-    delay(1000); // 1 second
+    delay(500); // 0.5 second
 }
