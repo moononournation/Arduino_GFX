@@ -93,7 +93,7 @@ bdfconv -v -f 1 -b 1 -m "0-1114111" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_
  * Size: 1,024,137
  * Generation script:
 ```console
-bdfconv -v -f 1 -b 1 -m "32-127,11904-12351,19968-40959,63744-64255,65280-65376" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese.h -n u8g2_font_unifont_t_chinese
+bdfconv -v -f 1 -m "32-127,11904-12351,19968-40959,63744-64255,65280-65376" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese.h -n u8g2_font_unifont_t_chinese
 ```
 
 #### u8g2_font_unifont_t_chinese4
@@ -104,7 +104,7 @@ bdfconv -v -f 1 -b 1 -m "32-127,11904-12351,19968-40959,63744-64255,65280-65376"
  * extra font list: 32-127,11904-12351,63744-64255,65280-65376
  * Generation script:
 ```console
-bdfconv -v -f 1 -b 1 -M common.txt unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese4.c -n u8g2_font_unifont_t_chinese4
+bdfconv -v -f 1 -M common.txt unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese4.c -n u8g2_font_unifont_t_chinese4
 ```
 
 #### u8g2_font_unifont_t_cjk
