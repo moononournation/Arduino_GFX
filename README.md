@@ -104,7 +104,7 @@ bdfconv -v -f 1 -m "32-127,11904-12351,19968-40959,63744-64255,65280-65376" unif
  * extra font list: 32-127,11904-12351,63744-64255,65280-65376
  * Generation script:
 ```console
-bdfconv -v -f 1 -M common.txt unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese4.c -n u8g2_font_unifont_t_chinese4
+bdfconv -v -f 1 -M common.txt unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese4.h -n u8g2_font_unifont_t_chinese4
 ```
 
 #### u8g2_font_unifont_t_cjk
