@@ -38,7 +38,7 @@
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
- * 
+ *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
  * Defalult pin list for non display dev kit:
@@ -107,8 +107,8 @@ void setup()
   gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
 /* Wio Terminal */
@@ -180,9 +180,9 @@ void loop()
         int16_t y = (gfx->height() - gif->height) / 2;
 
         Serial.println(F("GIF video start"));
-        uint32_t t_fstart, t_delay = 0, t_real_delay, delay_until;
+        int32_t t_fstart, t_delay = 0, t_real_delay, delay_until;
         int32_t res = 1;
-        uint32_t duration = 0, remain = 0;
+        int32_t duration = 0, remain = 0;
         while (res > 0)
         {
           t_fstart = millis();
@@ -201,10 +201,10 @@ void loop()
             duration += t_delay;
             remain += t_real_delay;
             delay_until = millis() + t_real_delay;
-            do
+            while (millis() < delay_until)
             {
               delay(1);
-            } while (millis() < delay_until);
+            }
           }
         }
         Serial.println(F("GIF video end"));
