@@ -124,8 +124,8 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotat
 #define TFT_RST 33
 #define TFT_BL 21
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-#define TFT_CS 44 // GFX_NOT_DEFINED for display without CS pin
-#define TFT_DC 43
+#define TFT_CS 40 // GFX_NOT_DEFINED for display without CS pin
+#define TFT_DC 41
 #define TFT_RST 42
 #define TFT_BL 48
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)

@@ -39,7 +39,7 @@
  * ESP32 various dev board     : CS:  5, DC: 27, RST: 33, BL: 22
  * ESP32-C3 various dev board  : CS:  7, DC:  2, RST:  1, BL:  3
  * ESP32-S2 various dev board  : CS: 34, DC: 35, RST: 33, BL: 21
- * ESP32-S3 various dev board  : CS: 44, DC: 43, RST: 42, BL: 48
+ * ESP32-S3 various dev board  : CS: 40, DC: 41, RST: 42, BL: 48
  * ESP8266 various dev board   : CS: 15, DC:  4, RST:  2, BL:  5
  * Raspberry Pi Pico dev board : CS: 17, DC: 27, RST: 26, BL: 28
  * RTL8720 BW16 old patch core : CS: 18, DC: 17, RST:  2, BL: 23
