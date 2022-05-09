@@ -8,8 +8,6 @@
 
 #include "soc/dport_reg.h"
 
-// #define SET_DATA_AND_WR_AT_THE_SAME_TIME
-
 Arduino_ESP32I2S8::Arduino_ESP32I2S8(
     int8_t dc, int8_t cs, int8_t wr, int8_t rd,
     int8_t d0, int8_t d1, int8_t d2, int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7)
