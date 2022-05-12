@@ -22,7 +22,7 @@ void Arduino_ESP32PAR16QQ::begin(int32_t speed, int8_t dataMode)
     _dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_dc != GFX_NOT_DEFINED)
+  else
   {
     _dcPinMask = digitalPinToBitMask(_dc);
     _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -55,7 +55,7 @@ void Arduino_ESP32PAR16QQ::begin(int32_t speed, int8_t dataMode)
     _wrPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _wrPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_wr != GFX_NOT_DEFINED)
+  else
   {
     _wrPinMask = digitalPinToBitMask(_wr);
     _wrPortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -66,24 +66,6 @@ void Arduino_ESP32PAR16QQ::begin(int32_t speed, int8_t dataMode)
   {
     pinMode(_rd, OUTPUT);
     digitalWrite(_rd, HIGH);
-  }
-  if (_rd >= 32)
-  {
-    _rdPinMask = digitalPinToBitMask(_rd);
-    _rdPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    _rdPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
-  }
-  else if (_rd != GFX_NOT_DEFINED)
-  {
-    _rdPinMask = digitalPinToBitMask(_rd);
-    _rdPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    _rdPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  }
-  else
-  {
-    _rdPinMask = 0;
-    _rdPortSet = _dcPortSet;
-    _rdPortClr = _dcPortClr;
   }
 
   // TODO: check pin range 0-31
@@ -207,9 +189,7 @@ void Arduino_ESP32PAR16QQ::writeCommand16(uint16_t c)
 {
   DC_LOW();
 
-  _data16.value = c;
-  WRITE(_data16.msb);
-  WRITE(_data16.lsb);
+  WRITE16(c);
 
   DC_HIGH();
 }
@@ -239,8 +219,7 @@ void Arduino_ESP32PAR16QQ::writePixels(uint16_t *data, uint32_t len)
 {
   while (len--)
   {
-    uint16_t d = *data++;
-    WRITE16(d);
+    WRITE16(*data++);
   }
 }
 

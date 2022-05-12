@@ -57,10 +57,6 @@ private:
   PORTreg_t _wrPortClr; ///< PORT register CLEAR
   uint32_t _wrPinMask;  ///< Bitmask
 
-  PORTreg_t _rdPortSet; ///< PORT register SET
-  PORTreg_t _rdPortClr; ///< PORT register CLEAR
-  uint32_t _rdPinMask;  ///< Bitmask
-
   PORTreg_t _dataPortSet; ///< PORT register SET
   PORTreg_t _dataPortClr; ///< PORT register CLEAR
   uint32_t _dataClrMask;

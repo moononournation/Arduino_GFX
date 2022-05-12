@@ -68,7 +68,6 @@ void Arduino_ESP32PAR16::begin(int32_t speed, int8_t dataMode)
     digitalWrite(_rd, HIGH);
   }
 
-  // TODO: check pin range 0-31
   pinMode(_d0, OUTPUT);
   pinMode(_d1, OUTPUT);
   pinMode(_d2, OUTPUT);
@@ -432,9 +431,7 @@ void Arduino_ESP32PAR16::writeCommand16(uint16_t c)
 {
   DC_LOW();
 
-  _data16.value = c;
-  WRITE(_data16.msb);
-  WRITE(_data16.lsb);
+  WRITE16(c);
 
   DC_HIGH();
 }
@@ -469,8 +466,7 @@ void Arduino_ESP32PAR16::writePixels(uint16_t *data, uint32_t len)
 {
   while (len--)
   {
-    uint16_t d = *data++;
-    WRITE16(d);
+    WRITE16(*data++);
   }
 }
 
@@ -575,11 +571,13 @@ INLINE void Arduino_ESP32PAR16::WRITE(uint8_t d)
 INLINE void Arduino_ESP32PAR16::WRITE16(uint16_t d)
 {
   _data16.value = d;
+  uint32_t d1 = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
+  uint32_t d2 = _xset_mask2_hi[_data16.msb] | _xset_mask2_lo[_data16.lsb];
   GPIO.out_w1tc = _data1ClrMask;
   GPIO.out1_w1tc.val = _data2ClrMask;
-  GPIO.out_w1ts = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
-  GPIO.out1_w1ts.val = _xset_mask2_hi[_data16.msb] | _xset_mask2_lo[_data16.lsb];
-    *_wrPortClr = _wrPinMask;
+  GPIO.out_w1ts = d1;
+  GPIO.out1_w1ts.val = d2;
+  *_wrPortClr = _wrPinMask;
   *_wrPortSet = _wrPinMask;
 }
 
