@@ -65,20 +65,18 @@ public:
 
 protected:
   void flush_data_buf();
-
-private:
-  INLINE void WRITE8BIT(uint8_t c);
-  INLINE void WRITE9BIT(uint32_t c);
+  INLINE void WRITE8BIT(uint8_t d);
+  INLINE void WRITE9BIT(uint32_t d);
   INLINE void DC_HIGH(void);
   INLINE void DC_LOW(void);
   INLINE void CS_HIGH(void);
   INLINE void CS_LOW(void);
 
+private:
   int8_t _dc, _cs;
   int8_t _sck, _mosi, _miso;
   uint8_t _spi_num;
   bool _is_shared_interface;
-  int32_t _speed;
   uint32_t _div = 0;
 
   PORTreg_t _dcPortSet; ///< PORT register for data/command SET
