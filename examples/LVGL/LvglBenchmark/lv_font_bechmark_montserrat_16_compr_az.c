@@ -1,4 +1,7 @@
 #include "lvgl.h"
+#define LV_USE_DEMO_BENCHMARK 1
+
+#if LV_USE_DEMO_BENCHMARK
 
 /*******************************************************************************
  * Size: 16 px
@@ -350,3 +353,6 @@ lv_font_t lv_font_benchmark_montserrat_16_compr_az = {
 };
 
 #endif /*#if LV_FONT_BENCHMARK_MONTSERRAT_16_COMPR_AZ*/
+
+#endif
+

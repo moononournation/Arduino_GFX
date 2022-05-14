@@ -6,10 +6,18 @@
  * Dependent libraries:
  * LVGL: https://github.com/lvgl/lvgl.git
  *
- * Settings in lv_conf.h
+ * LVGL Configuration file:
+ * Copy your_arduino_path/libraries/lvgl/lv_conf_template.h
+ * to your_arduino_path/libraries/lv_conf.h
+ * Then find and set:
  * #define LV_COLOR_DEPTH     16
- * #define LV_COLOR_16_SWAP   1
  * #define LV_TICK_CUSTOM     1
+ * 
+ * For SPI display set color swap can be faster, parallel screen don't set!
+ * #define LV_COLOR_16_SWAP   1
+ * 
+ * Optional: Show CPU usage and FPS count
+ * #define LV_USE_PERF_MONITOR 1
  ******************************************************************************/
 #include "lv_demo_widgets.h"
 
@@ -66,7 +74,11 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
    uint32_t w = (area->x2 - area->x1 + 1);
    uint32_t h = (area->y2 - area->y1 + 1);
 
+#if (LV_COLOR_16_SWAP != 0)
    gfx->draw16bitBeRGBBitmap(area->x1, area->y1, (uint16_t *)&color_p->full, w, h);
+#else
+   gfx->draw16bitRGBBitmap(area->x1, area->y1, (uint16_t *)&color_p->full, w, h);
+#endif
 
    lv_disp_flush_ready(disp);
 }

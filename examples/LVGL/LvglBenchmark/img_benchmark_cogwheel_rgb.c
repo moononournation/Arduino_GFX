@@ -1,4 +1,7 @@
 #include "lvgl.h"
+#define LV_USE_DEMO_BENCHMARK 1
+
+#if LV_USE_DEMO_BENCHMARK
 
 #ifndef LV_ATTRIBUTE_MEM_ALIGN
 #define LV_ATTRIBUTE_MEM_ALIGN
@@ -431,3 +434,5 @@ const lv_img_dsc_t img_benchmark_cogwheel_rgb = {
   .header.cf = LV_IMG_CF_TRUE_COLOR,
   .data = img_benchmark_cogwheel_rgb_map,
 };
+
+#endif
