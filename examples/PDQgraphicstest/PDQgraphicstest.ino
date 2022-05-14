@@ -35,19 +35,19 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rota
 
 #elif defined(ESP32_LCDKIT_PAR16)
 Arduino_DataBus *bus = new Arduino_ESP32PAR16(
-  5 /* DC */, GFX_NOT_DEFINED /* CS */, 18 /* WR */, GFX_NOT_DEFINED /* RD */,
-  19 /* D0 */, 21 /* D1 */, 0 /* D2 */, 22 /* D3 */, 23 /* D4 */, 33 /* D5 */, 32 /* D6 */, 27 /* D7 */,
-  25 /* D8 */, 26 /* D9 */, 12 /* D10 */, 13 /* D11 */, 14 /* D12 */, 15 /* D13 */, 2 /* D14 */, 4 /* D15 */);
+    5 /* DC */, GFX_NOT_DEFINED /* CS */, 18 /* WR */, GFX_NOT_DEFINED /* RD */,
+    19 /* D0 */, 21 /* D1 */, 0 /* D2 */, 22 /* D3 */, 23 /* D4 */, 33 /* D5 */, 32 /* D6 */, 27 /* D7 */,
+    25 /* D8 */, 26 /* D9 */, 12 /* D10 */, 13 /* D11 */, 14 /* D12 */, 15 /* D13 */, 2 /* D14 */, 4 /* D15 */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */);
 
 #elif defined(ESP32_S3_RGB)
 #define TFT_BL 38
 Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
-  39 /* CS */, 48 /* SCK */, 47 /* SDA */,
-  18 /* DE */, 17 /* VSYNC */, 16 /* HSYNC */, 21 /* PCLK */,
-  4 /* R0 */, 3 /* R1 */, 2 /* R2 */, 1 /* R3 */, 0 /* R4 */,
-  10 /* G0 */, 9 /* G1 */, 8 /* G2 */, 7 /* G3 */, 6 /* G4 */, 5 /* G5 */,
-  15 /* B0 */, 14 /* B1 */, 13 /* B2 */, 12 /* B3 */, 11 /* B4 */
+    39 /* CS */, 48 /* SCK */, 47 /* SDA */,
+    18 /* DE */, 17 /* VSYNC */, 16 /* HSYNC */, 21 /* PCLK */,
+    4 /* R0 */, 3 /* R1 */, 2 /* R2 */, 1 /* R3 */, 0 /* R4 */,
+    10 /* G0 */, 9 /* G1 */, 8 /* G2 */, 7 /* G3 */, 6 /* G4 */, 5 /* G5 */,
+    15 /* B0 */, 14 /* B1 */, 13 /* B2 */, 12 /* B3 */, 11 /* B4 */
 );
 Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(bus, GFX_NOT_DEFINED, 480, 480);
 
@@ -154,7 +154,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotat
 #define TFT_DC 14
 #define TFT_RST 15
 #define TFT_BL 13
-#else // old version
+#else             // old version
 #define TFT_CS 18 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 17
 #define TFT_RST 2
@@ -174,7 +174,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotat
 
 /*
  * Step 1: Initize one databus for your display
-*/
+ */
 
 // General software SPI
 // Arduino_DataBus *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
@@ -216,9 +216,19 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 //     19 /* D0 */, 23 /* D1 */, 18 /* D2 */, 5 /* D3 */, 17 /* D4 */, 16 /* D5 */, 25 /* D6 */, 26 /* D7 */,
 //     27 /* D8 */, 14 /* D9 */, 12 /* D10 */, 13 /* D11 */, 15 /* D12 */, 2 /* D13 */, 0 /* D14 */, 4 /* D15 */);
 
+// ESP32S2 parallel 8-bit
+// Display D0-D7 connect to GPIO 0-7
+// Arduino_DataBus *bus = new Arduino_ESP32S2PAR8(TFT_DC, TFT_CS, 16 /* WR */, 17 /* RD */);
+
 // ESP32S2 parallel 16-bit
 // Display D0-D15 connect to GPIO 0-15
-// Arduino_DataBus *bus = new Arduino_ESP32S2PAR16(TFT_DC, TFT_CS, 16 /* WR */, GFX_NOT_DEFINED /* RD */);
+// Arduino_DataBus *bus = new Arduino_ESP32S2PAR16(TFT_DC, TFT_CS, 16 /* WR */, 17 /* RD */);
+
+// ESP32S3 i80 LCD parallel 16-bit
+// Arduino_DataBus *bus = new Arduino_ESP32LCD16(
+//     TFT_DC, TFT_CS, 16 /* WR */, 17 /* RD */,
+//     0 /* D0 */, 1 /* D1 */, 2 /* D2 */, 3 /* D3 */, 4 /* D4 */, 5 /* D5 */, 6 /* D6 */, 7 /* D7 */,
+//     8 /* D8 */, 9 /* D9 */, 10 /* D10 */, 11 /* D11 */, 12 /* D12 */, 13 /* D13 */, 14 /* D14 */, 15 /* D15 */);
 
 // Raspberry Pi Pico parallel 8-bit
 // Display D0-D7 connect to GPIO 0-7
@@ -234,7 +244,7 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 
 /*
  * Step 2: Initize one driver for your display
-*/
+ */
 
 /***************************************
  * Start of Canvas (framebuffer)
