@@ -133,6 +133,22 @@ private:
   esp_lcd_i80_bus_handle_t _i80_bus = nullptr;
   dma_descriptor_t *_dmadesc = nullptr;
   gdma_channel_handle_t _dma_chan;
+    union
+  {
+    uint32_t value;
+    struct
+    {
+      uint8_t value16;
+      uint8_t value16_2;
+    };
+    struct
+    {
+      uint8_t lsb;
+      uint8_t msb;
+      uint8_t lsb_2;
+      uint8_t msb_2;
+    };
+  } _data32;
   union
   {
     uint8_t _buffer[LCD_MAX_PIXELS_AT_ONCE * 2] = {0};

@@ -219,25 +219,20 @@ void Arduino_ESP32LCD16::writePixels(uint16_t *data, uint32_t len)
   {
     xferLen = (len < LCD_MAX_PIXELS_AT_ONCE) ? len : LCD_MAX_PIXELS_AT_ONCE; // How many this pass?
     l = xferLen - 2;
-    p = *data++;
-    p <<= 16;
-    p |= *data++;
-
-    for (int i = 0; i < l; ++i)
-    {
-      _buffer16[i] = *data++;
-    }
+    _data32.value16 = *data++;
+    _data32.value16_2 = *data++;
 
     l <<= 1;
     *(uint32_t *)_dmadesc = ((l + 3) & (~3)) | l << 12 | 0xC0000000;
-    _dmadesc->buffer = _buffer;
+    _dmadesc->buffer = data;
     _dmadesc->next = nullptr;
     gdma_start(_dma_chan, (intptr_t)(_dmadesc));
-    LCD_CAM.lcd_cmd_val.val = p;
+    LCD_CAM.lcd_cmd_val.val = _data32.value;
     LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
     LCD_CAM.lcd_user.val = LCD_CAM_LCD_ALWAYS_OUT_EN | LCD_CAM_LCD_2BYTE_EN | LCD_CAM_LCD_CMD_2_CYCLE_EN | LCD_CAM_LCD_DOUT | LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
     WAIT_LCD_NOT_BUSY;
 
+    data += xferLen - 2;
     len -= xferLen;
   }
 
@@ -250,22 +245,6 @@ void Arduino_ESP32LCD16::writePixels(uint16_t *data, uint32_t len)
 void Arduino_ESP32LCD16::writeBytes(uint8_t *data, uint32_t len)
 {
   uint32_t xferLen, l;
-  union
-  {
-    uint32_t value;
-    struct
-    {
-      uint8_t value16;
-      uint8_t value16_2;
-    };
-    struct
-    {
-      uint8_t lsb;
-      uint8_t msb;
-      uint8_t lsb_2;
-      uint8_t msb_2;
-    };
-  } _data32;
 
   while (len > (USE_DMA_THRESHOLD * 2)) // While pixels remain
   {
