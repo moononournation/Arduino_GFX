@@ -159,18 +159,17 @@ Most tiny displays in hobbyist electronics world support 8-bit SPI, but some req
 
 Larger displays most likely do not support standalone SPI since it is not fast enough to refresh the full screen details. Most of them support 8-bit/16-bit Parallel interface.
 
-Some larger display require 3-bit SPI + RGB combo interface, i.e. require more than 3 + 24 pins. Most dev board do not have enough GPIO to support this. Arduino_GFX will eventually support this combo interface but will be in very low priority. A huge monthly sponsor may make it happen :P
+Some larger display require RGB + 3-bit SPI combo interface, This interface requies at most 3(9-bit SPI) + 4(CS, CD, WR, RD) + 24(RBG888) = 31 pins. Most dev board do not have enough GPIO to support this. Arduino_GFX is stick to RGB565 color, so RGB666 and RGB888 require some connection hack. E.g. RGB666 connect R5 and R6 together, B5 and B6 together to become RGB565. Then the least GPIO requirement can become 3(9-bit SPI) + 2(CD, WR) + 16(RBG565) = 21 pins. **Remember always pull down CS pin and always pull up RD pin.**
 
 ## Currently Supported data bus [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class)]
 - 8-bit and 9-bit hardware SPI (ESP32SPI)
 - 8-bit hardware SPI (HWSPI, ESP8266SPI, mbedSPI, NRFXSPI, RPiPicoSPI)
 - 8-bit and 9-bit software SPI (SWSPI)
-- 8-bit parallel interface (AVRPAR8, ESP32PAR8, ESP32S2PAR8, RPiPicoPAR8, RTLPAR8)
-- 16-bit parallel interface (ESP32PAR16, ESP32S2PAR8, RPiPicoPAR16)
+- 8-bit parallel interface (SWPAR8, AVRPAR8, ESP32I2S8, ESP32PAR8, ESP32S2PAR8, RPiPicoPAR8, RTLPAR8, STM32PAR8)
+- 16-bit parallel interface (ESP32LCD16, ESP32PAR16, ESP32S2PAR16, RPiPicoPAR16)
 - RGB565+SPI interface (ESP32RGBPanel)
 
 ## Tobe Support data bus (Sponsors can make it happen)
-- ESP32 I2S 8-bit/16-bit parallel interface
 - Arduino ATMega2560 dual 8-bit Port form 16-bit parallel interface
 - FastLED
 
