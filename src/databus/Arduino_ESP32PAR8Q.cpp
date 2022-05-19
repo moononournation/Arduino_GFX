@@ -84,7 +84,7 @@ void Arduino_ESP32PAR8Q::begin(int32_t speed, int8_t dataMode)
   _dataClrMask = (1 << _wr) | (1 << _d0) | (1 << _d1) | (1 << _d2) | (1 << _d3) | (1 << _d4) | (1 << _d5) | (1 << _d6) | (1 << _d7);
   for (int32_t c = 0; c < 256; c++)
   {
-    _xset_mask[c] = (1 << _wr);
+    _xset_mask[c] = 0;
     if (c & 0x01)
     {
       _xset_mask[c] |= (1 << _d0);
