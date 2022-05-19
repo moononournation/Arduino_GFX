@@ -161,6 +161,8 @@ public:
   // optimized code.  Otherwise 'generic' versions are used.
   virtual void setRotation(uint8_t r);
   virtual void invertDisplay(bool i);
+  virtual void displayOn();
+  virtual void displayOff();
 
   // BASIC DRAW API
   // These MAY be overridden by the subclass to provide device-specific

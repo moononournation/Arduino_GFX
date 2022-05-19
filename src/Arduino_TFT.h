@@ -19,9 +19,6 @@ public:
   // This MUST be defined by the subclass:
   // and also protected function: tftInit()
   virtual void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) = 0;
-  virtual void invertDisplay(bool) = 0;
-  virtual void displayOn() = 0;
-  virtual void displayOff() = 0;
 
   void begin(int32_t speed = 0);
   void startWrite(void) override;

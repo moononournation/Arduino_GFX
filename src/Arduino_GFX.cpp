@@ -2645,3 +2645,21 @@ void Arduino_GFX::invertDisplay(bool i)
   // Do nothing, must be subclassed if supported by hardware
   UNUSED(i);
 }
+
+/**************************************************************************/
+/*!
+  @brief  Turn on display after turned off
+*/
+/**************************************************************************/
+void Arduino_GFX::displayOn()
+{
+}
+
+/**************************************************************************/
+/*!
+  @brief  Turn off display
+*/
+/**************************************************************************/
+void Arduino_GFX::displayOff()
+{
+}
