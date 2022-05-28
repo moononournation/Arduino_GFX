@@ -26,16 +26,16 @@ void Arduino_ILI9488_18bit::setRotation(uint8_t r)
   switch (_rotation)
   {
   case 1:
-    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MV | ILI9488_MADCTL_MX | ILI9488_MADCTL_MY);
-    break;
-  case 2:
-    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MX);
-    break;
-  case 3:
     r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MV);
     break;
-  default: // case 0:
+  case 2:
     r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MY);
+    break;
+  case 3:
+    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MV | ILI9488_MADCTL_MX | ILI9488_MADCTL_MY);
+    break;
+  default: // case 0:
+    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MX);
     break;
   }
   _bus->beginWrite();

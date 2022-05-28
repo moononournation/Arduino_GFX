@@ -101,17 +101,17 @@ void Arduino_ILI9488_3bit::begin(int32_t speed)
   // setRotation
   switch (_rotation)
   {
-  case 3:
+  case 1:
     r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MV);
     break;
   case 2:
-    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MX);
+    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MY);
     break;
-  case 1:
+  case 3:
     r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MV | ILI9488_MADCTL_MX | ILI9488_MADCTL_MY);
     break;
   default: // case 0:
-    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MY);
+    r = (ILI9488_MADCTL_BGR | ILI9488_MADCTL_MX);
     break;
   }
   _bus->beginWrite();
