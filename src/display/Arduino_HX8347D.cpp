@@ -145,19 +145,19 @@ void Arduino_HX8347D::setRotation(uint8_t r)
   switch (_rotation)
   {
   case 1:
-    _bus->writeC8D8(0x36, 0x07);
+    _bus->writeC8D8(0x36, 0x03);
     _bus->writeC8D8(0x16, 0x20);
     break;
   case 2:
-    _bus->writeC8D8(0x36, 0x03);
+    _bus->writeC8D8(0x36, 0x07);
     _bus->writeC8D8(0x16, 0x00);
     break;
   case 3:
-    _bus->writeC8D8(0x36, 0x03);
+    _bus->writeC8D8(0x36, 0x07);
     _bus->writeC8D8(0x16, 0x60);
     break;
   default: // case 0:
-    _bus->writeC8D8(0x36, 0x07);
+    _bus->writeC8D8(0x36, 0x03);
     _bus->writeC8D8(0x16, 0x40);
     break;
   }
