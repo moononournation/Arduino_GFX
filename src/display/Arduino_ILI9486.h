@@ -13,8 +13,8 @@
 #define ILI9486_TFTWIDTH 320  ///< ILI9486 max TFT width
 #define ILI9486_TFTHEIGHT 480 ///< ILI9486 max TFT height
 
-#define ILI9486_RST_DELAY 150    ///< delay ms wait for reset finish
-#define ILI9486_SLPIN_DELAY 150  ///< delay ms wait for sleep in finish
+#define ILI9486_RST_DELAY 120    ///< delay ms wait for reset finish
+#define ILI9486_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
 #define ILI9486_SLPOUT_DELAY 150 ///< delay ms wait for sleep out finish
 
 #define ILI9486_NOP 0x00     ///< No-op register
