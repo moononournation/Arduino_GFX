@@ -20,8 +20,10 @@ Arduino_GFX *create_default_Arduino_GFX()
     Arduino_DataBus *bus = create_default_Arduino_DataBus();
 #if defined(WIO_TERMINAL)
     return new Arduino_ILI9341(bus, DF_GFX_RST, 1 /* rotation */);
-#elif defined(M5STACK_CORE)
+#elif defined(ESP32_S3_BOX)
     return new Arduino_ILI9342(bus, DF_GFX_RST, 0 /* rotation */);
+#elif defined(M5STACK_CORE)
+    return new Arduino_ILI9342(bus, DF_GFX_RST, 2 /* rotation */);
 #elif defined(ODROID_GO)
     return new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */);
 #elif defined(TTGO_T_WATCH)

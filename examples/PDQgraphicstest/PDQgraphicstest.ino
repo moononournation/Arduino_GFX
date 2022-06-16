@@ -76,11 +76,17 @@ Arduino_GFX *gfx = new Arduino_ST7796(bus, 22 /* RST */, 3 /* rotation */);
 Arduino_DataBus *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */);
 
+/* ESP32-S3-BOX */
+#elif defined(ARDUINO_ESP32_S3_BOX)
+#define TFT_BL 45
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_CLK, TFT_MOSI, TFT_MISO);
+Arduino_GFX *gfx = new Arduino_ILI9342(bus, TFT_RST /* RST */, 0 /* rotation */);
+
 /* M5Stack */
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 // #define TFT_BL 32
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
-Arduino_GFX *gfx = new Arduino_ILI9342(bus, 33 /* RST */, 0 /* rotation */);
+Arduino_GFX *gfx = new Arduino_ILI9342(bus, 33 /* RST */, 2 /* rotation */);
 
 /* Odroid-Go */
 #elif defined(ARDUINO_ODROID_ESP32)

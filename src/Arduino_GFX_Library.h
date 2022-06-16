@@ -75,6 +75,16 @@
 #define DF_GFX_DC LCD_DC
 #define DF_GFX_RST GFX_NOT_DEFINED
 #define DF_GFX_BL LCD_BACKLIGHT
+#elif defined(ARDUINO_ESP32_S3_BOX)
+#define DISPLAY_DEV_KIT
+#define ESP32_S3_BOX
+#define DF_GFX_SCK TFT_CLK
+#define DF_GFX_MOSI TFT_MOSI
+#define DF_GFX_MISO TFT_MISO
+#define DF_GFX_CS TFT_CS
+#define DF_GFX_DC TFT_DC
+#define DF_GFX_RST TFT_RST
+#define DF_GFX_BL TFT_BL
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
 #define DISPLAY_DEV_KIT
 #define M5STACK_CORE
