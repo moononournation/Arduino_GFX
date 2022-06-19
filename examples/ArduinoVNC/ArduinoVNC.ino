@@ -1,11 +1,12 @@
 /*******************************************************************************
  * Arduino VNC
- * This is a simple IoT photo frame sample
- * Please find more details at instructables:
- * https://www.instructables.com/id/Face-Aware-OSD-Photo-Frame/
+ * This is a simple VNC sample
+ * 
+ * Dependent libraries:
+ * ArduinoVNC: https://github.com/Links2004/arduinoVNC
  *
  * Setup steps:
- * 1. Fill your own SSID_NAME, SSID_PASSWORD, HTTP_HOST, HTTP_PORT and HTTP_PATH_TEMPLATE
+ * 1. Fill your own SSID_NAME, SSID_PASSWORD, VNC_IP, VNC_PORT and VNC_PASSWORD
  * 2. Change your LCD parameters in Arduino_GFX setting
  ******************************************************************************/
 
