@@ -29,35 +29,41 @@ public:
 
     void draw_area(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint8_t *data)
     {
+        // DEBUG_VNC("draw_area(%d, %d, %d, %d, data)\n", x, y, w, h);
         _gfx->draw16bitRGBBitmap(x, y, (uint16_t *)data, w, h);
     }
 
     void draw_rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint16_t color)
     {
+        // DEBUG_VNC("draw_rect(%d, %d, %d, %d, color)\n", x, y, w, h);
         _gfx->fillRect(x, y, w, h, color);
     }
 
     void copy_rect(uint32_t src_x, uint32_t src_y, uint32_t dest_x, uint32_t dest_y, uint32_t w, uint32_t h)
     {
+        // DEBUG_VNC("copy_rect(%d, %d, %d, %d, %d, %d, data)\n", src_x, src_y, dest_x, dest_y, w, h);
     }
 
     void area_update_start(uint32_t x, uint32_t y, uint32_t w, uint32_t h)
     {
+        // DEBUG_VNC("area_update_start(%d, %d, %d, %d, color)\n", x, y, w, h);
         _gfx->startWrite();
+        _gfx->writeAddrWindow(x, y, w, h);
     }
 
     void area_update_data(char *data, uint32_t pixel)
     {
+        // DEBUG_VNC("area_update_data(data, %d)\n", pixel);
         _gfx->writePixels((uint16_t *)data, pixel);
     }
 
     void area_update_end(void)
     {
+        // DEBUG_VNC("area_update_end()\n");
         _gfx->endWrite();
     }
 
 private:
-    uint32_t area_x, area_y, area_w, area_h;
     Arduino_TFT *_gfx;
 };
 

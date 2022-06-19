@@ -60,12 +60,8 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 1 /* rotation */, false 
 
 #if defined(ESP32)
 #include <WiFi.h>
-#include <WiFiMulti.h>
-WiFiMulti wifiMulti;
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
-ESP8266WiFiMulti WiFiMulti;
 #elif defined(RTL8722DM)
 #include <WiFi.h>
 #endif
@@ -120,19 +116,13 @@ void setup(void)
 
     Serial.println("Init WiFi");
     gfx->println("Init WiFi");
-#if defined(ESP32)
-    wifiMulti.addAP(SSID_NAME, SSID_PASSWORD);
-    while ((wifiMulti.run() == WL_CONNECTED))
-#elif defined(ESP8266)
+#if defined(ESP8266)
     // disable sleep mode for better data rate
     WiFi.setSleepMode(WIFI_NONE_SLEEP);
     WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP(SSID_NAME, SSID_PASSWORD);
-    while ((wifiMulti.run() == WL_CONNECTED))
-#elif defined(RTL8722DM)
+#endif
     WiFi.begin(SSID_NAME, SSID_PASSWORD);
     while (WiFi.status() != WL_CONNECTED)
-#endif
     {
         delay(500);
         Serial.print(".");
@@ -154,13 +144,7 @@ void setup(void)
 
 void loop()
 {
-#if defined(ESP32)
-    if ((wifiMulti.run() != WL_CONNECTED))
-#elif defined(ESP8266)
-    if ((WiFiMulti.run() != WL_CONNECTED))
-#elif defined(RTL8722DM)
-    if (WiFi.begin(SSID_NAME, SSID_PASSWORD) != WL_CONNECTED)
-#endif
+    if (WiFi.status() != WL_CONNECTED)
     {
         vnc.reconnect();
         TFTnoWifi();
