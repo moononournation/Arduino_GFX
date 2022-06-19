@@ -116,12 +116,16 @@ void setup(void)
 
     Serial.println("Init WiFi");
     gfx->println("Init WiFi");
-#if defined(ESP8266)
+#if defined(ESP32)
+    WiFi.begin(SSID_NAME, SSID_PASSWORD);
+#elif defined(ESP8266)
     // disable sleep mode for better data rate
     WiFi.setSleepMode(WIFI_NONE_SLEEP);
     WiFi.mode(WIFI_STA);
-#endif
     WiFi.begin(SSID_NAME, SSID_PASSWORD);
+#elif defined(RTL8722DM)
+    WiFi.begin((char *)SSID_NAME, (char *)SSID_PASSWORD);
+#endif
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
