@@ -3,7 +3,7 @@
  * This is a simple VNC sample
  * 
  * Dependent libraries:
- * ArduinoVNC: https://github.com/Links2004/arduinoVNC
+ * ArduinoVNC: https://github.com/moononournation/arduinoVNC.git
  *
  * Setup steps:
  * 1. Fill your own SSID_NAME, SSID_PASSWORD, VNC_IP, VNC_PORT and VNC_PASSWORD
