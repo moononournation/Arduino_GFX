@@ -41,12 +41,12 @@ public:
 
     void copy_rect(uint32_t src_x, uint32_t src_y, uint32_t dest_x, uint32_t dest_y, uint32_t w, uint32_t h)
     {
-        // DEBUG_VNC("copy_rect(%d, %d, %d, %d, %d, %d, data)\n", src_x, src_y, dest_x, dest_y, w, h);
+        // DEBUG_VNC("copy_rect(%d, %d, %d, %d, %d, %d)\n", src_x, src_y, dest_x, dest_y, w, h);
     }
 
     void area_update_start(uint32_t x, uint32_t y, uint32_t w, uint32_t h)
     {
-        // DEBUG_VNC("area_update_start(%d, %d, %d, %d, color)\n", x, y, w, h);
+        // DEBUG_VNC("area_update_start(%d, %d, %d, %d)\n", x, y, w, h);
         _gfx->startWrite();
         _gfx->writeAddrWindow(x, y, w, h);
     }
