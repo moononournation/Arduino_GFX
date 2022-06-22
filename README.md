@@ -45,7 +45,7 @@ gfx->println("Hello World!");
 
 U8g2 font list can be found at: https://github.com/olikraus/u8g2/wiki/fntlistall
 
-### U8g2 Font UTF8 Support
+### U8g2 Unicode (UTF8) Font Support
 Another U8g2 font advantage is the font support Unicode glyphs. Simply enable setUTF8Print:
 ```C
     gfx->begin();
