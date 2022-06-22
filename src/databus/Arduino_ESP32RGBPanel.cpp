@@ -7,12 +7,14 @@ Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
     int8_t de, int8_t vsync, int8_t hsync, int8_t pclk,
     int8_t r0, int8_t r1, int8_t r2, int8_t r3, int8_t r4,
     int8_t g0, int8_t g1, int8_t g2, int8_t g3, int8_t g4, int8_t g5,
-    int8_t b0, int8_t b1, int8_t b2, int8_t b3, int8_t b4)
+    int8_t b0, int8_t b1, int8_t b2, int8_t b3, int8_t b4,
+    bool useBigEndian)
     : _cs(cs), _sck(sck), _sda(sda),
       _de(de), _vsync(vsync), _hsync(hsync), _pclk(pclk),
       _r0(r0), _r1(r1), _r2(r2), _r3(r3), _r4(r4),
       _g0(g0), _g1(g1), _g2(g2), _g3(g3), _g4(g4), _g5(g5),
-      _b0(b0), _b1(b1), _b2(b2), _b3(b3), _b4(b4)
+      _b0(b0), _b1(b1), _b2(b2), _b3(b3), _b4(b4),
+      _useBigEndian(useBigEndian)
 {
 }
 
@@ -133,40 +135,44 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
   _panel_config->vsync_gpio_num = _vsync;
   _panel_config->hsync_gpio_num = _hsync;
   _panel_config->de_gpio_num = _de;
-  // _panel_config->data_gpio_nums[0] = _b0;
-  // _panel_config->data_gpio_nums[1] = _b1;
-  // _panel_config->data_gpio_nums[2] = _b2;
-  // _panel_config->data_gpio_nums[3] = _b3;
-  // _panel_config->data_gpio_nums[4] = _b4;
-  // _panel_config->data_gpio_nums[5] = _g0;
-  // _panel_config->data_gpio_nums[6] = _g1;
-  // _panel_config->data_gpio_nums[7] = _g2;
-  // _panel_config->data_gpio_nums[8] = _g3;
-  // _panel_config->data_gpio_nums[9] = _g4;
-  // _panel_config->data_gpio_nums[10] = _g5;
-  // _panel_config->data_gpio_nums[11] = _r0;
-  // _panel_config->data_gpio_nums[12] = _r1;
-  // _panel_config->data_gpio_nums[13] = _r2;
-  // _panel_config->data_gpio_nums[14] = _r3;
-  // _panel_config->data_gpio_nums[15] = _r4;
-
-  // Big Endian Pixel format
-  _panel_config->data_gpio_nums[0] = _g3;
-  _panel_config->data_gpio_nums[1] = _g4;
-  _panel_config->data_gpio_nums[2] = _g5;
-  _panel_config->data_gpio_nums[3] = _r0;
-  _panel_config->data_gpio_nums[4] = _r1;
-  _panel_config->data_gpio_nums[5] = _r2;
-  _panel_config->data_gpio_nums[6] = _r3;
-  _panel_config->data_gpio_nums[7] = _r4;
-  _panel_config->data_gpio_nums[8] = _b0;
-  _panel_config->data_gpio_nums[9] = _b1;
-  _panel_config->data_gpio_nums[10] = _b2;
-  _panel_config->data_gpio_nums[11] = _b3;
-  _panel_config->data_gpio_nums[12] = _b4;
-  _panel_config->data_gpio_nums[13] = _g0;
-  _panel_config->data_gpio_nums[14] = _g1;
-  _panel_config->data_gpio_nums[15] = _g2;
+  if (_useBigEndian)
+  {
+    _panel_config->data_gpio_nums[0] = _g3;
+    _panel_config->data_gpio_nums[1] = _g4;
+    _panel_config->data_gpio_nums[2] = _g5;
+    _panel_config->data_gpio_nums[3] = _r0;
+    _panel_config->data_gpio_nums[4] = _r1;
+    _panel_config->data_gpio_nums[5] = _r2;
+    _panel_config->data_gpio_nums[6] = _r3;
+    _panel_config->data_gpio_nums[7] = _r4;
+    _panel_config->data_gpio_nums[8] = _b0;
+    _panel_config->data_gpio_nums[9] = _b1;
+    _panel_config->data_gpio_nums[10] = _b2;
+    _panel_config->data_gpio_nums[11] = _b3;
+    _panel_config->data_gpio_nums[12] = _b4;
+    _panel_config->data_gpio_nums[13] = _g0;
+    _panel_config->data_gpio_nums[14] = _g1;
+    _panel_config->data_gpio_nums[15] = _g2;
+  }
+  else
+  {
+    _panel_config->data_gpio_nums[0] = _b0;
+    _panel_config->data_gpio_nums[1] = _b1;
+    _panel_config->data_gpio_nums[2] = _b2;
+    _panel_config->data_gpio_nums[3] = _b3;
+    _panel_config->data_gpio_nums[4] = _b4;
+    _panel_config->data_gpio_nums[5] = _g0;
+    _panel_config->data_gpio_nums[6] = _g1;
+    _panel_config->data_gpio_nums[7] = _g2;
+    _panel_config->data_gpio_nums[8] = _g3;
+    _panel_config->data_gpio_nums[9] = _g4;
+    _panel_config->data_gpio_nums[10] = _g5;
+    _panel_config->data_gpio_nums[11] = _r0;
+    _panel_config->data_gpio_nums[12] = _r1;
+    _panel_config->data_gpio_nums[13] = _r2;
+    _panel_config->data_gpio_nums[14] = _r3;
+    _panel_config->data_gpio_nums[15] = _r4;
+  }
 
   _panel_config->timings.pclk_hz = _speed;
   _panel_config->timings.h_res = w;

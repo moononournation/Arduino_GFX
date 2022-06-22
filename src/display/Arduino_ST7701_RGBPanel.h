@@ -24,6 +24,8 @@ public:
   void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
   void draw16bitBeRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
 
+  uint16_t *getFramebuffer();
+
 protected:
   uint16_t *_framebuffer;
   Arduino_ESP32RGBPanel *_bus;

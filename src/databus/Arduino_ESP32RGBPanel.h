@@ -61,7 +61,8 @@ public:
       int8_t de, int8_t vsync, int8_t hsync, int8_t pclk,
       int8_t r0, int8_t r1, int8_t r2, int8_t r3, int8_t r4,
       int8_t g0, int8_t g1, int8_t g2, int8_t g3, int8_t g4, int8_t g5,
-      int8_t b0, int8_t b1, int8_t b2, int8_t b3, int8_t b4);
+      int8_t b0, int8_t b1, int8_t b2, int8_t b3, int8_t b4,
+      bool useBigEndian = false);
 
   virtual void begin(int32_t speed = 10000000L);
 
@@ -85,6 +86,7 @@ private:
   int8_t _r0, _r1, _r2, _r3, _r4;
   int8_t _g0, _g1, _g2, _g3, _g4, _g5;
   int8_t _b0, _b1, _b2, _b3, _b4;
+  bool _useBigEndian;
 
   esp_lcd_panel_handle_t _panel_handle = NULL;
   esp_rgb_panel_t *_rgb_panel;
