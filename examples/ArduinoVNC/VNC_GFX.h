@@ -30,7 +30,11 @@ public:
     void draw_area(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint8_t *data)
     {
         // DEBUG_VNC("draw_area(%d, %d, %d, %d, data)\n", x, y, w, h);
+#ifdef RTL8722DM
+        _gfx->draw16bitBeRGBBitmap(x, y, (uint16_t *)data, w, h);
+#else
         _gfx->draw16bitRGBBitmap(x, y, (uint16_t *)data, w, h);
+#endif
     }
 
     void draw_rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint16_t color)
@@ -54,7 +58,11 @@ public:
     void area_update_data(char *data, uint32_t pixel)
     {
         // DEBUG_VNC("area_update_data(data, %d)\n", pixel);
+#ifdef RTL8722DM
         _gfx->writePixels((uint16_t *)data, pixel);
+#else
+        _gfx->writeBytes((uint8_t *)data, pixel * 2);
+#endif
     }
 
     void area_update_end(void)
