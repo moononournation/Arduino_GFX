@@ -27,67 +27,75 @@ typedef struct esp_lcd_i80_bus_t esp_lcd_i80_bus_t;
 typedef struct lcd_panel_io_i80_t lcd_panel_io_i80_t;
 typedef struct lcd_i80_trans_descriptor_t lcd_i80_trans_descriptor_t;
 
-struct esp_lcd_i80_bus_t {
-    int bus_id;            // Bus ID, index from 0
-    portMUX_TYPE spinlock; // spinlock used to protect i80 bus members(hal, device_list, cur_trans)
-    lcd_hal_context_t hal; // Hal object
-    size_t bus_width;      // Number of data lines
-    intr_handle_t intr;    // LCD peripheral interrupt handle
-    esp_pm_lock_handle_t pm_lock; // Power management lock
-    size_t num_dma_nodes;  // Number of DMA descriptors
-    uint8_t *format_buffer;  // The driver allocates an internal buffer for DMA to do data format transformer
-    size_t resolution_hz;    // LCD_CLK resolution, determined by selected clock source
-    gdma_channel_handle_t dma_chan; // DMA channel handle
-    size_t psram_trans_align; // DMA transfer alignment for data allocated from PSRAM
-    size_t sram_trans_align;  // DMA transfer alignment for data allocated from SRAM
-    lcd_i80_trans_descriptor_t *cur_trans; // Current transaction
-    lcd_panel_io_i80_t *cur_device; // Current working device
-    LIST_HEAD(i80_device_list, lcd_panel_io_i80_t) device_list; // Head of i80 device list
-    struct {
-        unsigned int exclusive: 1; // Indicate whether the I80 bus is owned by one device (whose CS GPIO is not assigned) exclusively
-    } flags;
-    dma_descriptor_t dma_nodes[]; // DMA descriptor pool, the descriptors are shared by all i80 devices
+struct esp_lcd_i80_bus_t
+{
+  int bus_id;                            // Bus ID, index from 0
+  portMUX_TYPE spinlock;                 // spinlock used to protect i80 bus members(hal, device_list, cur_trans)
+  lcd_hal_context_t hal;                 // Hal object
+  size_t bus_width;                      // Number of data lines
+  intr_handle_t intr;                    // LCD peripheral interrupt handle
+  esp_pm_lock_handle_t pm_lock;          // Power management lock
+  size_t num_dma_nodes;                  // Number of DMA descriptors
+  uint8_t *format_buffer;                // The driver allocates an internal buffer for DMA to do data format transformer
+  size_t resolution_hz;                  // LCD_CLK resolution, determined by selected clock source
+  gdma_channel_handle_t dma_chan;        // DMA channel handle
+  size_t psram_trans_align;              // DMA transfer alignment for data allocated from PSRAM
+  size_t sram_trans_align;               // DMA transfer alignment for data allocated from SRAM
+  lcd_i80_trans_descriptor_t *cur_trans; // Current transaction
+  lcd_panel_io_i80_t *cur_device;        // Current working device
+  LIST_HEAD(i80_device_list, lcd_panel_io_i80_t)
+  device_list; // Head of i80 device list
+  struct
+  {
+    unsigned int exclusive : 1; // Indicate whether the I80 bus is owned by one device (whose CS GPIO is not assigned) exclusively
+  } flags;
+  dma_descriptor_t dma_nodes[]; // DMA descriptor pool, the descriptors are shared by all i80 devices
 };
 
-struct lcd_i80_trans_descriptor_t {
-    lcd_panel_io_i80_t *i80_device; // i80 device issuing this transaction
-    int cmd_value;        // Command value
-    uint32_t cmd_cycles;  // Command cycles
-    const void *data;     // Data buffer
-    uint32_t data_length; // Data buffer size
-    void *user_ctx;   // private data used by trans_done_cb
-    esp_lcd_panel_io_color_trans_done_cb_t trans_done_cb; // transaction done callback
+struct lcd_i80_trans_descriptor_t
+{
+  lcd_panel_io_i80_t *i80_device;                       // i80 device issuing this transaction
+  int cmd_value;                                        // Command value
+  uint32_t cmd_cycles;                                  // Command cycles
+  const void *data;                                     // Data buffer
+  uint32_t data_length;                                 // Data buffer size
+  void *user_ctx;                                       // private data used by trans_done_cb
+  esp_lcd_panel_io_color_trans_done_cb_t trans_done_cb; // transaction done callback
 };
 
-struct lcd_panel_io_i80_t {
-    esp_lcd_panel_io_t base;   // Base class of generic lcd panel io
-    esp_lcd_i80_bus_t *bus;    // Which bus the device is attached to
-    int cs_gpio_num;           // GPIO used for CS line
-    unsigned int pclk_hz;      // PCLK clock frequency
-    size_t clock_prescale;     // Prescaler coefficient, determined by user's configured PCLK frequency
-    QueueHandle_t trans_queue; // Transaction queue, transactions in this queue are pending for scheduler to dispatch
-    QueueHandle_t done_queue;  // Transaction done queue, transactions in this queue are finished but not recycled by the caller
-    size_t queue_size;         // Size of transaction queue
-    size_t num_trans_inflight; // Number of transactions that are undergoing (the descriptor not recycled yet)
-    int lcd_cmd_bits;          // Bit width of LCD command
-    int lcd_param_bits;        // Bit width of LCD parameter
-    void *user_ctx;            // private data used when transfer color data
-    esp_lcd_panel_io_color_trans_done_cb_t on_color_trans_done; // color data trans done callback
-    LIST_ENTRY(lcd_panel_io_i80_t) device_list_entry; // Entry of i80 device list
-    struct {
-        unsigned int dc_idle_level: 1;  // Level of DC line in IDLE phase
-        unsigned int dc_cmd_level: 1;   // Level of DC line in CMD phase
-        unsigned int dc_dummy_level: 1; // Level of DC line in DUMMY phase
-        unsigned int dc_data_level: 1;  // Level of DC line in DATA phase
-    } dc_levels;
-    struct {
-        unsigned int cs_active_high: 1;     // Whether the CS line is active on high level
-        unsigned int reverse_color_bits: 1; // Reverse the data bits, D[N:0] -> D[0:N]
-        unsigned int swap_color_bytes: 1;   // Swap adjacent two data bytes before sending out
-        unsigned int pclk_active_neg: 1;    // The display will write data lines when there's a falling edge on WR line
-        unsigned int pclk_idle_low: 1;      // The WR line keeps at low level in IDLE phase
-    } flags;
-    lcd_i80_trans_descriptor_t trans_pool[]; // Transaction pool
+struct lcd_panel_io_i80_t
+{
+  esp_lcd_panel_io_t base;                                    // Base class of generic lcd panel io
+  esp_lcd_i80_bus_t *bus;                                     // Which bus the device is attached to
+  int cs_gpio_num;                                            // GPIO used for CS line
+  unsigned int pclk_hz;                                       // PCLK clock frequency
+  size_t clock_prescale;                                      // Prescaler coefficient, determined by user's configured PCLK frequency
+  QueueHandle_t trans_queue;                                  // Transaction queue, transactions in this queue are pending for scheduler to dispatch
+  QueueHandle_t done_queue;                                   // Transaction done queue, transactions in this queue are finished but not recycled by the caller
+  size_t queue_size;                                          // Size of transaction queue
+  size_t num_trans_inflight;                                  // Number of transactions that are undergoing (the descriptor not recycled yet)
+  int lcd_cmd_bits;                                           // Bit width of LCD command
+  int lcd_param_bits;                                         // Bit width of LCD parameter
+  void *user_ctx;                                             // private data used when transfer color data
+  esp_lcd_panel_io_color_trans_done_cb_t on_color_trans_done; // color data trans done callback
+  LIST_ENTRY(lcd_panel_io_i80_t)
+  device_list_entry; // Entry of i80 device list
+  struct
+  {
+    unsigned int dc_idle_level : 1;  // Level of DC line in IDLE phase
+    unsigned int dc_cmd_level : 1;   // Level of DC line in CMD phase
+    unsigned int dc_dummy_level : 1; // Level of DC line in DUMMY phase
+    unsigned int dc_data_level : 1;  // Level of DC line in DATA phase
+  } dc_levels;
+  struct
+  {
+    unsigned int cs_active_high : 1;     // Whether the CS line is active on high level
+    unsigned int reverse_color_bits : 1; // Reverse the data bits, D[N:0] -> D[0:N]
+    unsigned int swap_color_bytes : 1;   // Swap adjacent two data bytes before sending out
+    unsigned int pclk_active_neg : 1;    // The display will write data lines when there's a falling edge on WR line
+    unsigned int pclk_idle_low : 1;      // The WR line keeps at low level in IDLE phase
+  } flags;
+  lcd_i80_trans_descriptor_t trans_pool[]; // Transaction pool
 };
 
 class Arduino_ESP32LCD16 : public Arduino_DataBus
@@ -130,16 +138,17 @@ private:
   PORTreg_t _csPortClr; ///< PORT register CLEAR
   uint32_t _csPinMask;  ///< Bitmask
 
+  uint32_t _fast_wait;
   esp_lcd_i80_bus_handle_t _i80_bus = nullptr;
   dma_descriptor_t *_dmadesc = nullptr;
   gdma_channel_handle_t _dma_chan;
-    union
+  union
   {
     uint32_t value;
     struct
     {
-      uint8_t value16;
-      uint8_t value16_2;
+      uint16_t value16;
+      uint16_t value16_2;
     };
     struct
     {
