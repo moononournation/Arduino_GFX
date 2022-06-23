@@ -59,9 +59,9 @@ public:
     {
         // DEBUG_VNC("area_update_data(data, %d)\n", pixel);
 #ifdef RTL8722DM
-        _gfx->writePixels((uint16_t *)data, pixel);
-#else
         _gfx->writeBytes((uint8_t *)data, pixel * 2);
+#else
+        _gfx->writePixels((uint16_t *)data, pixel);
 #endif
     }
 
