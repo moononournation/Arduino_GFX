@@ -4,11 +4,19 @@
  * 
  * Dependent libraries:
  * ArduinoVNC: https://github.com/moononournation/arduinoVNC.git
+ * 
+ * Touch libraries:
+ * FT6X36: https://github.com/strange-v/FT6X36.git
  *
  * Setup steps:
  * 1. Fill your own SSID_NAME, SSID_PASSWORD, VNC_IP, VNC_PORT and VNC_PASSWORD
  * 2. Change your LCD parameters in Arduino_GFX setting
  ******************************************************************************/
+
+// #define TOUCH_FT6X36
+// #define TOUCH_FT6X36_SCL 19
+// #define TOUCH_FT6X36_SDA 18
+// #define TOUCH_FT6X36_INT 39
 
 /* WiFi settings */
 const char *SSID_NAME = "YourAP";
@@ -69,8 +77,14 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 1 /* rotation */, false 
 #include "VNC_GFX.h"
 #include <VNC.h>
 
-VNC_GFX *vnc_gfx = new VNC_GFX((Arduino_TFT *)gfx);
+VNC_GFX *vnc_gfx = new VNC_GFX(gfx);
 arduinoVNC vnc = arduinoVNC(vnc_gfx);
+
+#if defined(TOUCH_FT6X36)
+#include <Wire.h>
+#include <FT6X36.h>
+FT6X36 ts(&Wire, TOUCH_FT6X36_INT);
+#endif
 
 void TFTnoWifi(void)
 {
@@ -97,12 +111,52 @@ void TFTnoVNC(void)
     gfx->println(VNC_PORT);
 }
 
+#if defined(TOUCH_FT6X36)
+void touch(TPoint p, TEvent e)
+{
+    if (e != TEvent::Tap && e != TEvent::DragStart && e != TEvent::DragMove && e != TEvent::DragEnd)
+    return;
+  
+    int x = map(p.y, 480, 0, 0, 480);
+    int y = map(p.x, 0, 320, 0, 320);
+    switch (e)
+    {
+    case TEvent::Tap:
+        Serial.println("Tap");
+        vnc.mouseEvent(x, y, 0b001);
+        vnc.mouseEvent(x, y, 0b000);
+        break;
+    case TEvent::DragStart:
+        Serial.println("DragStart");
+        vnc.mouseEvent(x, y, 0b001);
+        break;
+    case TEvent::DragMove:
+        Serial.println("DragMove");
+        vnc.mouseEvent(x, y, 0b001);
+        break;
+    case TEvent::DragEnd:
+        Serial.println("DragEnd");
+        vnc.mouseEvent(x, y, 0b000);
+        break;
+    default:
+        Serial.println("UNKNOWN");
+        break;
+    }
+}
+#endif
+
 void setup(void)
 {
     Serial.begin(115200);
     // while (!Serial);
     // Serial.setDebugOutput(true);
     Serial.println("Arduino VNC");
+
+#if defined(TOUCH_FT6X36)
+    Wire.begin(TOUCH_FT6X36_SDA, TOUCH_FT6X36_SCL);
+    ts.begin();
+    ts.registerTouchHandler(touch);
+#endif
 
     Serial.println("Init display");
     gfx->begin();
@@ -156,6 +210,12 @@ void loop()
     }
     else
     {
+#if defined(TOUCH_FT6X36)
+        if (vnc.connected())
+        {
+            ts.loop();
+        }
+#endif
         vnc.loop();
         if (!vnc.connected())
         {
