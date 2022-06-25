@@ -36,6 +36,7 @@ public:
     void draw_rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint16_t color)
     {
         // DEBUG_VNC("draw_rect(%d, %d, %d, %d, color)\n", x, y, w, h);
+        MSB_16_SET(color, color);
         _gfx->fillRect(x, y, w, h, color);
     }
 
