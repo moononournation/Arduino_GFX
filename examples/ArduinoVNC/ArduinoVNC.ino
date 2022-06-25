@@ -117,8 +117,9 @@ void touch(TPoint p, TEvent e)
     if (e != TEvent::Tap && e != TEvent::DragStart && e != TEvent::DragMove && e != TEvent::DragEnd)
     return;
   
-    int x = map(p.y, 480, 0, 0, 480);
-    int y = map(p.x, 0, 320, 0, 320);
+    // translation logic depends on screen rotation
+    int x = map(p.y, 480, 0, 0, gfx->width());
+    int y = map(p.x, 0, 320, 0, gfx->height());
     switch (e)
     {
     case TEvent::Tap:
