@@ -6,7 +6,7 @@
 #include "VNC_config.h"
 
 #ifdef ESP32
-#define SEPARATE_DRAW_TASK
+// #define SEPARATE_DRAW_TASK
 #endif
 
 #ifdef SEPARATE_DRAW_TASK
