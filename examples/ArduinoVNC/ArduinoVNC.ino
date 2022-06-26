@@ -197,6 +197,10 @@ void setup(void)
 
     Serial.println(F("[SETUP] VNC..."));
 
+#ifdef SEPARATE_DRAW_TASK
+    draw_task_setup();
+#endif
+
     vnc.begin(VNC_IP, VNC_PORT);
     vnc.setPassword(VNC_PASSWORD); // optional
 }
