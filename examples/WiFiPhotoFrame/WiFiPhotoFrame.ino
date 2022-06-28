@@ -16,7 +16,7 @@
 #define HTTP_PORT 8080
 #define HTTP_PATH_TEMPLATE "/?w=%d&h=%d"
 
-#define HTTP_TIMEOUT 7000 // in ms, wait a while for server processing
+#define HTTP_TIMEOUT 30000 // in ms, wait a while for server processing
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
@@ -61,9 +61,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false 
 #if defined(ESP32)
 #include <esp_task_wdt.h>
 #include <WiFi.h>
-#include <WiFiMulti.h>
 #include <HTTPClient.h>
-WiFiMulti wifiMulti;
 HTTPClient http;
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
@@ -92,16 +90,6 @@ void setup()
   // while (!Serial);
   Serial.println("WiFi Photo Frame");
 
-  Serial.println("Init WiFi");
-#if defined(ESP32)
-  wifiMulti.addAP(SSID_NAME, SSID_PASSWORD);
-#elif defined(ESP8266)
-  WiFi.mode(WIFI_STA);
-  WiFiMulti.addAP(SSID_NAME, SSID_PASSWORD);
-#elif defined(RTL8722DM)
-  WiFi.begin(SSID_NAME, SSID_PASSWORD);
-#endif
-
   Serial.println("Init display");
   gfx->begin();
   gfx->fillScreen(BLACK);
@@ -113,7 +101,7 @@ void setup()
 
   Serial.println("Init WiFi");
   gfx->println("Init WiFi");
-#if defined(RTL8722DM)
+  WiFi.mode(WIFI_STA);
   WiFi.begin(SSID_NAME, SSID_PASSWORD);
   while (WiFi.status() != WL_CONNECTED)
   {
@@ -122,8 +110,7 @@ void setup()
     gfx->print(".");
   }
   Serial.println(" CONNECTED");
-  gfx->.println(" CONNECTED");
-#endif
+  gfx->println(" CONNECTED");
 
   Serial.println("Init HTTP path");
   gfx->println("Init HTTP path");
@@ -150,18 +137,9 @@ void loop()
   }
   else
   {
-#if defined(ESP32)
-    if ((wifiMulti.run() == WL_CONNECTED))
-    {
-#elif defined(ESP8266)
-    if ((WiFiMulti.run() == WL_CONNECTED))
+    if (WiFi.status() == WL_CONNECTED)
     {
       WiFiClient client;
-#elif defined(RTL8722DM)
-    if (WiFi.begin(SSID_NAME, SSID_PASSWORD) == WL_CONNECTED)
-    {
-      WiFiClient client;
-#endif
       next_show_millis = ((millis() / 60000L) + 1) * 60000L; // next minute
       printf("[HTTP] begin...\n");
 #if defined(ESP32) || defined(ESP8266)
