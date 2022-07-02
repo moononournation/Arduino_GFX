@@ -60,8 +60,6 @@ void Arduino_ILI9331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
 {
   if ((x != _currentX) || (w != _currentW))
   {
-    _currentX = x;
-    _currentW = w;
     x += _xStart;
     _bus->writeC16D16(ILI9331_MC, x);
     if (!(x == _currentX && y == _currentY))
@@ -73,8 +71,6 @@ void Arduino_ILI9331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
 
   if ((y != _currentY) || (h != _currentH))
   {
-    _currentY = y;
-    _currentH = h;
     y += _yStart;
     _bus->writeC16D16(ILI9331_MP, y);
     if (!(x == _currentX && y == _currentY))
@@ -83,7 +79,11 @@ void Arduino_ILI9331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
       _bus->writeC16D16(ILI9331_VSE, y + h - 1);
     }
   }
-
+  _currentX = x;
+  _currentW = w;
+  _currentY = y;
+  _currentH = h;
+    
   _bus->writeCommand16(ILI9331_MW);
 }
 
