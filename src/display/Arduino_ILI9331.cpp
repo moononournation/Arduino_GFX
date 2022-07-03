@@ -1,6 +1,7 @@
 /*
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
+ * https://github.com/adafruit/Adafruit_ILI9331.git
  */
 #include "Arduino_ILI9331.h"
 #include "SPI.h"
@@ -23,35 +24,46 @@ void Arduino_ILI9331::begin(int32_t speed)
 /**************************************************************************/
 void Arduino_ILI9331::setRotation(uint8_t r)
 {
-  uint16_t gsc1, drvoutctl, entry_mode;
+  uint16_t GS, SS, ORG;
   Arduino_TFT::setRotation(r);
   switch (_rotation)
   {
   case 1:
-    gsc1 = 0x2700;
-    drvoutctl = 0;
-    entry_mode = 0x1038;
+    GS = 0x2700;
+    SS = 0;
+    ORG = 0x1038;
     break;
   case 2:
-    gsc1 = 0xA700;
-    drvoutctl = 0;
-    entry_mode = 0x1030;
+    GS = 0xA700;
+    SS = 0;
+    ORG = 0x1030;
     break;
   case 3:
-    gsc1 = 0xA700;
-    drvoutctl = 0x100;
-    entry_mode = 0x1038;
+    GS = 0xA700;
+    SS = 0x100;
+    ORG = 0x1038;
     break;
   default: // case 0:
-    gsc1 = 0x2700;
-    drvoutctl = 0x100;
-    entry_mode = 0x1030;
+    GS = 0x2700;
+    SS = 0x100;
+    ORG = 0x1030;
     break;
   }
+
+  _MC = 0x20, _MP = 0x21, _SC = 0x50, _EC = 0x51, _SP = 0x52, _EP = 0x53;
+
+  if ((_rotation & 1))
+  {
+    uint16_t x;
+    x = _MC, _MC = _MP, _MP = x;
+    x = _SC, _SC = _SP, _SP = x; 
+    x = _EC, _EC = _EP, _EP = x; 
+  }
+
   _bus->beginWrite();
-  _bus->writeC16D16(ILI9331_GSC1, gsc1); // Set the direction of scan by the gate driver
-  _bus->writeC16D16(ILI9331_DRVOUTCTL, drvoutctl); // Select the shift direction of outputs from the source driver
-  _bus->writeC16D16(ILI9331_ENTRY_MODE, entry_mode); // Set GRAM write direction
+  _bus->writeC16D16(ILI9331_GSC1, GS); // Set the direction of scan by the gate driver
+  _bus->writeC16D16(ILI9331_DRVOUTCTL, SS); // Select the shift direction of outputs from the source driver
+  _bus->writeC16D16(ILI9331_ENTRY_MODE, ORG); // Set GRAM write direction
   _bus->writeCommand16(ILI9331_MW); // Write to GRAM
   _bus->endWrite();
 }
@@ -63,12 +75,9 @@ void Arduino_ILI9331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
     _currentX = x;
     _currentW = w;
     x += _xStart;
-    _bus->writeC16D16(ILI9331_MC, x);
-    if (!(x == _currentX && y == _currentY))
-    { 
-      _bus->writeC16D16(ILI9331_HSA, x);
-      _bus->writeC16D16(ILI9331_HSE, x + w - 1);
-    }
+    _bus->writeC16D16(_MC, x);
+    _bus->writeC16D16(_SC, x);
+    _bus->writeC16D16(_EC, x + w - 1);
   }
 
   if ((y != _currentY) || (h != _currentH))
@@ -76,12 +85,9 @@ void Arduino_ILI9331::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
     _currentY = y;
     _currentH = h;
     y += _yStart;
-    _bus->writeC16D16(ILI9331_MP, y);
-    if (!(x == _currentX && y == _currentY))
-    { 
-      _bus->writeC16D16(ILI9331_VSA, y);
-      _bus->writeC16D16(ILI9331_VSE, y + h - 1);
-    }
+    _bus->writeC16D16(_MP, y);
+    _bus->writeC16D16(_SP, y);
+    _bus->writeC16D16(_EP, y + h - 1);
   }
 
   _bus->writeCommand16(ILI9331_MW);

@@ -89,6 +89,7 @@ protected:
   void tftInit() override;
 
 private:
+  uint16_t _MC, _MP, _SC, _EC, _SP, _EP;
 };
 
 #endif
