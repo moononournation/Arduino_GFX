@@ -15,6 +15,17 @@ void Arduino_ST7701_RGBPanel::begin(int32_t speed)
 {
     _bus->begin(speed);
 
+    if (_rst != GFX_NOT_DEFINED)
+    {
+        pinMode(_rst, OUTPUT);
+        digitalWrite(_rst, HIGH);
+        delay(100);
+        digitalWrite(_rst, LOW);
+        delay(120);
+        digitalWrite(_rst, HIGH);
+        delay(120);
+    }
+
     _bus->sendCommand(0xFF);
     _bus->sendData(0x77);
     _bus->sendData(0x01);
