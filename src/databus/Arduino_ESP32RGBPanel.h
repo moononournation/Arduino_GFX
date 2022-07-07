@@ -68,7 +68,10 @@ public:
 
   void sendCommand(uint8_t c);
   void sendData(uint8_t d);
-  uint16_t *getFrameBuffer(int16_t w, int16_t h);
+  uint16_t *getFrameBuffer(
+      int16_t w, int16_t h,
+      uint16_t hsync_pulse_width = 18, uint16_t hsync_back_porch = 24, uint16_t hsync_front_porch = 6,
+      uint16_t vsync_pulse_width = 10, uint16_t vsync_back_porch = 16, uint16_t vsync_front_porch = 4);
 
 protected:
 private:

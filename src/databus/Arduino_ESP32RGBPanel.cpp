@@ -123,7 +123,10 @@ void Arduino_ESP32RGBPanel::sendData(uint8_t d)
   CS_HIGH();
 }
 
-uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
+uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(
+    int16_t w, int16_t h,
+    uint16_t hsync_pulse_width, uint16_t hsync_back_porch, uint16_t hsync_front_porch,
+    uint16_t vsync_pulse_width, uint16_t vsync_back_porch, uint16_t vsync_front_porch)
 {
   esp_lcd_rgb_panel_config_t *_panel_config = (esp_lcd_rgb_panel_config_t *)heap_caps_calloc(1, sizeof(esp_lcd_rgb_panel_config_t), MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL);
 
@@ -178,12 +181,12 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
   _panel_config->timings.h_res = w;
   _panel_config->timings.v_res = h;
   // The following parameters should refer to LCD spec
-  _panel_config->timings.hsync_back_porch = 50;
-  _panel_config->timings.hsync_front_porch = 10;
-  _panel_config->timings.hsync_pulse_width = 8;
-  _panel_config->timings.vsync_back_porch = 20;
-  _panel_config->timings.vsync_front_porch = 10;
-  _panel_config->timings.vsync_pulse_width = 8;
+  _panel_config->timings.hsync_back_porch = hsync_back_porch;
+  _panel_config->timings.hsync_front_porch = hsync_front_porch;
+  _panel_config->timings.hsync_pulse_width = hsync_pulse_width;
+  _panel_config->timings.vsync_back_porch = vsync_back_porch;
+  _panel_config->timings.vsync_front_porch = vsync_front_porch;
+  _panel_config->timings.vsync_pulse_width = vsync_pulse_width;
   _panel_config->timings.flags.pclk_active_neg = 0; // RGB data is clocked out on falling edge
   _panel_config->flags.fb_in_psram = 1;             // allocate frame buffer in PSRAM
   _panel_config->flags.relax_on_idle = 0;
