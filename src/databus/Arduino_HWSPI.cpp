@@ -36,7 +36,7 @@ Arduino_HWSPI::Arduino_HWSPI(int8_t dc, int8_t cs /* = GFX_NOT_DEFINED */, SPICl
 
 void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 {
-  _speed = speed ? speed : SPI_DEFAULT_FREQ;
+  _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
   _dataMode = dataMode;
 
   pinMode(_dc, OUTPUT);
@@ -147,14 +147,14 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 
 #if defined(ESP32)
   _spi->begin(_sck, _miso, _mosi);
-  if (_dataMode < 0)
+  if (_dataMode == GFX_NOT_DEFINED)
   {
     _dataMode = SPI_MODE0;
   }
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(ESP8266)
   _spi->begin();
-  if (_dataMode < 0)
+  if (_dataMode == GFX_NOT_DEFINED)
   {
     _dataMode = SPI_MODE0;
   }
@@ -162,14 +162,14 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 // Teensy 4.x
 #elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
   _spi->begin();
-  if (_dataMode < 0)
+  if (_dataMode == GFX_NOT_DEFINED)
   {
     _dataMode = SPI_MODE0;
   }
   mySPISettings = SPISettings(_speed, MSBFIRST, _dataMode);
 #elif defined(SPI_HAS_TRANSACTION)
   _spi->begin();
-  if (_dataMode < 0)
+  if (_dataMode == GFX_NOT_DEFINED)
   {
     _dataMode = SPI_MODE2;
   }
@@ -178,7 +178,7 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
   SPCRbackup = SPCR;
   _spi->begin();
   _spi->setClockDivider(SPI_CLOCK_DIV2);
-  if (_dataMode < 0)
+  if (_dataMode == GFX_NOT_DEFINED)
   {
     _dataMode = SPI_MODE2;
   }
@@ -188,13 +188,13 @@ void Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
 #elif defined(__SAM3X8E__)
   _spi->begin();
   _spi->setClockDivider(21); // 4MHz
-  if (_dataMode < 0)
+  if (_dataMode == GFX_NOT_DEFINED)
   {
     _dataMode = SPI_MODE2;
   }
   _spi->setDataMode(_dataMode);
 #elif defined(__arm__)
-  if (_dataMode < 0)
+  if (_dataMode == GFX_NOT_DEFINED)
   {
     _dataMode = SPI_MODE2;
   }

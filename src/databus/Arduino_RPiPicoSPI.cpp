@@ -11,7 +11,7 @@ Arduino_RPiPicoSPI::Arduino_RPiPicoSPI(int8_t dc /* = GFX_NOT_DEFINED */, int8_t
 void Arduino_RPiPicoSPI::begin(int32_t speed /* = 0 */, int8_t dataMode /* = GFX_NOT_DEFINED */)
 {
   // set SPI parameters
-  _speed = speed ? speed : SPI_DEFAULT_FREQ;
+  _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
   _dataMode = (dataMode != GFX_NOT_DEFINED) ? dataMode : SPI_MODE0;
   _spis = SPISettings(_speed, _bitOrder, _dataMode);
 

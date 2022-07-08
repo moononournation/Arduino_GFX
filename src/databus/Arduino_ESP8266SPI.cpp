@@ -16,8 +16,8 @@ Arduino_ESP8266SPI::Arduino_ESP8266SPI(int8_t dc, int8_t cs /* = GFX_NOT_DEFINED
 
 void Arduino_ESP8266SPI::begin(int32_t speed, int8_t dataMode)
 {
-  _speed = speed ? speed : SPI_DEFAULT_FREQ;
-  _dataMode = dataMode;
+  _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
+  _dataMode = (dataMode == GFX_NOT_DEFINED) ? SPI_MODE0 : dataMode;
 
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
@@ -38,7 +38,7 @@ void Arduino_ESP8266SPI::begin(int32_t speed, int8_t dataMode)
   _dcPinMaskClr = ~_dcPinMaskSet;
 
   SPI.begin();
-  if (_dataMode < 0)
+  if (_dataMode == GFX_NOT_DEFINED)
   {
     _dataMode = SPI_MODE0;
   }

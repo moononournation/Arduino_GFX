@@ -13,8 +13,8 @@ Arduino_NRFXSPI::Arduino_NRFXSPI(int8_t dc, int8_t cs /* = GFX_NOT_DEFINED */, i
 
 void Arduino_NRFXSPI::begin(int32_t speed, int8_t dataMode)
 {
-  _speed = speed ? speed : SPI_DEFAULT_FREQ;
-  _dataMode = dataMode;
+  _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
+  _dataMode = (dataMode == GFX_NOT_DEFINED) ? SPI_MODE2 : dataMode;
 
   // init pin mask
   uint32_t pin = digitalPinToPinName((pin_size_t)_dc);
@@ -76,12 +76,7 @@ void Arduino_NRFXSPI::begin(int32_t speed, int8_t dataMode)
   }
 
   // init data mode
-  if (_dataMode < 0)
-  {
-    _dataMode = SPI_MODE0;
-    _nrfxSpiConfig.mode = NRF_SPI_MODE_0;
-  }
-  else if (_dataMode == SPI_MODE1)
+  if (_dataMode == SPI_MODE1)
   {
     _nrfxSpiConfig.mode = NRF_SPI_MODE_1;
   }
@@ -92,6 +87,11 @@ void Arduino_NRFXSPI::begin(int32_t speed, int8_t dataMode)
   else if (_dataMode == SPI_MODE3)
   {
     _nrfxSpiConfig.mode = NRF_SPI_MODE_3;
+  }
+  else
+  {
+    _dataMode = SPI_MODE0;
+    _nrfxSpiConfig.mode = NRF_SPI_MODE_0;
   }
 
   // init SPI

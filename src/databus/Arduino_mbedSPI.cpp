@@ -13,8 +13,8 @@ Arduino_mbedSPI::Arduino_mbedSPI(int8_t dc, int8_t cs /* = GFX_NOT_DEFINED */)
 
 void Arduino_mbedSPI::begin(int32_t speed, int8_t dataMode)
 {
-  _speed = speed ? speed : SPI_DEFAULT_FREQ;
-  _dataMode = dataMode;
+  _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
+  _dataMode = (dataMode == GFX_NOT_DEFINED) ? SPI_MODE2 : dataMode;
 
   uint32_t pin = digitalPinToPinName((pin_size_t)_dc);
   NRF_GPIO_Type *reg = nrf_gpio_pin_port_decode(&pin);
@@ -32,7 +32,7 @@ void Arduino_mbedSPI::begin(int32_t speed, int8_t dataMode)
     _csPinMask = 1UL << pin;
   }
 
-  if (_dataMode < 0)
+  if (_dataMode == GFX_NOT_DEFINED)
   {
     _dataMode = SPI_MODE0;
   }

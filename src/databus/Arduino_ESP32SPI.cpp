@@ -143,8 +143,9 @@ static void spiInitBus(spi_t *spi)
 void Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
 {
   // set SPI parameters
-  _speed = speed ? speed : SPI_DEFAULT_FREQ;
-  _dataMode = dataMode;
+  _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
+  _dataMode = (dataMode == GFX_NOT_DEFINED) ? SPI_MODE0 : dataMode;
+;
   if (!_div)
   {
     _div = spiFrequencyToClockDiv(_speed);
