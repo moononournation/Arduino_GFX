@@ -127,19 +127,25 @@
 #define DF_GFX_BL 6
 #elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
 // PJRC Teensy 4.x
+#define DF_GFX_SCK 13
+#define DF_GFX_MOSI 11
+#define DF_GFX_MISO 12
 #define DF_GFX_CS 39 // GFX_NOT_DEFINED for display without CS pin
 #define DF_GFX_DC 41
 #define DF_GFX_RST 40
 #define DF_GFX_BL 22
 #elif defined(ARDUINO_BLACKPILL_F411CE)
+#define DF_GFX_SCK 5
+#define DF_GFX_MOSI 7
+#define DF_GFX_MISO 6
 #define DF_GFX_CS 4
 #define DF_GFX_DC 3
 #define DF_GFX_RST 2
 #define DF_GFX_BL 1
 #elif defined(ARDUINO_RASPBERRY_PI_PICO)
-#define DF_GFX_SCK PIN_SPI0_SCK
-#define DF_GFX_MOSI PIN_SPI0_MOSI
-#define DF_GFX_MISO PIN_SPI0_MISO
+#define DF_GFX_SCK 18
+#define DF_GFX_MOSI 19
+#define DF_GFX_MISO 16
 #define DF_GFX_CS 17
 #define DF_GFX_DC 27
 #define DF_GFX_RST 26
@@ -177,38 +183,59 @@
 #define DF_GFX_RST 1
 #define DF_GFX_BL 3
 #elif defined(ESP8266)
+#define DF_GFX_SCK 14
+#define DF_GFX_MOSI 13
+#define DF_GFX_MISO 12
 #define DF_GFX_CS 15
 #define DF_GFX_DC 4
 #define DF_GFX_RST 2
 #define DF_GFX_BL 5
 #elif defined(RTL8722DM)
 #if defined(BOARD_RTL8720DN_BW16)
+#define DF_GFX_SCK 10
+#define DF_GFX_MOSI 12
+#define DF_GFX_MISO 11
 #define DF_GFX_CS 9
 #define DF_GFX_DC 8
 #define DF_GFX_RST 6
 #define DF_GFX_BL 3
 #elif defined(BOARD_RTL8722DM)
+#define DF_GFX_SCK 13
+#define DF_GFX_MOSI 11
+#define DF_GFX_MISO 12
 #define DF_GFX_CS 18
 #define DF_GFX_DC 17
 #define DF_GFX_RST 22
 #define DF_GFX_BL 23
 #elif defined(BOARD_RTL8722DM_MINI)
+#define DF_GFX_SCK 11
+#define DF_GFX_MOSI 9
+#define DF_GFX_MISO 10
 #define DF_GFX_CS 12
 #define DF_GFX_DC 14
 #define DF_GFX_RST 15
 #define DF_GFX_BL 13
 #else // old version
+#define DF_GFX_SCK 19
+#define DF_GFX_MOSI 21
+#define DF_GFX_MISO 20
 #define DF_GFX_CS 18 // GFX_NOT_DEFINED for display without CS pin
 #define DF_GFX_DC 17
 #define DF_GFX_RST 2
 #define DF_GFX_BL 23
 #endif
 #elif defined(SEEED_XIAO_M0)
+#define DF_GFX_SCK 8
+#define DF_GFX_MOSI 10
+#define DF_GFX_MISO 9
 #define DF_GFX_CS 3 // GFX_NOT_DEFINED for display without CS pin
 #define DF_GFX_DC 2
 #define DF_GFX_RST 1
 #define DF_GFX_BL 0
 #else // default pins for Arduino Nano, Mini, Micro and more
+#define DF_GFX_SCK 13
+#define DF_GFX_MOSI 11
+#define DF_GFX_MISO 12
 #define DF_GFX_CS 9
 #define DF_GFX_DC 8
 #define DF_GFX_RST 7
