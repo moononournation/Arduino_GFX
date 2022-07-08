@@ -20,7 +20,18 @@ Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
 
 void Arduino_ESP32RGBPanel::begin(int32_t speed)
 {
-  _speed = speed;
+  if (speed == GFX_NOT_DEFINED)
+  {
+#ifdef CONFIG_SPIRAM_MODE_QUAD
+    _speed = 6000000L;
+#else
+    _speed = 12000000L;
+#endif
+  }
+  else
+  {
+    _speed = speed;
+  }
 
   pinMode(_cs, OUTPUT);
   digitalWrite(_cs, HIGH); // Deselect
@@ -64,6 +75,56 @@ void Arduino_ESP32RGBPanel::begin(int32_t speed)
     _sdaPinMask = digitalPinToBitMask(_sda);
     _sdaPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _sdaPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+}
+
+void Arduino_ESP32RGBPanel::batchOperation(uint8_t batch[], size_t len)
+{
+  for (size_t i = 0; i < len; ++i)
+  {
+    uint8_t l = 0;
+    switch (batch[i])
+    {
+    case BEGIN_WRITE:
+      break;
+    case WRITE_C8_D16:
+      l++;
+      /* fall through */
+    case WRITE_C8_D8:
+      l++;
+      /* fall through */
+    case WRITE_COMMAND_8:
+      sendCommand(batch[++i]);
+      break;
+    case WRITE_C16_D16:
+      l = 2;
+      /* fall through */
+    case WRITE_COMMAND_16:
+      sendCommand(batch[++i]);
+      sendCommand(batch[++i]);
+      break;
+    case WRITE_DATA_8:
+      l = 1;
+      break;
+    case WRITE_DATA_16:
+      l = 2;
+      break;
+    case WRITE_BYTES:
+      l = batch[++i];
+      break;
+    case END_WRITE:
+      break;
+    case DELAY:
+      delay(batch[++i]);
+      break;
+    default:
+      printf("Unknown operation id at %d: %d", i, batch[i]);
+      break;
+    }
+    while (l--)
+    {
+      sendData(batch[++i]);
+    }
   }
 }
 

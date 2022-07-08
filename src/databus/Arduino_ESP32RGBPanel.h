@@ -64,7 +64,8 @@ public:
       int8_t b0, int8_t b1, int8_t b2, int8_t b3, int8_t b4,
       bool useBigEndian = false);
 
-  virtual void begin(int32_t speed = 10000000L);
+  void begin(int32_t speed = GFX_NOT_DEFINED);
+  void batchOperation(uint8_t batch[], size_t len);
 
   void sendCommand(uint8_t c);
   void sendData(uint8_t d);
