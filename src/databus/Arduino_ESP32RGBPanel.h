@@ -53,7 +53,7 @@ struct esp_rgb_panel_t
   dma_descriptor_t dma_nodes[]; // DMA descriptor pool of size `num_dma_nodes`
 };
 
-class Arduino_ESP32RGBPanel
+class Arduino_ESP32RGBPanel : public Arduino_DataBus
 {
 public:
   Arduino_ESP32RGBPanel(
@@ -64,11 +64,19 @@ public:
       int8_t b0, int8_t b1, int8_t b2, int8_t b3, int8_t b4,
       bool useBigEndian = false);
 
-  void begin(int32_t speed = GFX_NOT_DEFINED);
-  void batchOperation(uint8_t batch[], size_t len);
+  void begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = GFX_NOT_DEFINED) override;
+  void beginWrite() override;
+  void endWrite() override;
+  void writeCommand(uint8_t) override;
+  void writeCommand16(uint16_t) override;
+  void write(uint8_t) override;
+  void write16(uint16_t) override;
+  void writeRepeat(uint16_t p, uint32_t len) override;
+  void writePixels(uint16_t *data, uint32_t len) override;
 
-  void sendCommand(uint8_t c);
-  void sendData(uint8_t d);
+  void writeBytes(uint8_t *data, uint32_t len) override;
+  void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
+
   uint16_t *getFrameBuffer(
       int16_t w, int16_t h,
       uint16_t hsync_pulse_width = 18, uint16_t hsync_back_porch = 24, uint16_t hsync_front_porch = 6,

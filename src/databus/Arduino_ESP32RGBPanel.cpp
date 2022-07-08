@@ -18,7 +18,7 @@ Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
 {
 }
 
-void Arduino_ESP32RGBPanel::begin(int32_t speed)
+void Arduino_ESP32RGBPanel::begin(int32_t speed, int8_t dataMode)
 {
   if (speed == GFX_NOT_DEFINED)
   {
@@ -32,6 +32,7 @@ void Arduino_ESP32RGBPanel::begin(int32_t speed)
   {
     _speed = speed;
   }
+  UNUSED(dataMode);
 
   pinMode(_cs, OUTPUT);
   digitalWrite(_cs, HIGH); // Deselect
@@ -78,60 +79,18 @@ void Arduino_ESP32RGBPanel::begin(int32_t speed)
   }
 }
 
-void Arduino_ESP32RGBPanel::batchOperation(uint8_t batch[], size_t len)
-{
-  for (size_t i = 0; i < len; ++i)
-  {
-    uint8_t l = 0;
-    switch (batch[i])
-    {
-    case BEGIN_WRITE:
-      break;
-    case WRITE_C8_D16:
-      l++;
-      /* fall through */
-    case WRITE_C8_D8:
-      l++;
-      /* fall through */
-    case WRITE_COMMAND_8:
-      sendCommand(batch[++i]);
-      break;
-    case WRITE_C16_D16:
-      l = 2;
-      /* fall through */
-    case WRITE_COMMAND_16:
-      sendCommand(batch[++i]);
-      sendCommand(batch[++i]);
-      break;
-    case WRITE_DATA_8:
-      l = 1;
-      break;
-    case WRITE_DATA_16:
-      l = 2;
-      break;
-    case WRITE_BYTES:
-      l = batch[++i];
-      break;
-    case END_WRITE:
-      break;
-    case DELAY:
-      delay(batch[++i]);
-      break;
-    default:
-      printf("Unknown operation id at %d: %d", i, batch[i]);
-      break;
-    }
-    while (l--)
-    {
-      sendData(batch[++i]);
-    }
-  }
-}
-
-void Arduino_ESP32RGBPanel::sendCommand(uint8_t c)
+void Arduino_ESP32RGBPanel::beginWrite()
 {
   CS_LOW();
+}
 
+void Arduino_ESP32RGBPanel::endWrite()
+{
+  CS_HIGH();
+}
+
+void Arduino_ESP32RGBPanel::writeCommand(uint8_t c)
+{
   // D/C bit, command
   SDA_LOW();
   SCK_HIGH();
@@ -152,14 +111,15 @@ void Arduino_ESP32RGBPanel::sendCommand(uint8_t c)
     bit >>= 1;
     SCK_LOW();
   }
-
-  CS_HIGH();
 }
 
-void Arduino_ESP32RGBPanel::sendData(uint8_t d)
+void Arduino_ESP32RGBPanel::writeCommand16(uint16_t)
 {
-  CS_LOW();
 
+}
+
+void Arduino_ESP32RGBPanel::write(uint8_t d)
+{
   // D/C bit, data
   SDA_HIGH();
   SCK_HIGH();
@@ -180,8 +140,26 @@ void Arduino_ESP32RGBPanel::sendData(uint8_t d)
     bit >>= 1;
     SCK_LOW();
   }
+}
 
-  CS_HIGH();
+void Arduino_ESP32RGBPanel::write16(uint16_t)
+{
+}
+
+void Arduino_ESP32RGBPanel::writeRepeat(uint16_t p, uint32_t len)
+{
+}
+
+void Arduino_ESP32RGBPanel::writePixels(uint16_t *data, uint32_t len)
+{
+}
+
+void Arduino_ESP32RGBPanel::writeBytes(uint8_t *data, uint32_t len)
+{
+}
+
+void Arduino_ESP32RGBPanel::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
+{
 }
 
 uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(
