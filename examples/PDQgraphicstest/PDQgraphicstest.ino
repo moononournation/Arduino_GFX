@@ -50,12 +50,16 @@ Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     10 /* G0 */, 9 /* G1 */, 8 /* G2 */, 7 /* G3 */, 6 /* G4 */, 5 /* G5 */,
     15 /* B0 */, 14 /* B1 */, 13 /* B2 */, 12 /* B3 */, 11 /* B4 */
 );
-Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(bus, GFX_NOT_DEFINED, 480, 480);
+Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
+  bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
+  true /* IPS */, 480 /* width */, 480 /* height */,
+  st7701_type1_init_operations, sizeof(st7701_type1_init_operations),
+  true /* BGR */);
 
 #elif defined(ESP32_S3_EYE)
 #define TFT_BL 48
 Arduino_DataBus *bus = new Arduino_ESP32SPI(43 /* DC */, 44 /* CS */, 21 /* SCK */, 47 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
-Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED, 0 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
 
 #elif defined(MAKERFABS_TFT_TOUCH_3_5)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(33 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */);
@@ -81,7 +85,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rota
 #elif defined(ARDUINO_ESP32_S3_BOX)
 #define TFT_BL 45
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_CLK, TFT_MOSI, TFT_MISO);
-Arduino_GFX *gfx = new Arduino_ILI9342(bus, TFT_RST /* RST */, 0 /* rotation */);
+Arduino_GFX *gfx = new Arduino_ILI9342(bus, TFT_RST, 0 /* rotation */);
 
 /* M5Stack */
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
@@ -111,7 +115,7 @@ Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     41 /* G0 */, 46 /* G1 */, 3 /* G2 */, 42 /* G3 */, 8 /* G4 */, 18 /* G5 */,
     10 /* B0 */, 9 /* B1 */, 40 /* B2 */, 20 /* B3 */, 19 /* B4 */
 );
-Arduino_GC9503V_RGBPanel *gfx = new Arduino_GC9503V_RGBPanel(bus, GFX_NOT_DEFINED, 480, 480);
+Arduino_GC9503V_RGBPanel *gfx = new Arduino_GC9503V_RGBPanel(bus, GFX_NOT_DEFINED /* RST */, 480, 480);
 
 #else /* not selected specific hardware */
 

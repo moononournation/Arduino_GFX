@@ -6,11 +6,15 @@
 #include "Arduino_ST7701_RGBPanel.h"
 
 Arduino_ST7701_RGBPanel::Arduino_ST7701_RGBPanel(
-    Arduino_ESP32RGBPanel *bus, int8_t rst, int16_t w, int16_t h,
-    uint8_t *init_operations, size_t init_operations_len)
-    : Arduino_GFX(w, h), _bus(bus), _rst(rst),
-      _init_operations(init_operations), _init_operations_len(init_operations_len)
+    Arduino_ESP32RGBPanel *bus, int8_t rst, uint8_t r,
+    bool ips, int16_t w, int16_t h,
+    uint8_t *init_operations, size_t init_operations_len,
+    bool bgr)
+    : Arduino_GFX(w, h), _bus(bus), _rst(rst), _ips(ips),
+      _init_operations(init_operations), _init_operations_len(init_operations_len),
+      _bgr(bgr)
 {
+    _rotation = r;
 }
 
 void Arduino_ST7701_RGBPanel::begin(int32_t speed)
@@ -29,6 +33,15 @@ void Arduino_ST7701_RGBPanel::begin(int32_t speed)
     }
 
     _bus->batchOperation(_init_operations, _init_operations_len);
+
+    if (_ips)
+    {
+        _bus->beginWrite();
+        _bus->writeCommand(0x21);
+        _bus->endWrite();
+    }
+
+    setRotation(_rotation);
 
     _framebuffer = _bus->getFrameBuffer(_width, _height);
 }
@@ -245,6 +258,73 @@ void Arduino_ST7701_RGBPanel::draw16bitBeRGBBitmap(int16_t x, int16_t y,
         }
         Cache_WriteBack_Addr(cachePos, _width * h * 2);
     }
+}
+
+/**************************************************************************/
+/*!
+    @brief   Set origin of (0,0) and orientation of TFT display
+    @param   m  The index for rotation, from 0-3 inclusive
+*/
+/**************************************************************************/
+void Arduino_ST7701_RGBPanel::setRotation(uint8_t r)
+{
+    Arduino_GFX::setRotation(r);
+    _bus->beginWrite();
+    switch (_rotation)
+    {
+    case 1:
+        // not implemented
+        break;
+    case 2:
+        // Y direction
+        _bus->writeCommand(0xFF);
+        _bus->write(0x77);
+        _bus->write(0x01);
+        _bus->write(0x00);
+        _bus->write(0x00);
+        _bus->write(0x10);
+        _bus->writeCommand(0xC7);
+        _bus->write(0x04);
+        // X Direction and color order
+        _bus->writeCommand(0xFF);
+        _bus->write(0x77);
+        _bus->write(0x01);
+        _bus->write(0x00);
+        _bus->write(0x00);
+        _bus->write(0x00);
+        _bus->writeCommand(0x36);
+        _bus->write(_bgr ? 0x10 : 0x18);
+        break;
+    case 3:
+        // not implemented
+        break;
+    default: // case 0:
+        // Y direction
+        _bus->writeCommand(0xFF);
+        _bus->write(0x77);
+        _bus->write(0x01);
+        _bus->write(0x00);
+        _bus->write(0x00);
+        _bus->write(0x10);
+        _bus->writeCommand(0xC7);
+        _bus->write(0x00);
+        // X Direction and color order
+        _bus->writeCommand(0xFF);
+        _bus->write(0x77);
+        _bus->write(0x01);
+        _bus->write(0x00);
+        _bus->write(0x00);
+        _bus->write(0x00);
+        _bus->writeCommand(0x36);
+        _bus->write(_bgr ? 0x00 : 0x08);
+        break;
+    }
+    _bus->endWrite();
+}
+
+void Arduino_ST7701_RGBPanel::invertDisplay(bool i)
+{
+  _bus->sendCommand(_ips ? (i ? 0x20 : 0x21) : (i ? 0x21 : 0x20));
 }
 
 uint16_t *Arduino_ST7701_RGBPanel::getFramebuffer()
