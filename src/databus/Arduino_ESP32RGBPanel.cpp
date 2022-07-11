@@ -34,13 +34,11 @@ void Arduino_ESP32RGBPanel::begin(int32_t speed, int8_t dataMode)
   }
   UNUSED(dataMode);
 
-  pinMode(_cs, OUTPUT);
-  digitalWrite(_cs, HIGH); // Deselect
-  pinMode(_sck, OUTPUT);
-  digitalWrite(_sck, LOW);
-  pinMode(_sda, OUTPUT);
-  digitalWrite(_sda, LOW);
-
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    pinMode(_cs, OUTPUT);
+    digitalWrite(_cs, HIGH); // disable chip select
+  }
   if (_cs >= 32)
   {
     _csPinMask = digitalPinToBitMask(_cs);
@@ -53,6 +51,11 @@ void Arduino_ESP32RGBPanel::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
+  if (_sck != GFX_NOT_DEFINED)
+  {
+    pinMode(_sck, OUTPUT);
+    digitalWrite(_sck, LOW);
+  }
   if (_sck >= 32)
   {
     _sckPinMask = digitalPinToBitMask(_sck);
@@ -64,6 +67,11 @@ void Arduino_ESP32RGBPanel::begin(int32_t speed, int8_t dataMode)
     _sckPinMask = digitalPinToBitMask(_sck);
     _sckPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _sckPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+  if (_sda != GFX_NOT_DEFINED)
+  {
+    pinMode(_sda, OUTPUT);
+    digitalWrite(_sda, LOW);
   }
   if (_sda >= 32)
   {
@@ -163,20 +171,38 @@ void Arduino_ESP32RGBPanel::writePattern(uint8_t *data, uint8_t len, uint32_t re
 }
 
 uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(
-    int16_t w, int16_t h,
-    uint16_t hsync_pulse_width, uint16_t hsync_back_porch, uint16_t hsync_front_porch,
-    uint16_t vsync_pulse_width, uint16_t vsync_back_porch, uint16_t vsync_front_porch)
+    uint16_t w, uint16_t h,
+    uint16_t hsync_pulse_width, uint16_t hsync_back_porch, uint16_t hsync_front_porch, uint16_t hsync_polarity,
+    uint16_t vsync_pulse_width, uint16_t vsync_back_porch, uint16_t vsync_front_porch, uint16_t vsync_polarity)
 {
   esp_lcd_rgb_panel_config_t *_panel_config = (esp_lcd_rgb_panel_config_t *)heap_caps_calloc(1, sizeof(esp_lcd_rgb_panel_config_t), MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL);
 
-  _panel_config->data_width = 16; // RGB565 in parallel mode, thus 16bit in width
-  _panel_config->psram_trans_align = 64;
   _panel_config->clk_src = LCD_CLK_SRC_PLL160M;
-  _panel_config->disp_gpio_num = GPIO_NUM_NC;
-  _panel_config->pclk_gpio_num = _pclk;
-  _panel_config->vsync_gpio_num = _vsync;
+
+  _panel_config->timings.pclk_hz = _speed;
+  _panel_config->timings.h_res = w;
+  _panel_config->timings.v_res = h;
+  // The following parameters should refer to LCD spec
+  _panel_config->timings.hsync_pulse_width = hsync_pulse_width;
+  _panel_config->timings.hsync_back_porch = hsync_back_porch;
+  _panel_config->timings.hsync_front_porch = hsync_front_porch;
+  _panel_config->timings.vsync_pulse_width = vsync_pulse_width;
+  _panel_config->timings.vsync_back_porch = vsync_back_porch;
+  _panel_config->timings.vsync_front_porch = vsync_front_porch;
+  _panel_config->timings.flags.hsync_idle_low = (hsync_polarity == 0) ? 1 : 0;
+  _panel_config->timings.flags.vsync_idle_low = (vsync_polarity == 0) ? 1 : 0;
+  _panel_config->timings.flags.de_idle_high = 0;
+  _panel_config->timings.flags.pclk_active_neg = 0; // RGB data is clocked out on falling edge
+  _panel_config->timings.flags.pclk_idle_high = 0;
+
+  _panel_config->data_width = 16; // RGB565 in parallel mode, thus 16bit in width
+  _panel_config->sram_trans_align = 8;
+  _panel_config->psram_trans_align = 64;
   _panel_config->hsync_gpio_num = _hsync;
+  _panel_config->vsync_gpio_num = _vsync;
   _panel_config->de_gpio_num = _de;
+  _panel_config->pclk_gpio_num = _pclk;
+
   if (_useBigEndian)
   {
     _panel_config->data_gpio_nums[0] = _g3;
@@ -216,19 +242,11 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(
     _panel_config->data_gpio_nums[15] = _r4;
   }
 
-  _panel_config->timings.pclk_hz = _speed;
-  _panel_config->timings.h_res = w;
-  _panel_config->timings.v_res = h;
-  // The following parameters should refer to LCD spec
-  _panel_config->timings.hsync_back_porch = hsync_back_porch;
-  _panel_config->timings.hsync_front_porch = hsync_front_porch;
-  _panel_config->timings.hsync_pulse_width = hsync_pulse_width;
-  _panel_config->timings.vsync_back_porch = vsync_back_porch;
-  _panel_config->timings.vsync_front_porch = vsync_front_porch;
-  _panel_config->timings.vsync_pulse_width = vsync_pulse_width;
-  _panel_config->timings.flags.pclk_active_neg = 0; // RGB data is clocked out on falling edge
-  _panel_config->flags.fb_in_psram = 1;             // allocate frame buffer in PSRAM
+  _panel_config->disp_gpio_num = GPIO_NUM_NC;
+
+  _panel_config->flags.disp_active_low = 0;
   _panel_config->flags.relax_on_idle = 0;
+  _panel_config->flags.fb_in_psram = 1;             // allocate frame buffer in PSRAM
 
   ESP_ERROR_CHECK(esp_lcd_new_rgb_panel(_panel_config, &_panel_handle));
   ESP_ERROR_CHECK(esp_lcd_panel_reset(_panel_handle));

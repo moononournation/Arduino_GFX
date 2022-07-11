@@ -227,6 +227,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 - NT35510 (8-bit/16-bit Parallel) 480x800 [[demo video](https://youtu.be/C_1ASzUN3bg)]
 - NT39125 (8-bit/16-bit Parallel) 240x376 [[demo video](https://youtu.be/JGMrM18JAFA)]
 - R61529 (8-bit/16-bit Parallel) 320x480 [[demo video](https://youtu.be/s93gxjbIAT8)]
+- Raspberry Pi DPI Display (RPi_DPI_RGBPanel) Any Resolution [[demo video](https://youtube.com/shorts/IqQEq-VLVwI)]
 - SEPS525 160x128 [[demo video](https://youtu.be/tlmvFBHYv-k)]
 - SSD1283A 130x130 [[demo video](https://youtu.be/OrIchaRikiQ)]
 - SSD1331 96x64 [[demo video](https://youtu.be/v20b1A_KDcQ)]
