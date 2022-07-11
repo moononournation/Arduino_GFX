@@ -219,11 +219,11 @@ class Arduino_GC9503V_RGBPanel : public Arduino_GFX
 {
 public:
   Arduino_GC9503V_RGBPanel(
-      Arduino_ESP32RGBPanel *databus, int8_t rst = GFX_NOT_DEFINED, int16_t w = ST7701_TFTWIDTH, int16_t h = ST7701_TFTHEIGHT,
+      Arduino_ESP32RGBPanel *bus, int8_t rst = GFX_NOT_DEFINED, int16_t w = ST7701_TFTWIDTH, int16_t h = ST7701_TFTHEIGHT,
       uint8_t *init_operations = gc9503v_type1_init_operations,
       size_t init_operations_len = sizeof(gc9503v_type1_init_operations));
 
-  void begin(int32_t speed = 10000000L) override;
+  void begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
   void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
   void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;

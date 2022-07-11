@@ -350,7 +350,7 @@ class Arduino_ST7701_RGBPanel : public Arduino_GFX
 {
 public:
   Arduino_ST7701_RGBPanel(
-      Arduino_ESP32RGBPanel *databus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0,
+      Arduino_ESP32RGBPanel *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0,
       bool ips = false, int16_t w = ST7701_TFTWIDTH, int16_t h = ST7701_TFTHEIGHT,
       uint8_t *init_operations = st7701_type1_init_operations,
       size_t init_operations_len = sizeof(st7701_type1_init_operations),
