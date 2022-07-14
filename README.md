@@ -195,18 +195,21 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 ## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
 - ESP32 LCDKIT
 - ESP32-S3-EYE
+- ESP32-S3-Box
 - ESPboy [[demo video](https://youtu.be/Cx82XWrc8-0)]
+- M5Stack Core Family
 - Makerfabs ESP32 3.5" TFT Touch with Camera
+- Odroid Go
 - TTGO T-DISPLAY
+- TTGO T-QT
+- TTGO T-Watch
 - wireless-tag WT-32-SC01
 - Wio Terminal
-- M5Stack Core Family
-- Odroid Go
-- TTGO T-Watch
 
 ## Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
 - GC9A01 round display 240x240 [[demo video](https://youtu.be/kJrAFm20-zg)]
 - GC9106 80x160 [[demo video](https://youtu.be/RToGeeb1jxQ)]
+- GC9107 128x128 [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM)]
 - GC9503V 480x480 [[demo video](https://youtube.com/shorts/hk7ZMBRCmjI)]
 - HX8347C 240x320 [[demo video](https://youtu.be/25ymuV51YQM)]
 - HX8347D 240x320 [[demo video](https://youtu.be/sv6LGkLRZjI)]

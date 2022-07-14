@@ -38,6 +38,7 @@
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 #include "display/Arduino_GC9106.h"
+#include "display/Arduino_GC9107.h"
 #include "display/Arduino_GC9A01.h"
 #include "display/Arduino_GC9503V_RGBPanel.h"
 #include "display/Arduino_HX8347C.h"

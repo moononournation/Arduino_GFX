@@ -20,6 +20,7 @@
 // #define ESP32_S3_RPI_DPI
 // #define MAKERFABS_TFT_TOUCH_3_5
 // #define TTGO_T_DISPLAY
+// #define TTGO_T_QT
 // #define WT32_SC01
 // #define ZX3D95CE01S_AR
 #if defined(ESP32_LCDKIT_SPI)
@@ -86,6 +87,11 @@ Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, GFX_NOT_DEFINED /* RST */, 1 /
 #define TFT_BL 4
 Arduino_DataBus *bus = new Arduino_ESP32SPI(16 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 23 /* RST */, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 52 /* col offset 1 */, 40 /* row offset 1 */, 53 /* col offset 2 */, 40 /* row offset 2 */);
+
+#elif defined(TTGO_T_QT)
+#define TFT_BL 10
+Arduino_DataBus *bus = new Arduino_ESP32SPI(6 /* DC */, 5 /* CS */, 3 /* SCK */, 2 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(WT32_SC01)
 #define TFT_BL 23
@@ -309,6 +315,12 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 
 // GC9A01 IPS LCD 240x240
 // Arduino_GFX *gfx = new Arduino_GC9A01(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+
+// GC9106 IPS LCD 80x160
+// Arduino_GFX *gfx = new Arduino_GC9106(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+
+// GC9107 IPS LCD 128x128
+// Arduino_GFX *gfx = new Arduino_GC9107(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // HX8347C IPS LCD 240x320
 // Arduino_GFX *gfx = new Arduino_HX8347C(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
