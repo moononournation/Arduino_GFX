@@ -143,7 +143,7 @@ public:
   Arduino_GFX(int16_t w, int16_t h); // Constructor
 
   // This MUST be defined by the subclass:
-  virtual void begin(int32_t speed = 0) = 0;
+  virtual void begin(int32_t speed = GFX_NOT_DEFINED) = 0;
   virtual void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) = 0;
 
   // TRANSACTION API / CORE DRAW API

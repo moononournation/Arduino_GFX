@@ -60,7 +60,7 @@ class Arduino_ILI9225 : public Arduino_TFT
 public:
   Arduino_ILI9225(Arduino_DataBus *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0);
 
-  void begin(int32_t speed = 0) override;
+  void begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) override;
   void setRotation(uint8_t r) override;
   void invertDisplay(bool) override;
