@@ -30,6 +30,8 @@
  ******************************************************************************/
 #define MJPEG_FILENAME "/earth.mjpeg"
 #define MJPEG_BUFFER_SIZE (240 * 240 * 2 / 10) // memory for a single JPEG frame
+// #define MJPEG_FILENAME "/earth128.mjpeg"
+// #define MJPEG_BUFFER_SIZE (128 * 128 * 2 / 10) // memory for a single JPEG frame
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
