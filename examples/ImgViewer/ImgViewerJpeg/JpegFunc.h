@@ -1,11 +1,11 @@
 /*******************************************************************************
- * JPEGDEC Wrapper Class
+ * JPEGDEC related function
  *
  * Dependent libraries:
  * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
  ******************************************************************************/
-#ifndef _JPEGCLASS_H_
-#define _JPEGCLASS_H_
+#ifndef _JPEGFUNC_H_
+#define _JPEGFUNC_H_
 
 #include <JPEGDEC.h>
 
@@ -103,4 +103,4 @@ static void jpegDraw(
     _jpeg.close();
 }
 
-#endif // _JPEGCLASS_H_
+#endif // _JPEGFUNC_H_
