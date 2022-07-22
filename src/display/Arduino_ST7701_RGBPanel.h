@@ -11,7 +11,7 @@
 #define ST7701_TFTWIDTH 480
 #define ST7701_TFTHEIGHT 864
 
-static uint8_t st7701_type1_init_operations[] = {
+static const uint8_t st7701_type1_init_operations[] = {
     BEGIN_WRITE,
     WRITE_COMMAND_8, 0xFF,
     WRITE_BYTES, 5, 0x77, 0x01, 0x00, 0x00, 0x10,
@@ -122,7 +122,7 @@ static uint8_t st7701_type1_init_operations[] = {
     WRITE_COMMAND_8, 0x29, // Display On
     END_WRITE};
 
-static uint8_t st7701_type2_init_operations[] = {
+static const uint8_t st7701_type2_init_operations[] = {
     BEGIN_WRITE,
     WRITE_COMMAND_8, 0xFF,
     WRITE_BYTES, 5, 0x77, 0x01, 0x00, 0x00, 0x10,
@@ -231,7 +231,7 @@ static uint8_t st7701_type2_init_operations[] = {
     WRITE_COMMAND_8, 0x29, // Display On
     END_WRITE};
 
-static uint8_t st7701_type3_init_operations[] = {
+static const uint8_t st7701_type3_init_operations[] = {
     BEGIN_WRITE,
     WRITE_COMMAND_8, 0xFF,
     WRITE_BYTES, 5, 0x77, 0x01, 0x00, 0x00, 0x10,
@@ -352,7 +352,7 @@ public:
   Arduino_ST7701_RGBPanel(
       Arduino_ESP32RGBPanel *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0,
       bool ips = false, int16_t w = ST7701_TFTWIDTH, int16_t h = ST7701_TFTHEIGHT,
-      uint8_t *init_operations = st7701_type1_init_operations,
+      const uint8_t *init_operations = st7701_type1_init_operations,
       size_t init_operations_len = sizeof(st7701_type1_init_operations),
       bool bgr = true);
 
@@ -373,10 +373,10 @@ protected:
   uint16_t *_framebuffer;
   Arduino_ESP32RGBPanel *_bus;
   int8_t _rst;
-  uint8_t *_init_operations;
+  bool _ips;
+  const uint8_t *_init_operations;
   size_t _init_operations_len;
   bool _bgr;
-  bool _ips;
 
 private:
 };

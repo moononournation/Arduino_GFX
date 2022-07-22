@@ -8,7 +8,7 @@
 Arduino_ST7701_RGBPanel::Arduino_ST7701_RGBPanel(
     Arduino_ESP32RGBPanel *bus, int8_t rst, uint8_t r,
     bool ips, int16_t w, int16_t h,
-    uint8_t *init_operations, size_t init_operations_len,
+    const uint8_t *init_operations, size_t init_operations_len,
     bool bgr)
     : Arduino_GFX(w, h), _bus(bus), _rst(rst), _ips(ips),
       _init_operations(init_operations), _init_operations_len(init_operations_len),
@@ -32,7 +32,7 @@ void Arduino_ST7701_RGBPanel::begin(int32_t speed)
         delay(120);
     }
 
-    _bus->batchOperation(_init_operations, _init_operations_len);
+    _bus->batchOperation((uint8_t *)_init_operations, _init_operations_len);
 
     if (_ips)
     {
