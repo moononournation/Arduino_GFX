@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Arduino VNC
  * This is a simple VNC sample
- * 
+ *
  * Dependent libraries:
  * ArduinoVNC: https://github.com/moononournation/arduinoVNC.git
- * 
+ *
  * Touch libraries:
  * FT6X36: https://github.com/strange-v/FT6X36.git
  *
@@ -88,145 +88,146 @@ FT6X36 ts(&Wire, TOUCH_FT6X36_INT);
 
 void TFTnoWifi(void)
 {
-    gfx->fillScreen(BLACK);
-    gfx->setCursor(0, ((gfx->height() / 2) - (5 * 8)));
-    gfx->setTextColor(RED);
-    gfx->setTextSize(5);
-    gfx->println("NO WIFI!");
-    gfx->setTextSize(2);
-    gfx->println();
+  gfx->fillScreen(BLACK);
+  gfx->setCursor(0, ((gfx->height() / 2) - (5 * 8)));
+  gfx->setTextColor(RED);
+  gfx->setTextSize(5);
+  gfx->println("NO WIFI!");
+  gfx->setTextSize(2);
+  gfx->println();
 }
 
 void TFTnoVNC(void)
 {
-    gfx->fillScreen(BLACK);
-    gfx->setCursor(0, ((gfx->height() / 2) - (4 * 8)));
-    gfx->setTextColor(GREEN);
-    gfx->setTextSize(4);
-    gfx->println("connect VNC");
-    gfx->setTextSize(2);
-    gfx->println();
-    gfx->print(VNC_IP);
-    gfx->print(":");
-    gfx->println(VNC_PORT);
+  gfx->fillScreen(BLACK);
+  gfx->setCursor(0, ((gfx->height() / 2) - (4 * 8)));
+  gfx->setTextColor(GREEN);
+  gfx->setTextSize(4);
+  gfx->println("connect VNC");
+  gfx->setTextSize(2);
+  gfx->println();
+  gfx->print(VNC_IP);
+  gfx->print(":");
+  gfx->println(VNC_PORT);
 }
 
 #if defined(TOUCH_FT6X36)
 void touch(TPoint p, TEvent e)
 {
-    if (e != TEvent::Tap && e != TEvent::DragStart && e != TEvent::DragMove && e != TEvent::DragEnd)
+  if (e != TEvent::Tap && e != TEvent::DragStart && e != TEvent::DragMove && e != TEvent::DragEnd)
     return;
-  
-    // translation logic depends on screen rotation
-    int x = map(p.y, 480, 0, 0, gfx->width());
-    int y = map(p.x, 0, 320, 0, gfx->height());
-    switch (e)
-    {
-    case TEvent::Tap:
-        Serial.println("Tap");
-        vnc.mouseEvent(x, y, 0b001);
-        vnc.mouseEvent(x, y, 0b000);
-        break;
-    case TEvent::DragStart:
-        Serial.println("DragStart");
-        vnc.mouseEvent(x, y, 0b001);
-        break;
-    case TEvent::DragMove:
-        Serial.println("DragMove");
-        vnc.mouseEvent(x, y, 0b001);
-        break;
-    case TEvent::DragEnd:
-        Serial.println("DragEnd");
-        vnc.mouseEvent(x, y, 0b000);
-        break;
-    default:
-        Serial.println("UNKNOWN");
-        break;
-    }
+
+  // translation logic depends on screen rotation
+  int x = map(p.y, 480, 0, 0, gfx->width());
+  int y = map(p.x, 0, 320, 0, gfx->height());
+  switch (e)
+  {
+  case TEvent::Tap:
+    Serial.println("Tap");
+    vnc.mouseEvent(x, y, 0b001);
+    vnc.mouseEvent(x, y, 0b000);
+    break;
+  case TEvent::DragStart:
+    Serial.println("DragStart");
+    vnc.mouseEvent(x, y, 0b001);
+    break;
+  case TEvent::DragMove:
+    Serial.println("DragMove");
+    vnc.mouseEvent(x, y, 0b001);
+    break;
+  case TEvent::DragEnd:
+    Serial.println("DragEnd");
+    vnc.mouseEvent(x, y, 0b000);
+    break;
+  default:
+    Serial.println("UNKNOWN");
+    break;
+  }
 }
 #endif
 
 void setup(void)
 {
-    Serial.begin(115200);
-    // while (!Serial);
-    // Serial.setDebugOutput(true);
-    Serial.println("Arduino VNC");
+  Serial.begin(115200);
+  // while (!Serial);
+  // Serial.setDebugOutput(true);
+  Serial.println("Arduino VNC");
 
 #if defined(TOUCH_FT6X36)
-    Wire.begin(TOUCH_FT6X36_SDA, TOUCH_FT6X36_SCL);
-    ts.begin();
-    ts.registerTouchHandler(touch);
+  Wire.begin(TOUCH_FT6X36_SDA, TOUCH_FT6X36_SCL);
+  ts.begin();
+  ts.registerTouchHandler(touch);
 #endif
 
-    Serial.println("Init display");
-    gfx->begin();
-    gfx->fillScreen(BLACK);
+  Serial.println("Init display");
+  gfx->begin();
+  gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
-    TFTnoWifi();
+  TFTnoWifi();
 
-    Serial.println("Init WiFi");
-    gfx->println("Init WiFi");
+  Serial.println("Init WiFi");
+  gfx->println("Init WiFi");
 #if defined(ESP32)
-    WiFi.begin(SSID_NAME, SSID_PASSWORD);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(SSID_NAME, SSID_PASSWORD);
 #elif defined(ESP8266)
-    // disable sleep mode for better data rate
-    WiFi.setSleepMode(WIFI_NONE_SLEEP);
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(SSID_NAME, SSID_PASSWORD);
+  // disable sleep mode for better data rate
+  WiFi.setSleepMode(WIFI_NONE_SLEEP);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(SSID_NAME, SSID_PASSWORD);
 #elif defined(RTL8722DM)
-    WiFi.begin((char *)SSID_NAME, (char *)SSID_PASSWORD);
+  WiFi.begin((char *)SSID_NAME, (char *)SSID_PASSWORD);
 #endif
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        delay(500);
-        Serial.print(".");
-        gfx->print(".");
-    }
-    Serial.println(" CONNECTED");
-    gfx->println(" CONNECTED");
-    Serial.println("IP address: ");
-    gfx->println("IP address: ");
-    Serial.println(WiFi.localIP());
-    gfx->println(WiFi.localIP());
-    TFTnoVNC();
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+    gfx->print(".");
+  }
+  Serial.println(" CONNECTED");
+  gfx->println(" CONNECTED");
+  Serial.println("IP address: ");
+  gfx->println("IP address: ");
+  Serial.println(WiFi.localIP());
+  gfx->println(WiFi.localIP());
+  TFTnoVNC();
 
-    Serial.println(F("[SETUP] VNC..."));
+  Serial.println(F("[SETUP] VNC..."));
 
 #ifdef SEPARATE_DRAW_TASK
-    draw_task_setup();
+  draw_task_setup();
 #endif
 
-    vnc.begin(VNC_IP, VNC_PORT);
-    vnc.setPassword(VNC_PASSWORD); // optional
+  vnc.begin(VNC_IP, VNC_PORT);
+  vnc.setPassword(VNC_PASSWORD); // optional
 }
 
 void loop()
 {
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        vnc.reconnect();
-        TFTnoWifi();
-        delay(100);
-    }
-    else
-    {
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    vnc.reconnect();
+    TFTnoWifi();
+    delay(100);
+  }
+  else
+  {
 #if defined(TOUCH_FT6X36)
-        if (vnc.connected())
-        {
-            ts.loop();
-        }
-#endif
-        vnc.loop();
-        if (!vnc.connected())
-        {
-            TFTnoVNC();
-            // some delay to not flood the server
-            delay(5000);
-        }
+    if (vnc.connected())
+    {
+      ts.loop();
     }
+#endif
+    vnc.loop();
+    if (!vnc.connected())
+    {
+      TFTnoVNC();
+      // some delay to not flood the server
+      delay(5000);
+    }
+  }
 }
