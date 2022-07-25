@@ -71,7 +71,7 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
     _misoPinMask = 1UL << pin;
     _misoPort = &reg->IN;
   }
-#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+#elif defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
   if (_dc != GFX_NOT_DEFINED)
   {
     _dcPinMask = digitalPinToBitMask(_dc);

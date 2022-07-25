@@ -1,4 +1,4 @@
-#ifdef ARDUINO_RASPBERRY_PI_PICO
+#if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
 
 #ifndef _ARDUINO_RPIPICOSPI_H_
 #define _ARDUINO_RPIPICOSPI_H_
@@ -65,4 +65,4 @@ private:
 };
 
 #endif // _ARDUINO_RPIPICOSPI_H_
-#endif // #ifdef ARDUINO_RASPBERRY_PI_PICO
+#endif // #if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)

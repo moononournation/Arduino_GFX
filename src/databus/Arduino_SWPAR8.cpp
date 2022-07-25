@@ -113,7 +113,7 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
   _d7PortSet = &reg->OUTSET;
   _d7PortClr = &reg->OUTCLR;
   _d7PinMask = 1UL << pin;
-#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+#elif defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
   _dcPinMask = digitalPinToBitMask(_dc);
   _dcPortSet = (PORTreg_t)&sio_hw->gpio_set;
   _dcPortClr = (PORTreg_t)&sio_hw->gpio_clr;

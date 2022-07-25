@@ -185,6 +185,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 - ESP32-S2 Series
 - ESP32-S3 Series
 - Raspberry Pi Pico
+- Raspberry Pi Pico W
 - rtlduino BW16 (by Ai-Thinker)
 - Sony Spresense
 - WeAct BlackPill V2.0 (BlackPill F411CE)

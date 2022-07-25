@@ -144,7 +144,7 @@
 #define DF_GFX_DC 3
 #define DF_GFX_RST 2
 #define DF_GFX_BL 1
-#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+#elif defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
 #define DF_GFX_SCK 18
 #define DF_GFX_MOSI 19
 #define DF_GFX_MISO 16

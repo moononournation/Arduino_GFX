@@ -45,7 +45,7 @@ Arduino_GFX *gfx4 = new Arduino_ILI9341(bus4, GFX_NOT_DEFINED /* RST */, 0 /* ro
  * End of Arduino_GFX setting
  ******************************************************************************/
 
-#if defined(ARDUINO_RASPBERRY_PI_PICO)
+#if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
 #include <LittleFS.h>
 #include <SD.h>
 #elif defined(ESP32)
@@ -88,7 +88,7 @@ void setup()
   gfx4->fillScreen(BLUE);
   delay(200);
 
-#if defined(ARDUINO_RASPBERRY_PI_PICO)
+#if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
   if (!LittleFS.begin())
   // if (!SD.begin(SS))
 #elif defined(ESP32)
@@ -111,7 +111,7 @@ void setup()
 
 void loop()
 {
-#if defined(ARDUINO_RASPBERRY_PI_PICO)
+#if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
   File gifFile1 = LittleFS.open(GIF_FILENAME1, "r");
   File gifFile2 = LittleFS.open(GIF_FILENAME2, "r");
   File gifFile3 = LittleFS.open(GIF_FILENAME3, "r");

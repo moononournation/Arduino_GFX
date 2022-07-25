@@ -1,4 +1,4 @@
-#ifdef ARDUINO_RASPBERRY_PI_PICO
+#if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
 
 #include "Arduino_RPiPicoPAR8.h"
 
@@ -237,4 +237,4 @@ INLINE void Arduino_RPiPicoPAR8::CS_LOW(void)
   }
 }
 
-#endif // #ifdef ARDUINO_RASPBERRY_PI_PICO
+#endif // #if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
