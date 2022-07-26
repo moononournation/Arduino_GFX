@@ -70,6 +70,8 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 #include <WiFi.h>
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W)
+#include <WiFi.h>
 #elif defined(RTL8722DM)
 #include <WiFi.h>
 #endif
@@ -177,6 +179,9 @@ void setup(void)
 #elif defined(ESP8266)
   // disable sleep mode for better data rate
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(SSID_NAME, SSID_PASSWORD);
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W)
   WiFi.mode(WIFI_STA);
   WiFi.begin(SSID_NAME, SSID_PASSWORD);
 #elif defined(RTL8722DM)
