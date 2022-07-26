@@ -4,19 +4,23 @@
  * Please find more details at instructables:
  * https://www.instructables.com/id/Face-Aware-OSD-Photo-Frame/
  *
+ * Dependent libraries:
+ * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
+ *
  * Setup steps:
  * 1. Fill your own SSID_NAME, SSID_PASSWORD, HTTP_HOST, HTTP_PORT and HTTP_PATH_TEMPLATE
  * 2. Change your LCD parameters in Arduino_GFX setting
  ******************************************************************************/
 
 /* WiFi settings */
-#define SSID_NAME "YourAP"
-#define SSID_PASSWORD "PleaseInputYourPasswordHere"
-#define HTTP_HOST "YourServerNameOrIP"
-#define HTTP_PORT 8080
-#define HTTP_PATH_TEMPLATE "/?w=%d&h=%d"
+const char *SSID_NAME = "YourAP";
+const char *SSID_PASSWORD = "PleaseInputYourPasswordHere";
 
-#define HTTP_TIMEOUT 30000 // in ms, wait a while for server processing
+const char *HTTP_HOST = "photoserver.local";            /* Your HTTP photo server host name */
+const uint16_t HTTP_PORT = 5000;                        /* Your HTTP photo server port */
+const char *HTTP_PATH_TEMPLATE = "/OSDPhoto?w=%d&h=%d"; /* Your HTTP photo server URL path template */
+
+const uint16_t HTTP_TIMEOUT = 30000; // in ms, wait a while for server processing
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
@@ -62,23 +66,30 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false 
 #include <esp_task_wdt.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+WiFiClient client;
 HTTPClient http;
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
 #include <ESP8266HTTPClient.h>
-ESP8266WiFiMulti WiFiMulti;
+WiFiClient client;
 HTTPClient http;
 #elif defined(RTL8722DM)
-#include <HttpClient.h>
 #include <WiFi.h>
 #include <WiFiClient.h>
+#include <HttpClient.h>
 WiFiClient client;
 HttpClient http(client);
 #endif
 
-#include "JpegDec.h"
-static JpegDec jpegDec;
+#include "JpegFunc.h"
+
+// pixel drawing callback
+static int jpegDrawCallback(JPEGDRAW *pDraw)
+{
+  // Serial.printf("Draw pos = %d,%d. size = %d x %d\n", pDraw->x, pDraw->y, pDraw->iWidth, pDraw->iHeight);
+  gfx->draw16bitRGBBitmap(pDraw->x, pDraw->y, pDraw->pPixels, pDraw->iWidth, pDraw->iHeight);
+  return 1;
+}
 
 static unsigned long next_show_millis = 0;
 
@@ -88,6 +99,7 @@ void setup()
 {
   Serial.begin(115200);
   // while (!Serial);
+  // Serial.setDebugOutput(true);
   Serial.println("WiFi Photo Frame");
 
   Serial.println("Init display");
@@ -101,8 +113,12 @@ void setup()
 
   Serial.println("Init WiFi");
   gfx->println("Init WiFi");
+#if defined(ESP32) || defined(ESP8266)
   WiFi.mode(WIFI_STA);
   WiFi.begin(SSID_NAME, SSID_PASSWORD);
+#elif defined(RTL8722DM)
+  WiFi.begin((char *)SSID_NAME, (char *)SSID_PASSWORD);
+#endif
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
@@ -139,18 +155,12 @@ void loop()
   {
     if (WiFi.status() == WL_CONNECTED)
     {
-      WiFiClient client;
-      next_show_millis = ((millis() / 60000L) + 1) * 60000L; // next minute
-      printf("[HTTP] begin...\n");
-#if defined(ESP32) || defined(ESP8266)
-      http.begin(HTTP_HOST, HTTP_PORT, http_path);
-#else
-      http.begin(client, HTTP_HOST, HTTP_PORT, http_path);
-#endif
+      int jpeg_result = 0;
+
+      Serial.printf("[HTTP] begin...\n");
       http.setTimeout(HTTP_TIMEOUT);
-      printf("[HTTP] GET...\n");
-      gfx->printf("[HTTP] GET...\n");
 #if defined(ESP32) || defined(ESP8266)
+      http.begin(client, HTTP_HOST, HTTP_PORT, http_path);
       int httpCode = http.GET();
 #elif defined(RTL8722DM)
       http.get(HTTP_HOST, HTTP_PORT, http_path);
@@ -158,49 +168,73 @@ void loop()
       http.skipResponseHeaders();
 #endif
 
-      printf("[HTTP] GET... code: %d\n", httpCode);
+      Serial.printf("[HTTP] GET... code: %d\n", httpCode);
       gfx->printf("[HTTP] GET... code: %d\n", httpCode);
       // HTTP header has been send and Server response header has been handled
       if (httpCode <= 0)
       {
-        // printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+        Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
       }
       else
       {
         if (httpCode != 200)
         {
-          printf("[HTTP] Not OK!\n");
+          Serial.printf("[HTTP] Not OK!\n");
           gfx->printf("[HTTP] Not OK!\n");
           delay(5000);
         }
         else
         {
-          // get lenght of document(is - 1 when Server sends no Content - Length header)
+// get lenght of document(is - 1 when Server sends no Content - Length header)
 #if defined(ESP32) || defined(ESP8266)
           int len = http.getSize();
 #elif defined(RTL8722DM)
           int len = http.contentLength();
 #endif
-          printf("[HTTP] size: %d\n", len);
+          Serial.printf("[HTTP] size: %d\n", len);
           gfx->printf("[HTTP] size: %d\n", len);
 
           if (len <= 0)
           {
-            printf("[HTTP] Unknow content size: %d\n", len);
+            Serial.printf("[HTTP] Unknow content size: %d\n", len);
             gfx->printf("[HTTP] Unknow content size: %d\n", len);
           }
           else
           {
             unsigned long start = millis();
-            // get tcp stream
+
+            uint8_t *buf = (uint8_t *)malloc(len);
+            if (buf)
+            {
 #if defined(ESP32) || defined(ESP8266)
-            static WiFiClient *http_stream = http.getStreamPtr();
-            jpegDec.prepare(http_stream_reader, http_stream);
+              static WiFiClient *http_stream = http.getStreamPtr();
+              jpeg_result = jpegOpenHttpStreamWithBuffer(http_stream, buf, len, jpegDrawCallback);
 #else
-            jpegDec.prepare(http_stream_reader, &client);
+              jpeg_result = jpegOpenHttpStreamWithBuffer(&client, buf, len, jpegDrawCallback);
 #endif
-            jpegDec.decode(JPG_SCALE_NONE, jpegDec.gfx_writer, gfx);
-            printf("Time used: %lu\n", millis() - start);
+              if (jpeg_result)
+              {
+                jpeg_result = jpegDraw(false /* useBigEndian */,
+                                       0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
+              }
+              free(buf);
+            }
+            else
+            {
+// get tcp stream
+#if defined(ESP32) || defined(ESP8266)
+              static WiFiClient *http_stream = http.getStreamPtr();
+              jpeg_result = jpegOpenHttpStream(http_stream, len, jpegDrawCallback);
+#else
+              jpeg_result = jpegOpenHttpStream(&client, len, jpegDrawCallback);
+#endif
+              if (jpeg_result)
+              {
+                jpeg_result = jpegDraw(false /* useBigEndian */,
+                                       0 /* x */, 0 /* y */, gfx->width() /* widthLimit */, gfx->height() /* heightLimit */);
+              }
+            }
+            Serial.printf("Time used: %lu\n", millis() - start);
           }
         }
       }
@@ -209,6 +243,11 @@ void loop()
 #elif defined(RTL8722DM)
       http.stop();
 #endif
+
+      if (jpeg_result)
+      {
+        next_show_millis = ((millis() / 60000L) + 1) * 60000L; // next minute
+      }
     }
   }
 
@@ -218,49 +257,4 @@ void loop()
 #elif defined(ESP8266)
   yield();
 #endif
-}
-
-static size_t http_stream_reader(JpegDec *jpegDec, size_t index, uint8_t *buf, size_t len)
-{
-  WiFiClient *http_stream = (WiFiClient *)jpegDec->input;
-  uint8_t wait = 0;
-  if (buf)
-  {
-    // printf("http_stream_reader: index %d, len: %d\n", index, len);
-    size_t a = http_stream->available();
-    size_t r = 0;
-    while ((r < len) && (wait < 10))
-    {
-      if (a)
-      {
-        r += http_stream->readBytes(buf + r, min((len - r), a));
-      }
-      else
-      {
-        delay(10);
-        wait++;
-      }
-      a = http_stream->available();
-    }
-    return r;
-  }
-  else
-  {
-    // Serial.printf("[HTTP] skip: %d\n", len);
-    size_t l = len;
-    while ((l) && (wait < 10))
-    {
-      if (http_stream->available())
-      {
-        --l;
-        http_stream->read();
-      }
-      else
-      {
-        delay(10);
-        wait++;
-      }
-    }
-    return len;
-  }
 }
