@@ -42,7 +42,7 @@ Arduino_GFX *gfx = create_default_Arduino_GFX();
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false /* IPS */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
 
 #endif /* !defined(DISPLAY_DEV_KIT) */
 /*******************************************************************************
@@ -97,7 +97,7 @@ void setup()
   h = gfx->height();
   text_size = (w < 224) ? 1 : 2;
   banner_height = text_size * 16;
-  graph_baseline = h - (2 * 16);                             // minus 2 text lines
+  graph_baseline = h - (2 * 16);                            // minus 2 text lines
   graph_height = graph_baseline - banner_height - (2 * 16); // minus 2 text lines
   channel_width = w / 17;
   signal_width = channel_width * 2;
@@ -175,8 +175,7 @@ void loop()
       bool duplicate_SSID = false;
       for (int j = 0; j < i; j++)
       {
-        if (
-            (WiFi.channel(j) == channel) && matchBssidPrefix(WiFi.BSSID(j), bssid))
+        if ((WiFi.channel(j) == channel) && matchBssidPrefix(WiFi.BSSID(j), bssid))
         {
           duplicate_SSID = true;
           break;

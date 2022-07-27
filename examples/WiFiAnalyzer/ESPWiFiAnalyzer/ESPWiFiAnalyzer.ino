@@ -3,14 +3,14 @@
  * Require ESP8266/ESP32 board support.
  */
 
-//POWER SAVING SETTING
+// POWER SAVING SETTING
 #define SCAN_INTERVAL 3000
 // #define SCAN_COUNT_SLEEP 3
 // #define LCD_PWR_PIN 14
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
- * 
+ *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
  * Defalult pin list for non display dev kit:
@@ -41,7 +41,7 @@ Arduino_GFX *gfx = create_default_Arduino_GFX();
 Arduino_DataBus *bus = create_default_Arduino_DataBus();
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false /* IPS */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false /* IPS */);
 
 #endif /* !defined(DISPLAY_DEV_KIT) */
 /*******************************************************************************
@@ -70,6 +70,8 @@ uint8_t scan_count = 0;
 
 void setup()
 {
+  Serial.begin(115200);
+
   // Set WiFi to station mode and disconnect from an AP if it was previously connected
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
@@ -81,8 +83,8 @@ void setup()
 #endif
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
   // init LCD
@@ -169,8 +171,7 @@ void loop()
       bool duplicate_SSID = false;
       for (int j = 0; j < i; j++)
       {
-        if (
-            (WiFi.channel(j) == channel) && matchBssidPrefix(WiFi.BSSID(j), bssid))
+        if ((WiFi.channel(j) == channel) && matchBssidPrefix(WiFi.BSSID(j), bssid))
         {
           duplicate_SSID = true;
           break;
@@ -339,7 +340,7 @@ void loop()
   delay(SCAN_INTERVAL);
 
 #if defined(SCAN_COUNT_SLEEP)
-  //POWER SAVING
+  // POWER SAVING
   if (++scan_count >= SCAN_COUNT_SLEEP)
   {
 #if defined(LCD_PWR_PIN)
