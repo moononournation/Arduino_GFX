@@ -6,6 +6,9 @@
  *
  * Dependent libraries:
  * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
+ * 
+ * Raspberry Pi Pico W dependent libraries:
+ * HttpClient: https://github.com/moononournation/HttpClient.git
  *
  * Setup steps:
  * 1. Fill your own SSID_NAME, SSID_PASSWORD, HTTP_HOST, HTTP_PORT and HTTP_PATH_TEMPLATE
@@ -73,6 +76,12 @@ HTTPClient http;
 #include <ESP8266HTTPClient.h>
 WiFiClient client;
 HTTPClient http;
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W)
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <HttpClient.h>
+WiFiClient client;
+HttpClient http(client);
 #elif defined(RTL8722DM)
 #include <WiFi.h>
 #include <WiFiClient.h>
@@ -114,6 +123,9 @@ void setup()
   Serial.println("Init WiFi");
   gfx->println("Init WiFi");
 #if defined(ESP32) || defined(ESP8266)
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(SSID_NAME, SSID_PASSWORD);
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W)
   WiFi.mode(WIFI_STA);
   WiFi.begin(SSID_NAME, SSID_PASSWORD);
 #elif defined(RTL8722DM)
@@ -162,7 +174,7 @@ void loop()
 #if defined(ESP32) || defined(ESP8266)
       http.begin(client, HTTP_HOST, HTTP_PORT, http_path);
       int httpCode = http.GET();
-#elif defined(RTL8722DM)
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(RTL8722DM)
       http.get(HTTP_HOST, HTTP_PORT, http_path);
       int httpCode = http.responseStatusCode();
       http.skipResponseHeaders();
@@ -173,7 +185,9 @@ void loop()
       // HTTP header has been send and Server response header has been handled
       if (httpCode <= 0)
       {
+#if defined(ESP32) || defined(ESP8266)
         Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+#endif
       }
       else
       {
@@ -188,7 +202,7 @@ void loop()
 // get lenght of document(is - 1 when Server sends no Content - Length header)
 #if defined(ESP32) || defined(ESP8266)
           int len = http.getSize();
-#elif defined(RTL8722DM)
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(RTL8722DM)
           int len = http.contentLength();
 #endif
           Serial.printf("[HTTP] size: %d\n", len);
@@ -209,7 +223,7 @@ void loop()
 #if defined(ESP32) || defined(ESP8266)
               static WiFiClient *http_stream = http.getStreamPtr();
               jpeg_result = jpegOpenHttpStreamWithBuffer(http_stream, buf, len, jpegDrawCallback);
-#else
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(RTL8722DM)
               jpeg_result = jpegOpenHttpStreamWithBuffer(&client, buf, len, jpegDrawCallback);
 #endif
               if (jpeg_result)
@@ -225,7 +239,7 @@ void loop()
 #if defined(ESP32) || defined(ESP8266)
               static WiFiClient *http_stream = http.getStreamPtr();
               jpeg_result = jpegOpenHttpStream(http_stream, len, jpegDrawCallback);
-#else
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(RTL8722DM)
               jpeg_result = jpegOpenHttpStream(&client, len, jpegDrawCallback);
 #endif
               if (jpeg_result)
@@ -240,7 +254,7 @@ void loop()
       }
 #if defined(ESP32) || defined(ESP8266)
       http.end();
-#elif defined(RTL8722DM)
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(RTL8722DM)
       http.stop();
 #endif
 
@@ -255,6 +269,8 @@ void loop()
   // notify WDT still working
   feedLoopWDT();
 #elif defined(ESP8266)
+  yield();
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W)
   yield();
 #endif
 }
