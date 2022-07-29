@@ -6,7 +6,7 @@
  *
  * Dependent libraries:
  * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
- * 
+ *
  * Raspberry Pi Pico W dependent libraries:
  * HttpClient: https://github.com/moononournation/HttpClient.git
  *
@@ -19,7 +19,7 @@
 const char *SSID_NAME = "YourAP";
 const char *SSID_PASSWORD = "PleaseInputYourPasswordHere";
 
-const char *HTTP_HOST = "photoserver.local";            /* Your HTTP photo server host name */
+const char *HTTP_HOST = "192.168.12.34";                /* Your HTTP photo server host name */
 const uint16_t HTTP_PORT = 5000;                        /* Your HTTP photo server port */
 const char *HTTP_PATH_TEMPLATE = "/OSDPhoto?w=%d&h=%d"; /* Your HTTP photo server URL path template */
 
