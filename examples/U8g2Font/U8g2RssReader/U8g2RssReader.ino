@@ -2,6 +2,9 @@
  * U8g2 RSS Reader
  * This is a simple RSS Reader sample with UTF-8 support
  *
+ *  * Raspberry Pi Pico W dependent libraries:
+ * HttpClient: https://github.com/moononournation/HttpClient.git
+ *
  * Setup steps:
  * 1. Fill your own SSID_NAME, SSID_PASSWORD, RSS_HOST, RSS_PORT, RSS_PATH
  * 2. Change your LCD parameters in Arduino_GFX setting
@@ -10,6 +13,7 @@
 /* WiFi settings */
 #define SSID_NAME "YourAP"
 #define SSID_PASSWORD "PleaseInputYourPasswordHere"
+
 #define RSS_HOST "rss.weather.gov.hk"
 #define RSS_PORT 80
 #define RSS_PATH "/rss/LocalWeatherForecast_uc.xml"
@@ -57,171 +61,173 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false 
 
 #if defined(ESP32)
 #include <WiFi.h>
-#include <WiFiMulti.h>
 #include <HTTPClient.h>
-WiFiMulti wifiMulti;
+WiFiClient client;
+HTTPClient http;
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
 #include <ESP8266HTTPClient.h>
-#include <WiFiClient.h>
-ESP8266WiFiMulti WiFiMulti;
-#elif defined(RTL8722DM)
-#include <HttpClient.h>
+WiFiClient client;
+HTTPClient http;
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W)
 #include <WiFi.h>
 #include <WiFiClient.h>
+#include <HttpClient.h>
+WiFiClient client;
+HttpClient http(client);
+#elif defined(RTL8722DM)
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <HttpClient.h>
+WiFiClient client;
+HttpClient http(client);
 #endif
 
 void setup(void)
 {
-    Serial.begin(115200);
+  Serial.begin(115200);
+  // while (!Serial);
+  // Serial.setDebugOutput(true);
+  Serial.println("Arduino RSS Panel");
 
-    Serial.println("Arduino RSS Panel");
-
-    // Connect WiFi
-#if defined(ESP32)
-    wifiMulti.addAP(SSID_NAME, SSID_PASSWORD);
-#elif defined(ESP8266)
-    WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP(SSID_NAME, SSID_PASSWORD);
-#elif defined(RTL8722DM)
-    WiFi.begin(SSID_NAME, SSID_PASSWORD);
-#endif
-
-    gfx->begin();
-    gfx->fillScreen(BLACK);
-    gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
+  Serial.println("Init display");
+  gfx->begin();
+  gfx->fillScreen(BLACK);
+  gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
-    /* U8g2 font list: https://github.com/olikraus/u8g2/wiki/fntlistall */
-    /* U8g2 Unifont list: https://github.com/olikraus/u8g2/wiki/fntgrpunifont */
-    gfx->setFont(u8g2_font_unifont_t_chinese4);
-    gfx->setTextColor(WHITE);
+  Serial.println("Init WiFi");
+  gfx->println("Init WiFi");
+#if defined(ESP32) || defined(ESP8266)
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(SSID_NAME, SSID_PASSWORD);
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W)
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(SSID_NAME, SSID_PASSWORD);
+#elif defined(RTL8722DM)
+  WiFi.begin((char *)SSID_NAME, (char *)SSID_PASSWORD);
+#endif
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+    gfx->print(".");
+  }
+  Serial.println(" CONNECTED");
+  gfx->println(" CONNECTED");
+
+  /* U8g2 font list: https://github.com/olikraus/u8g2/wiki/fntlistall */
+  /* U8g2 Unifont list: https://github.com/olikraus/u8g2/wiki/fntgrpunifont */
+  gfx->setFont(u8g2_font_unifont_t_chinese4);
+  gfx->setTextColor(WHITE);
 }
 
-void loop(void)
+void loop()
 {
-#if defined(ESP32)
-    if ((wifiMulti.run() == WL_CONNECTED))
-    {
-#elif defined(ESP8266)
-    if ((WiFiMulti.run() == WL_CONNECTED))
-    {
-        WiFiClient client;
-#elif defined(RTL8722DM)
-    if (WiFi.begin(SSID_NAME, SSID_PASSWORD) == WL_CONNECTED)
-    {
-        WiFiClient client;
-#endif
-
-        printf("[HTTP] begin...\n");
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    Serial.printf("[HTTP] begin...\n");
 #if defined(ESP32) || defined(ESP8266)
-        HTTPClient http;
-
-        if (http.begin(RSS_HOST, RSS_PORT, RSS_PATH))
-        {
-            printf("[HTTP] GET...\n");
-            // start connection and send HTTP header
-            int httpCode = http.GET();
-
-            printf("[HTTP] GET... code: %d\n", httpCode);
-
-            // httpCode will be negative on error
-            if (httpCode > 0)
-            {
-                // HTTP header has been send and Server response header has been handled
-                printf("[HTTP] GET... code: %d\n", httpCode);
-
-                // file found at server
-                if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY)
-                {
-                    // get length of document (is -1 when Server sends no Content-Length header)
-                    int len = http.getSize();
-                    printf("[HTTP] size: %d\n", len);
-
-                    // get XML string
-                    String xml = http.getString();
-#elif defined(RTL8722DM)
-        HttpClient http(client);
-
-        if (true)
-        {
-            printf("[HTTP] GET...\n");
-            // start connection and send HTTP header
-            int err = http.get(RSS_HOST, RSS_PORT, RSS_PATH);
-            if (err == 0)
-            {
-                if (true)
-                {
-                    int len = http.contentLength();
-                    printf("[HTTP] size: %d\n", len);
-
-                    // get XML string
-                    String xml = http.readString();
+    http.begin(client, RSS_HOST, RSS_PORT, RSS_PATH);
+    int httpCode = http.GET();
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(RTL8722DM)
+    http.get(RSS_HOST, RSS_PORT, RSS_PATH);
+    int httpCode = http.responseStatusCode();
+    http.skipResponseHeaders();
 #endif
-                    // update hour
-                    int key_idx = xml.indexOf("<item>");
-                    key_idx = xml.indexOf("<title>", key_idx + 6);
-                    int val_start_idx = key_idx + 7;
-                    int val_end_idx = xml.indexOf('<', val_start_idx);
-                    int update_hour = xml.substring(val_start_idx + 35, val_start_idx + 37).toInt();
-                    String title = xml.substring(val_start_idx, val_end_idx);
-                    Serial.println(title);
 
-                    gfx->fillScreen(BLACK);
-                    gfx->setCursor(0, 16);
-
-                    // gfx->setTextSize(2);
-                    gfx->setTextColor(GREEN);
-                    gfx->println(title);
-                    gfx->println();
-
-                    // description
-                    key_idx = xml.indexOf("<description><![CDATA[", val_end_idx);
-                    val_start_idx = key_idx + 22;
-                    val_end_idx = xml.indexOf("]]></description>", val_start_idx);
-                    String description = xml.substring(val_start_idx, val_end_idx);
-                    description.trim();
-                    Serial.println(description);
-
-                    // gfx->setTextSize(1);
-                    gfx->setTextColor(WHITE);
-                    val_start_idx = 0;
-                    while (val_start_idx < description.length())
-                    {
-                        val_end_idx = description.indexOf("<br/>", val_start_idx);
-                        if (val_end_idx < 0)
-                        {
-                            val_end_idx = description.length();
-                        }
-                        String paragraph = description.substring(val_start_idx, val_end_idx);
-                        paragraph.trim();
-                        gfx->println(paragraph);
-                        val_start_idx = val_end_idx + 5;
-                    }
-                }
-            }
+    Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+    gfx->printf("[HTTP] GET... code: %d\n", httpCode);
+    // HTTP header has been send and Server response header has been handled
+    if (httpCode <= 0)
+    {
 #if defined(ESP32) || defined(ESP8266)
-            else
-            {
-                printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
-            }
-            http.end();
-#elif defined(RTL8722DM)
-            http.stop();
+      Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
 #endif
+    }
+    else
+    {
+      if (httpCode != 200)
+      {
+        Serial.printf("[HTTP] Not OK!\n");
+        gfx->printf("[HTTP] Not OK!\n");
+        delay(5000);
+      }
+      else
+      {
+// get lenght of document(is - 1 when Server sends no Content - Length header)
+#if defined(ESP32) || defined(ESP8266)
+        int len = http.getSize();
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(RTL8722DM)
+        int len = http.contentLength();
+#endif
+        Serial.printf("[HTTP] size: %d\n", len);
+        gfx->printf("[HTTP] size: %d\n", len);
+
+        if (len <= 0)
+        {
+          Serial.printf("[HTTP] Unknow content size: %d\n", len);
+          gfx->printf("[HTTP] Unknow content size: %d\n", len);
         }
         else
         {
-            printf("[HTTP] Unable to connect\n");
+          // get XML string
+          String xml = http.readString();
+          // update hour
+          int key_idx = xml.indexOf("<item>");
+          key_idx = xml.indexOf("<title>", key_idx + 6);
+          int val_start_idx = key_idx + 7;
+          int val_end_idx = xml.indexOf('<', val_start_idx);
+          int update_hour = xml.substring(val_start_idx + 35, val_start_idx + 37).toInt();
+          String title = xml.substring(val_start_idx, val_end_idx);
+          Serial.println(title);
+
+          gfx->fillScreen(BLACK);
+          gfx->setCursor(0, 16);
+
+          // gfx->setTextSize(2);
+          gfx->setTextColor(GREEN);
+          gfx->println(title);
+          gfx->println();
+
+          // description
+          key_idx = xml.indexOf("<description><![CDATA[", val_end_idx);
+          val_start_idx = key_idx + 22;
+          val_end_idx = xml.indexOf("]]></description>", val_start_idx);
+          String description = xml.substring(val_start_idx, val_end_idx);
+          description.trim();
+          Serial.println(description);
+
+          // gfx->setTextSize(1);
+          gfx->setTextColor(WHITE);
+          val_start_idx = 0;
+          while (val_start_idx < description.length())
+          {
+            val_end_idx = description.indexOf("<br/>", val_start_idx);
+            if (val_end_idx < 0)
+            {
+              val_end_idx = description.length();
+            }
+            String paragraph = description.substring(val_start_idx, val_end_idx);
+            paragraph.trim();
+            gfx->println(paragraph);
+            val_start_idx = val_end_idx + 5;
+          }
         }
+      }
+#if defined(ESP32) || defined(ESP8266)
+      http.end();
+#elif defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(RTL8722DM)
+      http.stop();
+#endif
 
-        delay(60 * 60 * 1000);
+      delay(60 * 60 * 1000);
     }
+  }
 
-    // delay(1000);
+  delay(1000);
 }
