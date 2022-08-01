@@ -12,15 +12,15 @@ Arduino_ILI9481_18bit::Arduino_ILI9481_18bit(Arduino_DataBus *bus, int8_t rst, u
 void Arduino_ILI9481_18bit::begin(int32_t speed)
 {
 #if defined(ESP8266) || defined(ESP32)
-  if (speed == 0)
+  if (speed == GFX_NOT_DEFINED)
   {
-    speed = 12000000;
+    speed = 12000000UL;
   }
 // Teensy 4.x
 #elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
-  if (speed == 0)
+  if (speed == GFX_NOT_DEFINED)
   {
-    speed = 12000000;
+    speed = 12000000UL;
   }
 #endif
   Arduino_TFT::begin(speed);

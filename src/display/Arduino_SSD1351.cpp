@@ -16,15 +16,15 @@ Arduino_SSD1351::Arduino_SSD1351(
 void Arduino_SSD1351::begin(int32_t speed)
 {
 #if defined(ESP8266) || defined(ESP32)
-  if (speed == 0)
+  if (speed == GFX_NOT_DEFINED)
   {
-    speed = 16000000;
+    speed = 16000000UL;
   }
 // Teensy 4.x
 #elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
-  if (speed == 0)
+  if (speed == GFX_NOT_DEFINED)
   {
-    speed = 16000000;
+    speed = 16000000UL;
   }
 #endif
   _override_datamode = SPI_MODE0; // always SPI_MODE0

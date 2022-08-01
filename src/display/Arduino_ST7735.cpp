@@ -16,15 +16,15 @@ Arduino_ST7735::Arduino_ST7735(
 void Arduino_ST7735::begin(int32_t speed)
 {
 #if defined(ESP8266) || defined(ESP32)
-  if (speed == 0)
+  if (speed == GFX_NOT_DEFINED)
   {
-    speed = 27000000; // ST7735 Maximum supported speed
+    speed = 27000000UL; // ST7735 Maximum supported speed
   }
 // Teensy 4.x
 #elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
-  if (speed == 0)
+  if (speed == GFX_NOT_DEFINED)
   {
-    speed = 27000000; // ST7735 Maximum supported speed
+    speed = 27000000UL; // ST7735 Maximum supported speed
   }
 #endif
   Arduino_TFT::begin(speed);

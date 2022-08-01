@@ -16,15 +16,15 @@ Arduino_SSD1283A::Arduino_SSD1283A(
 void Arduino_SSD1283A::begin(int32_t speed)
 {
 #if defined(ESP8266) || defined(ESP32)
-  if (speed == 0)
+  if (speed == GFX_NOT_DEFINED)
   {
-    speed = 27000000;
+    speed = 27000000UL;
   }
 // Teensy 4.x
 #elif defined(__IMXRT1052__) || defined(__IMXRT1062__)
-  if (speed == 0)
+  if (speed == GFX_NOT_DEFINED)
   {
-    speed = 27000000;
+    speed = 27000000UL;
   }
 #endif
   Arduino_TFT::begin(speed);
