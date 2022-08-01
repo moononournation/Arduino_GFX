@@ -22,6 +22,7 @@
 // #define TTGO_T_DISPLAY
 // #define TTGO_T_QT
 // #define WT32_SC01
+// #define ZX3D50CE02S
 // #define ZX3D95CE01S_AR
 #if defined(ESP32_LCDKIT_SPI)
 #define TFT_BL 23
@@ -128,6 +129,13 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 3 /* rota
 // #define TFT_BL 12
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */, 240, 240, 0, 80);
+
+#elif defined(ZX3D50CE02S)
+#define TFT_BL 45
+Arduino_DataBus *bus = new Arduino_ESP32LCD8(
+  0 /* DC */, GFX_NOT_DEFINED /* CS */, 47 /* WR */, GFX_NOT_DEFINED /* RD */,
+  9 /* D0 */, 46 /* D1 */, 3 /* D2 */, 8 /* D3 */, 18 /* D4 */, 17 /* D5 */, 16 /* D6 */, 15 /* D7 */);
+Arduino_GFX *gfx = new Arduino_ST7796(bus, 4 /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(ZX3D95CE01S_AR)
 #define TFT_BL 45
