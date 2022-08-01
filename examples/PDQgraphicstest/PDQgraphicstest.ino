@@ -269,6 +269,11 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Display D0-D15 connect to GPIO 0-15
 // Arduino_DataBus *bus = new Arduino_ESP32S2PAR16(TFT_DC, TFT_CS, 16 /* WR */, 17 /* RD */);
 
+// ESP32S3 i80 LCD parallel 8-bit
+// Arduino_DataBus *bus = new Arduino_ESP32LCD8(
+//     TFT_DC, TFT_CS, 16 /* WR */, 17 /* RD */,
+//     0 /* D0 */, 1 /* D1 */, 2 /* D2 */, 3 /* D3 */, 4 /* D4 */, 5 /* D5 */, 6 /* D6 */, 7 /* D7 */);
+
 // ESP32S3 i80 LCD parallel 16-bit
 // Arduino_DataBus *bus = new Arduino_ESP32LCD16(
 //     TFT_DC, TFT_CS, 16 /* WR */, 17 /* RD */,
