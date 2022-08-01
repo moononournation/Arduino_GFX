@@ -618,7 +618,7 @@ void Arduino_SWPAR8::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 }
 #endif // !defined(LITTLE_FOOT_PRINT)
 
-INLINE void Arduino_SWPAR8::WRITE(uint8_t d)
+void Arduino_SWPAR8::WRITE(uint8_t d)
 {
   if (d & 0x01)
   {
@@ -688,7 +688,7 @@ INLINE void Arduino_SWPAR8::WRITE(uint8_t d)
   WR_HIGH();
 }
 
-INLINE void Arduino_SWPAR8::WRITEREPEAT(uint16_t p, uint32_t len)
+void Arduino_SWPAR8::WRITEREPEAT(uint16_t p, uint32_t len)
 {
   _data16.value = p;
   if (_data16.msb == _data16.lsb)
