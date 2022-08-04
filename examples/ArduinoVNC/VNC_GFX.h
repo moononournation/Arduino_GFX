@@ -157,14 +157,15 @@ public:
 #ifdef SEPARATE_DRAW_TASK
     queueDrawTask(x, y, w, h, true, (uint16_t *)data);
 #else
-    _gfx->draw16bitBeRGBBitmap(x, y, (uint16_t *)data, w, h);
+    // _gfx->draw16bitBeRGBBitmap(x, y, (uint16_t *)data, w, h);
+    _gfx->draw16bitRGBBitmap(x, y, (uint16_t *)data, w, h);
 #endif
   }
 
   void draw_rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint16_t color)
   {
     // DEBUG_VNC("draw_rect(%d, %d, %d, %d, color)\n", x, y, w, h);
-    MSB_16_SET(color, color);
+    // MSB_16_SET(color, color);
 #ifdef SEPARATE_DRAW_TASK
     queueDrawTask(x, y, w, h, false, &color);
 #else
@@ -174,7 +175,7 @@ public:
 
   void vnc_options_override(dfb_vnc_options *opt)
   {
-    opt->client.bigendian = 1;
+    // opt->client.bigendian = 1;
   }
 
 private:
