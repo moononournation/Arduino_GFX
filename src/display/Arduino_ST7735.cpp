@@ -27,6 +27,7 @@ void Arduino_ST7735::begin(int32_t speed)
     speed = 27000000UL; // ST7735 Maximum supported speed
   }
 #endif
+  _override_datamode = SPI_MODE0; // always use SPI_MODE0
   Arduino_TFT::begin(speed);
 }
 
