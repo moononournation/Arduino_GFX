@@ -3,6 +3,7 @@
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
 #include "Arduino_ST7735.h"
+#include "SPI.h"
 
 Arduino_ST7735::Arduino_ST7735(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
