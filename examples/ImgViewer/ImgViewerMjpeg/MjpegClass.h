@@ -1,6 +1,6 @@
 /*******************************************************************************
  * JPEGDEC Wrapper Class
- * 
+ *
  * Dependent libraries:
  * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
  ******************************************************************************/
@@ -38,7 +38,10 @@ public:
     _heightLimit = heightLimit;
     _inputindex = 0;
 
-    _read_buf = (uint8_t *)malloc(READ_BUFFER_SIZE);
+    if (!_read_buf)
+    {
+      _read_buf = (uint8_t *)malloc(READ_BUFFER_SIZE);
+    }
 
     return true;
   }
