@@ -9,7 +9,7 @@
 #include "../databus/Arduino_ESP32RGBPanel.h"
 
 #define ST7701_TFTWIDTH 480
-#define ST7701_TFTHEIGHT 480
+#define ST7701_TFTHEIGHT 864
 
 static const uint8_t st7701_type1_init_operations[] = {
     BEGIN_WRITE,
