@@ -183,12 +183,12 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(
   _panel_config->timings.h_res = w;
   _panel_config->timings.v_res = h;
   // The following parameters should refer to LCD spec
-  _panel_config->timings.hsync_pulse_width = hsync_pulse_width;
-  _panel_config->timings.hsync_back_porch = hsync_back_porch;
-  _panel_config->timings.hsync_front_porch = hsync_front_porch;
-  _panel_config->timings.vsync_pulse_width = vsync_pulse_width;
-  _panel_config->timings.vsync_back_porch = vsync_back_porch;
-  _panel_config->timings.vsync_front_porch = vsync_front_porch;
+  _panel_config->timings.hsync_pulse_width = 6;// hsync_pulse_width;
+  _panel_config->timings.hsync_back_porch = 18;//hsync_back_porch;
+  _panel_config->timings.hsync_front_porch = 24;// hsync_front_porch;
+  _panel_config->timings.vsync_pulse_width = 4;//vsync_pulse_width;
+  _panel_config->timings.vsync_back_porch = 10;// vsync_back_porch;
+  _panel_config->timings.vsync_front_porch = 16;//vsync_front_porch;
   _panel_config->timings.flags.hsync_idle_low = (hsync_polarity == 0) ? 1 : 0;
   _panel_config->timings.flags.vsync_idle_low = (vsync_polarity == 0) ? 1 : 0;
   _panel_config->timings.flags.de_idle_high = 0;
