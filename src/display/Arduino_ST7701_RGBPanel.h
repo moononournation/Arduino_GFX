@@ -231,6 +231,7 @@ static const uint8_t st7701_type2_init_operations[] = {
     WRITE_COMMAND_8, 0x29, // Display On
     END_WRITE};
 
+
 static const uint8_t st7701_type3_init_operations[] = {
     BEGIN_WRITE,
     WRITE_COMMAND_8, 0xFF,
@@ -257,6 +258,7 @@ static const uint8_t st7701_type3_init_operations[] = {
     0x0E, 0x2C, 0x33, 0x1D,
 
     // PAGE1
+    WRITE_COMMAND_8, 0xFF, 
     WRITE_BYTES, 5, 0x77, 0x01, 0x00, 0x00, 0x11,
 
     WRITE_C8_D8, 0xB0, 0x5d, // 5d
@@ -343,8 +345,10 @@ static const uint8_t st7701_type3_init_operations[] = {
 
     BEGIN_WRITE,
     WRITE_COMMAND_8, 0x29,   // Display On
+    WRITE_C8_D8, 0x36, 0x00, // 
     WRITE_C8_D8, 0x3A, 0x60, // 0x60 18bit   0x50 16bit
     END_WRITE};
+
 
 class Arduino_ST7701_RGBPanel : public Arduino_GFX
 {

@@ -32,7 +32,7 @@ void Arduino_ST7701_RGBPanel::begin(int32_t speed)
         delay(120);
     }
 
-#if 1 
+#if 0
 _bus->sendCommand(0xFF);
 _bus->sendData(0x77);
 _bus->sendData(0x01);
@@ -312,14 +312,14 @@ _bus->sendCommand(0x3A);
 _bus->sendData(0x60);//0x60 18bit 0x50 16bit
 #endif
 
-    // _bus->batchOperation((uint8_t *)_init_operations, _init_operations_len);
+    _bus->batchOperation((uint8_t *)_init_operations, _init_operations_len);
 
-    // if (_ips)
-    // {
-    //     _bus->beginWrite();
-    //     _bus->writeCommand(0x21);
-    //     _bus->endWrite();
-    // }
+    if (_ips)
+    {
+        _bus->beginWrite();
+        _bus->writeCommand(0x21);
+        _bus->endWrite();
+    }
 
     setRotation(_rotation);
 
