@@ -596,6 +596,7 @@ void Arduino_SWPAR8::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   _data16.value = d1;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
+
   _data16.value = d2;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
@@ -614,6 +615,28 @@ void Arduino_SWPAR8::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
   while (repeat--)
   {
     writeBytes(data, len);
+  }
+}
+
+void Arduino_SWPAR8::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  while (len--)
+  {
+    _data16.value = idx[*data++];
+    WRITE(_data16.msb);
+    WRITE(_data16.lsb);
+  }
+}
+
+void Arduino_SWPAR8::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  while (len--)
+  {
+    _data16.value = idx[*data++];
+    WRITE(_data16.msb);
+    WRITE(_data16.lsb);
+    WRITE(_data16.msb);
+    WRITE(_data16.lsb);
   }
 }
 #endif // !defined(LITTLE_FOOT_PRINT)
