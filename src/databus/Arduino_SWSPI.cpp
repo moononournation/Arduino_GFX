@@ -196,7 +196,9 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
   _mosiPortClr = portClearRegister(_mosi);
   if (_miso != GFX_NOT_DEFINED)
   {
+#if !defined(KINETISK)
     _misoPinMask = digitalPinToBitMask(_miso);
+#endif
     _misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
   }
 #else  // !CORE_TEENSY
