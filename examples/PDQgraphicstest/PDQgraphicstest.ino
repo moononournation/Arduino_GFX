@@ -11,6 +11,8 @@
 /* Or you can define the dev kit cannot find in board list */
 #include <Arduino_GFX_Library.h>
 
+// #define ESP32_2432S028R
+// #define ESP32_3248S035R
 // #define ESP32_LCDKIT_SPI
 // #define ESP32_LCDKIT_PAR8A
 // #define ESP32_LCDKIT_PAR8B
@@ -24,7 +26,17 @@
 // #define WT32_SC01
 // #define ZX3D50CE02S
 // #define ZX3D95CE01S_AR
-#if defined(ESP32_LCDKIT_SPI)
+#if defined(ESP32_2432S028R)
+#define TFT_BL 21
+Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 0 /* rotation */);
+
+#elif defined(ESP32_3248S035R)
+#define TFT_BL 27
+Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */, HSPI /* spi_num */);
+Arduino_GFX *gfx = new Arduino_ST7796(bus, -1 /* RST */, 0 /* rotation */);
+
+#elif defined(ESP32_LCDKIT_SPI)
 #define TFT_BL 23
 Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 5 /* CS */, 22 /* SCK */, 21 /* MOSI */, 27 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
