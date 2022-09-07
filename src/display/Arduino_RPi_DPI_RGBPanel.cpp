@@ -270,7 +270,10 @@ void Arduino_RPi_DPI_RGBPanel::draw16bitBeRGBBitmap(int16_t x, int16_t y,
 
 void Arduino_RPi_DPI_RGBPanel::flush(void)
 {
-    Cache_WriteBack_Addr((uint32_t)_framebuffer, _framebuffer_size);
+    if (!_auto_flush)
+    {
+        Cache_WriteBack_Addr((uint32_t)_framebuffer, _framebuffer_size);
+    }
 }
 
 uint16_t *Arduino_RPi_DPI_RGBPanel::getFramebuffer()
