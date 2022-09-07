@@ -7,6 +7,7 @@
  *
  * Touch libraries:
  * FT6X36: https://github.com/strange-v/FT6X36.git
+ * XPT2046: https://github.com/PaulStoffregen/XPT2046_Touchscreen
  *
  * Setup steps:
  * 1. Fill your own SSID_NAME, SSID_PASSWORD, VNC_IP, VNC_PORT and VNC_PASSWORD
@@ -17,6 +18,18 @@
 // #define TOUCH_FT6X36_SCL 19
 // #define TOUCH_FT6X36_SDA 18
 // #define TOUCH_FT6X36_INT 39
+
+// #define TOUCH_XPT2046
+// #define TOUCH_XPT2046_SCK 25
+// #define TOUCH_XPT2046_MISO 39
+// #define TOUCH_XPT2046_MOSI 32
+// #define TOUCH_XPT2046_CS 33
+// #define TOUCH_XPT2046_INT 36
+// #define TOUCH_XPT2046_X1 400
+// #define TOUCH_XPT2046_X2 3900
+// #define TOUCH_XPT2046_Y1 200
+// #define TOUCH_XPT2046_Y2 3800
+// #define TOUCH_XPT2046_ROTATION 3
 
 /* WiFi settings */
 const char *SSID_NAME = "YourAP";
@@ -88,6 +101,13 @@ arduinoVNC vnc = arduinoVNC(vnc_gfx);
 FT6X36 ts(&Wire, TOUCH_FT6X36_INT);
 #endif
 
+#if defined(TOUCH_XPT2046)
+#include <XPT2046_Touchscreen.h>
+#include <SPI.h>
+XPT2046_Touchscreen ts(TOUCH_XPT2046_CS, TOUCH_XPT2046_INT);
+int last_x = 0, last_y = 0;
+#endif
+
 void TFTnoWifi(void)
 {
   gfx->fillScreen(BLACK);
@@ -148,6 +168,25 @@ void touch(TPoint p, TEvent e)
 }
 #endif
 
+#if defined(TOUCH_XPT2046)
+void check_touch() {
+  if (ts.tirqTouched()) {
+    if (ts.touched()) {
+      TS_Point p = ts.getPoint();
+      int x = map(p.x, TOUCH_XPT2046_X1, TOUCH_XPT2046_X2, 0, gfx->width() - 1);
+      int y = map(p.y, TOUCH_XPT2046_Y1, TOUCH_XPT2046_Y2, 0, gfx->height() - 1);
+      vnc.mouseEvent(x, y, 0b001);
+      last_x = x;
+      last_y = y;
+    }
+    else
+    {
+      vnc.mouseEvent(last_x, last_y, 0b000);
+    }
+  }
+}
+#endif
+
 void setup(void)
 {
   Serial.begin(115200);
@@ -159,6 +198,12 @@ void setup(void)
   Wire.begin(TOUCH_FT6X36_SDA, TOUCH_FT6X36_SCL);
   ts.begin();
   ts.registerTouchHandler(touch);
+#endif
+
+#if defined(TOUCH_XPT2046)
+  SPI.begin(TOUCH_XPT2046_SCK, TOUCH_XPT2046_MISO, TOUCH_XPT2046_MOSI, TOUCH_XPT2046_CS);
+  ts.begin();
+  ts.setRotation(TOUCH_XPT2046_ROTATION);
 #endif
 
   Serial.println("Init display");
@@ -221,12 +266,18 @@ void loop()
   }
   else
   {
+
 #if defined(TOUCH_FT6X36)
     if (vnc.connected())
     {
       ts.loop();
     }
 #endif
+
+#if defined(TOUCH_XPT2046)
+  check_touch();
+#endif
+
     vnc.loop();
     if (!vnc.connected())
     {
