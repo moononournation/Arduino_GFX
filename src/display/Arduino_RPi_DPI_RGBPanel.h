@@ -14,7 +14,8 @@ public:
   Arduino_RPi_DPI_RGBPanel(
       Arduino_ESP32RGBPanel *bus,
       int16_t w, uint16_t hsync_polarity, uint16_t hsync_front_porch, uint16_t hsync_pulse_width, uint16_t hsync_back_porch,
-      int16_t h, uint16_t vsync_polarity, uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch);
+      int16_t h, uint16_t vsync_polarity, uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch,
+      bool auto_flush = true);
 
   void begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
@@ -23,11 +24,13 @@ public:
   void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) override;
   void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
   void draw16bitBeRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
+  void flush(void) override;
 
   uint16_t *getFramebuffer();
 
 protected:
   uint16_t *_framebuffer;
+  size_t _framebuffer_size;
   Arduino_ESP32RGBPanel *_bus;
 
   uint16_t _hsync_polarity;
@@ -38,6 +41,7 @@ protected:
   uint16_t _vsync_front_porch;
   uint16_t _vsync_pulse_width;
   uint16_t _vsync_back_porch;
+  bool _auto_flush;
 
 private:
 };

@@ -8,11 +8,14 @@
 Arduino_RPi_DPI_RGBPanel::Arduino_RPi_DPI_RGBPanel(
     Arduino_ESP32RGBPanel *bus,
     int16_t w, uint16_t hsync_polarity, uint16_t hsync_front_porch, uint16_t hsync_pulse_width, uint16_t hsync_back_porch,
-    int16_t h, uint16_t vsync_polarity, uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch)
+    int16_t h, uint16_t vsync_polarity, uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch,
+    bool auto_flush)
     : Arduino_GFX(w, h), _bus(bus),
       _hsync_polarity(hsync_polarity), _hsync_front_porch(hsync_front_porch), _hsync_pulse_width(hsync_pulse_width), _hsync_back_porch(hsync_back_porch),
-      _vsync_polarity(vsync_polarity), _vsync_front_porch(vsync_front_porch), _vsync_pulse_width(vsync_pulse_width), _vsync_back_porch(vsync_back_porch)
+      _vsync_polarity(vsync_polarity), _vsync_front_porch(vsync_front_porch), _vsync_pulse_width(vsync_pulse_width), _vsync_back_porch(vsync_back_porch),
+      _auto_flush(auto_flush)
 {
+    _framebuffer_size = w * h * 2;
 }
 
 void Arduino_RPi_DPI_RGBPanel::begin(int32_t speed)
@@ -31,7 +34,10 @@ void Arduino_RPi_DPI_RGBPanel::writePixelPreclipped(int16_t x, int16_t y, uint16
     fb += (int32_t)y * _width;
     fb += x;
     *fb = color;
-    Cache_WriteBack_Addr((uint32_t)fb, 2);
+    if (_auto_flush)
+    {
+        Cache_WriteBack_Addr((uint32_t)fb, 2);
+    }
 }
 
 void Arduino_RPi_DPI_RGBPanel::writeFastVLine(int16_t x, int16_t y,
@@ -61,11 +67,22 @@ void Arduino_RPi_DPI_RGBPanel::writeFastVLine(int16_t x, int16_t y,
                 } // Clip bottom
 
                 uint16_t *fb = _framebuffer + ((int32_t)y * _width) + x;
-                while (h--)
+                if (_auto_flush)
                 {
-                    *fb = color;
-                    Cache_WriteBack_Addr((uint32_t)fb, 2);
-                    fb += _width;
+                    while (h--)
+                    {
+                        *fb = color;
+                        Cache_WriteBack_Addr((uint32_t)fb, 2);
+                        fb += _width;
+                    }
+                }
+                else
+                {
+                    while (h--)
+                    {
+                        *fb = color;
+                        fb += _width;
+                    }
                 }
             }
         }
@@ -105,7 +122,10 @@ void Arduino_RPi_DPI_RGBPanel::writeFastHLine(int16_t x, int16_t y,
                 {
                     *(fb++) = color;
                 }
-                Cache_WriteBack_Addr(cachePos, writeSize);
+                if (_auto_flush)
+                {
+                    Cache_WriteBack_Addr(cachePos, writeSize);
+                }
             }
         }
     }
@@ -126,7 +146,10 @@ void Arduino_RPi_DPI_RGBPanel::writeFillRectPreclipped(int16_t x, int16_t y,
         }
         row += _width;
     }
-    Cache_WriteBack_Addr(cachePos, _width * h * 2);
+    if (_auto_flush)
+    {
+        Cache_WriteBack_Addr(cachePos, _width * h * 2);
+    }
 }
 
 void Arduino_RPi_DPI_RGBPanel::draw16bitRGBBitmap(int16_t x, int16_t y,
@@ -179,7 +202,10 @@ void Arduino_RPi_DPI_RGBPanel::draw16bitRGBBitmap(int16_t x, int16_t y,
             bitmap += xskip;
             row += _width;
         }
-        Cache_WriteBack_Addr(cachePos, _width * h * 2);
+        if (_auto_flush)
+        {
+            Cache_WriteBack_Addr(cachePos, _width * h * 2);
+        }
     }
 }
 
@@ -235,8 +261,16 @@ void Arduino_RPi_DPI_RGBPanel::draw16bitBeRGBBitmap(int16_t x, int16_t y,
             bitmap += xskip;
             row += _width;
         }
-        Cache_WriteBack_Addr(cachePos, _width * h * 2);
+        if (_auto_flush)
+        {
+            Cache_WriteBack_Addr(cachePos, _width * h * 2);
+        }
     }
+}
+
+void Arduino_RPi_DPI_RGBPanel::flush(void)
+{
+    Cache_WriteBack_Addr((uint32_t)_framebuffer, _framebuffer_size);
 }
 
 uint16_t *Arduino_RPi_DPI_RGBPanel::getFramebuffer()
