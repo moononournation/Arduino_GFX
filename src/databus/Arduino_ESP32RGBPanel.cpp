@@ -173,13 +173,14 @@ void Arduino_ESP32RGBPanel::writePattern(uint8_t *data, uint8_t len, uint32_t re
 uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(
     uint16_t w, uint16_t h,
     uint16_t hsync_pulse_width, uint16_t hsync_back_porch, uint16_t hsync_front_porch, uint16_t hsync_polarity,
-    uint16_t vsync_pulse_width, uint16_t vsync_back_porch, uint16_t vsync_front_porch, uint16_t vsync_polarity)
+    uint16_t vsync_pulse_width, uint16_t vsync_back_porch, uint16_t vsync_front_porch, uint16_t vsync_polarity,
+    uint16_t pclk_active_neg, int32_t prefer_speed)
 {
   esp_lcd_rgb_panel_config_t *_panel_config = (esp_lcd_rgb_panel_config_t *)heap_caps_calloc(1, sizeof(esp_lcd_rgb_panel_config_t), MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL);
 
   _panel_config->clk_src = LCD_CLK_SRC_PLL160M;
 
-  _panel_config->timings.pclk_hz = _speed;
+  _panel_config->timings.pclk_hz = (prefer_speed == GFX_NOT_DEFINED) ? _speed : prefer_speed;
   _panel_config->timings.h_res = w;
   _panel_config->timings.v_res = h;
   // The following parameters should refer to LCD spec
@@ -192,7 +193,7 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(
   _panel_config->timings.flags.hsync_idle_low = (hsync_polarity == 0) ? 1 : 0;
   _panel_config->timings.flags.vsync_idle_low = (vsync_polarity == 0) ? 1 : 0;
   _panel_config->timings.flags.de_idle_high = 0;
-  _panel_config->timings.flags.pclk_active_neg = 0; // RGB data is clocked out on falling edge
+  _panel_config->timings.flags.pclk_active_neg = pclk_active_neg;
   _panel_config->timings.flags.pclk_idle_high = 0;
 
   _panel_config->data_width = 16; // RGB565 in parallel mode, thus 16bit in width

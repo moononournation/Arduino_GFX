@@ -9,11 +9,11 @@ Arduino_RPi_DPI_RGBPanel::Arduino_RPi_DPI_RGBPanel(
     Arduino_ESP32RGBPanel *bus,
     int16_t w, uint16_t hsync_polarity, uint16_t hsync_front_porch, uint16_t hsync_pulse_width, uint16_t hsync_back_porch,
     int16_t h, uint16_t vsync_polarity, uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch,
-    bool auto_flush)
+    uint16_t pclk_active_neg, int32_t prefer_speed, bool auto_flush)
     : Arduino_GFX(w, h), _bus(bus),
       _hsync_polarity(hsync_polarity), _hsync_front_porch(hsync_front_porch), _hsync_pulse_width(hsync_pulse_width), _hsync_back_porch(hsync_back_porch),
       _vsync_polarity(vsync_polarity), _vsync_front_porch(vsync_front_porch), _vsync_pulse_width(vsync_pulse_width), _vsync_back_porch(vsync_back_porch),
-      _auto_flush(auto_flush)
+      _pclk_active_neg(pclk_active_neg), _prefer_speed(prefer_speed), _auto_flush(auto_flush)
 {
     _framebuffer_size = w * h * 2;
 }
@@ -25,7 +25,8 @@ void Arduino_RPi_DPI_RGBPanel::begin(int32_t speed)
     _framebuffer = _bus->getFrameBuffer(
         _width, _height,
         _hsync_pulse_width, _hsync_back_porch, _hsync_front_porch, _hsync_polarity,
-        _vsync_pulse_width, _vsync_back_porch, _vsync_front_porch, _vsync_polarity);
+        _vsync_pulse_width, _vsync_back_porch, _vsync_front_porch, _vsync_polarity,
+        _pclk_active_neg, _prefer_speed);
 }
 
 void Arduino_RPi_DPI_RGBPanel::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)

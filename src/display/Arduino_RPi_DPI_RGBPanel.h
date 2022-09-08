@@ -15,7 +15,7 @@ public:
       Arduino_ESP32RGBPanel *bus,
       int16_t w, uint16_t hsync_polarity, uint16_t hsync_front_porch, uint16_t hsync_pulse_width, uint16_t hsync_back_porch,
       int16_t h, uint16_t vsync_polarity, uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch,
-      bool auto_flush = true);
+      uint16_t pclk_active_neg = 0, int32_t prefer_speed = GFX_NOT_DEFINED, bool auto_flush = true);
 
   void begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
@@ -41,6 +41,8 @@ protected:
   uint16_t _vsync_front_porch;
   uint16_t _vsync_pulse_width;
   uint16_t _vsync_back_porch;
+  uint16_t _pclk_active_neg;
+  int32_t _prefer_speed;
   bool _auto_flush;
 
 private:
