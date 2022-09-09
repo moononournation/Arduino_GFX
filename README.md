@@ -238,6 +238,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 - SSD1331 96x64 [[demo video](https://youtu.be/v20b1A_KDcQ)]
 - SSD1351 128x128 [[demo video](https://youtu.be/5TIM-qMVBNQ)]
 - SSD1351 128x96
+- ST7262 800x480 [[demo video](https://youtu.be/VvpILAVyPt8)]
 - ST7735 128x160 (various tabs) [[demo video](https://youtu.be/eRBSSD_N9II)]
 - ST7735 128x128 (various tabs) [[demo video](https://youtu.be/6rueSV2Ee6c)]
 - ST7735 80x160 [[demo video](https://youtu.be/qESHDuYo_Mk)]
