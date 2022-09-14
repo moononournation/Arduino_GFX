@@ -79,6 +79,11 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
  * End of Arduino_GFX setting
  ******************************************************************************/
 
+/*******************************************************************************
+ * Please config the touch panel in touch.h
+ ******************************************************************************/
+#include "touch.h"
+
 #if defined(ESP32)
 #include <WiFi.h>
 #elif defined(ESP8266)
@@ -133,59 +138,18 @@ void TFTnoVNC(void)
   gfx->println(VNC_PORT);
 }
 
-#if defined(TOUCH_FT6X36)
-void touch(TPoint p, TEvent e)
+void handle_touch()
 {
-  if (e != TEvent::Tap && e != TEvent::DragStart && e != TEvent::DragMove && e != TEvent::DragEnd)
-    return;
-
-  // translation logic depends on screen rotation
-  int x = map(p.y, 480, 0, 0, gfx->width());
-  int y = map(p.x, 0, 320, 0, gfx->height());
-  switch (e)
-  {
-  case TEvent::Tap:
-    Serial.println("Tap");
-    vnc.mouseEvent(x, y, 0b001);
-    vnc.mouseEvent(x, y, 0b000);
-    break;
-  case TEvent::DragStart:
-    Serial.println("DragStart");
-    vnc.mouseEvent(x, y, 0b001);
-    break;
-  case TEvent::DragMove:
-    Serial.println("DragMove");
-    vnc.mouseEvent(x, y, 0b001);
-    break;
-  case TEvent::DragEnd:
-    Serial.println("DragEnd");
-    vnc.mouseEvent(x, y, 0b000);
-    break;
-  default:
-    Serial.println("UNKNOWN");
-    break;
-  }
-}
-#endif
-
-#if defined(TOUCH_XPT2046)
-void check_touch() {
-  if (ts.tirqTouched()) {
-    if (ts.touched()) {
-      TS_Point p = ts.getPoint();
-      int x = map(p.x, TOUCH_XPT2046_X1, TOUCH_XPT2046_X2, 0, gfx->width() - 1);
-      int y = map(p.y, TOUCH_XPT2046_Y1, TOUCH_XPT2046_Y2, 0, gfx->height() - 1);
-      vnc.mouseEvent(x, y, 0b001);
-      last_x = x;
-      last_y = y;
+  if (touch_has_signal()) {
+    if (touch_touched()) {
+      vnc.mouseEvent(touch_last_x, touch_last_y, 0b001);
     }
-    else
+    else if (touch_released())
     {
-      vnc.mouseEvent(last_x, last_y, 0b000);
+      vnc.mouseEvent(touch_last_x, touch_last_y, 0b000);
     }
   }
 }
-#endif
 
 void setup(void)
 {
@@ -194,11 +158,8 @@ void setup(void)
   // Serial.setDebugOutput(true);
   Serial.println("Arduino VNC");
 
-#if defined(TOUCH_FT6X36)
-  Wire.begin(TOUCH_FT6X36_SDA, TOUCH_FT6X36_SCL);
-  ts.begin();
-  ts.registerTouchHandler(touch);
-#endif
+  // Init touch device
+  touch_init();
 
 #if defined(TOUCH_XPT2046)
   SPI.begin(TOUCH_XPT2046_SCK, TOUCH_XPT2046_MISO, TOUCH_XPT2046_MOSI, TOUCH_XPT2046_CS);
@@ -266,18 +227,10 @@ void loop()
   }
   else
   {
-
-#if defined(TOUCH_FT6X36)
     if (vnc.connected())
     {
-      ts.loop();
+      handle_touch();
     }
-#endif
-
-#if defined(TOUCH_XPT2046)
-  check_touch();
-#endif
-
     vnc.loop();
     if (!vnc.connected())
     {
