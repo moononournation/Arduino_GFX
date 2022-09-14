@@ -5,6 +5,11 @@
  *
  * Dependent libraries:
  * LVGL: https://github.com/lvgl/lvgl.git
+
+ * Touch libraries:
+ * FT6X36: https://github.com/strange-v/FT6X36.git
+ * GT911: https://github.com/TAMCTec/gt911-arduino.git
+ * XPT2046: https://github.com/PaulStoffregen/XPT2046_Touchscreen.git
  *
  * LVGL Configuration file:
  * Copy your_arduino_path/libraries/lvgl/lv_conf_template.h
