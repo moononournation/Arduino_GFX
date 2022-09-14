@@ -15,23 +15,6 @@
  * 2. Change your LCD parameters in Arduino_GFX setting
  ******************************************************************************/
 
-// #define TOUCH_FT6X36
-// #define TOUCH_FT6X36_SCL 19
-// #define TOUCH_FT6X36_SDA 18
-// #define TOUCH_FT6X36_INT 39
-
-// #define TOUCH_XPT2046
-// #define TOUCH_XPT2046_SCK 25
-// #define TOUCH_XPT2046_MISO 39
-// #define TOUCH_XPT2046_MOSI 32
-// #define TOUCH_XPT2046_CS 33
-// #define TOUCH_XPT2046_INT 36
-// #define TOUCH_XPT2046_X1 400
-// #define TOUCH_XPT2046_X2 3900
-// #define TOUCH_XPT2046_Y1 200
-// #define TOUCH_XPT2046_Y2 3800
-// #define TOUCH_XPT2046_ROTATION 3
-
 /* WiFi settings */
 const char *SSID_NAME = "YourAP";
 const char *SSID_PASSWORD = "PleaseInputYourPasswordHere";
