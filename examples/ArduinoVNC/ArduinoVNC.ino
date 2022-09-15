@@ -84,19 +84,6 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 VNC_GFX *vnc_gfx = new VNC_GFX(gfx);
 arduinoVNC vnc = arduinoVNC(vnc_gfx);
 
-#if defined(TOUCH_FT6X36)
-#include <Wire.h>
-#include <FT6X36.h>
-FT6X36 ts(&Wire, TOUCH_FT6X36_INT);
-#endif
-
-#if defined(TOUCH_XPT2046)
-#include <XPT2046_Touchscreen.h>
-#include <SPI.h>
-XPT2046_Touchscreen ts(TOUCH_XPT2046_CS, TOUCH_XPT2046_INT);
-int last_x = 0, last_y = 0;
-#endif
-
 void TFTnoWifi(void)
 {
   gfx->fillScreen(BLACK);
@@ -144,12 +131,6 @@ void setup(void)
 
   // Init touch device
   touch_init();
-
-#if defined(TOUCH_XPT2046)
-  SPI.begin(TOUCH_XPT2046_SCK, TOUCH_XPT2046_MISO, TOUCH_XPT2046_MOSI, TOUCH_XPT2046_CS);
-  ts.begin();
-  ts.setRotation(TOUCH_XPT2046_ROTATION);
-#endif
 
   Serial.println("Init display");
   gfx->begin();

@@ -61,26 +61,6 @@ XPT2046_Touchscreen ts(TOUCH_XPT2046_CS, TOUCH_XPT2046_INT);
 
 #endif
 
-void touch_init()
-{
-#if defined(TOUCH_FT6X36)
-  Wire.begin(TOUCH_FT6X36_SDA, TOUCH_FT6X36_SCL);
-  ts.begin();
-  ts.registerTouchHandler(touch);
-
-#elif defined(TOUCH_GT911)
-  Wire.begin(TOUCH_GT911_SDA, TOUCH_GT911_SCL);
-  ts.begin();
-  ts.setRotation(TOUCH_GT911_ROTATION);
-
-#elif defined(TOUCH_XPT2046)
-  SPI.begin(TOUCH_XPT2046_SCK, TOUCH_XPT2046_MISO, TOUCH_XPT2046_MOSI, TOUCH_XPT2046_CS);
-  ts.begin();
-  ts.setRotation(TOUCH_XPT2046_ROTATION);
-
-#endif
-}
-
 #if defined(TOUCH_FT6X36)
 void touch(TPoint p, TEvent e)
 {
@@ -121,6 +101,26 @@ void touch(TPoint p, TEvent e)
   }
 }
 #endif
+
+void touch_init()
+{
+#if defined(TOUCH_FT6X36)
+  Wire.begin(TOUCH_FT6X36_SDA, TOUCH_FT6X36_SCL);
+  ts.begin();
+  ts.registerTouchHandler(touch);
+
+#elif defined(TOUCH_GT911)
+  Wire.begin(TOUCH_GT911_SDA, TOUCH_GT911_SCL);
+  ts.begin();
+  ts.setRotation(TOUCH_GT911_ROTATION);
+
+#elif defined(TOUCH_XPT2046)
+  SPI.begin(TOUCH_XPT2046_SCK, TOUCH_XPT2046_MISO, TOUCH_XPT2046_MOSI, TOUCH_XPT2046_CS);
+  ts.begin();
+  ts.setRotation(TOUCH_XPT2046_ROTATION);
+
+#endif
+}
 
 bool touch_has_signal()
 {
