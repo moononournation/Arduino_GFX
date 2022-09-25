@@ -107,52 +107,10 @@ void Arduino_ST7796::tftInit()
     delay(ST7796_RST_DELAY);
   }
 
-  _bus->beginWrite();
-  _bus->writeC8D8(0xF0, 0xC3);
-  _bus->writeC8D8(0xF0, 0x96);
-  _bus->writeC8D8(0x3A, 0x05);
-  _bus->writeC8D8(0xB0, 0x80);
-  _bus->writeC8D16(0xB6, 0x0002);
-  _bus->writeC8D16D16(0xB5, 0x0203, 0x0004);
-  _bus->writeC8D16(0xB1, 0x8010);
-  _bus->writeC8D8(0xB4, 0x00);
-  _bus->writeC8D8(0xB7, 0xC6);
-  _bus->writeC8D8(0xC5, 0x24);
-  _bus->writeC8D8(0xE4, 0x31);
-  _bus->writeCommand(0xE8);
-  _bus->write16(0x408A);
-  _bus->write16(0x0000);
-  _bus->write16(0x2919);
-  _bus->write16(0xA533);
-  _bus->writeCommand(0xC2);
-  _bus->writeCommand(0xA7);
+  _bus->batchOperation(st7796_init_operations, sizeof(st7796_init_operations));
 
-  _bus->writeCommand(0xE0);
-  _bus->write16(0xF009);
-  _bus->write16(0x1312);
-  _bus->write16(0x122B);
-  _bus->write16(0x3C44);
-  _bus->write16(0x4B1B);
-  _bus->write16(0x1817);
-  _bus->write16(0x1D21);
-
-  _bus->writeCommand(0XE1);
-  _bus->write16(0xF009);
-  _bus->write16(0x130C);
-  _bus->write16(0x0D27);
-  _bus->write16(0x3B44);
-  _bus->write16(0x4D0B);
-  _bus->write16(0x1717);
-  _bus->write16(0x1D21);
-
-  _bus->writeC8D8(0xF0, 0xC3);
-  _bus->writeC8D16(0xF0, 0x69);
-  _bus->writeCommand(0X13);
-  _bus->writeCommand(0X11);
   if (_ips)
   {
-    _bus->writeCommand(ST7796_INVON);
+    _bus->sendCommand(ST7796_INVON);
   }
-  _bus->writeCommand(0X29);
-  _bus->endWrite();
 }
