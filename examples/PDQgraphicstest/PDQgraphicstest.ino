@@ -14,6 +14,7 @@
 // #define ESP32_2432S028
 // #define ESP32_3248S035
 // #define ESP32_4827S043
+// #define ESP32_8048S070
 // #define ESP32_LCDKIT_SPI
 // #define ESP32_LCDKIT_PAR8A
 // #define ESP32_LCDKIT_PAR8B
@@ -60,6 +61,27 @@ Arduino_RPi_DPI_RGBPanel *gfx = new Arduino_RPi_DPI_RGBPanel(
 //   800 /* width */, 0 /* hsync_polarity */, 8 /* hsync_front_porch */, 4 /* hsync_pulse_width */, 8 /* hsync_back_porch */,
 //   480 /* height */, 0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 8 /* vsync_back_porch */,
 //   1 /* pclk_active_neg */, 16000000 /* prefer_speed */, true /* auto_flush */);
+// option 3:
+// RPi DPI 1024x600
+// Arduino_RPi_DPI_RGBPanel *gfx = new Arduino_RPi_DPI_RGBPanel(
+//   bus,
+//   1024 /* width */, 1 /* hsync_polarity */, 40 /* hsync_front_porch */, 48 /* hsync_pulse_width */, 128 /* hsync_back_porch */,
+//   600 /* height */, 1 /* vsync_polarity */, 13 /* vsync_front_porch */, 3 /* vsync_pulse_width */, 45 /* vsync_back_porch */);
+
+#elif defined(ESP32_8048S070)
+#define TFT_BL 2
+Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
+    GFX_NOT_DEFINED /* CS */, GFX_NOT_DEFINED /* SCK */, GFX_NOT_DEFINED /* SDA */,
+    41 /* DE */, 40 /* VSYNC */, 39 /* HSYNC */, 42 /* PCLK */,
+    14 /* R0 */, 21 /* R1 */, 47 /* R2 */, 48 /* R3 */, 45 /* R4 */,
+    9 /* G0 */, 46 /* G1 */, 3 /* G2 */, 8 /* G3 */, 16 /* G4 */, 1 /* G5 */,
+    15 /* B0 */, 7 /* B1 */, 6 /* B2 */, 5 /* B3 */, 4 /* B4 */
+);
+Arduino_RPi_DPI_RGBPanel *gfx = new Arduino_RPi_DPI_RGBPanel(
+  bus,
+  800 /* width */, 0 /* hsync_polarity */, 210 /* hsync_front_porch */, 30 /* hsync_pulse_width */, 16 /* hsync_back_porch */,
+  480 /* height */, 0 /* vsync_polarity */, 22 /* vsync_front_porch */, 13 /* vsync_pulse_width */, 10 /* vsync_back_porch */,
+  1 /* pclk_active_neg */, 16000000 /* prefer_speed */, true /* auto_flush */);
 
 #elif defined(ESP32_LCDKIT_SPI)
 #define TFT_BL 23
