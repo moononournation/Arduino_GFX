@@ -56,7 +56,7 @@
 
 static uint8_t st7796_init_operations[] = {
       BEGIN_WRITE,
-      WRITE_C8_D8, ST7796_SLPOUT,
+      WRITE_COMMAND_8, ST7796_SLPOUT,
       END_WRITE,
 
       DELAY, ST7796_SLPOUT_DELAY,
@@ -69,14 +69,14 @@ static uint8_t st7796_init_operations[] = {
 
       WRITE_C8_D8, 0xB4, 0x01,
 
+      WRITE_COMMAND_8, 0xB5,
+      WRITE_BYTES, 4, 0x02, 0x02, 0x00, 0x02,
+
       WRITE_C8_D8, 0xB7, 0xC6,
 
       WRITE_C8_D16, 0xC0, 0x80, 0x45,
-
-      WRITE_C8_D8, 0xC1, 0x18, // 18  //00
-
+      WRITE_C8_D8, 0xC1, 0x18,
       WRITE_C8_D8, 0xC2, 0xA7,
-
       WRITE_C8_D8, 0xC5, 0x0A,
 
       WRITE_COMMAND_8, 0xE8,
@@ -97,8 +97,8 @@ static uint8_t st7796_init_operations[] = {
       0x17, 0x17, 0x1D, 0x21,
 
       WRITE_C8_D8, 0xF0, 0x3C,
-
       WRITE_C8_D8, 0xF0, 0x69,
+
       WRITE_COMMAND_8, ST7796_DISPON,
       END_WRITE,
 
