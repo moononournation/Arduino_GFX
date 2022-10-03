@@ -1,7 +1,3 @@
-/*
- * start rewrite from:
- * https://github.com/nopnop2002/esp-idf-parallel-tft
- */
 #include "Arduino_ILI9488.h"
 
 Arduino_ILI9488::Arduino_ILI9488(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
@@ -94,42 +90,18 @@ void Arduino_ILI9488::tftInit()
     digitalWrite(_rst, HIGH);
     delay(ILI9488_RST_DELAY);
   }
-
-  uint8_t ili9488_init_operations[] = {
-      BEGIN_WRITE,
-      WRITE_COMMAND_8, ILI9488_SWRESET,
-      END_WRITE,
-
-      DELAY, ILI9488_RST_DELAY,
-
-      BEGIN_WRITE,
-      WRITE_COMMAND_8, 0x28,   //Display Off
-      WRITE_C8_D8, 0x3A, 0x55, //Pixel read=565, write=565.
-
-      WRITE_C8_D16, 0xC0, 0x10, 0x10, //Power Control 1 [0E 0E]
-      WRITE_C8_D8, 0xC1, 0x41,        //Power Control 2 [43]
-      WRITE_COMMAND_8, 0xC5,
-      WRITE_BYTES, 4, 0x00, 0x22, 0x80, 0x40, //VCOM  Control 1 [00 40 00 40]
-      WRITE_C8_D8, 0x36, 0x98,                //Memory Access [00]
-      WRITE_C8_D8, 0xB0, 0x00,                //Interface     [00]
-      WRITE_C8_D16, 0xB1, 0xB0, 0x11,         //Frame Rate Control [B0 11]
-      WRITE_C8_D8, 0xB4, 0x02,                //Inversion Control [02]
-      WRITE_COMMAND_8, 0xB6,
-      WRITE_BYTES, 3, 0x02, 0x02, 0x3B, // Display Function Control [02 02 3B] .kbv NL=480
-      WRITE_C8_D8, 0xB7, 0xC6,          //Entry Mode      [06]
-      WRITE_C8_D8, 0x3A, 0x55,          //Interlace Pixel Format [XX]
-      WRITE_COMMAND_8, 0xF7,
-      WRITE_BYTES, 4, 0xA9, 0x51, 0x2C, 0x82, //Adjustment Control 3 [A9 51 2C 82]
-      WRITE_COMMAND_8, ILI9488_SLPOUT,        // Sleep Out
-      END_WRITE,
-
-      DELAY, ILI9488_SLPOUT_DELAY,
-
-      BEGIN_WRITE,
-      WRITE_COMMAND_8, ILI9488_DISPON, // Display on
-      END_WRITE};
+  else
+  {
+    // Software Rest
+    _bus->sendCommand(ILI9488_SWRESET);
+    delay(ILI9488_RST_DELAY);
+  }
 
   _bus->batchOperation(ili9488_init_operations, sizeof(ili9488_init_operations));
+
+  _bus->beginWrite();
+  _bus->writeC8D8(0x3A, 0x55); // Interface Pixel Format, 16 bit
+  _bus->endWrite();
 
   if (_ips)
   {

@@ -48,6 +48,58 @@
 #define ILI9488_MADCTL_SS 0x02
 #define ILI9488_MADCTL_GS 0x01
 
+static uint8_t ili9488_init_operations[] = {
+    BEGIN_WRITE,
+
+    WRITE_COMMAND_8, 0xE0,
+    WRITE_BYTES, 15,
+    0x00, 0x03, 0x09, 0x08,
+    0x16, 0x0A, 0x3F, 0x78,
+    0x4C, 0x09, 0x0A, 0x08,
+    0x16, 0x1A, 0x0F,
+
+    WRITE_COMMAND_8, 0xE1,
+    WRITE_BYTES, 15,
+    0x00, 0x16, 0x19, 0x03,
+    0x0F, 0x05, 0x32, 0x45,
+    0x46, 0x04, 0x0E, 0x0D,
+    0x35, 0x37, 0x0F,
+
+    WRITE_C8_D16, 0XC0, // Power Control 1
+    0x17,               // Vreg1out
+    0x15,               // Verg2out
+
+    WRITE_C8_D8, 0xC1, // Power Control 2
+    0x41,              // VGH,VGL
+
+    WRITE_COMMAND_8, 0xC5, // Power Control 3
+    WRITE_BYTES, 3,
+    0x00,
+    0x12, // Vcom
+    0x80,
+
+    WRITE_C8_D8, 0xB0, 0x80, // Interface Mode Control, SDO NOT USE
+    WRITE_C8_D8, 0xB1, 0xA0, // Frame rate, 60Hz
+    WRITE_C8_D8, 0xB4, 0x02, // Display Inversion Control, 2-dot
+
+    WRITE_C8_D16, 0xB6, // Display Function Control  RGB/MCU Interface Control
+    0x02,               // MCU
+    0x02,               // Source,Gate scan dieection
+
+    WRITE_C8_D8, 0xE9, 0x00, // Set Image Function, disable 24 bit data
+
+    WRITE_COMMAND_8, 0xF7,                  // Adjust Control
+    WRITE_BYTES, 4, 0xA9, 0x51, 0x2C, 0x82, // D7 stream, loose
+
+    WRITE_COMMAND_8, ILI9488_SLPOUT, // Sleep Out
+    END_WRITE,
+
+    DELAY, ILI9488_SLPOUT_DELAY,
+
+    BEGIN_WRITE,
+    WRITE_COMMAND_8, ILI9488_DISPON, // Display on
+    END_WRITE};
+
 class Arduino_ILI9488 : public Arduino_TFT
 {
 public:
