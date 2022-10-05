@@ -82,6 +82,28 @@
 #define ILI9341_MADCTL_BGR 0x08 ///< Blue-Green-Red pixel order
 #define ILI9341_MADCTL_MH 0x04  ///< LCD refresh right to left
 
+static const uint8_t ili9341_init_operations[] = {
+    BEGIN_WRITE,
+    WRITE_C8_D8, ILI9341_PWCTR1, 0x23,        // Power control VRH[5:0]
+    WRITE_C8_D8, ILI9341_PWCTR2, 0x10,        // Power control SAP[2:0];BT[3:0]
+    WRITE_C8_D16, ILI9341_VMCTR1, 0x3e, 0x28, // VCM control
+    WRITE_C8_D8, ILI9341_VMCTR2, 0x86,        // VCM control2
+    WRITE_C8_D8, ILI9341_VSCRSADD, 0x00,      // Vertical scroll zero
+    WRITE_C8_D8, ILI9341_PIXFMT, 0x55,
+    WRITE_C8_D16, ILI9341_FRMCTR1, 0x00, 0x18,
+
+    WRITE_COMMAND_8, ILI9341_DFUNCTR, // Display Function Control
+    WRITE_BYTES, 3, 0x08, 0x82, 0x27,
+
+    WRITE_COMMAND_8, ILI9341_SLPOUT, // Exit Sleep
+    END_WRITE,
+
+    DELAY, ILI9341_SLPOUT_DELAY,
+
+    BEGIN_WRITE,
+    WRITE_COMMAND_8, ILI9341_DISPON, // Display on
+    END_WRITE};
+
 class Arduino_ILI9341 : public Arduino_TFT
 {
 public:

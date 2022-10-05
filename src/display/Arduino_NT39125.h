@@ -96,6 +96,103 @@
 #define NT39125_MADCTL_BGR 0x08 // Blue-Green-Red pixel order
 #define NT39125_MADCTL_MH 0x04  // LCD refresh right to left
 
+static const uint8_t nt39125_init_operations[] = {
+    // Initializing
+    BEGIN_WRITE,
+    WRITE_COMMAND_8, NT39125_SLPOUT, // Sleep Out
+    END_WRITE,
+
+    DELAY, 250,
+    DELAY, 250,
+    DELAY, 250,
+    DELAY, 250,
+    DELAY, 200,
+
+    // Display Settings
+    BEGIN_WRITE,
+    WRITE_C8_D8, NT39125_TEOFF,                // Tearing Effect Line OFF
+    WRITE_C8_D16, NT39125_FRMCTR1, 0x11, 0x1b, // Set Division ratio for internal clocks of Normal mode
+    WRITE_C8_D16, NT39125_FRMCTR2, 0x11, 0x1b, // Set Division ratio for internal clocks of Idle mode
+    WRITE_C8_D16, NT39125_FRMCTR3, 0x11, 0x1b, // Set Division ratio for internal clocks of Partial mode (Idle mode off)
+    WRITE_C8_D8, NT39125_INVCTR, 0x02,         // Inversion Control
+    WRITE_C8_D16, NT39125_DISSET5, 0x01, 0x02, // Display Function set 5
+    WRITE_C8_D8, NT39125_PWCTR1, 0x24,         // Power Control 1, 4.1V
+
+    // VGL -7V
+    WRITE_C8_D16, NT39125_PWCTR2, 0x02, 0x00, // Power Control 2
+    // WRITE_C8_D16, NT39125_PWCTR2, 0x02, 0x07, // gate modulation removed (spec 1.03 version)
+    // VGL -7V
+
+    WRITE_C8_D16, NT39125_PWCTR3, 0x05, 0x01, // Power Control 3 (in Normal mode/ Full colors), e1 setting
+    WRITE_C8_D16, NT39125_PWCTR4, 0x02, 0x05, // Power Control 4 (in Idle mode/ 8-colors)
+    WRITE_C8_D16, NT39125_PWCTR5, 0x02, 0x04, // Power Control 5 (in Partial mode/ full-colors)
+    WRITE_C8_D16, NT39125_VMCTR1,             // VCOM Control, Chameleon
+    0x14,                                     // 3   	.	 VcomH
+    0x2e,                                     // -1.35	.VcomL
+    WRITE_C8_D8, NT39125_GAM_R_SEL, 0x01,     // Gamma Selection
+
+    ///////////////////////////////////////// gamma //////////////////////
+
+    WRITE_COMMAND_8, NT39125_GMCTRP0, // Positive RED Gamma Control, d1 third vibration
+    WRITE_BYTES, 15,
+    0x27, 0x2B, 0x2E, 0x06,
+    0x0D, 0x11, 0x28, 0x7B,
+    0x35, 0x0C, 0x20, 0x26,
+    0x25, 0x28, 0x3C,
+
+    WRITE_COMMAND_8, NT39125_GMCTRN0, // Negative RED Gamma Control
+    WRITE_BYTES, 15,
+    0x08, 0x21, 0x26, 0x09,
+    0x0F, 0x12, 0x1F, 0x38,
+    0x31, 0x0D, 0x23, 0x29,
+    0x2C, 0x2F, 0x33,
+
+    WRITE_COMMAND_8, NT39125_GMCTRP1, // Positive GREEN Gamma Control
+    WRITE_BYTES, 15,
+    0x27, 0x2C, 0x2F, 0x07,
+    0x0E, 0x11, 0x29, 0x7A,
+    0x35, 0x0C, 0x20, 0x26,
+    0x24, 0x29, 0x3C,
+
+    WRITE_COMMAND_8, NT39125_GMCTRN1, // Negative GREEN Gamma Control
+    WRITE_BYTES, 15,
+    0x08, 0x20, 0x26, 0x09,
+    0x0F, 0x12, 0x1F, 0x48,
+    0x30, 0x0D, 0x22, 0x28,
+    0x2B, 0x2E, 0x33,
+
+    WRITE_COMMAND_8, NT39125_GMCTRP2, // Positive BLUE Gamma Control
+    WRITE_BYTES, 15,
+    0x1F, 0x24, 0x27, 0x08,
+    0x0F, 0x12, 0x25, 0x7B,
+    0x32, 0x0C, 0x20, 0x26,
+    0x20, 0x25, 0x3C,
+
+    WRITE_COMMAND_8, NT39125_GMCTRN2, // Negative BLUE Gamma Control
+    WRITE_BYTES, 15,
+    0x08, 0x24, 0x2B, 0x09,
+    0x0F, 0x12, 0x22, 0x38,
+    0x35, 0x0C, 0x21, 0x27,
+    0x33, 0x36, 0x3B,
+
+    //////////////////////////////////////////////////////////
+
+    WRITE_C8_D8, 0x3A, 0x55, // Color mode, 16-bit
+
+    WRITE_COMMAND_8, 0x11, // SLEEP MODE OUT / BOOSTER ON
+    END_WRITE,
+
+    DELAY, 250,
+    DELAY, 250,
+    DELAY, 250,
+    DELAY, 250,
+    DELAY, 200,
+
+    BEGIN_WRITE,
+    // WRITE_COMMAND_8, 0x13, //
+    WRITE_COMMAND_8, 0x29,
+    END_WRITE};
+
 class Arduino_NT39125 : public Arduino_TFT
 {
 public:

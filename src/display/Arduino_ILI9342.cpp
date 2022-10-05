@@ -105,28 +105,6 @@ void Arduino_ILI9342::tftInit()
     delay(ILI9342_RST_DELAY);
   }
 
-  uint8_t ILI9342_init_operations[] = {
-      BEGIN_WRITE,
-      WRITE_C8_D8, ILI9342_PWCTR1, 0x23,        // Power control VRH[5:0]
-      WRITE_C8_D8, ILI9342_PWCTR2, 0x10,        // Power control SAP[2:0];BT[3:0]
-      WRITE_C8_D16, ILI9342_VMCTR1, 0x3e, 0x28, // VCM control
-      WRITE_C8_D8, ILI9342_VMCTR2, 0x86,        // VCM control2
-      WRITE_C8_D8, ILI9342_VSCRSADD, 0x00,      // Vertical scroll zero
-      WRITE_C8_D8, ILI9342_PIXFMT, 0x55,
-      WRITE_C8_D16, ILI9342_FRMCTR1, 0x00, 0x18,
-
-      WRITE_COMMAND_8, ILI9342_DFUNCTR, // Display Function Control
-      WRITE_BYTES, 3, 0x08, 0x82, 0x27,
-
-      WRITE_COMMAND_8, ILI9342_SLPOUT, // Exit Sleep
-      END_WRITE,
-
-      DELAY, ILI9342_SLPOUT_DELAY,
-
-      BEGIN_WRITE,
-      WRITE_COMMAND_8, ILI9342_DISPON, // Display on
-      END_WRITE};
-
   _bus->batchOperation(ILI9342_init_operations, sizeof(ILI9342_init_operations));
 
   if (_ips)

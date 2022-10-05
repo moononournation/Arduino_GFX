@@ -11,7 +11,7 @@
 #define ST7701_TFTWIDTH 480
 #define ST7701_TFTHEIGHT 864
 
-static uint8_t gc9503v_type1_init_operations[] = {
+static const uint8_t gc9503v_type1_init_operations[] = {
     BEGIN_WRITE,
     WRITE_COMMAND_8, 0xF0,
     WRITE_BYTES, 5, 0x55, 0xAA, 0x52, 0x08, 0x00,
@@ -220,7 +220,7 @@ class Arduino_GC9503V_RGBPanel : public Arduino_GFX
 public:
   Arduino_GC9503V_RGBPanel(
       Arduino_ESP32RGBPanel *bus, int8_t rst = GFX_NOT_DEFINED, int16_t w = ST7701_TFTWIDTH, int16_t h = ST7701_TFTHEIGHT,
-      uint8_t *init_operations = gc9503v_type1_init_operations,
+      const uint8_t *init_operations = gc9503v_type1_init_operations,
       size_t init_operations_len = sizeof(gc9503v_type1_init_operations));
 
   void begin(int32_t speed = GFX_NOT_DEFINED) override;
@@ -237,7 +237,7 @@ protected:
   uint16_t *_framebuffer;
   Arduino_ESP32RGBPanel *_bus;
   int8_t _rst;
-  uint8_t *_init_operations;
+  const uint8_t *_init_operations;
   size_t _init_operations_len;
 
 private:

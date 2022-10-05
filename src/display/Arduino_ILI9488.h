@@ -48,7 +48,7 @@
 #define ILI9488_MADCTL_SS 0x02
 #define ILI9488_MADCTL_GS 0x01
 
-static uint8_t ili9488_init_operations[] = {
+static const uint8_t ili9488_init_operations[] = {
     BEGIN_WRITE,
 
     WRITE_COMMAND_8, 0xE0,
