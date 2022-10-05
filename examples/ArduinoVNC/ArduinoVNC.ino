@@ -24,6 +24,16 @@ const uint16_t VNC_PORT = 5901;
 const char *VNC_PASSWORD = "PleaseInputYourPasswordHere";
 
 /*******************************************************************************
+ * Please config the touch panel in touch.h
+ ******************************************************************************/
+#include "touch.h"
+
+/*******************************************************************************
+ * Please config the optional keyboard in keyboard.h
+ ******************************************************************************/
+#include "keyboard.h"
+
+/*******************************************************************************
  * Start of Arduino_GFX setting
  *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
@@ -62,11 +72,6 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 /*******************************************************************************
  * End of Arduino_GFX setting
  ******************************************************************************/
-
-/*******************************************************************************
- * Please config the touch panel in touch.h
- ******************************************************************************/
-#include "touch.h"
 
 #if defined(ESP32)
 #include <WiFi.h>
@@ -122,6 +127,41 @@ void handle_touch()
   }
 }
 
+void handle_keyboard() {
+  int key = keyboard_get_key();
+  if (key > 0) {
+    // Serial.println(key);
+    switch (key) {
+      case 8:
+        key = 0xff08;  // BackSpace
+        break;
+      case 9:
+        key = 0xff09;  // Tab
+        break;
+      case 13:
+        key = 0xff0d;  // Return or Enter
+        break;
+      case 27:
+        key = 0xff1b;  // Escape
+        break;
+      case 180:
+        key = 0xff51;  // Left
+        break;
+      case 181:
+        key = 0xff52;  // Up
+        break;
+      case 182:
+        key = 0xff54;  // Down
+        break;
+      case 183:
+        key = 0xff53;  // Right
+        break;
+    }
+    vnc.keyEvent(key, 0b001);
+    vnc.keyEvent(key, 0b000);
+  }
+}
+
 void setup(void)
 {
   Serial.begin(115200);
@@ -131,6 +171,9 @@ void setup(void)
 
   // Init touch device
   touch_init();
+
+  // Init keyboard device
+  keyboard_init();
 
   Serial.println("Init display");
   gfx->begin();
@@ -195,6 +238,7 @@ void loop()
     if (vnc.connected())
     {
       handle_touch();
+      handle_keyboard();
     }
     vnc.loop();
     if (!vnc.connected())
