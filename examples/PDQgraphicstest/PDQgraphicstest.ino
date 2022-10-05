@@ -296,7 +296,7 @@ Arduino_GC9503V_RGBPanel *gfx = new Arduino_GC9503V_RGBPanel(bus, GFX_NOT_DEFINE
 // Arduino_DataBus *bus = new Arduino_mbedSPI(TFT_DC, TFT_CS);
 Arduino_DataBus *bus = new Arduino_NRFXSPI(TFT_DC, TFT_CS, 13 /* SCK */, 11 /* MOSI */, 12 /* MISO */);
 #elif defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
-Arduino_DataBus *bus = new Arduino_RPiPicoSPI(TFT_DC, TFT_CS, PIN_SPI0_SCK /* SCK */, PIN_SPI0_MOSI /* MOSI */, PIN_SPI0_MISO /* MISO */, spi0 /* spi */);
+Arduino_DataBus *bus = new Arduino_RPiPicoSPI(TFT_DC /* DC */, TFT_CS /* CS */, 18 /* SCK */, 19 /* MOSI */, 16 /* MISO */, spi0 /* spi */);
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, GFX_NOT_DEFINED /* MISO */, VSPI /* spi_num */);
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
