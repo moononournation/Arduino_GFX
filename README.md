@@ -202,6 +202,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 - Makerfabs ESP32 3.5" TFT Touch with Camera
 - Odroid Go
 - TTGO T-DISPLAY
+- TTGO T-DISPLAY-S3 [[demo video](https://youtu.be/kpRC64QNQAo)]
 - TTGO T-QT
 - TTGO T-Watch
 - wireless-tag WT-32-SC01
