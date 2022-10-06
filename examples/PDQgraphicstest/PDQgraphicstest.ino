@@ -24,6 +24,7 @@
 // #define ESP32_S3_RPI_DPI
 // #define MAKERFABS_TFT_TOUCH_3_5
 // #define TTGO_T_DISPLAY
+// #define TTGO_T_DISPLAY_S3
 // #define TTGO_T_QT
 // #define WT32_SC01
 // #define ZX3D50CE02S
@@ -147,6 +148,14 @@ Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, GFX_NOT_DEFINED /* RST */, 1 /
 #define TFT_BL 4
 Arduino_DataBus *bus = new Arduino_ESP32SPI(16 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 23 /* RST */, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 52 /* col offset 1 */, 40 /* row offset 1 */, 53 /* col offset 2 */, 40 /* row offset 2 */);
+
+#elif defined(TTGO_T_DISPLAY_S3)
+#define TFT_PWD 15
+#define TFT_BL 38
+Arduino_DataBus *bus = new Arduino_ESP32LCD8(
+    7 /* DC */, 6 /* CS */, 8 /* WR */, 9 /* RD */,
+    39 /* D0 */, 40 /* D1 */, 41 /* D2 */, 42 /* D3 */, 45 /* D4 */, 46 /* D5 */, 47 /* D6 */, 48 /* D7 */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, 5 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */, 35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
 
 #elif defined(TTGO_T_QT)
 #define TFT_BL 10
@@ -515,6 +524,11 @@ void setup()
   Serial.begin(115200);
   // while(!Serial);
   Serial.println("Arduino_GFX library Test!");
+
+#ifdef TFT_PWD
+  pinMode(TFT_PWD, OUTPUT);
+  digitalWrite(TFT_PWD, HIGH);
+#endif
 
   gfx->begin();
   // gfx->begin(80000000); /* specify data bus speed */
