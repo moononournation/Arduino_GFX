@@ -26,6 +26,7 @@
 // #define TTGO_T_DISPLAY
 // #define TTGO_T_DISPLAY_S3
 // #define TTGO_T_QT
+// #define TTGO_T_RGB
 // #define WT32_SC01
 // #define ZX3D50CE02S
 // #define ZX3D95CE01S_AR
@@ -161,6 +162,24 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 5 /* RST */, 0 /* rotation */, true /
 #define TFT_BL 10
 Arduino_DataBus *bus = new Arduino_ESP32SPI(6 /* DC */, 5 /* CS */, 3 /* SCK */, 2 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(TTGO_T_RGB)
+#define TFT_BL 46
+Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
+    3 /* CS */, 48 /* SCK */, 8 /* SDA */,
+    45 /* DE */, 41 /* VSYNC */, 47 /* HSYNC */, 42 /* PCLK */,
+    21 /* R0 */, 18 /* R1 */, 17 /* R2 */, 16 /* R3 */, 15 /* R4 */,
+    14 /* G0 */, 13 /* G1 */, 12 /* G2 */, 11 /* G3 */, 10 /* G4 */, 9 /* G5 */,
+    7 /* B0 */, 6 /* B1 */, 5 /* B2 */, 3 /* B3 */, 2 /* B4 */
+);
+Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
+  bus, 6 /* RST */, 0 /* rotation */,
+  true /* IPS */, 480 /* width */, 480 /* height */,
+  st7701_type4_init_operations, sizeof(st7701_type4_init_operations),
+  true /* BGR */,
+  50 /* hsync_front_porch */, 1 /* hsync_pulse_width */, 30 /* hsync_back_porch */,
+  20 /* vsync_front_porch */, 1 /* vsync_pulse_width */, 30 /* vsync_back_porch */
+);
 
 #elif defined(WT32_SC01)
 #define TFT_BL 23

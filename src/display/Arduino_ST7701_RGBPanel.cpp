@@ -9,10 +9,14 @@ Arduino_ST7701_RGBPanel::Arduino_ST7701_RGBPanel(
     Arduino_ESP32RGBPanel *bus, int8_t rst, uint8_t r,
     bool ips, int16_t w, int16_t h,
     const uint8_t *init_operations, size_t init_operations_len,
-    bool bgr)
+    bool bgr,
+    uint16_t hsync_front_porch, uint16_t hsync_pulse_width, uint16_t hsync_back_porch,
+    uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch)
     : Arduino_GFX(w, h), _bus(bus), _rst(rst), _ips(ips),
       _init_operations(init_operations), _init_operations_len(init_operations_len),
-      _bgr(bgr)
+      _bgr(bgr),
+      _hsync_front_porch(hsync_front_porch), _hsync_pulse_width(hsync_pulse_width), _hsync_back_porch(hsync_back_porch),
+      _vsync_front_porch(vsync_front_porch), _vsync_pulse_width(vsync_pulse_width), _vsync_back_porch(vsync_back_porch)
 {
     _rotation = r;
 }
@@ -43,7 +47,9 @@ void Arduino_ST7701_RGBPanel::begin(int32_t speed)
 
     setRotation(_rotation);
 
-    _framebuffer = _bus->getFrameBuffer(_width, _height);
+    _framebuffer = _bus->getFrameBuffer(_width, _height,
+                                        _hsync_pulse_width, _hsync_back_porch, _hsync_front_porch, 1,
+                                        _vsync_pulse_width, _vsync_back_porch, _vsync_front_porch, 1);
 }
 
 void Arduino_ST7701_RGBPanel::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
@@ -324,7 +330,7 @@ void Arduino_ST7701_RGBPanel::setRotation(uint8_t r)
 
 void Arduino_ST7701_RGBPanel::invertDisplay(bool i)
 {
-  _bus->sendCommand(_ips ? (i ? 0x20 : 0x21) : (i ? 0x21 : 0x20));
+    _bus->sendCommand(_ips ? (i ? 0x20 : 0x21) : (i ? 0x21 : 0x20));
 }
 
 uint16_t *Arduino_ST7701_RGBPanel::getFramebuffer()
