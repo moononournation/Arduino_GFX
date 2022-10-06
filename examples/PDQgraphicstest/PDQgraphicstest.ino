@@ -26,7 +26,6 @@
 // #define TTGO_T_DISPLAY
 // #define TTGO_T_DISPLAY_S3
 // #define TTGO_T_QT
-// #define TTGO_T_RGB
 // #define WT32_SC01
 // #define ZX3D50CE02S
 // #define ZX3D95CE01S_AR
@@ -52,10 +51,10 @@ Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
 // option 1:
 // ILI6485 LCD 480x272
 Arduino_RPi_DPI_RGBPanel *gfx = new Arduino_RPi_DPI_RGBPanel(
-  bus,
-  480 /* width */, 0 /* hsync_polarity */, 8 /* hsync_front_porch */, 4 /* hsync_pulse_width */, 43 /* hsync_back_porch */,
-  272 /* height */, 0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 12 /* vsync_back_porch */,
-  1 /* pclk_active_neg */, 9000000 /* prefer_speed */, true /* auto_flush */);
+    bus,
+    480 /* width */, 0 /* hsync_polarity */, 8 /* hsync_front_porch */, 4 /* hsync_pulse_width */, 43 /* hsync_back_porch */,
+    272 /* height */, 0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 12 /* vsync_back_porch */,
+    1 /* pclk_active_neg */, 9000000 /* prefer_speed */, true /* auto_flush */);
 // option 2:
 // ST7262 IPS LCD 800x480
 // Arduino_RPi_DPI_RGBPanel *gfx = new Arduino_RPi_DPI_RGBPanel(
@@ -80,10 +79,10 @@ Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     15 /* B0 */, 7 /* B1 */, 6 /* B2 */, 5 /* B3 */, 4 /* B4 */
 );
 Arduino_RPi_DPI_RGBPanel *gfx = new Arduino_RPi_DPI_RGBPanel(
-  bus,
-  800 /* width */, 0 /* hsync_polarity */, 210 /* hsync_front_porch */, 30 /* hsync_pulse_width */, 16 /* hsync_back_porch */,
-  480 /* height */, 0 /* vsync_polarity */, 22 /* vsync_front_porch */, 13 /* vsync_pulse_width */, 10 /* vsync_back_porch */,
-  1 /* pclk_active_neg */, 16000000 /* prefer_speed */, true /* auto_flush */);
+    bus,
+    800 /* width */, 0 /* hsync_polarity */, 210 /* hsync_front_porch */, 30 /* hsync_pulse_width */, 16 /* hsync_back_porch */,
+    480 /* height */, 0 /* vsync_polarity */, 22 /* vsync_front_porch */, 13 /* vsync_pulse_width */, 10 /* vsync_back_porch */,
+    1 /* pclk_active_neg */, 16000000 /* prefer_speed */, true /* auto_flush */);
 
 #elif defined(ESP32_LCDKIT_SPI)
 #define TFT_BL 23
@@ -120,10 +119,10 @@ Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     15 /* B0 */, 14 /* B1 */, 13 /* B2 */, 12 /* B3 */, 11 /* B4 */
 );
 Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
-  bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
-  true /* IPS */, 480 /* width */, 480 /* height */,
-  st7701_type1_init_operations, sizeof(st7701_type1_init_operations),
-  true /* BGR */);
+    bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
+    true /* IPS */, 480 /* width */, 480 /* height */,
+    st7701_type1_init_operations, sizeof(st7701_type1_init_operations),
+    true /* BGR */);
 
 #elif defined(ESP32_S3_RPI_DPI)
 // #define TFT_BL 38
@@ -137,9 +136,9 @@ Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
 // e.g. Waveshare 7" RPi DPI LCD: https://www.waveshare.com/wiki/7inch_LCD_for_Pi
 // dpi_timings=1024 1 40 48 128 600 1 13 3 45 0 0 0 60 0 37000000 6
 Arduino_RPi_DPI_RGBPanel *gfx = new Arduino_RPi_DPI_RGBPanel(
-  bus,
-  1024 /* width */, 1 /* hsync_polarity */, 40 /* hsync_front_porch */, 48 /* hsync_pulse_width */, 128 /* hsync_back_porch */,
-  600 /* height */, 1 /* vsync_polarity */, 13 /* vsync_front_porch */, 3 /* vsync_pulse_width */, 45 /* vsync_back_porch */);
+    bus,
+    1024 /* width */, 1 /* hsync_polarity */, 40 /* hsync_front_porch */, 48 /* hsync_pulse_width */, 128 /* hsync_back_porch */,
+    600 /* height */, 1 /* vsync_polarity */, 13 /* vsync_front_porch */, 3 /* vsync_pulse_width */, 45 /* vsync_back_porch */);
 
 #elif defined(MAKERFABS_TFT_TOUCH_3_5)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(33 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */);
@@ -162,24 +161,6 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 5 /* RST */, 0 /* rotation */, true /
 #define TFT_BL 10
 Arduino_DataBus *bus = new Arduino_ESP32SPI(6 /* DC */, 5 /* CS */, 3 /* SCK */, 2 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */);
-
-#elif defined(TTGO_T_RGB)
-#define TFT_BL 46
-Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
-    3 /* CS */, 48 /* SCK */, 8 /* SDA */,
-    45 /* DE */, 41 /* VSYNC */, 47 /* HSYNC */, 42 /* PCLK */,
-    21 /* R0 */, 18 /* R1 */, 17 /* R2 */, 16 /* R3 */, 15 /* R4 */,
-    14 /* G0 */, 13 /* G1 */, 12 /* G2 */, 11 /* G3 */, 10 /* G4 */, 9 /* G5 */,
-    7 /* B0 */, 6 /* B1 */, 5 /* B2 */, 3 /* B3 */, 2 /* B4 */
-);
-Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
-  bus, 6 /* RST */, 0 /* rotation */,
-  true /* IPS */, 480 /* width */, 480 /* height */,
-  st7701_type4_init_operations, sizeof(st7701_type4_init_operations),
-  true /* BGR */,
-  50 /* hsync_front_porch */, 1 /* hsync_pulse_width */, 30 /* hsync_back_porch */,
-  20 /* vsync_front_porch */, 1 /* vsync_pulse_width */, 30 /* vsync_back_porch */
-);
 
 #elif defined(WT32_SC01)
 #define TFT_BL 23
@@ -220,8 +201,8 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotat
 #elif defined(ZX3D50CE02S)
 #define TFT_BL 45
 Arduino_DataBus *bus = new Arduino_ESP32LCD8(
-  0 /* DC */, GFX_NOT_DEFINED /* CS */, 47 /* WR */, GFX_NOT_DEFINED /* RD */,
-  9 /* D0 */, 46 /* D1 */, 3 /* D2 */, 8 /* D3 */, 18 /* D4 */, 17 /* D5 */, 16 /* D6 */, 15 /* D7 */);
+    0 /* DC */, GFX_NOT_DEFINED /* CS */, 47 /* WR */, GFX_NOT_DEFINED /* RD */,
+    9 /* D0 */, 46 /* D1 */, 3 /* D2 */, 8 /* D3 */, 18 /* D4 */, 17 /* D5 */, 16 /* D6 */, 15 /* D7 */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, 4 /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(ZX3D95CE01S_AR)
