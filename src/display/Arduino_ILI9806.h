@@ -110,7 +110,8 @@ static const uint8_t ili9806_init_operations[] = {
     WRITE_COMMAND_8, 0xC0,            // Power Control 1
     WRITE_BYTES, 3, 0x03, 0x0B, 0x0C, // 0A VGH VGL
 
-    WRITE_C8_D16, 0xFD, 0x0A, 0x00, // External Power Selection Set
+    WRITE_COMMAND_8, 0xFD, // External Power Selection Set
+    WRITE_BYTES, 2, 0x0A, 0x00,
 
     WRITE_C8_D8, 0xFC, 0x08, // LVGL
 
@@ -124,7 +125,8 @@ static const uint8_t ili9806_init_operations[] = {
     WRITE_COMMAND_8, 0xB4, // Display Inversion Control
     WRITE_BYTES, 3, 0x00, 0x00, 0x00,
 
-    WRITE_C8_D16, 0xB5, 0x08, 0x15, // Blanking Porch Control
+    WRITE_COMMAND_8, 0xB5, // Blanking Porch Control
+    WRITE_BYTES, 2, 0x08, 0x15,
 
     WRITE_C8_D8, 0xF7, 0x81, // 480x854
 

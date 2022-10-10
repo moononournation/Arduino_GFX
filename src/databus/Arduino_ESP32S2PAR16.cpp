@@ -164,12 +164,22 @@ void Arduino_ESP32S2PAR16::writeC8D16(uint8_t c, uint16_t d)
 
   DC_HIGH();
 
-  _data16.value = d;
-  WRITE(_data16.msb);
-  WRITE(_data16.lsb);
+  WRITE16(d);
 }
 
 void Arduino_ESP32S2PAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
+{
+  DC_LOW();
+
+  WRITE(c);
+
+  DC_HIGH();
+
+  WRITE16(d1);
+  WRITE16(d2);
+}
+
+void Arduino_ESP32S2PAR16::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
 {
   DC_LOW();
 

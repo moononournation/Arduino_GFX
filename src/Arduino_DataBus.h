@@ -257,6 +257,7 @@ public:
   virtual void writeC16D16(uint16_t c, uint16_t d);
   virtual void writeC8D16(uint8_t c, uint16_t d);
   virtual void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2);
+  virtual void writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2);
   virtual void writeRepeat(uint16_t p, uint32_t len) = 0;
   virtual void writePixels(uint16_t *data, uint32_t len) = 0;
 

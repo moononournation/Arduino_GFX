@@ -28,8 +28,9 @@ void Arduino_ESP32LCD16::begin(int32_t speed, int8_t dataMode)
   {
     _speed = speed;
   }
+
   pinMode(_dc, OUTPUT);
-  digitalWrite(_dc, HIGH);
+  digitalWrite(_dc, HIGH); // Data mode
 
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -50,7 +51,7 @@ void Arduino_ESP32LCD16::begin(int32_t speed, int8_t dataMode)
   }
 
   pinMode(_wr, OUTPUT);
-  digitalWrite(_wr, HIGH);
+  digitalWrite(_wr, HIGH); // Set write strobe high (inactive)
 
   if (_rd != GFX_NOT_DEFINED)
   {
@@ -259,6 +260,38 @@ void Arduino_ESP32LCD16::writePixels(uint16_t *data, uint32_t len)
   {
     WRITE16(*data++);
   }
+}
+
+void Arduino_ESP32LCD16::writeC8D8(uint8_t c, uint8_t d)
+{
+  WRITECOMMAND16(c);
+  WRITE16(d);
+}
+
+void Arduino_ESP32LCD16::writeC8D16(uint8_t c, uint16_t d)
+{
+  WRITECOMMAND16(c);
+  WRITE16(d);
+}
+
+void Arduino_ESP32LCD16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
+{
+  WRITECOMMAND16(c);
+  WRITE16(d1);
+  WRITE16(d2);
+}
+
+void Arduino_ESP32LCD16::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
+{
+  WRITECOMMAND16(c);
+
+  _data16.value = d1;
+  WRITE16(_data16.msb);
+  WRITE16(_data16.lsb);
+
+  _data16.value = d2;
+  WRITE16(_data16.msb);
+  WRITE16(_data16.lsb);
 }
 
 void Arduino_ESP32LCD16::writeBytes(uint8_t *data, uint32_t len)

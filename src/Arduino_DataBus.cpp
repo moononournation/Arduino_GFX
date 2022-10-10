@@ -31,6 +31,17 @@ void Arduino_DataBus::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   write16(d2);
 }
 
+void Arduino_DataBus::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
+{
+  writeCommand(c);
+  _data16.value = d1;
+  write(_data16.msb);
+  write(_data16.lsb);
+  _data16.value = d2;
+  write(_data16.msb);
+  write(_data16.lsb);
+}
+
 void Arduino_DataBus::sendCommand(uint8_t c)
 {
   beginWrite();

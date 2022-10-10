@@ -43,14 +43,14 @@ void Arduino_R61529::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t 
 {
   if ((x != _currentX) || (w != _currentW))
   {
-    _bus->writeC8D16D16(R61529_CASET, x + _xStart, x + w - 1 + _xStart);
+    _bus->writeC8D16D16Split(R61529_CASET, x + _xStart, x + w - 1 + _xStart);
 
     _currentX = x;
     _currentW = w;
   }
   if ((y != _currentY) || (h != _currentH))
   {
-    _bus->writeC8D16D16(R61529_PASET, y + _yStart, y + h - 1 + _yStart);
+    _bus->writeC8D16D16Split(R61529_PASET, y + _yStart, y + h - 1 + _yStart);
 
     _currentY = y;
     _currentH = h;
