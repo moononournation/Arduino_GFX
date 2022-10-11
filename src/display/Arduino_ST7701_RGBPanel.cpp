@@ -38,13 +38,7 @@ void Arduino_ST7701_RGBPanel::begin(int32_t speed)
 
     _bus->batchOperation((uint8_t *)_init_operations, _init_operations_len);
 
-    if (_ips)
-    {
-        _bus->beginWrite();
-        _bus->writeCommand(0x21);
-        _bus->endWrite();
-    }
-
+    invertDisplay(false);
     setRotation(_rotation);
 
     _framebuffer = _bus->getFrameBuffer(_width, _height,
