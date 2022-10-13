@@ -13,8 +13,8 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-// #include "../lv_demos.h"
 #include <lvgl.h>
+#define LV_USE_DEMO_WIDGETS 1
 
 /*********************
  *      DEFINES

@@ -1,5 +1,4 @@
-#include "lvgl.h"
-#define LV_USE_DEMO_BENCHMARK 1
+#include "lv_demo_benchmark.h"
 
 #if LV_USE_DEMO_BENCHMARK
 

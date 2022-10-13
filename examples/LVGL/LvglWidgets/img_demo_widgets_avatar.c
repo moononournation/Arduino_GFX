@@ -1,5 +1,4 @@
-#include "lvgl.h"
-#define LV_USE_DEMO_WIDGETS 1
+#include "lv_demo_widgets.h"
 
 #if LV_USE_DEMO_WIDGETS
 
