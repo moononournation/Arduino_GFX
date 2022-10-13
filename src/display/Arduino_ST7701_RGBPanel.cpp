@@ -35,6 +35,12 @@ void Arduino_ST7701_RGBPanel::begin(int32_t speed)
         digitalWrite(_rst, HIGH);
         delay(120);
     }
+    else
+    {
+        // Software Rest
+        _bus->sendCommand(0x01);
+        delay(120);
+    }
 
     _bus->batchOperation((uint8_t *)_init_operations, _init_operations_len);
 
