@@ -124,7 +124,7 @@ Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
     true /* IPS */, 480 /* width */, 480 /* height */,
     st7701_type1_init_operations, sizeof(st7701_type1_init_operations),
     true /* BGR */);
-// Uncomment for round display
+// Uncomment for 2.1 round display
 // Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
 //     bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
 //     false /* IPS */, 480 /* width */, 480 /* height */,
@@ -132,6 +132,14 @@ Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
 //     true /* BGR */,
 //     10 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
 //     10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
+// Uncomment for 2.8 round display
+// Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
+//     bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
+//     false /* IPS */, 480 /* width */, 480 /* height */,
+//     st7701_type6_init_operations, sizeof(st7701_type6_init_operations),
+//     true /* BGR */,
+//     22 /* hsync_front_porch */, 3 /* hsync_pulse_width */, 45 /* hsync_back_porch */,
+//     4 /* vsync_front_porch */, 12 /* vsync_pulse_width */, 40 /* vsync_back_porch */);
 
 #elif defined(ESP32_S3_RPI_DPI)
 // #define TFT_BL 38
