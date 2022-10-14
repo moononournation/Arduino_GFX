@@ -123,7 +123,9 @@ Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
     bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
     true /* IPS */, 480 /* width */, 480 /* height */,
     st7701_type1_init_operations, sizeof(st7701_type1_init_operations),
-    true /* BGR */);
+     true /* BGR */,
+     10 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
+     10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
 // Uncomment for 2.1 round display
 // Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
 //     bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
