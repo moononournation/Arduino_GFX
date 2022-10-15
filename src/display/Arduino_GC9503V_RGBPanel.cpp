@@ -28,6 +28,12 @@ void Arduino_GC9503V_RGBPanel::begin(int32_t speed)
     digitalWrite(_rst, HIGH);
     delay(120);
   }
+  else
+  {
+    // Software Rest
+    _bus->sendCommand(0x01);
+    delay(120);
+  }
 
   _bus->batchOperation(_init_operations, _init_operations_len);
 
@@ -179,14 +185,35 @@ void Arduino_GC9503V_RGBPanel::draw16bitRGBBitmap(int16_t x, int16_t y,
     row += y * _width;
     uint32_t cachePos = (uint32_t)row;
     row += x;
-    for (int j = 0; j < h; j++)
+    if (((_width & 1) == 0) && ((xskip & 1) == 0) && ((w & 1) == 0))
     {
-      for (int i = 0; i < w; i++)
+      uint32_t *row2 = (uint32_t *)row;
+      uint32_t *bitmap2 = (uint32_t *)bitmap;
+      int16_t _width2 = _width >> 1;
+      int16_t xskip2 = xskip >> 1;
+      int16_t w2 = w >> 1;
+
+      for (int16_t j = 0; j < h; j++)
       {
-        row[i] = *bitmap++;
+        for (int16_t i = 0; i < w2; i++)
+        {
+          row2[i] = *bitmap2++;
+        }
+        bitmap2 += xskip2;
+        row2 += _width2;
       }
-      bitmap += xskip;
-      row += _width;
+    }
+    else
+    {
+      for (int j = 0; j < h; j++)
+      {
+        for (int i = 0; i < w; i++)
+        {
+          row[i] = *bitmap++;
+        }
+        bitmap += xskip;
+        row += _width;
+      }
     }
     Cache_WriteBack_Addr(cachePos, _width * h * 2);
   }
