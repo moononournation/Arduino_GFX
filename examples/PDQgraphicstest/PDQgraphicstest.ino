@@ -118,7 +118,7 @@ Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     10 /* G0 */, 9 /* G1 */, 8 /* G2 */, 7 /* G3 */, 6 /* G4 */, 5 /* G5 */,
     15 /* B0 */, 14 /* B1 */, 13 /* B2 */, 12 /* B3 */, 11 /* B4 */
 );
-// Uncomment for rect display
+// Uncomment for 4" rect display
 Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
     bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
     true /* IPS */, 480 /* width */, 480 /* height */,
@@ -126,7 +126,7 @@ Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
      true /* BGR */,
      10 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
      10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
-// Uncomment for 2.1 round display
+// Uncomment for 2.1" round display
 // Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
 //     bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
 //     false /* IPS */, 480 /* width */, 480 /* height */,
@@ -134,7 +134,7 @@ Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
 //     true /* BGR */,
 //     10 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
 //     10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
-// Uncomment for 2.8 round display
+// Uncomment for 2.8" round display
 // Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
 //     bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
 //     false /* IPS */, 480 /* width */, 480 /* height */,
