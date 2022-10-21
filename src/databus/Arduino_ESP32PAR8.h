@@ -1,7 +1,3 @@
-/*
- * start rewrite from:
- * https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test
- */
 #include "Arduino_DataBus.h"
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
@@ -29,6 +25,7 @@ public:
   void writeC8D8(uint8_t c, uint8_t d) override;
   void writeC8D16(uint8_t c, uint16_t d) override;
   void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2) override;
+  void writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2) override;
   void writeBytes(uint8_t *data, uint32_t len) override;
   void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
 
@@ -58,11 +55,11 @@ private:
   PORTreg_t _wrPortClr; ///< PORT register CLEAR
   uint32_t _wrPinMask;  ///< Bitmask
 
-  PORTreg_t _dataPortSet; ///< PORT register SET
-  PORTreg_t _dataPortClr; ///< PORT register CLEAR
-  uint32_t _dataClrMask;
+  uint32_t _data1ClrMask;
+  uint32_t _data2ClrMask;
   // Lookup table for ESP32 parallel bus interface uses 1kbyte RAM,
-  uint32_t _xset_mask[256];
+  uint32_t _xset_mask1[256];
+  uint32_t _xset_mask2[256];
 };
 
 #endif // _ARDUINO_ESP32PAR8_H_

@@ -1,7 +1,3 @@
-/*
- * start rewrite from:
- * https://github.com/daumemo/IPS_LCD_R61529_FT6236_Arduino_eSPI_Test
- */
 #include "Arduino_ESP32PAR8QQ.h"
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
@@ -16,6 +12,9 @@ Arduino_ESP32PAR8QQ::Arduino_ESP32PAR8QQ(
 
 void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
 {
+  UNUSED(speed);
+  UNUSED(dataMode);
+
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
   if (_dc >= 32)
@@ -24,7 +23,7 @@ void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
     _dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_dc != GFX_NOT_DEFINED)
+  else
   {
     _dcPinMask = digitalPinToBitMask(_dc);
     _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -57,7 +56,7 @@ void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
     _wrPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _wrPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else if (_wr != GFX_NOT_DEFINED)
+  else
   {
     _wrPinMask = digitalPinToBitMask(_wr);
     _wrPortSet = (PORTreg_t)&GPIO.out_w1ts;
@@ -68,24 +67,6 @@ void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
   {
     pinMode(_rd, OUTPUT);
     digitalWrite(_rd, HIGH);
-  }
-  if (_rd >= 32)
-  {
-    _rdPinMask = digitalPinToBitMask(_rd);
-    _rdPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    _rdPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
-  }
-  else if (_rd != GFX_NOT_DEFINED)
-  {
-    _rdPinMask = digitalPinToBitMask(_rd);
-    _rdPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    _rdPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  }
-  else
-  {
-    _rdPinMask = 0;
-    _rdPortSet = _dcPortSet;
-    _rdPortClr = _dcPortClr;
   }
 
   // TODO: check pin range 0-31
@@ -136,9 +117,7 @@ void Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
       _xset_mask[c] |= (1 << _d7);
     }
   }
-  _dataPortSet = (PORTreg_t)&GPIO.out_w1ts;
-  _dataPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  *_dataPortClr = _dataClrMask;
+  GPIO.out_w1tc = _dataClrMask;
 }
 
 void Arduino_ESP32PAR8QQ::beginWrite()
@@ -190,8 +169,8 @@ void Arduino_ESP32PAR8QQ::writeRepeat(uint16_t p, uint32_t len)
   if (_data16.msb == _data16.lsb)
   {
     uint32_t setMask = _xset_mask[_data16.msb];
-    *_dataPortClr = _dataClrMask;
-    *_dataPortSet = setMask;
+    GPIO.out_w1tc = _dataClrMask;
+    GPIO.out_w1ts = setMask;
     while (len--)
     {
       *_wrPortClr = _wrPinMask;
@@ -206,10 +185,11 @@ void Arduino_ESP32PAR8QQ::writeRepeat(uint16_t p, uint32_t len)
     uint32_t loMask = _xset_mask[_data16.lsb];
     while (len--)
     {
-      *_dataPortClr = _dataClrMask;
-      *_dataPortSet = hiMask;
-      *_dataPortClr = _dataClrMask;
-      *_dataPortSet = loMask;
+      GPIO.out_w1tc = _dataClrMask;
+      GPIO.out_w1ts = hiMask;
+
+      GPIO.out_w1tc = _dataClrMask;
+      GPIO.out_w1ts = loMask;
     }
   }
 }
@@ -249,6 +229,23 @@ void Arduino_ESP32PAR8QQ::writeC8D16(uint8_t c, uint16_t d)
 }
 
 void Arduino_ESP32PAR8QQ::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
+{
+  DC_LOW();
+
+  WRITE(c);
+
+  DC_HIGH();
+
+  _data16.value = d1;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
+
+  _data16.value = d2;
+  WRITE(_data16.msb);
+  WRITE(_data16.lsb);
+}
+
+void Arduino_ESP32PAR8QQ::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
 {
   DC_LOW();
 
@@ -305,9 +302,9 @@ void Arduino_ESP32PAR8QQ::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx,
 
 INLINE void Arduino_ESP32PAR8QQ::WRITE(uint8_t d)
 {
-  uint32_t mask = _xset_mask[d];
-  *_dataPortClr = _dataClrMask;
-  *_dataPortSet = mask;
+  uint32_t setMask = _xset_mask[d];
+  GPIO.out_w1tc = _dataClrMask;
+  GPIO.out_w1ts = setMask;
 }
 
 /******** low level bit twiddling **********/

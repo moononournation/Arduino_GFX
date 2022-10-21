@@ -14,6 +14,9 @@ Arduino_ESP32PAR16QQ::Arduino_ESP32PAR16QQ(
 
 void Arduino_ESP32PAR16QQ::begin(int32_t speed, int8_t dataMode)
 {
+  UNUSED(speed);
+  UNUSED(dataMode);
+
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
   if (_dc >= 32)
