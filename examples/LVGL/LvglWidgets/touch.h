@@ -10,11 +10,6 @@
 // #define TOUCH_FT6X36_SCL 19
 // #define TOUCH_FT6X36_SDA 18
 // #define TOUCH_FT6X36_INT 39
-// #define TOUCH_SWAP_XY
-// #define TOUCH_MAP_X1 480
-// #define TOUCH_MAP_X2 0
-// #define TOUCH_MAP_Y1 0
-// #define TOUCH_MAP_Y2 320
 
 /* uncomment for GT911 */
 // #define TOUCH_GT911
@@ -23,10 +18,6 @@
 // #define TOUCH_GT911_INT -1
 // #define TOUCH_GT911_RST -1
 // #define TOUCH_GT911_ROTATION ROTATION_NORMAL
-// #define TOUCH_MAP_X1 480
-// #define TOUCH_MAP_X2 0
-// #define TOUCH_MAP_Y1 480
-// #define TOUCH_MAP_Y2 0
 
 /* uncomment for XPT2046 */
 // #define TOUCH_XPT2046
@@ -36,12 +27,18 @@
 // #define TOUCH_XPT2046_CS 10
 // #define TOUCH_XPT2046_INT 18
 // #define TOUCH_XPT2046_ROTATION 0
-// #define TOUCH_MAP_X1 4000
-// #define TOUCH_MAP_X2 100
-// #define TOUCH_MAP_Y1 100
-// #define TOUCH_MAP_Y2 4000
+// #define TOUCH_XPT2046_SAMPLES 50
 
-int touch_last_x = 0, touch_last_y = 0;
+// Please fill below values from Arduino_GFX Example - TouchCalibration
+bool touch_swap_xy = false;
+int16_t touch_map_x1 = -1;
+int16_t touch_map_x2 = -1;
+int16_t touch_map_y1 = -1;
+int16_t touch_map_y2 = -1;
+
+int16_t touch_max_x = 0, touch_max_y = 0;
+int16_t touch_raw_x = 0, touch_raw_y = 0;
+int16_t touch_last_x = 0, touch_last_y = 0;
 
 #if defined(TOUCH_FT6X36)
 #include <Wire.h>
@@ -52,7 +49,7 @@ bool touch_touched_flag = true, touch_released_flag = true;
 #elif defined(TOUCH_GT911)
 #include <Wire.h>
 #include <TAMC_GT911.h>
-TAMC_GT911 ts = TAMC_GT911(TOUCH_GT911_SDA, TOUCH_GT911_SCL, TOUCH_GT911_INT, TOUCH_GT911_RST, max(TOUCH_MAP_X1, TOUCH_MAP_X2), max(TOUCH_MAP_Y1, TOUCH_MAP_Y2));
+TAMC_GT911 ts = TAMC_GT911(TOUCH_GT911_SDA, TOUCH_GT911_SCL, TOUCH_GT911_INT, TOUCH_GT911_RST, max(touch_map_x1, touch_map_x2), max(touch_map_y1, touch_map_y2));
 
 #elif defined(TOUCH_XPT2046)
 #include <XPT2046_Touchscreen.h>
@@ -69,13 +66,18 @@ void touch(TPoint p, TEvent e)
     return;
   }
   // translation logic depends on screen rotation
-#if defined(TOUCH_SWAP_XY)
-  touch_last_x = map(p.y, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, gfx->width());
-  touch_last_y = map(p.x, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, gfx->height());
-#else
-  touch_last_x = map(p.x, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, gfx->width());
-  touch_last_y = map(p.y, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, gfx->height());
-#endif
+  touch_raw_x = p.x;
+  touch_raw_y = p.y;
+  if (touch_swap_xy)
+  {
+    touch_last_x = map(touch_raw_y, touch_map_x1, touch_map_x2, 0, touch_max_x);
+    touch_last_y = map(touch_raw_x, touch_map_y1, touch_map_y2, 0, touch_max_y);
+  }
+  else
+  {
+    touch_last_x = map(touch_raw_x, touch_map_x1, touch_map_x2, 0, touch_max_x);
+    touch_last_y = map(touch_raw_y, touch_map_y1, touch_map_y2, 0, touch_max_y);
+  }
   switch (e)
   {
   case TEvent::Tap:
@@ -102,8 +104,11 @@ void touch(TPoint p, TEvent e)
 }
 #endif
 
-void touch_init()
+void touch_init(int max_x, int max_y)
 {
+  touch_max_x = max_x;
+  touch_max_y = max_y;
+
 #if defined(TOUCH_FT6X36)
   Wire.begin(TOUCH_FT6X36_SDA, TOUCH_FT6X36_SCL);
   ts.begin();
@@ -147,50 +152,62 @@ bool touch_touched()
     touch_touched_flag = false;
     return true;
   }
-  else
-  {
-    return false;
-  }
 
 #elif defined(TOUCH_GT911)
   ts.read();
   if (ts.isTouched)
   {
-#if defined(TOUCH_SWAP_XY)
-    touch_last_x = map(ts.points[0].y, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, gfx->width() - 1);
-    touch_last_y = map(ts.points[0].x, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, gfx->height() - 1);
-#else
-    touch_last_x = map(ts.points[0].x, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, gfx->width() - 1);
-    touch_last_y = map(ts.points[0].y, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, gfx->height() - 1);
-#endif
+    touch_raw_x = ts.points[0].x;
+    touch_raw_y = ts.points[0].y;
+    if (touch_swap_xy)
+    {
+      touch_last_x = map(touch_raw_y, touch_map_x1, touch_map_x2, 0, touch_max_x);
+      touch_last_y = map(touch_raw_x, touch_map_y1, touch_map_y2, 0, touch_max_y);
+    }
+    else
+    {
+      touch_last_x = map(touch_raw_x, touch_map_x1, touch_map_x2, 0, touch_max_x);
+      touch_last_y = map(touch_raw_y, touch_map_y1, touch_map_y2, 0, touch_max_y);
+    }
     return true;
-  }
-  else
-  {
-    return false;
   }
 
 #elif defined(TOUCH_XPT2046)
   if (ts.touched())
   {
     TS_Point p = ts.getPoint();
-#if defined(TOUCH_SWAP_XY)
-    touch_last_x = map(p.y, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, gfx->width() - 1);
-    touch_last_y = map(p.x, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, gfx->height() - 1);
-#else
-    touch_last_x = map(p.x, TOUCH_MAP_X1, TOUCH_MAP_X2, 0, gfx->width() - 1);
-    touch_last_y = map(p.y, TOUCH_MAP_Y1, TOUCH_MAP_Y2, 0, gfx->height() - 1);
-#endif
+    touch_raw_x = p.x;
+    touch_raw_y = p.y;
+    int max_z = p.z;
+    int count = 0;
+    while ((ts.touched()) && (count < TOUCH_XPT2046_SAMPLES))
+    {
+      count++;
+
+      TS_Point p = ts.getPoint();
+      if (p.z > max_z)
+      {
+        touch_raw_x = p.x;
+        touch_raw_y = p.y;
+        max_z = p.z;
+      }
+      // Serial.printf("touch_raw_x: %d, touch_raw_y: %d, p.z: %d\n", touch_raw_x, touch_raw_y, p.z);
+    }
+    if (touch_swap_xy)
+    {
+      touch_last_x = map(touch_raw_y, touch_map_x1, touch_map_x2, 0, touch_max_x);
+      touch_last_y = map(touch_raw_x, touch_map_y1, touch_map_y2, 0, touch_max_y);
+    }
+    else
+    {
+      touch_last_x = map(touch_raw_x, touch_map_x1, touch_map_x2, 0, touch_max_x);
+      touch_last_y = map(touch_raw_y, touch_map_y1, touch_map_y2, 0, touch_max_y);
+    }
     return true;
   }
-  else
-  {
-    return false;
-  }
 
-#else
-  return false;
 #endif
+  return false;
 }
 
 bool touch_released()

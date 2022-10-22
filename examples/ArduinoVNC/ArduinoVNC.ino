@@ -170,7 +170,7 @@ void setup(void)
   Serial.println("Arduino VNC");
 
   // Init touch device
-  touch_init();
+  touch_init(gfx->width(), gfx->height());
 
   // Init keyboard device
   keyboard_init();

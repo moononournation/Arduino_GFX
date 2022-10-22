@@ -123,7 +123,7 @@ void setup()
   Serial.println("LVGL Widgets Demo");
 
   // Init touch device
-  touch_init();
+  touch_init(gfx->width(), gfx->height());
 
   // Init Display
   gfx->begin();
