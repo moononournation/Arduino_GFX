@@ -135,8 +135,8 @@
 #define HX8357A_MADCTL_BGR 0x08 // RGB-BGR ORDER
 #define HX8357A_MADCTL_SS 0x02  // SOURCE OUTPUT ORDER
 #define HX8357A_MADCTL_GS 0x01  // GATE OUTPUT ORDER
-#define HX8359A_INV_ON 0x20     // INV_ON enable
-#define HX8359A_INV_OFF 0x00    // INV_ON disable
+#define HX8357A_INV_ON 0x20     // INV_ON enable
+#define HX8357A_INV_OFF 0x00    // INV_ON disable
 
 static const uint8_t hx8357a_init_operations[] = {
     BEGIN_WRITE,
