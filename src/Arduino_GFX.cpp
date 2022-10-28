@@ -2320,16 +2320,20 @@ void Arduino_GFX::setTextSize(uint8_t s_x, uint8_t s_y, uint8_t pixel_margin)
 /**************************************************************************/
 void Arduino_GFX::setRotation(uint8_t r)
 {
-  _rotation = (r & 3);
+  _rotation = (r & 7);
   switch (_rotation)
   {
-  case 1:
+  case 7:
+  case 5:
   case 3:
+  case 1:
     _width = HEIGHT;
     _height = WIDTH;
     _max_x = _width - 1;  ///< x zero base bound
     _max_y = _height - 1; ///< y zero base bound
     break;
+  case 6:
+  case 4:
   case 2:
   default: // case 0:
     _width = WIDTH;

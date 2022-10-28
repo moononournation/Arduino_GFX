@@ -47,6 +47,7 @@
 #include "display/Arduino_HX8352C.h"
 #include "display/Arduino_HX8357A.h"
 #include "display/Arduino_HX8357B.h"
+#include "display/Arduino_HX8369A.h"
 #include "display/Arduino_ILI9225.h"
 #include "display/Arduino_ILI9331.h"
 #include "display/Arduino_ILI9341.h"

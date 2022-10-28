@@ -440,6 +440,9 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // HX8357B IPS LCD 320x480
 // Arduino_GFX *gfx = new Arduino_HX8357B(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
+// HX8369A LCD 480x800
+// Arduino_GFX *gfx = new Arduino_HX8369A(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 480, 800, 0, 7, 0, 57);
+
 // ILI9225 LCD 176x220
 // Arduino_GFX *gfx = new Arduino_ILI9225(bus, TFT_RST);
 
