@@ -163,6 +163,7 @@ public:
   virtual void invertDisplay(bool i);
   virtual void displayOn();
   virtual void displayOff();
+  virtual void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h);
 
   // BASIC DRAW API
   // These MAY be overridden by the subclass to provide device-specific

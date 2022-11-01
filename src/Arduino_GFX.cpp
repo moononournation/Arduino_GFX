@@ -2667,3 +2667,21 @@ void Arduino_GFX::displayOn()
 void Arduino_GFX::displayOff()
 {
 }
+
+/**************************************************************************/
+/*!
+  @brief  Write address window
+  @param  x   Start point x coordinate
+  @param  y   Start point y coordinate
+  @param  w   Width in pixels
+  @param  h   Height in pixels
+*/
+/**************************************************************************/
+void Arduino_GFX::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
+{
+  // Do nothing, must be subclassed if supported by hardware
+  UNUSED(x);
+  UNUSED(y);
+  UNUSED(w);
+  UNUSED(h);
+}
