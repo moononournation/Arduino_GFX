@@ -123,7 +123,7 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
     _dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
     _dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
-  else
+  else if (_dc != GFX_NOT_DEFINED)
   {
     _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
@@ -270,7 +270,7 @@ void Arduino_SWSPI::endWrite()
 
 void Arduino_SWSPI::writeCommand(uint8_t c)
 {
-  if (_dc < 0) // 9-bit SPI
+  if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
     WRITE9BITCOMMAND(c);
   }
@@ -284,7 +284,7 @@ void Arduino_SWSPI::writeCommand(uint8_t c)
 
 void Arduino_SWSPI::writeCommand16(uint16_t c)
 {
-  if (_dc < 0) // 9-bit SPI
+  if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
     _data16.value = c;
     WRITE9BITCOMMAND(_data16.msb);
@@ -300,7 +300,7 @@ void Arduino_SWSPI::writeCommand16(uint16_t c)
 
 void Arduino_SWSPI::write(uint8_t d)
 {
-  if (_dc < 0) // 9-bit SPI
+  if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
     WRITE9BITDATA(d);
   }
@@ -312,7 +312,7 @@ void Arduino_SWSPI::write(uint8_t d)
 
 void Arduino_SWSPI::write16(uint16_t d)
 {
-  if (_dc < 0) // 9-bit SPI
+  if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
     _data16.value = d;
     WRITE9BITDATA(_data16.msb);
@@ -326,7 +326,7 @@ void Arduino_SWSPI::write16(uint16_t d)
 
 void Arduino_SWSPI::writeRepeat(uint16_t p, uint32_t len)
 {
-  if (_dc < 0) // 9-bit SPI
+  if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
 // ESP8266 avoid trigger watchdog
 #if defined(ESP8266)
