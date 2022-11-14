@@ -35,7 +35,7 @@ void Arduino_ILI9486_18bit::tftInit()
     delay(ILI9486_RST_DELAY);
   }
 
-  _bus->sendCommand(ILI9486_SLPOUT); //Exit Sleep
+  _bus->sendCommand(ILI9486_SLPOUT); // Exit Sleep
   delay(ILI9486_SLPIN_DELAY);
 
   _bus->sendCommand(0x3A);
@@ -93,7 +93,7 @@ void Arduino_ILI9486_18bit::tftInit()
     _bus->sendCommand(ILI9486_INVOFF);
   }
 
-  _bus->sendCommand(ILI9486_DISPON); //Display on
+  _bus->sendCommand(ILI9486_DISPON); // Display on
   delay(25);
 }
 
@@ -141,16 +141,28 @@ void Arduino_ILI9486_18bit::setRotation(uint8_t r)
   switch (_rotation)
   {
   case 1:
-    r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MV);
+    r = (ILI9486_MADCTL_MV | ILI9486_MADCTL_BGR);
     break;
   case 2:
-    r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MY);
+    r = (ILI9486_MADCTL_MY | ILI9486_MADCTL_BGR);
     break;
   case 3:
-    r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MV | ILI9486_MADCTL_MX | ILI9486_MADCTL_MY);
+    r = (ILI9486_MADCTL_MY | ILI9486_MADCTL_MX | ILI9486_MADCTL_MV | ILI9486_MADCTL_BGR);
+    break;
+  case 4:
+    r = (ILI9486_MADCTL_BGR);
+    break;
+  case 5:
+    r = (ILI9486_MADCTL_MY | ILI9486_MADCTL_MV | ILI9486_MADCTL_BGR);
+    break;
+  case 6:
+    r = (ILI9486_MADCTL_MY | ILI9486_MADCTL_MX | ILI9486_MADCTL_BGR);
+    break;
+  case 7:
+    r = (ILI9486_MADCTL_MX | ILI9486_MADCTL_MV | ILI9486_MADCTL_BGR);
     break;
   default: // case 0:
-    r = (ILI9486_MADCTL_BGR | ILI9486_MADCTL_MX);
+    r = (ILI9486_MADCTL_MX | ILI9486_MADCTL_BGR);
     break;
   }
   _bus->beginWrite();
