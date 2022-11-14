@@ -13,6 +13,7 @@
 
 // #define ESP32_2432S028
 // #define ESP32_3248S035
+// #define ESP32_4827A043
 // #define ESP32_4827S043
 // #define ESP32_8048S070
 // #define ESP32_LCDKIT_SPI
@@ -38,6 +39,14 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 0 /* rotation */);
 #define TFT_BL 27
 Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */, HSPI /* spi_num */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, -1 /* RST */, 0 /* rotation */);
+
+#elif defined(ESP32_4827A043)
+#define TFT_BL 2
+Arduino_DataBus *bus = new Arduino_ESP32LCD16(
+    48 /* DC */, 45 /* CS */, 47 /* WR */, 21 /* RD */,
+    5 /* D0 */, 6 /* D1 */, 7 /* D2 */, 15 /* D3 */, 16 /* D4 */, 4 /* D5 */, 8 /* D6 */, 3 /* D7 */,
+    46 /* D8 */, 9 /* D9 */, 1 /* D10 */, 42 /* D11 */, 39 /* D12 */, 41 /* D13 */, 40 /* D14 */, 14 /* D15 */);
+Arduino_GFX *gfx = new Arduino_NV3041A(bus, 17 /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(ESP32_4827S043)
 #define TFT_BL 2
@@ -461,7 +470,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 // ILI9486 parallel 16-bit LCD 320x480
 // Arduino_GFX *gfx = new Arduino_ILI9486(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
 
-// ILI9486 SPI parallel LCD 320x480
+// ILI9486 SPI LCD 320x480
 // Arduino_GFX *gfx = new Arduino_ILI9486_18bit(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
 
 // ILI9488 parallel 16-bit LCD 320x480
@@ -484,6 +493,9 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 
 // NT39125 LCD 240x376
 // Arduino_GFX *gfx = new Arduino_NT39125(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 240, 376, 0, 0, 0, 56);
+
+// NV3041A IPS LCD
+// Arduino_GFX *gfx = new Arduino_NV3041A(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
 // R61529 IPS LCD 320x480
 // Arduino_GFX *gfx = new Arduino_R61529(bus, TFT_RST, 0 /* rotation */, true /* IPS */);

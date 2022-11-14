@@ -62,6 +62,7 @@
 #include "display/Arduino_NT35310.h"
 #include "display/Arduino_NT35510.h"
 #include "display/Arduino_NT39125.h"
+#include "display/Arduino_NV3041A.h"
 #include "display/Arduino_R61529.h"
 #include "display/Arduino_RPi_DPI_RGBPanel.h"
 #include "display/Arduino_SEPS525.h"
