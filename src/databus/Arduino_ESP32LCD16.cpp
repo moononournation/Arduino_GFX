@@ -22,7 +22,7 @@ void Arduino_ESP32LCD16::begin(int32_t speed, int8_t dataMode)
 {
   if (speed == GFX_NOT_DEFINED)
   {
-    _speed = 10000000UL;
+    _speed = 8000000UL; // safe frequency
   }
   else
   {

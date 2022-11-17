@@ -581,7 +581,7 @@ void setup()
   cn = min(cx1, cy1);
   cn1 = cn - 1;
   tsa = ((w <= 176) || (h <= 160)) ? 1 : (((w <= 240) || (h <= 240)) ? 2 : 3); // text size A
-  tsb = ((w <= 240) || (h <= 220)) ? 1 : 2;                                    // text size B
+  tsb = ((w <= 272) || (h <= 220)) ? 1 : 2;                                    // text size B
   tsc = ((w <= 220) || (h <= 220)) ? 1 : 2;                                    // text size C
   ds = (w <= 160) ? 9 : 12;                                                    // digit size
 
@@ -689,7 +689,6 @@ void loop(void)
     gfx->println(F("micro-secs"));
   }
 
-  gfx->setTextSize(1);
   printnice(F("Screen fill "), usecFillScreen);
   printnice(F("Text        "), usecText);
   printnice(F("Pixels      "), usecPixels);
