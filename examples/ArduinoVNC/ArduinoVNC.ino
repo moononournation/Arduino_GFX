@@ -116,8 +116,10 @@ void TFTnoVNC(void)
 
 void handle_touch()
 {
-  if (touch_has_signal()) {
-    if (touch_touched()) {
+  if (touch_has_signal())
+  {
+    if (touch_touched())
+    {
       vnc.mouseEvent(touch_last_x, touch_last_y, 0b001);
     }
     else if (touch_released())
@@ -127,35 +129,38 @@ void handle_touch()
   }
 }
 
-void handle_keyboard() {
+void handle_keyboard()
+{
   int key = keyboard_get_key();
-  if (key > 0) {
+  if (key > 0)
+  {
     // Serial.println(key);
-    switch (key) {
-      case 8:
-        key = 0xff08;  // BackSpace
-        break;
-      case 9:
-        key = 0xff09;  // Tab
-        break;
-      case 13:
-        key = 0xff0d;  // Return or Enter
-        break;
-      case 27:
-        key = 0xff1b;  // Escape
-        break;
-      case 180:
-        key = 0xff51;  // Left
-        break;
-      case 181:
-        key = 0xff52;  // Up
-        break;
-      case 182:
-        key = 0xff54;  // Down
-        break;
-      case 183:
-        key = 0xff53;  // Right
-        break;
+    switch (key)
+    {
+    case 8:
+      key = 0xff08; // BackSpace
+      break;
+    case 9:
+      key = 0xff09; // Tab
+      break;
+    case 13:
+      key = 0xff0d; // Return or Enter
+      break;
+    case 27:
+      key = 0xff1b; // Escape
+      break;
+    case 180:
+      key = 0xff51; // Left
+      break;
+    case 181:
+      key = 0xff52; // Up
+      break;
+    case 182:
+      key = 0xff54; // Down
+      break;
+    case 183:
+      key = 0xff53; // Right
+      break;
     }
     vnc.keyEvent(key, 0b001);
     vnc.keyEvent(key, 0b000);
@@ -165,9 +170,14 @@ void handle_keyboard() {
 void setup(void)
 {
   Serial.begin(115200);
-  // while (!Serial);
   // Serial.setDebugOutput(true);
+  // while(!Serial);
   Serial.println("Arduino VNC");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   // Init touch device
   touch_init(gfx->width(), gfx->height());

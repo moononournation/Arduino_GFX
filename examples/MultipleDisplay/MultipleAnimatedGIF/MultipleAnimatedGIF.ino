@@ -69,8 +69,14 @@ static GifClass gifClass4;
 void setup()
 {
   Serial.begin(115200);
-  // while (!Serial);
-  Serial.println("Arduino_GFX library Multiple Device Test!");
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
+  Serial.println("Arduino_GFX library Multiple Device Animated GIF Test!");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   gfx1->begin();
   gfx1->fillScreen(RED);

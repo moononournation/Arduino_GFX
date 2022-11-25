@@ -31,17 +31,17 @@
 // #define ZX3D50CE02S
 // #define ZX3D95CE01S_AR
 #if defined(ESP32_2432S028)
-#define TFT_BL 21
+#define GFX_BL 21
 Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 0 /* rotation */);
 
 #elif defined(ESP32_3248S035)
-#define TFT_BL 27
+#define GFX_BL 27
 Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */, HSPI /* spi_num */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, -1 /* RST */, 0 /* rotation */);
 
 #elif defined(ESP32_4827A043)
-#define TFT_BL 2
+#define GFX_BL 2
 Arduino_DataBus *bus = new Arduino_ESP32LCD16(
     48 /* DC */, 45 /* CS */, 47 /* WR */, 21 /* RD */,
     5 /* D0 */, 6 /* D1 */, 7 /* D2 */, 15 /* D3 */, 16 /* D4 */, 4 /* D5 */, 8 /* D6 */, 3 /* D7 */,
@@ -49,7 +49,7 @@ Arduino_DataBus *bus = new Arduino_ESP32LCD16(
 Arduino_GFX *gfx = new Arduino_NV3041A(bus, 17 /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(ESP32_4827S043)
-#define TFT_BL 2
+#define GFX_BL 2
 Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     GFX_NOT_DEFINED /* CS */, GFX_NOT_DEFINED /* SCK */, GFX_NOT_DEFINED /* SDA */,
     40 /* DE */, 41 /* VSYNC */, 39 /* HSYNC */, 42 /* PCLK */,
@@ -79,7 +79,7 @@ Arduino_RPi_DPI_RGBPanel *gfx = new Arduino_RPi_DPI_RGBPanel(
 //   600 /* height */, 1 /* vsync_polarity */, 13 /* vsync_front_porch */, 3 /* vsync_pulse_width */, 45 /* vsync_back_porch */);
 
 #elif defined(ESP32_8048S070)
-#define TFT_BL 2
+#define GFX_BL 2
 Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     GFX_NOT_DEFINED /* CS */, GFX_NOT_DEFINED /* SCK */, GFX_NOT_DEFINED /* SDA */,
     41 /* DE */, 40 /* VSYNC */, 39 /* HSYNC */, 42 /* PCLK */,
@@ -94,7 +94,7 @@ Arduino_RPi_DPI_RGBPanel *gfx = new Arduino_RPi_DPI_RGBPanel(
     1 /* pclk_active_neg */, 16000000 /* prefer_speed */, true /* auto_flush */);
 
 #elif defined(ESP32_LCDKIT_SPI)
-#define TFT_BL 23
+#define GFX_BL 23
 Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 5 /* CS */, 22 /* SCK */, 21 /* MOSI */, 27 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, 18 /* RST */, 1 /* rotation */);
 
@@ -114,12 +114,12 @@ Arduino_DataBus *bus = new Arduino_ESP32PAR16(
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */);
 
 #elif defined(ESP32_S3_EYE)
-#define TFT_BL 48
+#define GFX_BL 48
 Arduino_DataBus *bus = new Arduino_ESP32SPI(43 /* DC */, 44 /* CS */, 21 /* SCK */, 47 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
 
 #elif defined(ESP32_S3_RGB)
-#define TFT_BL 38
+#define GFX_BL 38
 Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     39 /* CS */, 48 /* SCK */, 47 /* SDA */,
     18 /* DE */, 17 /* VSYNC */, 16 /* HSYNC */, 21 /* PCLK */,
@@ -156,7 +156,7 @@ Arduino_ST7701_RGBPanel *gfx = new Arduino_ST7701_RGBPanel(
 //     4 /* vsync_front_porch */, 12 /* vsync_pulse_width */, 40 /* vsync_back_porch */);
 
 #elif defined(ESP32_S3_RPI_DPI)
-// #define TFT_BL 38
+// #define GFX_BL 38
 Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     GFX_NOT_DEFINED /* CS */, GFX_NOT_DEFINED /* SCK */, GFX_NOT_DEFINED /* SDA */,
     18 /* DE */, 17 /* VSYNC */, 16 /* HSYNC */, 21 /* PCLK */,
@@ -176,68 +176,68 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(33 /* DC */, 15 /* CS */, 14 /* SCK 
 Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */, false /* IPS */);
 
 #elif defined(TTGO_T_DISPLAY)
-#define TFT_BL 4
+#define GFX_BL 4
 Arduino_DataBus *bus = new Arduino_ESP32SPI(16 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 23 /* RST */, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 52 /* col offset 1 */, 40 /* row offset 1 */, 53 /* col offset 2 */, 40 /* row offset 2 */);
 
 #elif defined(TTGO_T_DISPLAY_S3)
-#define TFT_PWD 15
-#define TFT_BL 38
+#define GFX_PWD 15
+#define GFX_BL 38
 Arduino_DataBus *bus = new Arduino_ESP32LCD8(
     7 /* DC */, 6 /* CS */, 8 /* WR */, 9 /* RD */,
     39 /* D0 */, 40 /* D1 */, 41 /* D2 */, 42 /* D3 */, 45 /* D4 */, 46 /* D5 */, 47 /* D6 */, 48 /* D7 */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 5 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */, 35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
 
 #elif defined(TTGO_T_QT)
-#define TFT_BL 10
+#define GFX_BL 10
 Arduino_DataBus *bus = new Arduino_ESP32SPI(6 /* DC */, 5 /* CS */, 3 /* SCK */, 2 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(WT32_SC01)
-#define TFT_BL 23
+#define GFX_BL 23
 Arduino_DataBus *bus = new Arduino_ESP32SPI(21 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, 22 /* RST */, 3 /* rotation */);
 
 /* Wio Terminal */
 #elif defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
-// #define TFT_BL LCD_BACKLIGHT
+// #define GFX_BL LCD_BACKLIGHT
 Arduino_DataBus *bus = new Arduino_HWSPI(LCD_DC /* DC */, LCD_SS_PIN /* CS */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */);
 
 /* ESP32-S3-BOX */
 #elif defined(ARDUINO_ESP32_S3_BOX)
-#define TFT_BL 45
+#define GFX_BL 45
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_CLK, TFT_MOSI, TFT_MISO);
 Arduino_GFX *gfx = new Arduino_ILI9342(bus, TFT_RST, 0 /* rotation */);
 
 /* M5Stack */
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
-// #define TFT_BL 32
+// #define GFX_BL 32
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
 Arduino_GFX *gfx = new Arduino_ILI9342(bus, 33 /* RST */, 2 /* rotation */);
 
 /* Odroid-Go */
 #elif defined(ARDUINO_ODROID_ESP32)
-// #define TFT_BL 14
+// #define GFX_BL 14
 Arduino_DataBus *bus = new Arduino_ESP32SPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 3 /* rotation */);
 // Arduino_ST7789 *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 3 /* rotation */, true /* IPS */);
 
 /* TTGO T-Watch */
 #elif defined(ARDUINO_T) || defined(ARDUINO_TWATCH_BASE) || defined(ARDUINO_TWATCH_2020_V1) || defined(ARDUINO_TWATCH_2020_V2)
-// #define TFT_BL 12
+// #define GFX_BL 12
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */, 240, 240, 0, 80);
 
 #elif defined(ZX3D50CE02S)
-#define TFT_BL 45
+#define GFX_BL 45
 Arduino_DataBus *bus = new Arduino_ESP32LCD8(
     0 /* DC */, GFX_NOT_DEFINED /* CS */, 47 /* WR */, GFX_NOT_DEFINED /* RD */,
     9 /* D0 */, 46 /* D1 */, 3 /* D2 */, 8 /* D3 */, 18 /* D4 */, 17 /* D5 */, 16 /* D6 */, 15 /* D7 */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, 4 /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(ZX3D95CE01S_AR)
-#define TFT_BL 45
+#define GFX_BL 45
 Arduino_ESP32RGBPanel *bus = new Arduino_ESP32RGBPanel(
     0 /* CS */, 10 /* SCK */, 9 /* SDA */,
     13 /* DE */, 12 /* VSYNC */, 11 /* HSYNC */, 14 /* PCLK */,
@@ -254,74 +254,74 @@ Arduino_GC9503V_RGBPanel *gfx = new Arduino_GC9503V_RGBPanel(bus, GFX_NOT_DEFINE
 #define TFT_CS 39 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 41
 #define TFT_RST 40
-#define TFT_BL 22
+#define GFX_BL 22
 #elif defined(ARDUINO_BLACKPILL_F411CE)
 #define TFT_CS 4 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 3
 #define TFT_RST 2
-#define TFT_BL 1
+#define GFX_BL 1
 #elif defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
 #define TFT_CS 17 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 27
 #define TFT_RST 26
-#define TFT_BL 28
+#define GFX_BL 28
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
 #define TFT_CS 5  // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 27 // GFX_NOT_DEFINED for display without DC pin (9-bit SPI)
 #define TFT_RST 33
-#define TFT_BL 22
+#define GFX_BL 22
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2)
 #define TFT_CS 34 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 35
 #define TFT_RST 33
-#define TFT_BL 21
+#define GFX_BL 21
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
 #define TFT_CS 40 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 41
 #define TFT_RST 42
-#define TFT_BL 48
+#define GFX_BL 48
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)
 #define TFT_CS 7 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 2
 #define TFT_RST 1
-#define TFT_BL 3
+#define GFX_BL 3
 #elif defined(ESP8266)
 #define TFT_CS 15 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 4
 #define TFT_RST 2
-#define TFT_BL 5
+#define GFX_BL 5
 #elif defined(RTL8722DM)
 #if defined(BOARD_RTL8720DN_BW16)
 #define TFT_CS 9
 #define TFT_DC 8
 #define TFT_RST 6
-#define TFT_BL 3
+#define GFX_BL 3
 #elif defined(BOARD_RTL8722DM)
 #define TFT_CS 18
 #define TFT_DC 17
 #define TFT_RST 22
-#define TFT_BL 23
+#define GFX_BL 23
 #elif defined(BOARD_RTL8722DM_MINI)
 #define TFT_CS 12
 #define TFT_DC 14
 #define TFT_RST 15
-#define TFT_BL 13
+#define GFX_BL 13
 #else             // old version
 #define TFT_CS 18 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 17
 #define TFT_RST 2
-#define TFT_BL 23
+#define GFX_BL 23
 #endif
 #elif defined(SEEED_XIAO_M0)
 #define TFT_CS 3 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 2
 #define TFT_RST 1
-#define TFT_BL 0
+#define GFX_BL 0
 #else
 #define TFT_CS 9 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 8
 #define TFT_RST 7
-#define TFT_BL 6
+#define GFX_BL 6
 #endif
 
 /*
@@ -559,12 +559,13 @@ uint8_t tsa, tsb, tsc, ds;
 void setup()
 {
   Serial.begin(115200);
+  // Serial.setDebugOutput(true);
   // while(!Serial);
   Serial.println("Arduino_GFX library Test!");
 
-#ifdef TFT_PWD
-  pinMode(TFT_PWD, OUTPUT);
-  digitalWrite(TFT_PWD, HIGH);
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
 #endif
 
   gfx->begin();
@@ -585,9 +586,9 @@ void setup()
   tsc = ((w <= 220) || (h <= 220)) ? 1 : 2;                                    // text size C
   ds = (w <= 160) ? 9 : 12;                                                    // digit size
 
-#ifdef TFT_BL
-  pinMode(TFT_BL, OUTPUT);
-  digitalWrite(TFT_BL, HIGH);
+#ifdef GFX_BL
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 }
 

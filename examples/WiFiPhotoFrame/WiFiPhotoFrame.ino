@@ -107,9 +107,14 @@ char http_path[1024];
 void setup()
 {
   Serial.begin(115200);
-  // while (!Serial);
   // Serial.setDebugOutput(true);
+  // while(!Serial);
   Serial.println("WiFi Photo Frame");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   Serial.println("Init display");
   gfx->begin();

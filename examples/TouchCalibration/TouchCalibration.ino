@@ -62,9 +62,14 @@ int16_t touched_y[4] = {-1};
 void setup(void)
 {
   Serial.begin(115200);
-  // while (!Serial);
   // Serial.setDebugOutput(true);
+  // while(!Serial);
   Serial.println("Touch Calibration");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   Serial.println("Init display");
   gfx->begin();

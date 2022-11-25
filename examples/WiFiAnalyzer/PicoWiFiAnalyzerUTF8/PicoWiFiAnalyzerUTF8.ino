@@ -66,6 +66,14 @@ uint8_t scan_count = 0;
 void setup()
 {
   Serial.begin(115200);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
+  Serial.println("Pico WiFi Analyzer UTF8");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   // Set WiFi to station mode and disconnect from an AP if it was previously connected
   WiFi.mode(WIFI_STA);
@@ -86,7 +94,7 @@ void setup()
   h = gfx->height();
   text_size = (w < 224) ? 1 : 2;
   banner_height = text_size * 16;
-  graph_baseline = h - (2 * 16);                             // minus 2 text lines
+  graph_baseline = h - (2 * 16);                            // minus 2 text lines
   graph_height = graph_baseline - banner_height - (2 * 16); // minus 2 text lines
   channel_width = w / 17;
   signal_width = channel_width * 2;

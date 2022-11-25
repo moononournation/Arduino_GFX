@@ -5,7 +5,7 @@
  *
  * Dependent libraries:
  * PNGdec: https://github.com/bitbank2/PNGdec.git
- * 
+ *
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
  * 2. Upload PNG file
@@ -31,7 +31,7 @@
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
- * 
+ *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
  * Defalult pin list for non display dev kit:
@@ -165,8 +165,14 @@ void PNGDraw(PNGDRAW *pDraw)
 void setup()
 {
   Serial.begin(115200);
-  // while (!Serial);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
   Serial.println("PNG Image Viewer");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   // Init Display
   gfx->begin();
@@ -180,8 +186,8 @@ void setup()
   }
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
 /* Wio Terminal */

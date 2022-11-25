@@ -101,6 +101,14 @@ static GifClass gifClass;
 void setup()
 {
   Serial.begin(115200);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
+  Serial.println("Animated GIF Image Viewer");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   // Init Display
   gfx->begin();

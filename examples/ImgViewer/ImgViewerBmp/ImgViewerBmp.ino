@@ -29,7 +29,7 @@
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
- * 
+ *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
  * Defalult pin list for non display dev kit:
@@ -99,16 +99,22 @@ static void bmpDrawCallback(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, i
 void setup()
 {
   Serial.begin(115200);
-  // while (!Serial);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
   Serial.println("BMP Image Viewer");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   // Init Display
   gfx->begin();
   gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
 /* Wio Terminal */

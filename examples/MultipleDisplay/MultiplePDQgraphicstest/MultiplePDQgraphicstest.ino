@@ -32,8 +32,14 @@ uint8_t tsa, tsb, tsc, ds;
 void setup()
 {
   Serial.begin(115200);
-  // while (!Serial);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
   Serial.println("Arduino_GFX library Multiple Device Test!");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   gfx1->begin();
   gfx1->fillScreen(RED);

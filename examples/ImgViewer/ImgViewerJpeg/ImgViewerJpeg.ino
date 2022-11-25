@@ -100,8 +100,14 @@ static int jpegDrawCallback(JPEGDRAW *pDraw)
 void setup()
 {
   Serial.begin(115200);
-  // while (!Serial);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
   Serial.println("JPEG Image Viewer");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   // Init Display
   gfx->begin();

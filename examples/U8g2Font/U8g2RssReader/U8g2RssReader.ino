@@ -88,7 +88,12 @@ void setup(void)
   Serial.begin(115200);
   // while (!Serial);
   // Serial.setDebugOutput(true);
-  Serial.println("Arduino RSS Panel");
+  Serial.println("U8g2 RSS Reader");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   Serial.println("Init display");
   gfx->begin();

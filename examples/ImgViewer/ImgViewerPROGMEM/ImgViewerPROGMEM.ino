@@ -15,7 +15,7 @@
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
- * 
+ *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
  * Defalult pin list for non display dev kit:
@@ -56,19 +56,25 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 void setup()
 {
   Serial.begin(115200);
-  // while (!Serial);
-  Serial.println("BMP Image Viewer");
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
+  Serial.println("PROGMEM Image Viewer");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   // Init Display
   gfx->begin();
   gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
-  gfx->draw16bitRGBBitmap(0, 0, (const uint16_t*)Arduino_UNO_Rev3_Ok, IMG_WIDTH, IMG_HEIGHT);
+  gfx->draw16bitRGBBitmap(0, 0, (const uint16_t *)Arduino_UNO_Rev3_Ok, IMG_WIDTH, IMG_HEIGHT);
 
   delay(5000); // 5 seconds
 }
@@ -77,7 +83,7 @@ void loop()
 {
   int16_t x = random(gfx->width());
   int16_t y = random(gfx->height());
-  gfx->draw16bitRGBBitmap(x, y, (const uint16_t*)Arduino_UNO_Rev3_Ok, IMG_WIDTH, IMG_HEIGHT);
+  gfx->draw16bitRGBBitmap(x, y, (const uint16_t *)Arduino_UNO_Rev3_Ok, IMG_WIDTH, IMG_HEIGHT);
 
   delay(1000); // 1 second
 }

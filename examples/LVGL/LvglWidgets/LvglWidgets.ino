@@ -119,8 +119,14 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 void setup()
 {
   Serial.begin(115200);
-  // while (!Serial);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
   Serial.println("LVGL Widgets Demo");
+
+#ifdef GFX_PWD
+  pinMode(GFX_PWD, OUTPUT);
+  digitalWrite(GFX_PWD, HIGH);
+#endif
 
   // Init touch device
   touch_init(gfx->width(), gfx->height());
