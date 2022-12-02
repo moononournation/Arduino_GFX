@@ -15,9 +15,6 @@
  *
  * For SPI display set color swap can be faster, parallel screen don't set!
  * #define LV_COLOR_16_SWAP   1
- *
- * Optional: Show CPU usage and FPS count
- * #define LV_USE_PERF_MONITOR 1
  ******************************************************************************/
 #include "lv_demo_benchmark.h"
 
@@ -110,9 +107,9 @@ void setup()
   screenWidth = gfx->width();
   screenHeight = gfx->height();
 #ifdef ESP32
-  disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * screenWidth * 10, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+  disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * screenWidth * 32, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
 #else
-  disp_draw_buf = (lv_color_t *)malloc(sizeof(lv_color_t) * screenWidth * 10);
+  disp_draw_buf = (lv_color_t *)malloc(sizeof(lv_color_t) * screenWidth * 32);
 #endif
   if (!disp_draw_buf)
   {
@@ -120,7 +117,7 @@ void setup()
   }
   else
   {
-    lv_disp_draw_buf_init(&draw_buf, disp_draw_buf, NULL, screenWidth * 10);
+    lv_disp_draw_buf_init(&draw_buf, disp_draw_buf, NULL, screenWidth * 32);
 
     /* Initialize the display */
     lv_disp_drv_init(&disp_drv);
