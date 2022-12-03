@@ -496,7 +496,11 @@ static void sub_rectangle_cb(void)
     lv_style_reset(&style_common);
     lv_style_set_radius(&style_common, RADIUS);
     lv_style_set_bg_opa(&style_common, opa_mode ? LV_OPA_50 : LV_OPA_COVER);
+#if LV_GPU_SDL_CUSTOM_BLEND_MODE
     lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_SUBTRACTIVE);
+#else
+    lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_NORMAL);
+#endif
     rect_create(&style_common);
 }
 
@@ -506,7 +510,11 @@ static void sub_border_cb(void)
     lv_style_set_radius(&style_common, RADIUS);
     lv_style_set_border_width(&style_common, BORDER_WIDTH);
     lv_style_set_border_opa(&style_common, opa_mode ? LV_OPA_50 : LV_OPA_COVER);
+#if LV_GPU_SDL_CUSTOM_BLEND_MODE
     lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_SUBTRACTIVE);
+#else
+    lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_NORMAL);
+#endif
     rect_create(&style_common);
 
 }
@@ -519,7 +527,11 @@ static void sub_shadow_cb(void)
     lv_style_set_shadow_opa(&style_common, opa_mode ? LV_OPA_80 : LV_OPA_COVER);
     lv_style_set_shadow_width(&style_common, SHADOW_WIDTH_SMALL);
     lv_style_set_shadow_spread(&style_common, SHADOW_WIDTH_SMALL);
+#if LV_GPU_SDL_CUSTOM_BLEND_MODE
     lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_SUBTRACTIVE);
+#else
+    lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_NORMAL);
+#endif
     rect_create(&style_common);
 
 }
@@ -528,7 +540,11 @@ static void sub_img_cb(void)
 {
     lv_style_reset(&style_common);
     lv_style_set_img_opa(&style_common, opa_mode ? LV_OPA_50 : LV_OPA_COVER);
+#if LV_GPU_SDL_CUSTOM_BLEND_MODE
     lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_SUBTRACTIVE);
+#else
+    lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_NORMAL);
+#endif
 #if LV_DEMO_BENCHMARK_RGB565A8 && LV_COLOR_DEPTH == 16
     img_create(&style_common, &img_benchmark_cogwheel_rgb565a8, false, false, false);
 #else
@@ -540,7 +556,11 @@ static void sub_line_cb(void)
     lv_style_reset(&style_common);
     lv_style_set_line_width(&style_common, LINE_WIDTH);
     lv_style_set_line_opa(&style_common, opa_mode ? LV_OPA_50 : LV_OPA_COVER);
+#if LV_GPU_SDL_CUSTOM_BLEND_MODE
     lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_SUBTRACTIVE);
+#else
+    lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_NORMAL);
+#endif
     line_create(&style_common);
 
 }
@@ -550,7 +570,11 @@ static void sub_arc_cb(void)
     lv_style_reset(&style_common);
     lv_style_set_arc_width(&style_common, ARC_WIDTH_THICK);
     lv_style_set_arc_opa(&style_common, opa_mode ? LV_OPA_50 : LV_OPA_COVER);
+#if LV_GPU_SDL_CUSTOM_BLEND_MODE
     lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_SUBTRACTIVE);
+#else
+    lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_NORMAL);
+#endif
     arc_create(&style_common);
 }
 
@@ -559,7 +583,11 @@ static void sub_text_cb(void)
     lv_style_reset(&style_common);
     lv_style_set_text_font(&style_common, lv_theme_get_font_normal(NULL));
     lv_style_set_text_opa(&style_common, opa_mode ? LV_OPA_50 : LV_OPA_COVER);
+#if LV_GPU_SDL_CUSTOM_BLEND_MODE
     lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_SUBTRACTIVE);
+#else
+    lv_style_set_blend_mode(&style_common, LV_BLEND_MODE_NORMAL);
+#endif
     txt_create(&style_common);
 }
 
