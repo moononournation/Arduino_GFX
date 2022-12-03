@@ -14,7 +14,6 @@ extern "C" {
  *      INCLUDES
  *********************/
 #include <lvgl.h>
-#define LV_USE_DEMO_WIDGETS 1
 
 /*********************
  *      DEFINES

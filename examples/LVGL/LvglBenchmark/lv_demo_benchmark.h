@@ -15,7 +15,6 @@ extern "C" {
  *********************/
 // #include "../lv_demos.h"
 #include <lvgl.h>
-#define LV_USE_DEMO_BENCHMARK 1
 
 /*********************
  *      DEFINES

@@ -16,6 +16,9 @@
  * For SPI display set color swap can be faster, parallel screen don't set!
  * #define LV_COLOR_16_SWAP   1
  *
+ * Enable LVGL Demo Benchmark
+ * #define LV_USE_DEMO_BENCHMARK 1
+ * 
  * Enables support for compressed fonts.
  * #define LV_USE_FONT_COMPRESSED 1
  ******************************************************************************/

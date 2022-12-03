@@ -20,6 +20,9 @@
  *
  * For SPI display set color swap can be faster, parallel screen don't set!
  * #define LV_COLOR_16_SWAP   1
+ * 
+ * Enable LVGL Demo Widgets
+ * #define LV_USE_DEMO_WIDGETS 1
  ******************************************************************************/
 #include "lv_demo_widgets.h"
 
