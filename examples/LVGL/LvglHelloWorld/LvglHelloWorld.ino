@@ -63,6 +63,7 @@ static uint32_t screenWidth;
 static uint32_t screenHeight;
 static lv_disp_draw_buf_t draw_buf;
 static lv_color_t *disp_draw_buf;
+static lv_color_t *disp_draw_buf2;
 static lv_disp_drv_t disp_drv;
 
 /* Display flushing */
@@ -107,6 +108,7 @@ void setup()
   screenHeight = gfx->height();
 #ifdef ESP32
   disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * screenWidth * 32, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+  // disp_draw_buf2 = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * screenWidth * 32, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
 #else
   disp_draw_buf = (lv_color_t *)malloc(sizeof(lv_color_t) * screenWidth * 32);
 #endif
@@ -116,7 +118,15 @@ void setup()
   }
   else
   {
-    lv_disp_draw_buf_init(&draw_buf, disp_draw_buf, NULL, screenWidth * 32);
+    if (!disp_draw_buf2)
+    {
+      Serial.println("LVGL disp_draw_buf2 not allocated!");
+      lv_disp_draw_buf_init(&draw_buf, disp_draw_buf, NULL, screenWidth * 32);
+    }
+    else
+    {
+      lv_disp_draw_buf_init(&draw_buf, disp_draw_buf, disp_draw_buf2, screenWidth * 32);
+    }
 
     /* Initialize the display */
     lv_disp_drv_init(&disp_drv);
