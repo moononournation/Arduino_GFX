@@ -223,15 +223,19 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 ## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
 
 * ESP32 LCDKIT
+* ESP32-4827A043 [[demo video](https://youtu.be/pd1DTW9QHkg)] [[LVGL demo video](https://youtu.be/L8iYjiy-DUI)]
+* [[ESP32-4827S043](https://www.aliexpress.com/item/1005004788147691.html)] [[demo video](https://youtu.be/60rl7QoU4Sc)] [[LVGL demo video](https://youtu.be/VvpILAVyPt8)]
+* [[ESP32-8048S070](https://www.aliexpress.com/item/1005004952726089.html)] [[LVGL demo video](https://youtu.be/7BRGVsnQpgE)]
 * ESP32-S3-EYE
 * ESP32-S3-Box
+* ESP32-S3-RGB [[LVGL demo video](https://youtu.be/d11yUvjh34A)]
 * ESPboy [[demo video](https://youtu.be/Cx82XWrc8-0)]
 * M5Stack Core Family
 * Makerfabs ESP32 3.5" TFT Touch with Camera
 * Odroid Go
 * TTGO T-DISPLAY
 * TTGO T-DISPLAY-S3 [[demo video](https://youtu.be/kpRC64QNQAo)]
-* TTGO T-QT
+* TTGO T-QT [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM?feature=share)]
 * TTGO T-Watch
 * wireless-tag WT-32-SC01
 * Wio Terminal
@@ -247,7 +251,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * HX8352C 240x400 [[demo video](https://youtu.be/m2xWYbS3t7s)]
 * HX8357A 320x480 [[demo video](https://youtu.be/wJkLO_xCTXA)] (currently only portrait works, i.e. rotation 0 and 2)
 * HX8357B (9-bit SPI) 320x480 [[demo video](https://youtu.be/pB6_LOCiUqg)]
-* HX8369A 480x800 [[demo video](https://youtu.be/sXpU8bhtXKQ)]
+* HX8369A 480x800 [[demo video](https://youtu.be/sXpU8bhtXKQ)] [[LVGL demo video](https://youtu.be/q575lTuVDcU)]
 * ILI6485 (RGB) 480x272 [[demo video](https://youtu.be/60rl7QoU4Sc)]
 * ILI9225 176x220 [[demo video](https://youtu.be/jm2UrCG27F4)]
 * ILI9341 240x320 [[demo video](https://youtu.be/NtlEEL7MkQY)]
@@ -257,7 +261,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * ILI9486 320x480 (18 bit color) [[demo video](https://youtu.be/pZ6izDqmVds)]
 * ILI9488 320x480 (3 bit color with canvas) [[demo video](https://youtu.be/r7be0WbIBYk)]
 * ILI9488 320x480 (18 bit color) [[demo video](https://youtu.be/NkE-LhtLHBQ)]
-* ILI9806 (8-bit/16-bit Parallel) 480x854 [[demo video](https://youtu.be/mYv-wdtWr8s)]
+* ILI9806 (8-bit/16-bit Parallel) 480x854 [[demo video](https://youtu.be/mYv-wdtWr8s)] [[LVGL demo video](https://youtu.be/PqjV8lovg_c)][[2](https://youtu.be/j31KZoQUKis)]
 * JBT6K71 (8-bit Parallel) 240x320 [[demo video](https://youtu.be/qid3F4Gb0mM)]
 * NT35310 320x480 [[demo video](https://youtu.be/bvIz5CoYPNk)]
 * NT35510 (8-bit/16-bit Parallel) 480x800 [[demo video](https://youtu.be/C_1ASzUN3bg)]
@@ -274,7 +278,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * ST7735 128x160 (various tabs) [[demo video](https://youtu.be/eRBSSD_N9II)]
 * ST7735 128x128 (various tabs) [[demo video](https://youtu.be/6rueSV2Ee6c)]
 * ST7735 80x160 [[demo video](https://youtu.be/qESHDuYo_Mk)]
-* ST7701 (RGB) 480x480 [[demo video](https://youtube.com/shorts/JV8Rzxop5EQ)]
+* ST7701 (RGB) 480x480 [[demo video](https://youtube.com/shorts/JV8Rzxop5EQ)] [[2.1" round display demo video](https://youtube.com/shorts/WLWio1CjBoo?feature=share)] [[2.8" round display demo video](https://youtube.com/shorts/Ih_QlttWTVk?feature=share)]
 * ST7789 TTGO T-Display 135x240 [[demo video](https://youtu.be/Zk81_T8c20E)]
 * ST7789 240x240 [[demo video](https://youtu.be/Z27zYg5uAsk)]
 * ST7789 TTGO T-Watch 240x240 [[demo video](https://youtu.be/9AqsXMB8Qbk)]
