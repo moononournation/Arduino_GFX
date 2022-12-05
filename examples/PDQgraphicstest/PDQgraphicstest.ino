@@ -11,6 +11,7 @@
 /* Or you can define the dev kit cannot find in board list */
 #include <Arduino_GFX_Library.h>
 
+// #define ESP32_1732S019
 // #define ESP32_2432S028
 // #define ESP32_3248S035
 // #define ESP32_4827A043
@@ -30,15 +31,20 @@
 // #define WT32_SC01
 // #define ZX3D50CE02S
 // #define ZX3D95CE01S_AR
-#if defined(ESP32_2432S028)
+#if defined(ESP32_1732S019)
+#define GFX_BL 14
+Arduino_DataBus *bus = new Arduino_ESP32SPI(11 /* DC */, 10 /* CS */, 12 /* SCK */, 13 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */, 35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
+
+#elif defined(ESP32_2432S028)
 #define GFX_BL 21
 Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */);
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, -1 /* RST */, 0 /* rotation */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */);
 
 #elif defined(ESP32_3248S035)
 #define GFX_BL 27
 Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */, HSPI /* spi_num */);
-Arduino_GFX *gfx = new Arduino_ST7796(bus, -1 /* RST */, 0 /* rotation */);
+Arduino_GFX *gfx = new Arduino_ST7796(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */);
 
 #elif defined(ESP32_4827A043)
 #define GFX_BL 2
