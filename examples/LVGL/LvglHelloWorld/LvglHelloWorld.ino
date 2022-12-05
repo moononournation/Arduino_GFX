@@ -13,8 +13,9 @@
  * #define LV_COLOR_DEPTH     16
  * #define LV_TICK_CUSTOM     1
  *
- * For SPI display set color swap can be faster, parallel screen don't set!
- * #define LV_COLOR_16_SWAP   1
+ * For SPI display set color swap can be faster, parallel screen don't swap!
+ * #define LV_COLOR_16_SWAP   1 // for SPI
+ * #define LV_COLOR_16_SWAP   0 // for parallel and RGB
  ******************************************************************************/
 #include <lvgl.h>
 
