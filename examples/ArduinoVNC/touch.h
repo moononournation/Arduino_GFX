@@ -49,7 +49,7 @@ bool touch_touched_flag = true, touch_released_flag = true;
 #elif defined(TOUCH_GT911)
 #include <Wire.h>
 #include <TAMC_GT911.h>
-TAMC_GT911 ts = TAMC_GT911(TOUCH_GT911_SDA, TOUCH_GT911_SCL, TOUCH_GT911_INT, TOUCH_GT911_RST, max(touch_map_x1, touch_map_x2), max(touch_map_y1, touch_map_y2));
+TAMC_GT911 ts = TAMC_GT911(TOUCH_GT911_SDA, TOUCH_GT911_SCL, TOUCH_GT911_INT, TOUCH_GT911_RST, 4096, 4096);
 
 #elif defined(TOUCH_XPT2046)
 #include <XPT2046_Touchscreen.h>
