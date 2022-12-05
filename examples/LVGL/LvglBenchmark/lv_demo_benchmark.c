@@ -835,10 +835,10 @@ static void generate_report(void)
     lv_obj_set_flex_flow(lv_scr_act(), LV_FLEX_FLOW_COLUMN);
 
     title = lv_label_create(lv_scr_act());
-    lv_label_set_text_fmt(title, "Weighted FPS: %"LV_PRIu32, fps_weighted);
+    lv_label_set_text_fmt(title, "Arduino_GFX screen size: %"LV_PRIu32" x %"LV_PRIu32, LV_HOR_RES, LV_VER_RES);
 
     subtitle = lv_label_create(lv_scr_act());
-    lv_label_set_text_fmt(subtitle, "Opa. speed: %"LV_PRIu32"%%", opa_speed_pct);
+    lv_label_set_text_fmt(subtitle, "LVGL weighted FPS: %"LV_PRIu32", Opa. speed: %"LV_PRIu32"%%", fps_weighted, opa_speed_pct);
 
     lv_coord_t w = lv_obj_get_content_width(lv_scr_act());
     lv_obj_t * table = lv_table_create(lv_scr_act());
