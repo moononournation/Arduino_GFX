@@ -3,20 +3,25 @@
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
 
 #include "../Arduino_GFX.h"
-#include "Arduino_GC9503V_RGBPanel.h"
+#include "Arduino_RGB_Display.h"
 
-Arduino_GC9503V_RGBPanel::Arduino_GC9503V_RGBPanel(
-    Arduino_ESP32RGBPanel *bus, int8_t rst, int16_t w, int16_t h,
-    const uint8_t *init_operations, size_t init_operations_len)
-
-    : Arduino_GFX(w, h), _bus(bus), _rst(rst),
-      _init_operations(init_operations), _init_operations_len(init_operations_len)
+Arduino_RGB_Display::Arduino_RGB_Display(
+    int16_t w, int16_t h, Arduino_ESP32RGBPanel *rgbpanel, uint8_t r, bool auto_flush,
+    Arduino_DataBus *bus, int8_t rst, const uint8_t *init_operations, size_t init_operations_len)
+    : Arduino_GFX(w, h), _rgbpanel(rgbpanel), _r(r), _auto_flush(auto_flush),
+      _bus(bus), _rst(rst), _init_operations(init_operations), _init_operations_len(init_operations_len)
 {
+  _framebuffer_size = w * h * 2;
 }
 
-void Arduino_GC9503V_RGBPanel::begin(int32_t speed)
+void Arduino_RGB_Display::begin(int32_t speed)
 {
-  _bus->begin(speed);
+  _rgbpanel->begin(speed);
+
+  if (_bus)
+  {
+    _bus->begin();
+  }
 
   if (_rst != GFX_NOT_DEFINED)
   {
@@ -30,27 +35,39 @@ void Arduino_GC9503V_RGBPanel::begin(int32_t speed)
   }
   else
   {
-    // Software Rest
-    _bus->sendCommand(0x01);
-    delay(120);
+    if (_bus)
+    {
+      // Software Rest
+      _bus->sendCommand(0x01);
+      delay(120);
+    }
   }
 
-  _bus->batchOperation(_init_operations, _init_operations_len);
+  if (_bus)
+  {
+    if (_init_operations_len > 0)
+    {
+      _bus->batchOperation((uint8_t *)_init_operations, _init_operations_len);
+    }
+  }
 
-  _framebuffer = _bus->getFrameBuffer(_width, _height);
+  _framebuffer = _rgbpanel->getFrameBuffer(WIDTH, HEIGHT);
 }
 
-void Arduino_GC9503V_RGBPanel::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
+void Arduino_RGB_Display::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
   uint16_t *fb = _framebuffer;
   fb += (int32_t)y * _width;
   fb += x;
   *fb = color;
-  Cache_WriteBack_Addr((uint32_t)fb, 2);
+  if (_auto_flush)
+  {
+    Cache_WriteBack_Addr((uint32_t)fb, 2);
+  }
 }
 
-void Arduino_GC9503V_RGBPanel::writeFastVLine(int16_t x, int16_t y,
-                                              int16_t h, uint16_t color)
+void Arduino_RGB_Display::writeFastVLine(int16_t x, int16_t y,
+                                         int16_t h, uint16_t color)
 {
   if (_ordered_in_range(x, 0, _max_x) && h)
   { // X on screen, nonzero height
@@ -76,19 +93,30 @@ void Arduino_GC9503V_RGBPanel::writeFastVLine(int16_t x, int16_t y,
         } // Clip bottom
 
         uint16_t *fb = _framebuffer + ((int32_t)y * _width) + x;
-        while (h--)
+        if (_auto_flush)
         {
-          *fb = color;
-          Cache_WriteBack_Addr((uint32_t)fb, 2);
-          fb += _width;
+          while (h--)
+          {
+            *fb = color;
+            Cache_WriteBack_Addr((uint32_t)fb, 2);
+            fb += _width;
+          }
+        }
+        else
+        {
+          while (h--)
+          {
+            *fb = color;
+            fb += _width;
+          }
         }
       }
     }
   }
 }
 
-void Arduino_GC9503V_RGBPanel::writeFastHLine(int16_t x, int16_t y,
-                                              int16_t w, uint16_t color)
+void Arduino_RGB_Display::writeFastHLine(int16_t x, int16_t y,
+                                         int16_t w, uint16_t color)
 {
   if (_ordered_in_range(y, 0, _max_y) && w)
   { // Y on screen, nonzero width
@@ -120,14 +148,17 @@ void Arduino_GC9503V_RGBPanel::writeFastHLine(int16_t x, int16_t y,
         {
           *(fb++) = color;
         }
-        Cache_WriteBack_Addr(cachePos, writeSize);
+        if (_auto_flush)
+        {
+          Cache_WriteBack_Addr(cachePos, writeSize);
+        }
       }
     }
   }
 }
 
-void Arduino_GC9503V_RGBPanel::writeFillRectPreclipped(int16_t x, int16_t y,
-                                                       int16_t w, int16_t h, uint16_t color)
+void Arduino_RGB_Display::writeFillRectPreclipped(int16_t x, int16_t y,
+                                                  int16_t w, int16_t h, uint16_t color)
 {
   uint16_t *row = _framebuffer;
   row += y * _width;
@@ -141,11 +172,14 @@ void Arduino_GC9503V_RGBPanel::writeFillRectPreclipped(int16_t x, int16_t y,
     }
     row += _width;
   }
-  Cache_WriteBack_Addr(cachePos, _width * h * 2);
+  if (_auto_flush)
+  {
+    Cache_WriteBack_Addr(cachePos, _width * h * 2);
+  }
 }
 
-void Arduino_GC9503V_RGBPanel::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                                  uint16_t *bitmap, int16_t w, int16_t h)
+void Arduino_RGB_Display::draw16bitRGBBitmap(int16_t x, int16_t y,
+                                             uint16_t *bitmap, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -215,12 +249,15 @@ void Arduino_GC9503V_RGBPanel::draw16bitRGBBitmap(int16_t x, int16_t y,
         row += _width;
       }
     }
-    Cache_WriteBack_Addr(cachePos, _width * h * 2);
+    if (_auto_flush)
+    {
+      Cache_WriteBack_Addr(cachePos, _width * h * 2);
+    }
   }
 }
 
-void Arduino_GC9503V_RGBPanel::draw16bitBeRGBBitmap(int16_t x, int16_t y,
-                                                    uint16_t *bitmap, int16_t w, int16_t h)
+void Arduino_RGB_Display::draw16bitBeRGBBitmap(int16_t x, int16_t y,
+                                               uint16_t *bitmap, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -271,11 +308,22 @@ void Arduino_GC9503V_RGBPanel::draw16bitBeRGBBitmap(int16_t x, int16_t y,
       bitmap += xskip;
       row += _width;
     }
-    Cache_WriteBack_Addr(cachePos, _width * h * 2);
+    if (_auto_flush)
+    {
+      Cache_WriteBack_Addr(cachePos, _width * h * 2);
+    }
   }
 }
 
-uint16_t *Arduino_GC9503V_RGBPanel::getFramebuffer()
+void Arduino_RGB_Display::flush(void)
+{
+  if (!_auto_flush)
+  {
+    Cache_WriteBack_Addr((uint32_t)_framebuffer, _framebuffer_size);
+  }
+}
+
+uint16_t *Arduino_RGB_Display::getFramebuffer()
 {
   return _framebuffer;
 }
