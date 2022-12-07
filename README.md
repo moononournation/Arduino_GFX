@@ -328,6 +328,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * <https://github.com/gitcnd/LCDWIKI_SPI.git>
 * <https://github.com/hi631/LCD_NT35510-MRB3971.git>
 * <https://github.com/lcdwiki/LCDWIKI_SPI.git>
+* <https://github.com/Xinyuan-LilyGO/T-RGB.git>
 * <https://github.com/lovyan03/LovyanGFX.git>
 * <https://github.com/lovyan03/M5Stack_JpgLoopAnime.git>
 * <https://github.com/nopnop2002/esp-idf-parallel-tft.git>
