@@ -935,7 +935,6 @@ protected:
   uint16_t *_framebuffer;
   size_t _framebuffer_size;
   Arduino_ESP32RGBPanel *_rgbpanel;
-  uint8_t _r;
   bool _auto_flush;
   Arduino_DataBus *_bus;
   int8_t _rst;

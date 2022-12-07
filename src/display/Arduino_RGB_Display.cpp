@@ -8,10 +8,11 @@
 Arduino_RGB_Display::Arduino_RGB_Display(
     int16_t w, int16_t h, Arduino_ESP32RGBPanel *rgbpanel, uint8_t r, bool auto_flush,
     Arduino_DataBus *bus, int8_t rst, const uint8_t *init_operations, size_t init_operations_len)
-    : Arduino_GFX(w, h), _rgbpanel(rgbpanel), _r(r), _auto_flush(auto_flush),
+    : Arduino_GFX(w, h), _rgbpanel(rgbpanel), _auto_flush(auto_flush),
       _bus(bus), _rst(rst), _init_operations(init_operations), _init_operations_len(init_operations_len)
 {
   _framebuffer_size = w * h * 2;
+  _rotation = r;
 }
 
 void Arduino_RGB_Display::begin(int32_t speed)
