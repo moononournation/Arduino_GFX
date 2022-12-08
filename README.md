@@ -235,6 +235,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * Odroid Go
 * TTGO T-DISPLAY
 * TTGO T-DISPLAY-S3 [[demo video](https://youtu.be/kpRC64QNQAo)]
+* TTGO T-RGB [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
 * TTGO T-QT [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM?feature=share)]
 * TTGO T-Watch
 * wireless-tag WT-32-SC01
