@@ -210,6 +210,8 @@ Arduino_DataBus *bus = new Arduino_ESP32LCD8(
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 5 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */, 35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
 
 #elif defined(TTGO_T_RGB)
+#include <Wire.h>
+#define EXTRA_PRE_INIT() { Wire.begin(8 /* SDA */, 48 /* SCL */, 800000L /* spped */); }
 #define GFX_BL 46
 Arduino_DataBus *bus = new Arduino_XL9535SWSPI(8 /* SDA */, 48 /* SCL */, 2 /* XL PWD */, 3 /* XL CS */, 5 /* XL SCK */, 4 /* XL MOSI */);
 Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
@@ -221,7 +223,7 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     1 /* vsync_polarity */, 10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
-    bus, GFX_NOT_DEFINED /* RST */, st7701_type5_init_operations, sizeof(st7701_type5_init_operations));
+    bus, GFX_NOT_DEFINED /* RST */, st7701_type4_init_operations, sizeof(st7701_type4_init_operations));
 
 #elif defined(TTGO_T_QT)
 #define GFX_BL 10
@@ -602,6 +604,10 @@ void setup()
   // Serial.setDebugOutput(true);
   // while(!Serial);
   Serial.println("Arduino_GFX library Test!");
+
+#ifdef EXTRA_PRE_INIT
+  EXTRA_PRE_INIT();
+#endif
 
 #ifdef GFX_PWD
   pinMode(GFX_PWD, OUTPUT);
