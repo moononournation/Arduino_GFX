@@ -174,9 +174,8 @@ void setup(void)
   // while(!Serial);
   Serial.println("Arduino VNC");
 
-#ifdef GFX_PWD
-  pinMode(GFX_PWD, OUTPUT);
-  digitalWrite(GFX_PWD, HIGH);
+#ifdef GFX_EXTRA_PRE_INIT
+  GFX_EXTRA_PRE_INIT();
 #endif
 
   // Init touch device

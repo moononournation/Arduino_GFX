@@ -36,9 +36,8 @@ void setup()
   // while(!Serial);
   Serial.println("Arduino_GFX library Multiple Device Test!");
 
-#ifdef GFX_PWD
-  pinMode(GFX_PWD, OUTPUT);
-  digitalWrite(GFX_PWD, HIGH);
+#ifdef GFX_EXTRA_PRE_INIT
+  GFX_EXTRA_PRE_INIT();
 #endif
 
   gfx1->begin();

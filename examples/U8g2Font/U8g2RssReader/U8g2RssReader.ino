@@ -90,9 +90,8 @@ void setup(void)
   // Serial.setDebugOutput(true);
   Serial.println("U8g2 RSS Reader");
 
-#ifdef GFX_PWD
-  pinMode(GFX_PWD, OUTPUT);
-  digitalWrite(GFX_PWD, HIGH);
+#ifdef GFX_EXTRA_PRE_INIT
+  GFX_EXTRA_PRE_INIT();
 #endif
 
   Serial.println("Init display");

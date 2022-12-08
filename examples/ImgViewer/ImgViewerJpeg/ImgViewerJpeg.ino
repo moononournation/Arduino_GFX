@@ -104,9 +104,8 @@ void setup()
   // while(!Serial);
   Serial.println("JPEG Image Viewer");
 
-#ifdef GFX_PWD
-  pinMode(GFX_PWD, OUTPUT);
-  digitalWrite(GFX_PWD, HIGH);
+#ifdef GFX_EXTRA_PRE_INIT
+  GFX_EXTRA_PRE_INIT();
 #endif
 
   // Init Display

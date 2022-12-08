@@ -76,9 +76,8 @@ void setup()
   // while(!Serial);
   Serial.println("ESP WiFi Analyzer UTF8");
 
-#ifdef GFX_PWD
-  pinMode(GFX_PWD, OUTPUT);
-  digitalWrite(GFX_PWD, HIGH);
+#ifdef GFX_EXTRA_PRE_INIT
+  GFX_EXTRA_PRE_INIT();
 #endif
 
   // Set WiFi to station mode and disconnect from an AP if it was previously connected
