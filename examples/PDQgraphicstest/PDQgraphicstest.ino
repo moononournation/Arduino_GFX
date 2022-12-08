@@ -211,7 +211,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 5 /* RST */, 0 /* rotation */, true /
 
 #elif defined(TTGO_T_RGB)
 #include <Wire.h>
-#define EXTRA_PRE_INIT() { Wire.begin(8 /* SDA */, 48 /* SCL */, 800000L /* spped */); }
+#define EXTRA_PRE_INIT() { Wire.begin(8 /* SDA */, 48 /* SCL */, 800000L /* speed */); }
 #define GFX_BL 46
 Arduino_DataBus *bus = new Arduino_XL9535SWSPI(8 /* SDA */, 48 /* SCL */, 2 /* XL PWD */, 3 /* XL CS */, 5 /* XL SCK */, 4 /* XL MOSI */);
 Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
