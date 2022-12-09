@@ -315,7 +315,7 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 #define GFX_BL 22
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2)
 #define TFT_CS 34 // GFX_NOT_DEFINED for display without CS pin
-#define TFT_DC 35
+#define TFT_DC 38
 #define TFT_RST 33
 #define GFX_BL 21
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
