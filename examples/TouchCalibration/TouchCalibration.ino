@@ -143,8 +143,8 @@ void loop()
       Serial.printf("touched_x[1]: %d, touched_y[1]: %d\n", touched_x[1], touched_y[1]);
       Serial.printf("touched_x[2]: %d, touched_y[2]: %d\n", touched_x[2], touched_y[2]);
       Serial.printf("touched_x[3]: %d, touched_y[3]: %d\n", touched_x[3], touched_y[3]);
-      uint16_t delta_x = (touched_x[0] > touched_x[1]) ? (touched_x[0] - touched_x[1]) : (touched_x[1] > touched_x[0]);
-      uint16_t delta_y = (touched_y[0] > touched_y[1]) ? (touched_y[0] - touched_y[1]) : (touched_y[1] > touched_y[0]);
+      uint16_t delta_x = (touched_x[0] > touched_x[1]) ? (touched_x[0] - touched_x[1]) : (touched_x[1] - touched_x[0]);
+      uint16_t delta_y = (touched_y[0] > touched_y[1]) ? (touched_y[0] - touched_y[1]) : (touched_y[1] - touched_y[0]);
 
       if (delta_x > delta_y)
       {
