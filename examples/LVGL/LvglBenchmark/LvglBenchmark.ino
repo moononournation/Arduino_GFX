@@ -65,6 +65,11 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false 
  * End of Arduino_GFX setting
  ******************************************************************************/
 
+/*******************************************************************************
+ * Please config the touch panel in touch.h
+ ******************************************************************************/
+#include "touch.h"
+
 /* Change to your screen resolution */
 static uint32_t screenWidth;
 static uint32_t screenHeight;
@@ -89,6 +94,29 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
   lv_disp_flush_ready(disp);
 }
 
+void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
+{
+  if (touch_has_signal())
+  {
+    if (touch_touched())
+    {
+      data->state = LV_INDEV_STATE_PR;
+
+      /*Set the coordinates*/
+      data->point.x = touch_last_x;
+      data->point.y = touch_last_y;
+    }
+    else if (touch_released())
+    {
+      data->state = LV_INDEV_STATE_REL;
+    }
+  }
+  else
+  {
+    data->state = LV_INDEV_STATE_REL;
+  }
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -99,6 +127,9 @@ void setup()
 #ifdef GFX_EXTRA_PRE_INIT
   GFX_EXTRA_PRE_INIT();
 #endif
+
+  // Init touch device
+  touch_init(gfx->width(), gfx->height());
 
   // Init Display
   gfx->begin();
@@ -148,6 +179,7 @@ void setup()
     static lv_indev_drv_t indev_drv;
     lv_indev_drv_init(&indev_drv);
     indev_drv.type = LV_INDEV_TYPE_POINTER;
+    indev_drv.read_cb = my_touchpad_read;
     lv_indev_drv_register(&indev_drv);
 
     lv_demo_benchmark();

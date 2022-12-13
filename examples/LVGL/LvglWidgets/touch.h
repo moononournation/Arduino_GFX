@@ -1,9 +1,17 @@
 /*******************************************************************************
  * Touch libraries:
+ * CST816T: https://github.com/fbiego/CST816S/issues/1
  * FT6X36: https://github.com/strange-v/FT6X36.git
  * GT911: https://github.com/TAMCTec/gt911-arduino.git
  * XPT2046: https://github.com/PaulStoffregen/XPT2046_Touchscreen.git
  ******************************************************************************/
+
+/* uncomment for CST816T */
+// #define TOUCH_CST816T
+// #define TOUCH_CST816T_SCL 13
+// #define TOUCH_CST816T_SDA 10
+// #define TOUCH_CST816T_INT 11
+// #define TOUCH_CST816T_RST 12
 
 /* uncomment for FT6X36 */
 // #define TOUCH_FT6X36
@@ -40,7 +48,11 @@ int16_t touch_max_x = 0, touch_max_y = 0;
 int16_t touch_raw_x = 0, touch_raw_y = 0;
 int16_t touch_last_x = 0, touch_last_y = 0;
 
-#if defined(TOUCH_FT6X36)
+#if defined(TOUCH_CST816T)
+#include "CST816T.h"
+CST816T ts(TOUCH_CST816T_SDA, TOUCH_CST816T_SCL, TOUCH_CST816T_RST, TOUCH_CST816T_INT);
+
+#elif defined(TOUCH_FT6X36)
 #include <Wire.h>
 #include <FT6X36.h>
 FT6X36 ts(&Wire, TOUCH_FT6X36_INT);
@@ -109,7 +121,10 @@ void touch_init(int max_x, int max_y)
   touch_max_x = max_x;
   touch_max_y = max_y;
 
-#if defined(TOUCH_FT6X36)
+#if defined(TOUCH_CST816T)
+  ts.begin();
+
+#elif defined(TOUCH_FT6X36)
   Wire.begin(TOUCH_FT6X36_SDA, TOUCH_FT6X36_SCL);
   ts.begin();
   ts.registerTouchHandler(touch);
@@ -129,7 +144,10 @@ void touch_init(int max_x, int max_y)
 
 bool touch_has_signal()
 {
-#if defined(TOUCH_FT6X36)
+#if defined(TOUCH_CST816T)
+  return true;
+
+#elif defined(TOUCH_FT6X36)
   ts.loop();
   return touch_touched_flag || touch_released_flag;
 
@@ -146,7 +164,28 @@ bool touch_has_signal()
 
 bool touch_touched()
 {
-#if defined(TOUCH_FT6X36)
+#if defined(TOUCH_CST816T)
+  uint16_t touchX, touchY;
+  uint8_t gesture;
+  
+  if (ts.getTouch(&touchX, &touchY, &gesture))
+  {
+    touch_raw_x = touchX;
+    touch_raw_y = touchY;
+    if (touch_swap_xy)
+    {
+      touch_last_x = map(touch_raw_y, touch_map_x1, touch_map_x2, 0, touch_max_x);
+      touch_last_y = map(touch_raw_x, touch_map_y1, touch_map_y2, 0, touch_max_y);
+    }
+    else
+    {
+      touch_last_x = map(touch_raw_x, touch_map_x1, touch_map_x2, 0, touch_max_x);
+      touch_last_y = map(touch_raw_y, touch_map_y1, touch_map_y2, 0, touch_max_y);
+    }
+    return true;
+  }
+
+#elif defined(TOUCH_FT6X36)
   if (touch_touched_flag)
   {
     touch_touched_flag = false;
