@@ -227,7 +227,7 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     bus, GFX_NOT_DEFINED /* RST */, st7701_type4_init_operations, sizeof(st7701_type4_init_operations));
 
 #elif defined(TTGO_T_QT)
-#define GFX_BL 10
+#define GFX_EXTRA_PRE_INIT() { pinMode(10 /* BL */, OUTPUT); digitalWrite(10 /* BL */, LOW); }
 Arduino_DataBus *bus = new Arduino_ESP32SPI(6 /* DC */, 5 /* CS */, 3 /* SCK */, 2 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */);
 
