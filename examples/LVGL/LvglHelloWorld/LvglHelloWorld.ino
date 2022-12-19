@@ -139,7 +139,7 @@ void setup()
 
     /* Create simple label */
     lv_obj_t *label = lv_label_create(lv_scr_act());
-    lv_label_set_text(label, "Hello Arduino! (V8.0.X)");
+    lv_label_set_text(label, "Hello Arduino! (V" GFX_STR(LVGL_VERSION_MAJOR) "." GFX_STR(LVGL_VERSION_MINOR) "." GFX_STR(LVGL_VERSION_PATCH) ")");
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
     Serial.println("Setup done");

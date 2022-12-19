@@ -8,6 +8,8 @@
 #include <Arduino.h>
 
 #define GFX_NOT_DEFINED -1
+#define GFX_STR_HELPER(x) #x
+#define GFX_STR(x) GFX_STR_HELPER(x)
 
 #if defined(__AVR__)
 #define LITTLE_FOOT_PRINT // reduce program size for limited flash MCU
