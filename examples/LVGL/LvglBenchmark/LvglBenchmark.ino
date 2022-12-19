@@ -9,6 +9,10 @@
  * LVGL Configuration file:
  * Copy your_arduino_path/libraries/lvgl/lv_conf_template.h
  * to your_arduino_path/libraries/lv_conf.h
+ * 
+ * In lv_conf.h around line 15, enable config file:
+ * #if 1 // Set it to "1" to enable content
+ * 
  * Then find and set:
  * #define LV_COLOR_DEPTH     16
  * #define LV_TICK_CUSTOM     1
