@@ -234,11 +234,11 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * M5Stack Core Family
 * Makerfabs ESP32 3.5" TFT Touch with Camera
 * Odroid Go
-* TTGO T-DISPLAY
-* TTGO T-DISPLAY-S3 [[demo video](https://youtu.be/kpRC64QNQAo)]
-* TTGO T-RGB [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
-* TTGO T-QT [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM?feature=share)]
-* TTGO T-Watch
+* LILYGO T-DISPLAY
+* LILYGO T-DISPLAY-S3 [[demo video](https://youtu.be/kpRC64QNQAo)]
+* LILYGO T-RGB [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
+* LILYGO T-QT [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM?feature=share)]
+* LILYGO T-Watch
 * wireless-tag WT-32-SC01
 * Wio Terminal
 
@@ -281,9 +281,9 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * ST7735 128x128 (various tabs) [[demo video](https://youtu.be/6rueSV2Ee6c)]
 * ST7735 80x160 [[demo video](https://youtu.be/qESHDuYo_Mk)]
 * ST7701 (RGB) 480x480 [[demo video](https://youtube.com/shorts/JV8Rzxop5EQ)] [[2.1" round display demo video](https://youtube.com/shorts/WLWio1CjBoo?feature=share)] [[2.8" round display demo video](https://youtube.com/shorts/Ih_QlttWTVk?feature=share)]
-* ST7789 TTGO T-Display 135x240 [[demo video](https://youtu.be/Zk81_T8c20E)]
+* ST7789 135x240 [[demo video](https://youtu.be/Zk81_T8c20E)]
 * ST7789 240x240 [[demo video](https://youtu.be/Z27zYg5uAsk)]
-* ST7789 TTGO T-Watch 240x240 [[demo video](https://youtu.be/9AqsXMB8Qbk)]
+* ST7789 240x240 [[demo video](https://youtu.be/9AqsXMB8Qbk)]
 * ST7789 round corner display 240x280 [[demo video](https://youtu.be/KzDC02wg8z0)]
 * ST7789 240x320 [[demo video](https://youtu.be/ZEvc1LkuVuQ)]
 * ST7796 320x480 [[demo video](https://youtu.be/hUL-RuG4MAQ)]

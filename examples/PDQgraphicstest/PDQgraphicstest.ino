@@ -25,10 +25,10 @@
 // #define ESP32_S3_RGB
 // #define ESP32_S3_RPI_DPI
 // #define MAKERFABS_TFT_TOUCH_3_5
-// #define TTGO_T_DISPLAY
-// #define TTGO_T_DISPLAY_S3
-// #define TTGO_T_RGB
-// #define TTGO_T_QT
+// #define LILYGO_T_DISPLAY
+// #define LILYGO_T_DISPLAY_S3
+// #define LILYGO_T_RGB
+// #define LILYGO_T_QT
 // #define WT32_SC01
 // #define ZX3D50CE02S
 // #define ZX3D95CE01S_AR
@@ -196,12 +196,12 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 Arduino_DataBus *bus = new Arduino_ESP32SPI(33 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */, false /* IPS */);
 
-#elif defined(TTGO_T_DISPLAY)
+#elif defined(LILYGO_T_DISPLAY)
 #define GFX_BL 4
 Arduino_DataBus *bus = new Arduino_ESP32SPI(16 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 23 /* RST */, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 52 /* col offset 1 */, 40 /* row offset 1 */, 53 /* col offset 2 */, 40 /* row offset 2 */);
 
-#elif defined(TTGO_T_DISPLAY_S3)
+#elif defined(LILYGO_T_DISPLAY_S3)
 #define GFX_EXTRA_PRE_INIT() { pinMode(15 /* PWD */, OUTPUT); digitalWrite(15 /* PWD */, HIGH); }
 #define GFX_BL 38
 Arduino_DataBus *bus = new Arduino_ESP32LCD8(
@@ -209,7 +209,7 @@ Arduino_DataBus *bus = new Arduino_ESP32LCD8(
     39 /* D0 */, 40 /* D1 */, 41 /* D2 */, 42 /* D3 */, 45 /* D4 */, 46 /* D5 */, 47 /* D6 */, 48 /* D7 */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 5 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */, 35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
 
-#elif defined(TTGO_T_RGB)
+#elif defined(LILYGO_T_RGB)
 #include <Wire.h>
 #define GFX_EXTRA_PRE_INIT() { Wire.begin(8 /* SDA */, 48 /* SCL */, 800000L /* speed */); }
 #define GFX_BL 46
@@ -226,7 +226,7 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
     bus, GFX_NOT_DEFINED /* RST */, st7701_type4_init_operations, sizeof(st7701_type4_init_operations));
 
-#elif defined(TTGO_T_QT)
+#elif defined(LILYGO_T_QT)
 #define GFX_EXTRA_PRE_INIT() { pinMode(10 /* BL */, OUTPUT); digitalWrite(10 /* BL */, LOW); }
 Arduino_DataBus *bus = new Arduino_ESP32SPI(6 /* DC */, 5 /* CS */, 3 /* SCK */, 2 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */);
@@ -261,7 +261,7 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(21 /* DC */, 5 /* CS */, SCK, MOSI, 
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 3 /* rotation */);
 // Arduino_ST7789 *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 3 /* rotation */, true /* IPS */);
 
-/* TTGO T-Watch */
+/* LILYGO T-Watch */
 #elif defined(ARDUINO_T) || defined(ARDUINO_TWATCH_BASE) || defined(ARDUINO_TWATCH_2020_V1) || defined(ARDUINO_TWATCH_2020_V2)
 // #define GFX_BL 12
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
@@ -582,7 +582,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 // Arduino_GFX *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 240 /* width */, 280 /* height */, 0 /* col offset 1 */, 20 /* row offset 1 */, 0 /* col offset 2 */, 20 /* row offset 2 */);
 // 1.3"/1.5" square IPS LCD 240x240
 // Arduino_GFX *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
-// 1.14" IPS LCD 135x240 TTGO T-Display
+// 1.14" IPS LCD 135x240
 // Arduino_GFX *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 52 /* col offset 1 */, 40 /* row offset 1 */, 53 /* col offset 2 */, 40 /* row offset 2 */);
 
 // ST7796 LCD
