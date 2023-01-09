@@ -18,7 +18,7 @@ Arduino_TFT::Arduino_TFT(
   _rotation = r;
 }
 
-void Arduino_TFT::begin(int32_t speed)
+bool Arduino_TFT::begin(int32_t speed)
 {
   if (_override_datamode != GFX_NOT_DEFINED)
   {
@@ -32,6 +32,8 @@ void Arduino_TFT::begin(int32_t speed)
   tftInit();
   setRotation(_rotation); // apply the setting rotation to the display
   setAddrWindow(0, 0, _width, _height);
+
+  return true;
 }
 
 void Arduino_TFT::startWrite()

@@ -20,7 +20,7 @@ public:
   // and also protected function: tftInit()
   virtual void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) = 0;
 
-  void begin(int32_t speed = GFX_NOT_DEFINED);
+  bool begin(int32_t speed = GFX_NOT_DEFINED);
   void startWrite(void) override;
   void endWrite(void) override;
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;

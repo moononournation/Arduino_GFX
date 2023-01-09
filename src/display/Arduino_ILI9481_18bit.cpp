@@ -9,7 +9,7 @@ Arduino_ILI9481_18bit::Arduino_ILI9481_18bit(Arduino_DataBus *bus, int8_t rst, u
 {
 }
 
-void Arduino_ILI9481_18bit::begin(int32_t speed)
+bool Arduino_ILI9481_18bit::begin(int32_t speed)
 {
 #if defined(ESP8266) || defined(ESP32)
   if (speed == GFX_NOT_DEFINED)
@@ -23,7 +23,8 @@ void Arduino_ILI9481_18bit::begin(int32_t speed)
     speed = 12000000UL;
   }
 #endif
-  Arduino_TFT::begin(speed);
+
+  return Arduino_TFT::begin(speed);
 }
 
 // Companion code to the above tables.  Reads and issues
@@ -50,23 +51,23 @@ void Arduino_ILI9481_18bit::tftInit()
   _bus->sendCommand(ILI9481_SLPOUT);
   delay(280);
 
-  _bus->sendCommand(0xd0); //Power_Setting
-  _bus->sendData(0x07);    //07  VC[2:0] Sets the ratio factor of Vci to generate the reference voltages Vci1
-  _bus->sendData(0x44);    //41  BT[2:0] Sets the Step up factor and output voltage level from the reference voltages Vci1
-  _bus->sendData(0x1E);    //1f  17   1C  VRH[3:0]: Sets the factor to generate VREG1OUT from VCILVL
+  _bus->sendCommand(0xd0); // Power_Setting
+  _bus->sendData(0x07);    // 07  VC[2:0] Sets the ratio factor of Vci to generate the reference voltages Vci1
+  _bus->sendData(0x44);    // 41  BT[2:0] Sets the Step up factor and output voltage level from the reference voltages Vci1
+  _bus->sendData(0x1E);    // 1f  17   1C  VRH[3:0]: Sets the factor to generate VREG1OUT from VCILVL
   delay(220);
 
-  _bus->sendCommand(0xd1); //VCOM Control
-  _bus->sendData(0x00);    //00
-  _bus->sendData(0x0C);    //1A   VCM [6:0] is used to set factor to generate VCOMH voltage from the reference voltage VREG1OUT  15    09
-  _bus->sendData(0x1A);    //1F   VDV[4:0] is used to set the VCOM alternating amplitude in the range of VREG1OUT x 0.70 to VREG1OUT   1F   18
+  _bus->sendCommand(0xd1); // VCOM Control
+  _bus->sendData(0x00);    // 00
+  _bus->sendData(0x0C);    // 1A   VCM [6:0] is used to set factor to generate VCOMH voltage from the reference voltage VREG1OUT  15    09
+  _bus->sendData(0x1A);    // 1F   VDV[4:0] is used to set the VCOM alternating amplitude in the range of VREG1OUT x 0.70 to VREG1OUT   1F   18
 
-  _bus->sendCommand(0xC5); //Frame Rate
+  _bus->sendCommand(0xC5); // Frame Rate
   _bus->sendData(0x03);    // 03   02
 
-  _bus->sendCommand(0xd2); //Power_Setting for Normal Mode
-  _bus->sendData(0x01);    //01
-  _bus->sendData(0x11);    //11
+  _bus->sendCommand(0xd2); // Power_Setting for Normal Mode
+  _bus->sendData(0x01);    // 01
+  _bus->sendData(0x11);    // 11
 
   _bus->sendCommand(0xE4); //
   _bus->sendData(0xa0);
@@ -74,7 +75,7 @@ void Arduino_ILI9481_18bit::tftInit()
   _bus->sendData(0x00);
   _bus->sendData(0x2a);
 
-  //1  OK
+  // 1  OK
   _bus->sendCommand(0xc8);
   _bus->sendData(0x00);
   _bus->sendData(0x26);
@@ -88,18 +89,18 @@ void Arduino_ILI9481_18bit::tftInit()
   _bus->sendData(0x00);
   _bus->sendData(0x0f);
   _bus->sendData(0x00);
-  //GAMMA SETTING
+  // GAMMA SETTING
 
-  _bus->sendCommand(0xC0); //Panel Driving Setting
-  _bus->sendData(0x00);    //1//00  REV  SM  GS
-  _bus->sendData(0x3B);    //2//NL[5:0]: Sets the number of lines to drive the LCD at an interval of 8 lines.
-  _bus->sendData(0x00);    //3//SCN[6:0]
-  _bus->sendData(0x02);    //4//PTV: Sets the Vcom output in non-display area drive period
-  _bus->sendData(0x11);    //5//NDL: Sets the source output level in non-display area.  PTG: Sets the scan mode in non-display area.
+  _bus->sendCommand(0xC0); // Panel Driving Setting
+  _bus->sendData(0x00);    // 1//00  REV  SM  GS
+  _bus->sendData(0x3B);    // 2//NL[5:0]: Sets the number of lines to drive the LCD at an interval of 8 lines.
+  _bus->sendData(0x00);    // 3//SCN[6:0]
+  _bus->sendData(0x02);    // 4//PTV: Sets the Vcom output in non-display area drive period
+  _bus->sendData(0x11);    // 5//NDL: Sets the source output level in non-display area.  PTG: Sets the scan mode in non-display area.
 
-  _bus->sendCommand(0xc6); //Interface Control
+  _bus->sendCommand(0xc6); // Interface Control
   _bus->sendData(0x83);
-  //GAMMA SETTING
+  // GAMMA SETTING
 
   _bus->sendCommand(0xf0); //?
   _bus->sendData(0x01);
@@ -110,7 +111,7 @@ void Arduino_ILI9481_18bit::tftInit()
   _bus->sendCommand(ILI9481_PIXFMT);
   _bus->sendData(0x66);
 
-  _bus->sendCommand(0xb4); //Display Mode and Frame Memory Write Mode Setting
+  _bus->sendCommand(0xb4); // Display Mode and Frame Memory Write Mode Setting
   _bus->sendData(0x02);
   _bus->sendData(0x00); //
   _bus->sendData(0x00);

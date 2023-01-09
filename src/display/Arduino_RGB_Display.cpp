@@ -15,7 +15,7 @@ Arduino_RGB_Display::Arduino_RGB_Display(
   _rotation = r;
 }
 
-void Arduino_RGB_Display::begin(int32_t speed)
+bool Arduino_RGB_Display::begin(int32_t speed)
 {
   _rgbpanel->begin(speed);
 
@@ -53,6 +53,13 @@ void Arduino_RGB_Display::begin(int32_t speed)
   }
 
   _framebuffer = _rgbpanel->getFrameBuffer(WIDTH, HEIGHT);
+
+  if (!_framebuffer)
+  {
+    return false;
+  }
+
+  return true;
 }
 
 void Arduino_RGB_Display::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)

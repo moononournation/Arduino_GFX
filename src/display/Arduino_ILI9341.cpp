@@ -11,10 +11,11 @@ Arduino_ILI9341::Arduino_ILI9341(Arduino_DataBus *bus, int8_t rst, uint8_t r, bo
 {
 }
 
-void Arduino_ILI9341::begin(int32_t speed)
+bool Arduino_ILI9341::begin(int32_t speed)
 {
   _override_datamode = SPI_MODE0; // always use SPI_MODE0
-  Arduino_TFT::begin(speed);
+
+  return Arduino_TFT::begin(speed);
 }
 
 /**************************************************************************/

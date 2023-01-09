@@ -12,9 +12,9 @@ Arduino_SSD1331::Arduino_SSD1331(
 {
 }
 
-void Arduino_SSD1331::begin(int32_t speed)
+bool Arduino_SSD1331::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 // Companion code to the above tables.  Reads and issues

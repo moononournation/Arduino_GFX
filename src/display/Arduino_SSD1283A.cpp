@@ -13,7 +13,7 @@ Arduino_SSD1283A::Arduino_SSD1283A(
 {
 }
 
-void Arduino_SSD1283A::begin(int32_t speed)
+bool Arduino_SSD1283A::begin(int32_t speed)
 {
 #if defined(ESP8266) || defined(ESP32)
   if (speed == GFX_NOT_DEFINED)
@@ -27,7 +27,8 @@ void Arduino_SSD1283A::begin(int32_t speed)
     speed = 27000000UL;
   }
 #endif
-  Arduino_TFT::begin(speed);
+
+  return Arduino_TFT::begin(speed);
 }
 
 // Companion code to the above tables.  Reads and issues

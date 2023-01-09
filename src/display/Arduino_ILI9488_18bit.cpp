@@ -5,9 +5,9 @@ Arduino_ILI9488_18bit::Arduino_ILI9488_18bit(Arduino_DataBus *bus, int8_t rst, u
 {
 }
 
-void Arduino_ILI9488_18bit::begin(int32_t speed)
+bool Arduino_ILI9488_18bit::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 /**************************************************************************/

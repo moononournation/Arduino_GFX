@@ -9,9 +9,9 @@ Arduino_HX8369A::Arduino_HX8369A(
 {
 }
 
-void Arduino_HX8369A::begin(int32_t speed)
+bool Arduino_HX8369A::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 /**************************************************************************/

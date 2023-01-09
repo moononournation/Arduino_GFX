@@ -13,9 +13,9 @@ Arduino_HX8347C::Arduino_HX8347C(
   _invert = ips;
 }
 
-void Arduino_HX8347C::begin(int32_t speed)
+bool Arduino_HX8347C::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 // Companion code to the above tables.  Reads and issues
@@ -37,53 +37,53 @@ void Arduino_HX8347C::tftInit()
     // Software Rest
   }
 
-  //LCD Init For 3.0inch LCD Panel with HX8347C.
-  //Power Voltage Setting
+  // LCD Init For 3.0inch LCD Panel with HX8347C.
+  // Power Voltage Setting
   _bus->sendCommand(0x1A);
-  _bus->sendData(0x02); //BT
+  _bus->sendData(0x02); // BT
   _bus->sendCommand(0x1B);
-  _bus->sendData(0x8B); //VRH
+  _bus->sendData(0x8B); // VRH
   //****VCOM offset**///
   _bus->sendCommand(0x23);
-  _bus->sendData(0x00); //SEL_VCM
+  _bus->sendData(0x00); // SEL_VCM
   _bus->sendCommand(0x24);
-  _bus->sendData(0x5D); //VCM
+  _bus->sendData(0x5D); // VCM
   _bus->sendCommand(0x25);
-  _bus->sendData(0x15); //VDV
+  _bus->sendData(0x15); // VDV
   _bus->sendCommand(0x2D);
-  _bus->sendData(0x01); //NOW[2:0]=001
+  _bus->sendData(0x01); // NOW[2:0]=001
   //****OPON**//
   _bus->sendCommand(0xE8);
   _bus->sendData(0x60);
-  //Power on Setting
+  // Power on Setting
   _bus->sendCommand(0x18);
-  _bus->sendData(0x04); //Frame rate 72Hz
+  _bus->sendData(0x04); // Frame rate 72Hz
   _bus->sendCommand(0x19);
-  _bus->sendData(0x01); //OSC_EN='1', start Osc
+  _bus->sendData(0x01); // OSC_EN='1', start Osc
   _bus->sendCommand(0x01);
-  _bus->sendData(0x00); //DP_STB='0', out deep sleep
+  _bus->sendData(0x00); // DP_STB='0', out deep sleep
   _bus->sendCommand(0x1F);
-  _bus->sendData(0x88); //STB=0
+  _bus->sendData(0x88); // STB=0
   delay(5);
   _bus->sendCommand(0x1F);
-  _bus->sendData(0x80); //DK=0
+  _bus->sendData(0x80); // DK=0
   delay(5);
   _bus->sendCommand(0x1F);
-  _bus->sendData(0x90); //PON=1
+  _bus->sendData(0x90); // PON=1
   delay(5);
   _bus->sendCommand(0x1F);
-  _bus->sendData(0xD0); //VCOMG=1
+  _bus->sendData(0xD0); // VCOMG=1
   delay(5);
 
-  //262k/65k color selection
+  // 262k/65k color selection
   _bus->sendCommand(0x17);
-  _bus->sendData(0x05); //default 0x06 262k color // 0x05 65k color
-  //SET PANEL
+  _bus->sendData(0x05); // default 0x06 262k color // 0x05 65k color
+  // SET PANEL
   _bus->sendCommand(0x29);
-  _bus->sendData(0x31); //400 lines
+  _bus->sendData(0x31); // 400 lines
   _bus->sendCommand(0x71);
-  _bus->sendData(0x1A); //RTN
-  //Gamma 2.2 Setting
+  _bus->sendData(0x1A); // RTN
+  // Gamma 2.2 Setting
   _bus->sendCommand(0x40);
   _bus->sendData(0x00);
   _bus->sendCommand(0x41);
@@ -114,11 +114,11 @@ void Arduino_HX8347C::tftInit()
   _bus->sendData(0x00);
   _bus->sendCommand(0x4E);
   _bus->sendData(0x00);
-  //Set DGC
+  // Set DGC
   _bus->sendCommand(0xFF);
-  _bus->sendData(0x01); //Page1
+  _bus->sendData(0x01); // Page1
   _bus->sendCommand(0x00);
-  _bus->sendData(0x01); //DGC_EN
+  _bus->sendData(0x01); // DGC_EN
   _bus->sendCommand(0x01);
   _bus->sendData(0x00);
   _bus->sendCommand(0x02);
@@ -318,14 +318,14 @@ void Arduino_HX8347C::tftInit()
   _bus->sendCommand(0x63);
   _bus->sendData(0xFC);
   _bus->sendCommand(0xFF);
-  _bus->sendData(0x00); //Page0
-  //Display ON Setting
+  _bus->sendData(0x00); // Page0
+  // Display ON Setting
   _bus->sendCommand(0x28);
-  _bus->sendData(0x38); //GON=1, DTE=1, D=10
+  _bus->sendData(0x38); // GON=1, DTE=1, D=10
   delay(40);
   _bus->sendCommand(0x28);
-  _bus->sendData(0x3C);    //GON=1, DTE=1, D=11
-  _bus->sendCommand(0x22); //Start GRAM write
+  _bus->sendData(0x3C);    // GON=1, DTE=1, D=11
+  _bus->sendCommand(0x22); // Start GRAM write
 }
 
 void Arduino_HX8347C::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
@@ -411,12 +411,12 @@ void Arduino_HX8347C::invertDisplay(bool i)
 void Arduino_HX8347C::displayOn(void)
 {
   _bus->sendCommand(0x28);
-  _bus->sendData(0x3C); //GON=1, DTE=1, D=11
+  _bus->sendData(0x3C); // GON=1, DTE=1, D=11
 }
 
 void Arduino_HX8347C::displayOff(void)
 {
   _bus->sendCommand(0x28);
-  _bus->sendData(0x34); //GON=1, DTE=1, D=01
+  _bus->sendData(0x34); // GON=1, DTE=1, D=01
   delay(40);
 }

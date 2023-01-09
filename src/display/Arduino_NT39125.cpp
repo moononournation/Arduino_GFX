@@ -13,9 +13,9 @@ Arduino_NT39125::Arduino_NT39125(
 {
 }
 
-void Arduino_NT39125::begin(int32_t speed)
+bool Arduino_NT39125::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 void Arduino_NT39125::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)

@@ -13,9 +13,9 @@ Arduino_JBT6K71::Arduino_JBT6K71(
 {
 }
 
-void Arduino_JBT6K71::begin(int32_t speed)
+bool Arduino_JBT6K71::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 // Companion code to the above tables.  Reads and issues

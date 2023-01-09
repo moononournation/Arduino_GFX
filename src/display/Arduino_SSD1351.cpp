@@ -13,7 +13,7 @@ Arduino_SSD1351::Arduino_SSD1351(
 {
 }
 
-void Arduino_SSD1351::begin(int32_t speed)
+bool Arduino_SSD1351::begin(int32_t speed)
 {
 #if defined(ESP8266) || defined(ESP32)
   if (speed == GFX_NOT_DEFINED)
@@ -28,7 +28,8 @@ void Arduino_SSD1351::begin(int32_t speed)
   }
 #endif
   _override_datamode = SPI_MODE0; // always SPI_MODE0
-  Arduino_TFT::begin(speed);
+
+  return Arduino_TFT::begin(speed);
 }
 
 // Companion code to the above tables.  Reads and issues

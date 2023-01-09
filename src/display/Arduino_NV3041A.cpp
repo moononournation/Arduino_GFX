@@ -9,9 +9,9 @@ Arduino_NV3041A::Arduino_NV3041A(
 {
 }
 
-void Arduino_NV3041A::begin(int32_t speed)
+bool Arduino_NV3041A::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 /**************************************************************************/

@@ -9,10 +9,11 @@ Arduino_GC9107::Arduino_GC9107(
 {
 }
 
-void Arduino_GC9107::begin(int32_t speed)
+bool Arduino_GC9107::begin(int32_t speed)
 {
   _override_datamode = SPI_MODE0; // always use SPI_MODE0
-  Arduino_TFT::begin(speed);
+
+  return Arduino_TFT::begin(speed);
 }
 
 void Arduino_GC9107::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)

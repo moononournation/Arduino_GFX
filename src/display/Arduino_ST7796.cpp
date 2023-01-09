@@ -12,9 +12,9 @@ Arduino_ST7796::Arduino_ST7796(
 {
 }
 
-void Arduino_ST7796::begin(int32_t speed)
+bool Arduino_ST7796::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 /**************************************************************************/

@@ -105,7 +105,7 @@ public:
       bool ips = false, int16_t w = NT35510_TFTWIDTH, int16_t h = NT35510_TFTHEIGHT,
       uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
-  void begin(int32_t speed = GFX_NOT_DEFINED) override;
+  bool begin(int32_t speed = GFX_NOT_DEFINED) override;
 
   void setRotation(uint8_t r) override;
 

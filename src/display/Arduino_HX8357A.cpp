@@ -5,9 +5,9 @@ Arduino_HX8357A::Arduino_HX8357A(Arduino_DataBus *bus, int8_t rst, uint8_t r, bo
 {
 }
 
-void Arduino_HX8357A::begin(int32_t speed)
+bool Arduino_HX8357A::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 /**************************************************************************/

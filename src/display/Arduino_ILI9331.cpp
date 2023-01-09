@@ -11,9 +11,9 @@ Arduino_ILI9331::Arduino_ILI9331(Arduino_DataBus *bus, int8_t rst, uint8_t r, bo
 {
 }
 
-void Arduino_ILI9331::begin(int32_t speed)
+bool Arduino_ILI9331::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 /**************************************************************************/

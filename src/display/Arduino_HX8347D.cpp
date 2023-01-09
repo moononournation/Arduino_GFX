@@ -13,12 +13,13 @@ Arduino_HX8347D::Arduino_HX8347D(
 {
 }
 
-void Arduino_HX8347D::begin(int32_t speed)
+bool Arduino_HX8347D::begin(int32_t speed)
 {
 #if defined(__AVR__)
   _override_datamode = SPI_MODE0;
 #endif
-  Arduino_TFT::begin(speed);
+
+  return Arduino_TFT::begin(speed);
 }
 
 // Companion code to the above tables.  Reads and issues

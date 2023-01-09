@@ -12,9 +12,9 @@ Arduino_SEPS525::Arduino_SEPS525(
 {
 }
 
-void Arduino_SEPS525::begin(int32_t speed)
+bool Arduino_SEPS525::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 // Companion code to the above tables.  Reads and issues

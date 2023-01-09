@@ -10,9 +10,9 @@ Arduino_R61529::Arduino_R61529(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool
 {
 }
 
-void Arduino_R61529::begin(int32_t speed)
+bool Arduino_R61529::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 // Companion code to the above tables.  Reads and issues

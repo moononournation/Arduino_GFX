@@ -269,7 +269,7 @@ class Arduino_R61529 : public Arduino_TFT
 public:
   Arduino_R61529(Arduino_DataBus *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0, bool ips = false);
 
-  void begin(int32_t speed = GFX_NOT_DEFINED) override;
+  bool begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) override;
   void setRotation(uint8_t r) override;
   void invertDisplay(bool) override;

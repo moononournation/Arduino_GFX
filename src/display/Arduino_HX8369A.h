@@ -174,8 +174,7 @@ static const uint8_t hx8369a_init_operations_part1[] = {
     0x8C, 0xA4, 0x19, 0xEC,
     0x1B, 0x4C, 0x40,
 
-    WRITE_COMMAND_8, HX8369A_COLOUR_SET
-    };
+    WRITE_COMMAND_8, HX8369A_COLOUR_SET};
 
 static const uint8_t hx8369a_init_operations_part2[] = {
     WRITE_C8_D8, HX8369A_SET_TEAR_ON, 0x00,
@@ -199,7 +198,7 @@ public:
       int16_t w = HX8369A_TFTWIDTH, int16_t h = HX8369A_TFTHEIGHT,
       uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
-  void begin(int32_t speed = GFX_NOT_DEFINED) override;
+  bool begin(int32_t speed = GFX_NOT_DEFINED) override;
 
   void setRotation(uint8_t r) override;
 

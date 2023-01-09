@@ -8,7 +8,7 @@ Arduino_ILI9488_3bit::Arduino_ILI9488_3bit(Arduino_DataBus *bus, int8_t rst, uin
 {
 }
 
-void Arduino_ILI9488_3bit::begin(int32_t speed)
+bool Arduino_ILI9488_3bit::begin(int32_t speed)
 {
   _bus->begin(speed);
 
@@ -64,6 +64,8 @@ void Arduino_ILI9488_3bit::begin(int32_t speed)
   _bus->beginWrite();
   _bus->writeC8D8(ILI9488_MADCTL, r);
   _bus->endWrite();
+
+  return true;
 }
 
 void Arduino_ILI9488_3bit::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)

@@ -118,7 +118,7 @@ public:
       uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0,
       bool bgr = true);
 
-  void begin(int32_t speed = GFX_NOT_DEFINED) override;
+  bool begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) override;
   void setRotation(uint8_t r) override;
   void invertDisplay(bool) override;

@@ -12,9 +12,9 @@ Arduino_NT35510::Arduino_NT35510(
 {
 }
 
-void Arduino_NT35510::begin(int32_t speed)
+bool Arduino_NT35510::begin(int32_t speed)
 {
-  Arduino_TFT::begin(speed);
+  return Arduino_TFT::begin(speed);
 }
 
 /**************************************************************************/
@@ -161,30 +161,30 @@ void Arduino_NT35510::tftInit()
   WriteRegM(0xD600, sizeof(ini20), ini20); // B+ B-
   //
   uint8_t ini21[] = {0x55, 0xAA, 0x52, 0x08, 0x00};
-  WriteRegM(0xF000, sizeof(ini21), ini21); //#Enable Page0
+  WriteRegM(0xF000, sizeof(ini21), ini21); // #Enable Page0
   uint8_t ini22[] = {0x08, 0x05, 0x02, 0x05, 0x02};
-  WriteRegM(0xB000, sizeof(ini22), ini22); //# RGB I/F Setting
+  WriteRegM(0xB000, sizeof(ini22), ini22); // # RGB I/F Setting
   _bus->writeCommand16(0xB600);
   _bus->write16(0x08);
   _bus->writeCommand16(0xB500);
-  _bus->write16(0x50); //## SDT: //0x6b ?? 480x854  0x50 ?? 480x800
+  _bus->write16(0x50); // ## SDT: //0x6b ?? 480x854  0x50 ?? 480x800
   uint8_t ini24[] = {0x00, 0x00};
-  WriteRegM(0xB700, sizeof(ini24), ini24); //## Gate EQ:
+  WriteRegM(0xB700, sizeof(ini24), ini24); // ## Gate EQ:
   uint8_t ini25[] = {0x01, 0x05, 0x05, 0x05};
-  WriteRegM(0xB800, sizeof(ini25), ini25); //## Source EQ:
+  WriteRegM(0xB800, sizeof(ini25), ini25); // ## Source EQ:
   uint8_t ini26[] = {0x00, 0x00, 0x00};
-  WriteRegM(0xBC00, sizeof(ini26), ini26); //# Inversion: Column inversion (NVT)
+  WriteRegM(0xBC00, sizeof(ini26), ini26); // # Inversion: Column inversion (NVT)
   uint8_t ini27[] = {0x03, 0x00, 0x00};
-  WriteRegM(0xCC00, sizeof(ini27), ini27); //# BOE's Setting(default)
+  WriteRegM(0xCC00, sizeof(ini27), ini27); // # BOE's Setting(default)
   uint8_t ini28[] = {0x01, 0x84, 0x07, 0x31, 0x00, 0x01};
-  WriteRegM(0xBD00, sizeof(ini28), ini28); //# Display Timing:
+  WriteRegM(0xBD00, sizeof(ini28), ini28); // # Display Timing:
   //
   uint8_t ini30[] = {0xAA, 0x55, 0x25, 0x01};
   WriteRegM(0xFF00, sizeof(ini30), ini30);
   _bus->writeCommand16(NT35510_TEON);
   _bus->write16(0x00);
   _bus->writeCommand16(NT35510_COLMOD);
-  _bus->write16(0x55); //0x55=16bit Mode
+  _bus->write16(0x55); // 0x55=16bit Mode
   _bus->writeCommand16(NT35510_SLPOUT);
   _bus->endWrite();
 
