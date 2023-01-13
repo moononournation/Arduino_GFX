@@ -63,7 +63,9 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
       .data_gpio_nums = {
           _d0, _d1, _d2, _d3, _d4, _d5, _d6, _d7},
       .bus_width = 8,
-      .max_transfer_bytes = 2};
+      .max_transfer_bytes = 2,
+      .psram_trans_align = 0,
+      .sram_trans_align = 0};
   esp_lcd_new_i80_bus(&bus_config, &_i80_bus);
 
   uint32_t diff = INT32_MAX;

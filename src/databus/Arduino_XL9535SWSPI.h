@@ -46,11 +46,12 @@ protected:
   uint8_t readRegister(uint8_t reg, uint8_t *data, uint8_t len);
 
   uint8_t _address;
-  TwoWire *_wire;
   bool is_found;
 
-private:
   int8_t _sda, _scl, _pwd, _cs, _sck, _mosi;
+  TwoWire *_wire;
+
+private:
 };
 
 #endif // _ARDUINO_XL9535SWSPI_H_
