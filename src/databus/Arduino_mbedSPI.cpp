@@ -11,7 +11,7 @@ Arduino_mbedSPI::Arduino_mbedSPI(int8_t dc, int8_t cs /* = GFX_NOT_DEFINED */)
 {
 }
 
-void Arduino_mbedSPI::begin(int32_t speed, int8_t dataMode)
+bool Arduino_mbedSPI::begin(int32_t speed, int8_t dataMode)
 {
   _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
   _dataMode = (dataMode == GFX_NOT_DEFINED) ? SPI_MODE2 : dataMode;
@@ -37,6 +37,8 @@ void Arduino_mbedSPI::begin(int32_t speed, int8_t dataMode)
     _dataMode = SPI_MODE0;
   }
   _dev = new mbed::SPI((PinName)SPI_MOSI, (PinName)SPI_MISO, (PinName)SPI_SCK);
+
+  return true;
 }
 
 void Arduino_mbedSPI::beginWrite()

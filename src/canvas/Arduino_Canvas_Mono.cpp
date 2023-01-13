@@ -11,7 +11,10 @@ Arduino_Canvas_Mono::Arduino_Canvas_Mono(int16_t w, int16_t h, Arduino_G *output
 
 bool Arduino_Canvas_Mono::begin(int32_t speed)
 {
-  _output->begin(speed);
+  if (!_output->begin(speed))
+  {
+    return false;
+  }
 
   size_t s = (_width + 7) / 8 * _height;
 #if defined(ESP32)

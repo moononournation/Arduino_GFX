@@ -12,7 +12,10 @@ Arduino_Canvas::Arduino_Canvas(
 
 bool Arduino_Canvas::begin(int32_t speed)
 {
-  _output->begin(speed);
+  if (!_output->begin(speed))
+  {
+    return false;
+  }
 
   size_t s = _width * _height * 2;
 #if defined(ESP32)

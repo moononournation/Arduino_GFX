@@ -18,7 +18,7 @@ Arduino_ESP32LCD16::Arduino_ESP32LCD16(
 {
 }
 
-void Arduino_ESP32LCD16::begin(int32_t speed, int8_t dataMode)
+bool Arduino_ESP32LCD16::begin(int32_t speed, int8_t dataMode)
 {
   if (speed == GFX_NOT_DEFINED)
   {
@@ -134,6 +134,8 @@ void Arduino_ESP32LCD16::begin(int32_t speed, int8_t dataMode)
 
   _dma_chan = _i80_bus->dma_chan;
   _dmadesc = (dma_descriptor_t *)heap_caps_malloc(sizeof(dma_descriptor_t), MALLOC_CAP_DMA);
+
+  return true;
 }
 
 void Arduino_ESP32LCD16::beginWrite()

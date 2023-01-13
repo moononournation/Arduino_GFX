@@ -8,7 +8,7 @@ Arduino_SWPAR8::Arduino_SWPAR8(
 {
 }
 
-void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
+bool Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
 {
   UNUSED(speed);
   UNUSED(dataMode);
@@ -490,6 +490,8 @@ void Arduino_SWPAR8::begin(int32_t speed, int8_t dataMode)
   _d7PinMaskClr = ~_d7PinMaskSet;
 #endif // !HAS_PORT_SET_CLR
 #endif // USE_FAST_PINIO
+
+  return true;
 }
 
 void Arduino_SWPAR8::beginWrite()

@@ -10,7 +10,7 @@ class Arduino_STM32PAR8 : public Arduino_DataBus
 public:
   Arduino_STM32PAR8(int8_t dc, int8_t cs, int8_t wr, int8_t rd, GPIO_TypeDef* port); // Constructor
 
-  void begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = GFX_NOT_DEFINED) override;
+  bool begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = GFX_NOT_DEFINED) override;
   void beginWrite() override;
   void endWrite() override;
   void writeCommand(uint8_t) override;

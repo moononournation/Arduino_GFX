@@ -14,7 +14,7 @@ Arduino_ESP8266SPI::Arduino_ESP8266SPI(int8_t dc, int8_t cs /* = GFX_NOT_DEFINED
 {
 }
 
-void Arduino_ESP8266SPI::begin(int32_t speed, int8_t dataMode)
+bool Arduino_ESP8266SPI::begin(int32_t speed, int8_t dataMode)
 {
   _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
   _dataMode = (dataMode == GFX_NOT_DEFINED) ? SPI_MODE0 : dataMode;
@@ -45,6 +45,8 @@ void Arduino_ESP8266SPI::begin(int32_t speed, int8_t dataMode)
   SPI.setBitOrder(MSBFIRST);
   SPI.setDataMode(_dataMode);
   SPI.setFrequency(_speed);
+
+  return true;
 }
 
 void Arduino_ESP8266SPI::beginWrite()

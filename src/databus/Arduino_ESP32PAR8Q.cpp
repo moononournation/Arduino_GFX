@@ -10,7 +10,7 @@ Arduino_ESP32PAR8Q::Arduino_ESP32PAR8Q(
 {
 }
 
-void Arduino_ESP32PAR8Q::begin(int32_t speed, int8_t dataMode)
+bool Arduino_ESP32PAR8Q::begin(int32_t speed, int8_t dataMode)
 {
   UNUSED(speed);
   UNUSED(dataMode);
@@ -118,6 +118,8 @@ void Arduino_ESP32PAR8Q::begin(int32_t speed, int8_t dataMode)
     }
   }
   GPIO.out_w1tc = _dataClrMask;
+
+  return true;
 }
 
 void Arduino_ESP32PAR8Q::beginWrite()

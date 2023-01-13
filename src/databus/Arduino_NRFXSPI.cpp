@@ -11,7 +11,7 @@ Arduino_NRFXSPI::Arduino_NRFXSPI(int8_t dc, int8_t cs /* = GFX_NOT_DEFINED */, i
 {
 }
 
-void Arduino_NRFXSPI::begin(int32_t speed, int8_t dataMode)
+bool Arduino_NRFXSPI::begin(int32_t speed, int8_t dataMode)
 {
   _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
   _dataMode = (dataMode == GFX_NOT_DEFINED) ? SPI_MODE2 : dataMode;
@@ -96,6 +96,8 @@ void Arduino_NRFXSPI::begin(int32_t speed, int8_t dataMode)
 
   // init SPI
   nrfx_spi_init(&_nrfxSpi, &_nrfxSpiConfig, NULL, NULL);
+
+  return true;
 }
 
 void Arduino_NRFXSPI::beginWrite()

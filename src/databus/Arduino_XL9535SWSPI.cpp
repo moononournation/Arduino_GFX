@@ -5,7 +5,7 @@ Arduino_XL9535SWSPI::Arduino_XL9535SWSPI(int8_t sda, int8_t scl, int8_t pwd, int
 {
 }
 
-void Arduino_XL9535SWSPI::begin(int32_t speed, int8_t dataMode)
+bool Arduino_XL9535SWSPI::begin(int32_t speed, int8_t dataMode)
 {
   UNUSED(speed);
   UNUSED(dataMode);
@@ -35,6 +35,8 @@ void Arduino_XL9535SWSPI::begin(int32_t speed, int8_t dataMode)
     Serial.println("xl9535 not found");
     is_found = false;
   }
+
+  return true;
 }
 
 void Arduino_XL9535SWSPI::beginWrite()

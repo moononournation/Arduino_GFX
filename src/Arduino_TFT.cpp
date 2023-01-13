@@ -22,11 +22,17 @@ bool Arduino_TFT::begin(int32_t speed)
 {
   if (_override_datamode != GFX_NOT_DEFINED)
   {
-    _bus->begin(speed, _override_datamode);
+    if (!_bus->begin(speed, _override_datamode))
+    {
+      return false;
+    }
   }
   else
   {
-    _bus->begin(speed);
+    if (!_bus->begin(speed))
+    {
+      return false;
+    }
   }
 
   tftInit();

@@ -21,7 +21,10 @@ bool Arduino_RGB_Display::begin(int32_t speed)
 
   if (_bus)
   {
-    _bus->begin();
+    if (!_bus->begin())
+    {
+      return false;
+    }
   }
 
   if (_rst != GFX_NOT_DEFINED)

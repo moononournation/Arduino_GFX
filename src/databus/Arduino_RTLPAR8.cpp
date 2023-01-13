@@ -11,7 +11,7 @@ Arduino_RTLPAR8::Arduino_RTLPAR8(
 {
 }
 
-void Arduino_RTLPAR8::begin(int32_t speed, int8_t dataMode)
+bool Arduino_RTLPAR8::begin(int32_t speed, int8_t dataMode)
 {
   UNUSED(speed);
   UNUSED(dataMode);
@@ -108,6 +108,8 @@ void Arduino_RTLPAR8::begin(int32_t speed, int8_t dataMode)
     }
   }
   _dataPinMaskClr = ~_xset_mask[255];
+
+  return true;
 }
 
 void Arduino_RTLPAR8::beginWrite()

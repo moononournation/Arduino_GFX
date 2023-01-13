@@ -7,7 +7,7 @@ Arduino_ESP32S2PAR8Q::Arduino_ESP32S2PAR8Q(int8_t dc, int8_t cs, int8_t wr, int8
 {
 }
 
-void Arduino_ESP32S2PAR8Q::begin(int32_t speed, int8_t dataMode)
+bool Arduino_ESP32S2PAR8Q::begin(int32_t speed, int8_t dataMode)
 {
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
@@ -77,6 +77,8 @@ void Arduino_ESP32S2PAR8Q::begin(int32_t speed, int8_t dataMode)
   _dataPortSet = (PORTreg_t)&GPIO.out_w1ts;
   _dataPortClr = (PORTreg_t)&GPIO.out_w1tc;
   *_dataPortClr = _dataClrMask;
+
+  return true;
 }
 
 void Arduino_ESP32S2PAR8Q::beginWrite()

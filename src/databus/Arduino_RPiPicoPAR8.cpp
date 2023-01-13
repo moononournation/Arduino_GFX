@@ -7,7 +7,7 @@ Arduino_RPiPicoPAR8::Arduino_RPiPicoPAR8(int8_t dc, int8_t cs, int8_t wr, int8_t
 {
 }
 
-void Arduino_RPiPicoPAR8::begin(int32_t speed, int8_t dataMode)
+bool Arduino_RPiPicoPAR8::begin(int32_t speed, int8_t dataMode)
 {
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
@@ -38,6 +38,8 @@ void Arduino_RPiPicoPAR8::begin(int32_t speed, int8_t dataMode)
   pinMode(6, OUTPUT);
   pinMode(7, OUTPUT);
   sio_hw->gpio_clr = 0xFF;
+
+  return true;
 }
 
 void Arduino_RPiPicoPAR8::beginWrite()

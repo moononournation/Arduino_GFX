@@ -7,7 +7,7 @@ Arduino_STM32PAR8::Arduino_STM32PAR8(int8_t dc, int8_t cs, int8_t wr, int8_t rd,
 {
 }
 
-void Arduino_STM32PAR8::begin(int32_t speed, int8_t dataMode)
+bool Arduino_STM32PAR8::begin(int32_t speed, int8_t dataMode)
 {
   UNUSED(speed);
   UNUSED(dataMode);
@@ -45,6 +45,8 @@ void Arduino_STM32PAR8::begin(int32_t speed, int8_t dataMode)
 
   *(portModeRegister(_port)) = 0x33333333; // Set data port to output at max speed
   _port->BSRR = 0xFF << 16;                // Clear data port
+
+  return true;
 }
 
 void Arduino_STM32PAR8::beginWrite()

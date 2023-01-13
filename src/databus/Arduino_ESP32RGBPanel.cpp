@@ -20,7 +20,7 @@ Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
 {
 }
 
-void Arduino_ESP32RGBPanel::begin(int32_t speed)
+bool Arduino_ESP32RGBPanel::begin(int32_t speed)
 {
   if (speed == GFX_NOT_DEFINED)
   {
@@ -34,6 +34,8 @@ void Arduino_ESP32RGBPanel::begin(int32_t speed)
   {
     _speed = speed;
   }
+
+  return true;
 }
 
 uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)

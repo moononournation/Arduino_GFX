@@ -8,7 +8,7 @@ Arduino_RPiPicoSPI::Arduino_RPiPicoSPI(int8_t dc /* = GFX_NOT_DEFINED */, int8_t
 {
 }
 
-void Arduino_RPiPicoSPI::begin(int32_t speed /* = 0 */, int8_t dataMode /* = GFX_NOT_DEFINED */)
+bool Arduino_RPiPicoSPI::begin(int32_t speed /* = 0 */, int8_t dataMode /* = GFX_NOT_DEFINED */)
 {
   // set SPI parameters
   _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
@@ -42,6 +42,8 @@ void Arduino_RPiPicoSPI::begin(int32_t speed /* = 0 */, int8_t dataMode /* = GFX
 
   spi_init(_spi, _spis.getClockFreq());
   spi_set_format(_spi, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
+
+  return true;
 }
 
 void Arduino_RPiPicoSPI::beginWrite()

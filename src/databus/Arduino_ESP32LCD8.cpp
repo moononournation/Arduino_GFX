@@ -16,7 +16,7 @@ Arduino_ESP32LCD8::Arduino_ESP32LCD8(
 {
 }
 
-void Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
+bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
 {
   if (speed == GFX_NOT_DEFINED)
   {
@@ -125,6 +125,8 @@ void Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
   lcd_clock.clk_en = true;
 
   LCD_CAM.lcd_clock.val = lcd_clock.val;
+
+  return true;
 }
 
 void Arduino_ESP32LCD8::beginWrite()

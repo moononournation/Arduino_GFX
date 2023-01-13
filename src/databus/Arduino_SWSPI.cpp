@@ -9,7 +9,7 @@ Arduino_SWSPI::Arduino_SWSPI(int8_t dc, int8_t cs, int8_t sck, int8_t mosi, int8
 {
 }
 
-void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
+bool Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
 {
   UNUSED(speed);
   UNUSED(dataMode);
@@ -252,6 +252,8 @@ void Arduino_SWSPI::begin(int32_t speed, int8_t dataMode)
   }
 #endif // !HAS_PORT_SET_CLR
 #endif // USE_FAST_PINIO
+
+  return true;
 }
 
 void Arduino_SWSPI::beginWrite()

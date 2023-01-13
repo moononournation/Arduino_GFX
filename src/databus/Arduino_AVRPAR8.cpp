@@ -7,7 +7,7 @@ Arduino_AVRPAR8::Arduino_AVRPAR8(int8_t dc, int8_t cs, int8_t wr, int8_t rd, uin
 {
 }
 
-void Arduino_AVRPAR8::begin(int32_t speed, int8_t dataMode)
+bool Arduino_AVRPAR8::begin(int32_t speed, int8_t dataMode)
 {
   UNUSED(speed);
   UNUSED(dataMode);
@@ -54,6 +54,8 @@ void Arduino_AVRPAR8::begin(int32_t speed, int8_t dataMode)
 
   _dataPort = portOutputRegister(_port);
   *_dataPort = 0xFF;
+
+  return true;
 }
 
 void Arduino_AVRPAR8::beginWrite()

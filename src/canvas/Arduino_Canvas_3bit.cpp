@@ -11,7 +11,10 @@ Arduino_Canvas_3bit::Arduino_Canvas_3bit(int16_t w, int16_t h, Arduino_G *output
 
 bool Arduino_Canvas_3bit::begin(int32_t speed)
 {
-  _output->begin(speed);
+  if (!_output->begin(speed))
+  {
+    return false;
+  }
 
   size_t s = (_width * _height + 1) / 2;
 #if defined(ESP32)
