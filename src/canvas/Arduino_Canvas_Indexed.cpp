@@ -130,6 +130,11 @@ void Arduino_Canvas_Indexed::flush()
   _output->drawIndexedBitmap(_output_x, _output_y, _framebuffer, _color_index, _width, _height);
 }
 
+uint8_t *Arduino_Canvas_Indexed::getFramebuffer()
+{
+  return _framebuffer;
+}
+
 uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)
 {
   color &= _color_mask;

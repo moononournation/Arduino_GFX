@@ -56,4 +56,9 @@ void Arduino_Canvas_Mono::flush()
   _output->drawBitmap(_output_x, _output_y, _framebuffer, _width, _height, WHITE, BLACK);
 }
 
+uint8_t *Arduino_Canvas_Mono::getFramebuffer()
+{
+  return _framebuffer;
+}
+
 #endif // !defined(LITTLE_FOOT_PRINT)

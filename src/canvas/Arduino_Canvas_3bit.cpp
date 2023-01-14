@@ -59,4 +59,9 @@ void Arduino_Canvas_3bit::flush()
   _output->draw3bitRGBBitmap(_output_x, _output_y, _framebuffer, _width, _height);
 }
 
+uint8_t *Arduino_Canvas_3bit::getFramebuffer()
+{
+  return _framebuffer;
+}
+
 #endif // !defined(LITTLE_FOOT_PRINT)

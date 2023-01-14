@@ -19,6 +19,8 @@ public:
   void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
   void flush(void) override;
 
+  uint8_t *getFramebuffer();
+
   uint8_t get_color_index(uint16_t color);
   uint16_t get_index_color(uint8_t idx);
   void raise_mask_level();

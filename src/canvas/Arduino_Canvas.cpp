@@ -243,4 +243,9 @@ void Arduino_Canvas::flush()
   _output->draw16bitRGBBitmap(_output_x, _output_y, _framebuffer, _width, _height);
 }
 
+uint16_t *Arduino_Canvas::getFramebuffer()
+{
+  return _framebuffer;
+}
+
 #endif // !defined(LITTLE_FOOT_PRINT)
