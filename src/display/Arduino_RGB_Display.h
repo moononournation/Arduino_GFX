@@ -770,10 +770,9 @@ static const uint8_t st7701_type5_init_operations[] = {
     WRITE_COMMAND_8, 0xFF,
     WRITE_BYTES, 5, 0x77, 0x01, 0x00, 0x00, 0x00,
 
-    WRITE_C8_D8, 0x36, 0x00,
+    WRITE_C8_D8, 0x36, 0x08,
     WRITE_C8_D8, 0x3A, 0x60, // 0x70 RGB888, 0x60 RGB666, 0x50 RGB565
 
-    // WRITE_COMMAND_8, 0x21,   //Display Inversion On
     WRITE_COMMAND_8, 0x11, // Sleep Out
     END_WRITE,
 
