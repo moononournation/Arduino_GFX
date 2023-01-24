@@ -31,6 +31,7 @@
 // #define LILYGO_T_RGB
 // #define LILYGO_T_QT
 // #define WT32_SC01
+// #define ZX2D10GE01R_V4848
 // #define ZX3D50CE02S
 // #define ZX3D95CE01S_AR
 #if defined(ESP32_1732S019)
@@ -295,6 +296,23 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 3 /* rota
 // #define GFX_BL 12
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 5 /* CS */, 18 /* SCK */, 19 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */, 240, 240, 0, 80);
+
+#elif defined(ZX2D10GE01R_V4848)
+#define GFX_BL 38
+Arduino_DataBus *bus = new Arduino_SWSPI(
+    GFX_NOT_DEFINED /* DC */, 21 /* CS */,
+    47 /* SCK */, 41 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    39 /* DE */, 48 /* VSYNC */, 40 /* HSYNC */, 45 /* PCLK */,
+    10 /* R0 */, 16 /* R1 */, 9 /* R2 */, 15 /* R3 */, 46 /* R4 */,
+    8 /* G0 */, 13 /* G1 */, 18 /* G2 */, 12 /* G3 */, 11 /* G4 */, 17 /* G5 */,
+    47 /* B0 */, 41 /* B1 */, 0 /* B2 */, 42 /* B3 */, 14 /* B4 */,
+    1 /* hsync_polarity */, 10 /* hsync_front_porch */, 10 /* hsync_pulse_width */, 10 /* hsync_back_porch */,
+    1 /* vsync_polarity */, 14 /* vsync_front_porch */, 2 /* vsync_pulse_width */, 12 /* vsync_back_porch */,
+    0 /* pclk_active_neg */, 15000000 /* prefer_speed */);
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+    480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
+    bus, GFX_NOT_DEFINED /* RST */, st7701_type7_init_operations, sizeof(st7701_type7_init_operations));
 
 #elif defined(ZX3D50CE02S)
 #define GFX_BL 45
