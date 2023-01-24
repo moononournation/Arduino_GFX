@@ -17,8 +17,6 @@ Arduino_RGB_Display::Arduino_RGB_Display(
 
 bool Arduino_RGB_Display::begin(int32_t speed)
 {
-  _rgbpanel->begin(speed);
-
   if (_bus)
   {
     if (!_bus->begin())
@@ -55,6 +53,7 @@ bool Arduino_RGB_Display::begin(int32_t speed)
     }
   }
 
+  _rgbpanel->begin(speed);
   _framebuffer = _rgbpanel->getFrameBuffer(WIDTH, HEIGHT);
 
   if (!_framebuffer)
