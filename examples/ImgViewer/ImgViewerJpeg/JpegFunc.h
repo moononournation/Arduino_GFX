@@ -18,7 +18,7 @@ static void *jpegOpenFile(const char *szFilename, int32_t *pFileSize)
     // Serial.println("jpegOpenFile");
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
     _f = SD.open(szFilename, "r");
-#elif defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
+#elif defined(TARGET_RP2040)
     _f = LittleFS.open(szFilename, "r");
     // _f = SDFS.open(szFilename, "r");
 #elif defined(ESP32)

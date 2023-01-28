@@ -1,4 +1,4 @@
-#if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
+#if defined(TARGET_RP2040)
 
 #ifndef _ARDUINO_RPIPICOSPI_H_
 #define _ARDUINO_RPIPICOSPI_H_
@@ -65,4 +65,4 @@ private:
 };
 
 #endif // _ARDUINO_RPIPICOSPI_H_
-#endif // #if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
+#endif // #if defined(TARGET_RP2040)

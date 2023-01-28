@@ -1,4 +1,4 @@
-#if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
+#if defined(TARGET_RP2040)
 
 #include "Arduino_DataBus.h"
 #include "Arduino_RPiPicoSPI.h"
@@ -224,4 +224,4 @@ INLINE void Arduino_RPiPicoSPI::CS_LOW(void)
   }
 }
 
-#endif // #if defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
+#endif // #if defined(TARGET_RP2040)
