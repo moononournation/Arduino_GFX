@@ -64,6 +64,9 @@ static const uint8_t st7789_init_operations[] = {
     WRITE_C8_D8, ST7789_COLMOD, 0x55, // 3: Set color mode, 16-bit color
     WRITE_C8_D8, 0x36, 0x00,
 
+    WRITE_COMMAND_8, 0xB0,
+    WRITE_BYTES, 2, 0x00, 0xF0, // 0xF0 MSB first, 0xF8 LSB first
+
     WRITE_COMMAND_8, 0xB2,
     WRITE_BYTES, 5, 0x0C, 0x0C, 0x00, 0x33, 0x33,
 
