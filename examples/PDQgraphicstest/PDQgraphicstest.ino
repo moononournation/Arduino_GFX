@@ -30,6 +30,7 @@
 // #define LILYGO_T_DISPLAY_S3
 // #define LILYGO_T_RGB
 // #define LILYGO_T_QT
+// #define LILYGO_T_WATCH_2021
 // #define WT32_SC01
 // #define ZX2D10GE01R_V4848
 // #define ZX3D50CE02S
@@ -260,6 +261,11 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
   }
 Arduino_DataBus *bus = new Arduino_ESP32SPI(6 /* DC */, 5 /* CS */, 3 /* SCK */, 2 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(LILYGO_T_WATCH_2021)
+#define GFX_BL 21
+Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_GC9A01(bus, 27 /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(WT32_SC01)
 #define GFX_BL 23
