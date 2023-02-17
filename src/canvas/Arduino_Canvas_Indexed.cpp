@@ -45,7 +45,14 @@ bool Arduino_Canvas_Indexed::begin(int32_t speed)
 
 void Arduino_Canvas_Indexed::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
-  _framebuffer[((int32_t)y * _width) + x] = get_color_index(color);
+  if (_isDirectUseColorIndex)
+  {
+    _framebuffer[((int32_t)y * _width) + x] = (uint8_t)color;
+  }
+  else
+  {
+    _framebuffer[((int32_t)y * _width) + x] = get_color_index(color);
+  }
 }
 
 void Arduino_Canvas_Indexed::writeFastVLine(int16_t x, int16_t y,
@@ -74,7 +81,15 @@ void Arduino_Canvas_Indexed::writeFastVLine(int16_t x, int16_t y,
           h = _max_y - y + 1;
         } // Clip bottom
 
-        uint8_t idx = get_color_index(color);
+        uint8_t idx;
+        if (_isDirectUseColorIndex)
+        {
+          idx = color;
+        }
+        else
+        {
+          idx = get_color_index(color);
+        }
 
         uint8_t *fb = _framebuffer + ((int32_t)y * _width) + x;
         while (h--)
@@ -113,7 +128,15 @@ void Arduino_Canvas_Indexed::writeFastHLine(int16_t x, int16_t y,
           w = _max_x - x + 1;
         } // Clip right
 
-        uint8_t idx = get_color_index(color);
+        uint8_t idx;
+        if (_isDirectUseColorIndex)
+        {
+          idx = color;
+        }
+        else
+        {
+          idx = get_color_index(color);
+        }
 
         uint8_t *fb = _framebuffer + ((int32_t)y * _width) + x;
         while (w--)
@@ -133,6 +156,16 @@ void Arduino_Canvas_Indexed::flush()
 uint8_t *Arduino_Canvas_Indexed::getFramebuffer()
 {
   return _framebuffer;
+}
+
+uint16_t *Arduino_Canvas_Indexed::getColorIndex()
+{
+  return _color_index;
+}
+
+void Arduino_Canvas_Indexed::setDirectUseColorIndex(bool isEnable)
+{
+  _isDirectUseColorIndex = isEnable;
 }
 
 uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)

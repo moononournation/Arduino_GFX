@@ -20,6 +20,8 @@ public:
   void flush(void) override;
 
   uint8_t *getFramebuffer();
+  uint16_t *getColorIndex();
+  void setDirectUseColorIndex(bool isEnable);
 
   uint8_t get_color_index(uint16_t color);
   uint16_t get_index_color(uint8_t idx);
@@ -31,6 +33,8 @@ protected:
   int16_t _output_x, _output_y;
   uint16_t _color_index[COLOR_IDX_SIZE];
   uint8_t _indexed_size = 0;
+  bool _isDirectUseColorIndex = false;
+
   uint8_t _current_mask_level;
   uint16_t _color_mask;
 #define MAXMASKLEVEL 3
