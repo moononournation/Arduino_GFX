@@ -7,6 +7,7 @@
 
 #include <Arduino.h>
 
+#define GFX_SKIP_OUTPUT_BEGIN -2
 #define GFX_NOT_DEFINED -1
 #define GFX_STR_HELPER(x) #x
 #define GFX_STR(x) GFX_STR_HELPER(x)

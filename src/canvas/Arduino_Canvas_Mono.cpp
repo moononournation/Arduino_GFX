@@ -11,9 +11,12 @@ Arduino_Canvas_Mono::Arduino_Canvas_Mono(int16_t w, int16_t h, Arduino_G *output
 
 bool Arduino_Canvas_Mono::begin(int32_t speed)
 {
-  if (!_output->begin(speed))
+  if (speed != GFX_SKIP_OUTPUT_BEGIN)
   {
-    return false;
+    if (!_output->begin(speed))
+    {
+      return false;
+    }
   }
 
   size_t s = (_width + 7) / 8 * _height;

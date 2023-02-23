@@ -12,9 +12,12 @@ Arduino_Canvas::Arduino_Canvas(
 
 bool Arduino_Canvas::begin(int32_t speed)
 {
-  if (!_output->begin(speed))
+  if (speed != GFX_SKIP_OUTPUT_BEGIN)
   {
-    return false;
+    if (!_output->begin(speed))
+    {
+      return false;
+    }
   }
 
   size_t s = _width * _height * 2;

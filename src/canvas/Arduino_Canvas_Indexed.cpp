@@ -17,9 +17,12 @@ Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *
 
 bool Arduino_Canvas_Indexed::begin(int32_t speed)
 {
-  if (!_output->begin(speed))
+  if (speed != GFX_SKIP_OUTPUT_BEGIN)
   {
-    return false;
+    if (!_output->begin(speed))
+    {
+      return false;
+    }
   }
 
   size_t s = _width * _height;
