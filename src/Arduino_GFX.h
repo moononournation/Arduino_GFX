@@ -27,27 +27,49 @@
 #include "font/u8g2_font_unifont_t_cjk.h"
 #endif
 
+#define RGB565(r, g, b) ((((r)&0xF8) << 8) | (((g)&0xFC) << 3) | ((b) >> 3))
+
+#define RGB565_BLACK RGB565(0, 0, 0)
+#define RGB565_NAVY RGB565(0, 0, 123)
+#define RGB565_DARKGREEN RGB565(0, 125, 0)
+#define RGB565_DARKCYAN RGB565(0, 125, 123)
+#define RGB565_MAROON RGB565(123, 0, 0)
+#define RGB565_PURPLE RGB565(123, 0, 123)
+#define RGB565_OLIVE RGB565(123, 125, 0)
+#define RGB565_LIGHTGREY RGB565(198, 195, 198)
+#define RGB565_DARKGREY RGB565(123, 125, 123)
+#define RGB565_BLUE RGB565(0, 0, 255)
+#define RGB565_GREEN RGB565(0, 255, 0)
+#define RGB565_CYAN RGB565(0, 255, 255)
+#define RGB565_RED RGB565(255, 0, 0)
+#define RGB565_MAGENTA RGB565(255, 0, 255)
+#define RGB565_YELLOW RGB565(255, 255, 0)
+#define RGB565_WHITE RGB565(255, 255, 255)
+#define RGB565_ORANGE RGB565(255, 165, 0)
+#define RGB565_GREENYELLOW RGB565(173, 255, 41)
+#define RGB565_PINK RGB565(255, 130, 198)
+
 // Color definitions
 #ifndef DISABLE_COLOR_DEFINES
-#define BLACK 0x0000       ///<   0,   0,   0
-#define NAVY 0x000F        ///<   0,   0, 123
-#define DARKGREEN 0x03E0   ///<   0, 125,   0
-#define DARKCYAN 0x03EF    ///<   0, 125, 123
-#define MAROON 0x7800      ///< 123,   0,   0
-#define PURPLE 0x780F      ///< 123,   0, 123
-#define OLIVE 0x7BE0       ///< 123, 125,   0
-#define LIGHTGREY 0xC618   ///< 198, 195, 198
-#define DARKGREY 0x7BEF    ///< 123, 125, 123
-#define BLUE 0x001F        ///<   0,   0, 255
-#define GREEN 0x07E0       ///<   0, 255,   0
-#define CYAN 0x07FF        ///<   0, 255, 255
-#define RED 0xF800         ///< 255,   0,   0
-#define MAGENTA 0xF81F     ///< 255,   0, 255
-#define YELLOW 0xFFE0      ///< 255, 255,   0
-#define WHITE 0xFFFF       ///< 255, 255, 255
-#define ORANGE 0xFD20      ///< 255, 165,   0
-#define GREENYELLOW 0xAFE5 ///< 173, 255,  41
-#define PINK 0xFC18        ///< 255, 130, 198
+#define BLACK RGB565_BLACK
+#define NAVY RGB565_NAVY
+#define DARKGREEN RGB565_DARKGREEN
+#define DARKCYAN RGB565_DARKCYAN
+#define MAROON RGB565_MAROON
+#define PURPLE RGB565_PURPLE
+#define OLIVE RGB565_OLIVE
+#define LIGHTGREY RGB565_LIGHTGREY
+#define DARKGREY RGB565_DARKGREY
+#define BLUE RGB565_BLUE
+#define GREEN RGB565_GREEN
+#define CYAN RGB565_CYAN
+#define RED RGB565_RED
+#define MAGENTA RGB565_MAGENTA
+#define YELLOW RGB565_YELLOW
+#define WHITE RGB565_WHITE
+#define ORANGE RGB565_ORANGE
+#define GREENYELLOW RGB565_GREENYELLOW
+#define PINK RGB565_PINK
 #endif
 
 // Many (but maybe not all) non-AVR board installs define macros
