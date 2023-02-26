@@ -32,7 +32,7 @@
 // #define LILYGO_T_QT
 // #define LILYGO_T_WATCH_2021
 // #define WT32_SC01
-// #define ZX2D10GE01R_V4848
+// #define ZX2D10GE10R_V4848
 // #define ZX3D50CE02S
 // #define ZX3D95CE01S_AR
 #if defined(ESP32_1732S019)
@@ -309,7 +309,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotat
 Arduino_DataBus *bus = new Arduino_RPiPicoSPI(8 /* DC */, 9 /* CS */, 10 /* SCK */, 11 /* MOSI */, 12 /* MISO */, spi1 /* spi */);
 Arduino_GFX *gfx = new Arduino_GC9A01(bus, 12, 0 /* rotation */, true /* IPS */);
 
-#elif defined(ZX2D10GE01R_V4848)
+#elif defined(ZX2D10GE10R_V4848)
 #define GFX_BL 38
 Arduino_DataBus *bus = new Arduino_SWSPI(
     GFX_NOT_DEFINED /* DC */, 21 /* CS */,
