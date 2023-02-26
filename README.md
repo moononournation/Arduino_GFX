@@ -222,24 +222,31 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 ## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
 
-* ESP32 LCDKIT
-* [[ESP32-1732S019](https://www.aliexpress.com/item/1005005059421229.html)] [[demo video](https://youtube.com/shorts/VS4Qb3g2dWk)] [[LVGL demo video](https://youtu.be/V5xib6OnWiM)]
+* [ESP32-1732S019](https://www.aliexpress.com/item/1005005059421229.html) [[demo video](https://youtube.com/shorts/VS4Qb3g2dWk)] [[LVGL demo video](https://youtu.be/V5xib6OnWiM)]
+* ESP32-2432S028
+* ESP32-3248S035
 * ESP32-4827A043 [[demo video](https://youtu.be/pd1DTW9QHkg)] [[LVGL demo video](https://youtu.be/L8iYjiy-DUI)]
-* [[ESP32-4827S043](https://www.aliexpress.com/item/1005004788147691.html)] [[demo video](https://youtu.be/60rl7QoU4Sc)] [[LVGL demo video](https://youtu.be/VvpILAVyPt8)]
-* [[ESP32-8048S070](https://www.aliexpress.com/item/1005004952726089.html)] [[LVGL demo video](https://youtu.be/7BRGVsnQpgE)]
-* ESP32-S3-EYE
-* ESP32-S3-Box
-* ESP32-S3-RGB [[LVGL demo video](https://youtu.be/d11yUvjh34A)]
-* ESPboy [[demo video](https://youtu.be/Cx82XWrc8-0)]
-* M5Stack Core Family
-* Makerfabs ESP32 3.5" TFT Touch with Camera
-* Odroid Go
-* LILYGO T-DISPLAY
-* LILYGO T-DISPLAY-S3 [[demo video](https://youtu.be/kpRC64QNQAo)]
-* LILYGO T-RGB [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
-* LILYGO T-QT [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM?feature=share)]
-* LILYGO T-Watch
-* wireless-tag WT-32-SC01
+* [ESP32-4827S043](https://www.aliexpress.com/item/1005004788147691.html) [[demo video](https://youtu.be/60rl7QoU4Sc)] [[LVGL demo video](https://youtu.be/VvpILAVyPt8)]
+* [ESP32-8048S070](https://www.aliexpress.com/item/1005004952726089.html) [[LVGL demo video](https://youtu.be/7BRGVsnQpgE)]
+* [ESP32 LCDKIT](https://docs.espressif.com/projects/espressif-esp-dev-kits/en/latest/esp32/esp32-lcdkit/user_guide.html)
+* [ESP32-S3-EYE](https://github.com/espressif/esp-who/blob/master/docs/en/get-started/ESP32-S3-EYE_Getting_Started_Guide.md)
+* [ESP32-S3-Box](https://www.espressif.com/en/news/ESP32-S3-BOX_video)
+* [ESP32-S3-RGB](https://github.com/W00ng/ESP32-S3-RGB-Panel) [[LVGL demo video](https://youtu.be/d11yUvjh34A)]
+* ESP32S3-2.1-TP
+* [ESPboy](https://www.espboy.com) [[demo video](https://youtu.be/Cx82XWrc8-0)]
+* [M5Stack Core Family](https://shop.m5stack.com/collections/m5-controllers/CORE)
+* [Makerfabs ESP32 3.5" TFT Touch with Camera](https://www.makerfabs.com/esp32-3.5-inch-tft-touch-capacitive-with-camera.html)
+* [Odroid Go](https://www.hardkernel.com/shop/odroid-go/)
+* [LILYGO T-DISPLAY](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
+* [LILYGO T-DISPLAY-S3](https://www.lilygo.cc/products/t-display-s3) [[demo video](https://youtu.be/kpRC64QNQAo)]
+* [LILYGO T-RGB](https://www.lilygo.cc/products/t-rgb) [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
+* [LILYGO T-QT](https://www.lilygo.cc/products/t-qt-v1-1) [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM?feature=share)]
+* [LILYGO T-Watch](http://www.lilygo.cn/prod_view.aspx?TypeId=50053&Id=1123)
+* [LILYGO T-Watch 2021](https://www.lilygo.cc/products/t-watch-2021)
+* [wireless-tag WT-32-SC01](http://www.wireless-tag.com/portfolio/wt32-sc01/)
+* [wireless-tag ZX2D10GE10R-V4848](https://github.com/wireless-tag-com/ZX2D10GE01R-V4848)
+* [wireless-tag ZX3D50CE02S](https://github.com/wireless-tag-com/ZX3D50CE02S)
+* [wireless-tag ZX3D95CE01S-AR](https://github.com/wireless-tag-com/ZX3D95CE01S-AR-4848)
 * Wio Terminal
 
 ## Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
