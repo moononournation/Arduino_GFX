@@ -234,20 +234,21 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [ESP32-S3-RGB](https://github.com/W00ng/ESP32-S3-RGB-Panel) [[LVGL demo video](https://youtu.be/d11yUvjh34A)]
 * ESP32S3-2.1-TP
 * [ESPboy](https://www.espboy.com) [[demo video](https://youtu.be/Cx82XWrc8-0)]
-* [M5Stack Core Family](https://shop.m5stack.com/collections/m5-controllers/CORE)
-* [Makerfabs ESP32 3.5" TFT Touch with Camera](https://www.makerfabs.com/esp32-3.5-inch-tft-touch-capacitive-with-camera.html)
-* [Odroid Go](https://www.hardkernel.com/shop/odroid-go/)
 * [LILYGO T-DISPLAY](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
 * [LILYGO T-DISPLAY-S3](https://www.lilygo.cc/products/t-display-s3) [[demo video](https://youtu.be/kpRC64QNQAo)]
 * [LILYGO T-RGB](https://www.lilygo.cc/products/t-rgb) [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
 * [LILYGO T-QT](https://www.lilygo.cc/products/t-qt-v1-1) [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM?feature=share)]
 * [LILYGO T-Watch](http://www.lilygo.cn/prod_view.aspx?TypeId=50053&Id=1123)
 * [LILYGO T-Watch 2021](https://www.lilygo.cc/products/t-watch-2021)
+* [M5Stack Core Family](https://shop.m5stack.com/collections/m5-controllers/CORE)
+* [Makerfabs ESP32 3.5" TFT Touch with Camera](https://www.makerfabs.com/esp32-3.5-inch-tft-touch-capacitive-with-camera.html)
+* [Odroid Go](https://www.hardkernel.com/shop/odroid-go/)
+* [seeed studio Wio Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
+* [Waveshare RP2040-LCD-1.28](https://www.waveshare.com/wiki/RP2040-LCD-1.28)
 * [wireless-tag WT-32-SC01](http://www.wireless-tag.com/portfolio/wt32-sc01/)
 * [wireless-tag ZX2D10GE10R-V4848](https://github.com/wireless-tag-com/ZX2D10GE01R-V4848)
 * [wireless-tag ZX3D50CE02S](https://github.com/wireless-tag-com/ZX3D50CE02S)
 * [wireless-tag ZX3D95CE01S-AR](https://github.com/wireless-tag-com/ZX3D95CE01S-AR-4848)
-* Wio Terminal
 
 ## Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
 
