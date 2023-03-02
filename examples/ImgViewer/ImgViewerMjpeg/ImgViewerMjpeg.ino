@@ -85,6 +85,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 #include <LittleFS.h>
 #include <SPIFFS.h>
 #include <SD.h>
+#include <SD_MMC.h>
 #elif defined(ESP8266)
 #include <LittleFS.h>
 #include <SD.h>
@@ -144,6 +145,10 @@ void setup()
   if (!LittleFS.begin())
   // if (!SPIFFS.begin())
   // if (!SD.begin(SS))
+  // pinMode(10 /* CS */, OUTPUT);
+  // digitalWrite(10 /* CS */, HIGH);
+  // SD_MMC.setPins(12 /* CLK */, 11 /* CMD/MOSI */, 13 /* D0/MISO */);
+  // if (!SD_MMC.begin("/root", true))
 #elif defined(ESP8266)
   if (!LittleFS.begin())
   // if (!SD.begin(SS))
@@ -166,6 +171,7 @@ void setup()
     File mjpegFile = LittleFS.open(MJPEG_FILENAME, "r");
     // File mjpegFile = SPIFFS.open(MJPEG_FILENAME, "r");
     // File mjpegFile = SD.open(MJPEG_FILENAME, "r");
+    // File mjpegFile = SD_MMC.open(MJPEG_FILENAME, "r");
 #elif defined(ESP8266)
     File mjpegFile = LittleFS.open(MJPEG_FILENAME, "r");
     // File mjpegFile = SD.open(MJPEG_FILENAME, "r");

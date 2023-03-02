@@ -26,6 +26,7 @@ static void *jpegOpenFile(const char *szFilename, int32_t *pFileSize)
     _f = LittleFS.open(szFilename, "r");
     // _f = SPIFFS.open(szFilename, "r");
     // _f = SD.open(szFilename, "r");
+    // _f = SD_MMC.open(szFilename, "r");
 #elif defined(ESP8266)
     _f = LittleFS.open(szFilename, "r");
     // _f = SD.open(szFilename, "r");
