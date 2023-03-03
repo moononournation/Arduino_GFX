@@ -242,6 +242,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [LILYGO T-Watch 2021](https://www.lilygo.cc/products/t-watch-2021)
 * [M5Stack Core Family](https://shop.m5stack.com/collections/m5-controllers/CORE)
 * [Makerfabs ESP32 3.5" TFT Touch with Camera](https://www.makerfabs.com/esp32-3.5-inch-tft-touch-capacitive-with-camera.html)
+* [Makerfabs ESP32-S3 TFT 4.0"](https://www.makerfabs.com/esp32-s3-parallel-tft-with-touch-4-inch.html) [[demo video](https://youtu.be/Fmxd-Xu97C8)]
 * [Makerfabs ESP32-S3 TFT 4.3" v1.3](https://www.makerfabs.com/esp32-s3-parallel-tft-with-touch-4-3-inch.html) [[demo video](https://youtu.be/oQ57L2gTHoo)]
 * [Odroid Go](https://www.hardkernel.com/shop/odroid-go/)
 * [seeed studio Wio Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
