@@ -799,7 +799,7 @@ static const uint8_t st7701_type6_init_operations[] = {
 
     WRITE_C8_D16, 0xC2, 0x07, 0x0A,
 
-    WRITE_C8_D8, 0xC7, 0x04,
+    WRITE_C8_D8, 0xC7, 0x00,
 
     WRITE_C8_D8, 0xCC, 0x10,
 
