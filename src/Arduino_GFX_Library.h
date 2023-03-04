@@ -121,6 +121,18 @@
 #define DF_GFX_DC 27
 #define DF_GFX_RST GFX_NOT_DEFINED
 #define DF_GFX_BL 12
+/* Waveshare RP2040-LCD-1.28 */
+#elif defined(ARDUINO_WAVESHARE_RP2040_LCD_1_28)
+#define DISPLAY_DEV_KIT
+#define WAVESHARE_RP2040_LCD_1_28
+#define DF_GFX_SCK 10
+#define DF_GFX_MOSI 11
+#define DF_GFX_MISO 12
+#define DF_GFX_CS 9
+#define DF_GFX_DC 8
+#define DF_GFX_RST 12
+#define DF_GFX_BL 25
+#define DF_GFX_SPI spi1
 #elif defined(ARDUINO_ARCH_NRF52840)
 #define DF_GFX_SCK 13
 #define DF_GFX_MOSI 11
@@ -154,6 +166,7 @@
 #define DF_GFX_DC 27
 #define DF_GFX_RST 26
 #define DF_GFX_BL 28
+#define DF_GFX_SPI spi0
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
 #define DF_GFX_SCK 18
 #define DF_GFX_MOSI 23

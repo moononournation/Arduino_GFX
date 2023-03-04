@@ -376,7 +376,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotat
 #elif defined(ARDUINO_WAVESHARE_RP2040_LCD_1_28)
 #define GFX_BL 25
 Arduino_DataBus *bus = new Arduino_RPiPicoSPI(8 /* DC */, 9 /* CS */, 10 /* SCK */, 11 /* MOSI */, 12 /* MISO */, spi1 /* spi */);
-Arduino_GFX *gfx = new Arduino_GC9A01(bus, 12, 0 /* rotation */, true /* IPS */);
+Arduino_GFX *gfx = new Arduino_GC9A01(bus, 12 /* RST */, 0 /* rotation */, true /* IPS */);
 
 #else /* not selected specific hardware */
 
