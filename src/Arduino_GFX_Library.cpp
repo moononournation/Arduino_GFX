@@ -78,14 +78,35 @@ void gfx_draw_bitmap_to_framebuffer(
     uint16_t *row = framebuffer;
     row += y * framebuffer_w;
     row += x;
-    for (int j = 0; j < bitmap_h; j++)
+    if (((framebuffer_w & 1) == 0) && ((xskip & 1) == 0) && ((bitmap_w & 1) == 0))
     {
-      for (int i = 0; i < bitmap_w; i++)
+      uint32_t *row2 = (uint32_t *)row;
+      uint32_t *from_bitmap2 = (uint32_t *)from_bitmap;
+      int16_t framebuffer_w2 = framebuffer_w >> 1;
+      int16_t xskip2 = xskip >> 1;
+      int16_t w2 = bitmap_w >> 1;
+
+      for (int16_t j = 0; j < bitmap_h; j++)
       {
-        row[i] = *from_bitmap++;
+        for (int16_t i = 0; i < w2; i++)
+        {
+          row2[i] = *from_bitmap2++;
+        }
+        from_bitmap2 += xskip2;
+        row2 += framebuffer_w2;
       }
-      from_bitmap += xskip;
-      row += framebuffer_w;
+    }
+    else
+    {
+      for (int j = 0; j < bitmap_h; j++)
+      {
+        for (int i = 0; i < bitmap_w; i++)
+        {
+          row[i] = *from_bitmap++;
+        }
+        from_bitmap += xskip;
+        row += framebuffer_w;
+      }
     }
   }
 }
