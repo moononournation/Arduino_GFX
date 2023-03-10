@@ -35,7 +35,7 @@
 // #define MAKERFABS_ESP32_S3_TFT_4_3_v1_3
 // #define WT32_SC01
 // #define ZX2D10GE10R_V4848
-// #define ZX3D50CE02S
+// #define ZX3D50CE02S // or called "WT32-SC01 PLUS"
 // #define ZX3D95CE01S_AR
 #if defined(ESP32_1732S019)
 #define GFX_BL 14
