@@ -56,9 +56,9 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
   _panel_config->timings.vsync_front_porch = _vsync_front_porch;
   _panel_config->timings.flags.hsync_idle_low = (_hsync_polarity == 0) ? 1 : 0;
   _panel_config->timings.flags.vsync_idle_low = (_vsync_polarity == 0) ? 1 : 0;
-  _panel_config->timings.flags.de_idle_high = 0;
+  _panel_config->timings.flags.de_idle_high = 1;
   _panel_config->timings.flags.pclk_active_neg = _pclk_active_neg;
-  _panel_config->timings.flags.pclk_idle_high = 0;
+  _panel_config->timings.flags.pclk_idle_high = 1;
 
   _panel_config->data_width = 16; // RGB565 in parallel mode, thus 16bit in width
   _panel_config->sram_trans_align = 8;
