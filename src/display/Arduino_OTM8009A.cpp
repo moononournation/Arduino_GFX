@@ -118,132 +118,128 @@ void Arduino_OTM8009A::tftInit()
 
   //************* OTM8009A**********//
   _bus->beginWrite();
- //3.97inch OTM8009 Init 20190116
-	/* Enter CMD2 */
+  // 3.97inch OTM8009 Init 20190116
+  /* Enter CMD2 */
   uint8_t ini01[] = {0x80, 0x09, 0x01, 0x01};
   WriteRegM(0xFF00, sizeof(ini01), ini01);
-	/* Enter Orise Command2 */
+  /* Enter Orise Command2 */
   uint8_t ini02[] = {0x80, 0x09};
   WriteRegM(0xFF80, sizeof(ini02), ini02);
 
-	/* Command not documented */
-	_bus->writeCommand16(0xf5b6); 
-	_bus->write16(0x06); //??
+  /* Command not documented */
+  _bus->writeCommand16(0xf5b6);
+  _bus->write16(0x06); //??
 
-	/* Source Driver Precharge Control */
+  /* Source Driver Precharge Control */
   uint8_t ini03[] = {0x30, 0x83};
   WriteRegM(0xC480, sizeof(ini03), ini03);
 
-	/* Command not documented: 0xC48A */
-	_bus->writeCommand16(0xC48A); 
-	_bus->write16(0x40); 
-	
-	/* Source Driver Timing Setting */
-	_bus->writeCommand16(0xC0A2 + 1);
-	_bus->write16(0x1B);
+  /* Command not documented: 0xC48A */
+  _bus->writeCommand16(0xC48A);
+  _bus->write16(0x40);
 
-	/* Command not documented */
-	_bus->writeCommand16(0xc0ba); //--> (0xc0b4); // column inversion //  2013.12.16 modify
-	_bus->write16(0x50); 
+  /* Source Driver Timing Setting */
+  _bus->writeCommand16(0xC0A2 + 1);
+  _bus->write16(0x1B);
 
-	/* Oscillator Adjustment for Idle/Normal mode */
-	_bus->writeCommand16(0xC181);
-	_bus->write16(0x66); /* 65Hz */
+  /* Command not documented */
+  _bus->writeCommand16(0xc0ba); //--> (0xc0b4); // column inversion //  2013.12.16 modify
+  _bus->write16(0x50);
 
-	/* RGB Video Mode Setting */
-	_bus->writeCommand16(0xC1A1);
-	_bus->write16(0x0E);
+  /* Oscillator Adjustment for Idle/Normal mode */
+  _bus->writeCommand16(0xC181);
+  _bus->write16(0x66); /* 65Hz */
 
+  /* RGB Video Mode Setting */
+  _bus->writeCommand16(0xC1A1);
+  _bus->write16(0x0E);
 
-	/* Power Control Setting 1 */
-	_bus->writeCommand16(0xC580 + 2);
-	_bus->write16(0x83);
+  /* Power Control Setting 1 */
+  _bus->writeCommand16(0xC580 + 2);
+  _bus->write16(0x83);
 
-	/* Power Control Setting 2 for Normal Mode */
+  /* Power Control Setting 2 for Normal Mode */
   uint8_t ini04[] = {0x96, 0x2B, 0x01, 0x33, 0x34};
   WriteRegM(0xC590, sizeof(ini04), ini04);
 
-	/* Power Control Setting 4 for DC Voltage */
-	_bus->writeCommand16(0xC5B0 + 1);
-	_bus->write16(0xa9);
+  /* Power Control Setting 4 for DC Voltage */
+  _bus->writeCommand16(0xC5B0 + 1);
+  _bus->write16(0xa9);
 
-	/* GOA VST Setting */
+  /* GOA VST Setting */
   uint8_t ini05[] = {0x86, 0x01, 0x00, 0x85, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
   WriteRegM(0xCE80, sizeof(ini05), ini05);
 
-
-	/* GOA CLKA1 Setting */
+  /* GOA CLKA1 Setting */
   uint8_t ini06[] = {0x18, 0x04, 0x03, 0x21, 0x00, 0x00, 0x00};
   WriteRegM(0xCEA0, sizeof(ini06), ini06);
 
-	/* GOA CLKA2 Setting */
+  /* GOA CLKA2 Setting */
   uint8_t ini07[] = {0x18, 0x03, 0x03, 0x22, 0x00, 0x00, 0x00};
   WriteRegM(0xCEA7, sizeof(ini07), ini07);
 
-	/* GOA CLKA3 Setting */
+  /* GOA CLKA3 Setting */
   uint8_t ini08[] = {0x18, 0x02, 0x03, 0x23, 0x00, 0x00, 0x00};
   WriteRegM(0xCEB0, sizeof(ini08), ini08);
-	
-	/* GOA CLKA4 Setting */
+
+  /* GOA CLKA4 Setting */
   uint8_t ini09[] = {0x18, 0x01, 0x03, 0x24, 0x00, 0x00, 0x00};
   WriteRegM(0xCEB7, sizeof(ini09), ini09);
 
-	/* GOA ECLK Setting */
+  /* GOA ECLK Setting */
   uint8_t ini10[] = {0x01, 0x01, 0x20, 0x20, 0x00, 0x00};
   WriteRegM(0xCFC0, sizeof(ini10), ini10);
-	
-	/* GOA Other Options 1 */
-	_bus->writeCommand16(0xCFC6);// cfc7[7:0] : 00, vstmask, vendmask, 00, dir1, dir2 (0=VGL, 1=VGH)                                                     
-	_bus->write16(0x01); 
 
-	/* GOA Signal Toggle Option Setting */
+  /* GOA Other Options 1 */
+  _bus->writeCommand16(0xCFC6); // cfc7[7:0] : 00, vstmask, vendmask, 00, dir1, dir2 (0=VGL, 1=VGH)
+  _bus->write16(0x01);
+
+  /* GOA Signal Toggle Option Setting */
   uint8_t ini11[] = {0x00, 0x00, 0x00};
-  WriteRegM(0xCFC7, sizeof(ini11), ini11);// cfc8[7:0] : reg_goa_gnd_opt, reg_goa_dpgm_tail_set, reg_goa_f_gating_en, reg_goa_f_odd_gating, toggle_mod1, 2, 3, 4
+  WriteRegM(0xCFC7, sizeof(ini11), ini11); // cfc8[7:0] : reg_goa_gnd_opt, reg_goa_dpgm_tail_set, reg_goa_f_gating_en, reg_goa_f_odd_gating, toggle_mod1, 2, 3, 4
 
-	/* Command not documented: 0xCFD0 */
-	_bus->writeCommand16(0xCFD0);// cfd1[7:0] : 0000000, reg_goa_frame_odd_high
-	_bus->write16(0x00); 
+  /* Command not documented: 0xCFD0 */
+  _bus->writeCommand16(0xCFD0); // cfd1[7:0] : 0000000, reg_goa_frame_odd_high
+  _bus->write16(0x00);
 
-	/* Panel Control Setting 5 */
+  /* Panel Control Setting 5 */
   uint8_t ini12[] = {0x00, 0x04, 0x04, 0x04, 0x04, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-  WriteRegM(0xCBC0, sizeof(ini12), ini12);// cbc[7:0] : enmode H-byte of sig  (pwrof_0, pwrof_1, norm, pwron_4 )
+  WriteRegM(0xCBC0, sizeof(ini12), ini12); // cbc[7:0] : enmode H-byte of sig  (pwrof_0, pwrof_1, norm, pwron_4 )
 
-	/* Panel Control Setting 6 */
+  /* Panel Control Setting 6 */
   uint8_t ini13[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x04, 0x04, 0x04, 0x04, 0x00, 0x00, 0x00, 0x00};
-  WriteRegM(0xCBD0, sizeof(ini13), ini13);// cbd1[7:0] : enmode H-byte of sig16 (pwrof_0, pwrof_1, norm, pwron_4 )
+  WriteRegM(0xCBD0, sizeof(ini13), ini13); // cbd1[7:0] : enmode H-byte of sig16 (pwrof_0, pwrof_1, norm, pwron_4 )
 
-	/* Panel Control Setting 7 */
+  /* Panel Control Setting 7 */
   uint8_t ini14[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-  WriteRegM(0xCBE0, sizeof(ini14), ini14);// cbe1[7:0] : enmode H-byte of sig31 (pwrof_0, pwrof_1, norm, pwron_4 )  
-	
-	/* Panel U2D Setting 1 */  
-	// cc8x 
+  WriteRegM(0xCBE0, sizeof(ini14), ini14); // cbe1[7:0] : enmode H-byte of sig31 (pwrof_0, pwrof_1, norm, pwron_4 )
+
+  /* Panel U2D Setting 1 */
+  // cc8x
   uint8_t ini15[] = {0x00, 0x26, 0x09, 0x0B, 0x01, 0x25, 0x00, 0x00, 0x00, 0x00};
-  WriteRegM(0xCC80, sizeof(ini15), ini15);//cc81[7:0] : reg setting for signal01 selection with u2d mode   
+  WriteRegM(0xCC80, sizeof(ini15), ini15); // cc81[7:0] : reg setting for signal01 selection with u2d mode
 
-	/* Panel U2D Setting 2 */
-	// cc9x   
+  /* Panel U2D Setting 2 */
+  // cc9x
   uint8_t ini16[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x26, 0x0A, 0x0C, 0x02};
-  WriteRegM(0xCC90, sizeof(ini16), ini16);// cc91[7:0] : reg setting for signal11 selection with u2d mode 
-	
-	/* Panel U2D Setting 3 */
-	// ccax   
+  WriteRegM(0xCC90, sizeof(ini16), ini16); // cc91[7:0] : reg setting for signal11 selection with u2d mode
+
+  /* Panel U2D Setting 3 */
+  // ccax
   uint8_t ini17[] = {0x25, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-  WriteRegM(0xCCA0, sizeof(ini17), ini17);//cca1[7:0] : reg setting for signal26 selection with u2d mode   
+  WriteRegM(0xCCA0, sizeof(ini17), ini17); // cca1[7:0] : reg setting for signal26 selection with u2d mode
 
-  	/* Command not documented: 0x3A00 */
-	_bus->writeCommand16(0x3A00);//ccaa[7:0] : reg setting for signal35 selection with u2d mode 
-	_bus->write16(0x55);//0x55
+  /* Command not documented: 0x3A00 */
+  _bus->writeCommand16(0x3A00); // ccaa[7:0] : reg setting for signal35 selection with u2d mode
+  _bus->write16(0x55);          // 0x55
 
-    _bus->endWrite();
+  _bus->endWrite();
 
-	/* Sleep out */
-	_bus->sendCommand16(0x1100);
-	delay(100);
+  /* Sleep out */
+  _bus->sendCommand16(0x1100);
+  delay(100);
 
-	/* Display on */
-	_bus->sendCommand16(0x2900);
-	delay(50);
-
-
+  /* Display on */
+  _bus->sendCommand16(0x2900);
+  delay(50);
 }

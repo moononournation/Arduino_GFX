@@ -628,6 +628,9 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 // NV3041A IPS LCD
 // Arduino_GFX *gfx = new Arduino_NV3041A(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
+// OTM8009A LCD 480x800
+// Arduino_GFX *gfx = new Arduino_OTM8009A(bus, TFT_RST, 0 /* rotation */);
+
 // R61529 IPS LCD 320x480
 // Arduino_GFX *gfx = new Arduino_R61529(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 

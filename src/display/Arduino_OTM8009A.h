@@ -1,4 +1,3 @@
-
 #ifndef _ARDUINO_OTM8009A_H_
 #define _ARDUINO_OTM8009A_H_
 
