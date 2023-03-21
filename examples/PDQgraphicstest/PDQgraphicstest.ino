@@ -12,6 +12,7 @@
 #include <Arduino_GFX_Library.h>
 
 // #define ESP32_1732S019
+#define ESP32_2424012
 // #define ESP32_2432S028
 // #define ESP32_3248S035
 // #define ESP32_4827A043
@@ -41,6 +42,11 @@
 #define GFX_BL 14
 Arduino_DataBus *bus = new Arduino_ESP32SPI(11 /* DC */, 10 /* CS */, 12 /* SCK */, 13 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */, 35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
+
+#elif defined(ESP32_2424012)
+#define GFX_BL 8
+Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 10 /* CS */, 6 /* SCK */, 7 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_GC9A01(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(ESP32_2432S028)
 #define GFX_BL 21

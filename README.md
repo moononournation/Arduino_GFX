@@ -224,6 +224,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 * [ESP32-1732S019](https://www.aliexpress.com/item/1005005059421229.html) [[demo video](https://youtube.com/shorts/VS4Qb3g2dWk)] [[LVGL demo video](https://youtu.be/V5xib6OnWiM)]
 * ESP32-2432S028
+* ESP32-2424012 [[demo video](https://youtu.be/EXw_yEMgug8)]
 * ESP32-3248S035
 * ESP32-4827A043 [[demo video](https://youtu.be/pd1DTW9QHkg)] [[LVGL demo video](https://youtu.be/L8iYjiy-DUI)]
 * [ESP32-4827S043](https://www.aliexpress.com/item/1005004788147691.html) [[demo video](https://youtu.be/60rl7QoU4Sc)] [[LVGL demo video](https://youtu.be/VvpILAVyPt8)]
