@@ -12,7 +12,7 @@
 #include <Arduino_GFX_Library.h>
 
 // #define ESP32_1732S019
-#define ESP32_2424012
+// #define ESP32_2424012
 // #define ESP32_2432S028
 // #define ESP32_3248S035
 // #define ESP32_4827A043
