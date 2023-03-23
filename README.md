@@ -323,6 +323,8 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 ## Feature wishlist (Sponsors can make it happen)
 
+* Set text box
+* Canvas to FastLED
 * Print color Emoji Characters
 * Load bitmap font files from flash / SD
 * Fill Gradient
