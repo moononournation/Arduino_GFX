@@ -490,6 +490,9 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // General Software parallel 8-bit
 // Arduino_DataBus *bus = new Arduino_SWPAR8(TFT_DC, TFT_CS, 25 /* WR */, 32 /* RD */, 23 /* D0 */, 19 /* D1 */, 18 /* D2 */, 26 /* D3 */, 21 /* D4 */, 4 /* D5 */, 0 /* D6 */, 2 /* D7 */);
 
+// General Software parallel 16-bit
+// Arduino_DataBus *bus = new Arduino_SWPAR16(32 /* DC */, GFX_NOT_DEFINED /* CS */, 21 /* WR */, GFX_NOT_DEFINED /* RD */, 19 /* D0 */, 23 /* D1 */, 18 /* D2 */, 5 /* D3 */, 17 /* D4 */, 16 /* D5 */, 25 /* D6 */, 26 /* D7 */, 27 /* D8 */, 14 /* D9 */, 12 /* D10 */, 13 /* D11 */, 15 /* D12 */, 2 /* D13 */, 0 /* D14 */, 4 /* D15 */);
+
 // AVR parallel 8-bit
 // Arduino Pro Micro port 2(PB): 17, 15, 16, 14, 8, 9, 10, 11
 // Arduino_DataBus *bus = new Arduino_AVRPAR8(4 /* DC */, 5 /* CS */, 18 /* WR */, 19 /* RD */, 2 /* PORT */);

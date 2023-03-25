@@ -27,6 +27,7 @@
 #include "databus/Arduino_RTLPAR8.h"
 #include "databus/Arduino_STM32PAR8.h"
 #include "databus/Arduino_SWPAR8.h"
+#include "databus/Arduino_SWPAR16.h"
 #include "databus/Arduino_SWSPI.h"
 #include "databus/Arduino_XL9535SWSPI.h"
 
