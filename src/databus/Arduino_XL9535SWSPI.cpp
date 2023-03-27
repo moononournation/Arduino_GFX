@@ -28,7 +28,6 @@ bool Arduino_XL9535SWSPI::begin(int32_t speed, int8_t dataMode)
     this->digitalWrite(_sck, 1);
     // this->pinMode(_mosi, OUTPUT);
     this->digitalWrite(_mosi, 1);
-    this->read_all_reg();
   }
   else
   {
@@ -116,6 +115,7 @@ void Arduino_XL9535SWSPI::writePixels(uint16_t *data, uint32_t len)
   // not implemented
 }
 
+#if !defined(LITTLE_FOOT_PRINT)
 void Arduino_XL9535SWSPI::writeBytes(uint8_t *data, uint32_t len)
 {
   // not implemented
@@ -125,6 +125,17 @@ void Arduino_XL9535SWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repe
 {
   // not implemented
 }
+
+void Arduino_XL9535SWSPI::read_all_reg()
+{
+  uint8_t data;
+  for (uint8_t i = 0; i < 8; i++)
+  {
+    this->readRegister(i, &data, 1);
+    Serial.printf("0x%02x : 0x%02X \r\n", i, data);
+  }
+}
+#endif // !defined(LITTLE_FOOT_PRINT)
 
 void Arduino_XL9535SWSPI::writeRegister(uint8_t reg, uint8_t *data, uint8_t len)
 {
@@ -256,14 +267,4 @@ int Arduino_XL9535SWSPI::digitalRead(uint8_t pin)
     Serial.println("xl9535 not found");
   }
   return 0;
-}
-
-void Arduino_XL9535SWSPI::read_all_reg()
-{
-  uint8_t data;
-  for (uint8_t i = 0; i < 8; i++)
-  {
-    this->readRegister(i, &data, 1);
-    Serial.printf("0x%02x : 0x%02X \r\n", i, data);
-  }
 }

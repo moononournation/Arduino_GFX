@@ -31,15 +31,17 @@ public:
   void writeRepeat(uint16_t p, uint32_t len) override;
   void writePixels(uint16_t *data, uint32_t len) override;
 
+#if !defined(LITTLE_FOOT_PRINT)
   void writeBytes(uint8_t *data, uint32_t len) override;
   void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
+  void read_all_reg();
+#endif // !defined(LITTLE_FOOT_PRINT)
 
   void pinMode(uint8_t pin, uint8_t mode);
   void pinMode8(uint8_t port, uint8_t pin, uint8_t mode);
 
   void digitalWrite(uint8_t pin, uint8_t val);
   int digitalRead(uint8_t pin);
-  void read_all_reg();
 
 protected:
   void writeRegister(uint8_t reg, uint8_t *data, uint8_t len);
