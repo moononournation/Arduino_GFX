@@ -171,7 +171,7 @@ bool Arduino_SWPAR16::begin(int32_t speed, int8_t dataMode)
   _d15PortSet = &reg->OUTSET;
   _d15PortClr = &reg->OUTCLR;
   _d15PinMask = 1UL << pin;
-  #elif defined(TARGET_RP2040)
+#elif defined(TARGET_RP2040)
   _dcPinMask = digitalPinToBitMask(_dc);
   _dcPortSet = (PORTreg_t)&sio_hw->gpio_set;
   _dcPortClr = (PORTreg_t)&sio_hw->gpio_clr;
@@ -595,7 +595,7 @@ bool Arduino_SWPAR16::begin(int32_t speed, int8_t dataMode)
 #endif
   _d7PortSet = portSetRegister(_d7);
   _d7PortClr = portClearRegister(_d7);
-  #if !defined(KINETISK)
+#if !defined(KINETISK)
   _d8PinMask = digitalPinToBitMask(_d8);
 #endif
   _d8PortSet = portSetRegister(_d8);
@@ -711,7 +711,7 @@ bool Arduino_SWPAR16::begin(int32_t speed, int8_t dataMode)
   {
     _csPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_cs));
     _csPinMaskSet = digitalPinToBitMask(_cs);
-  _csPinMaskClr = ~_csPinMaskSet;
+    _csPinMaskClr = ~_csPinMaskSet;
   }
   _wrPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_wr));
   _wrPinMaskSet = digitalPinToBitMask(_wr);
@@ -720,7 +720,7 @@ bool Arduino_SWPAR16::begin(int32_t speed, int8_t dataMode)
   {
     _rdPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_rd));
     _rdPinMaskSet = digitalPinToBitMask(_rd);
-  _rdPinMaskClr = ~_rdPinMaskSet;
+    _rdPinMaskClr = ~_rdPinMaskSet;
   }
   _d0Port = (PORTreg_t)portOutputRegister(digitalPinToPort(_d0));
   _d0PinMaskSet = digitalPinToBitMask(_d0);
@@ -1138,9 +1138,11 @@ void Arduino_SWPAR16::WRITE16(uint16_t d)
 
 void Arduino_SWPAR16::WRITEREPEAT(uint16_t p, uint32_t len)
 {
-  while (len--)
+  WRITE16(p);
+  while (--len)
   {
-    WRITE16(p);
+    WR_LOW();
+    WR_HIGH();
   }
 }
 
