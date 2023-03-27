@@ -497,6 +497,12 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 // Arduino Pro Micro port 2(PB): 17, 15, 16, 14, 8, 9, 10, 11
 // Arduino_DataBus *bus = new Arduino_AVRPAR8(4 /* DC */, 5 /* CS */, 18 /* WR */, 19 /* RD */, 2 /* PORT */);
 
+// AVR parallel 16-bit
+// Arduino MEGA 2560
+// port 3(PC): 37, 36, 35, 34, 33, 32, 31, 30
+// port 1(PA): 22, 23, 24, 25, 26, 27, 28, 29
+// Arduino_DataBus *bus = new Arduino_AVRPAR8(4 /* DC */, 5 /* CS */, 18 /* WR */, 19 /* RD */, 3 /* PORT LOW */, 1 /* PORT HIGH */);
+
 // ESP32 parallel 8-bit
 // Arduino_DataBus *bus = new Arduino_ESP32PAR8(TFT_DC, TFT_CS, 25 /* WR */, 32 /* RD */, 23 /* D0 */, 19 /* D1 */, 18 /* D2 */, 26 /* D3 */, 21 /* D4 */, 4 /* D5 */, 0 /* D6 */, 2 /* D7 */);
 
