@@ -70,7 +70,7 @@ void Arduino_AVRPAR16::writeCommand(uint8_t c)
 {
   DC_LOW();
 
-  WRITE(c);
+  WRITE16(c);
 
   DC_HIGH();
 }
@@ -86,7 +86,7 @@ void Arduino_AVRPAR16::writeCommand16(uint16_t c)
 
 void Arduino_AVRPAR16::write(uint8_t d)
 {
-  WRITE(d);
+  WRITE16(d);
 }
 
 void Arduino_AVRPAR16::write16(uint16_t d)
@@ -120,18 +120,18 @@ void Arduino_AVRPAR16::writeC8D8(uint8_t c, uint8_t d)
 {
   DC_LOW();
 
-  WRITE(c);
+  WRITE16(c);
 
   DC_HIGH();
 
-  WRITE(d);
+  WRITE16(d);
 }
 
 void Arduino_AVRPAR16::writeC8D16(uint8_t c, uint16_t d)
 {
   DC_LOW();
 
-  WRITE(c);
+  WRITE16(c);
 
   DC_HIGH();
 
@@ -142,7 +142,7 @@ void Arduino_AVRPAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 {
   DC_LOW();
 
-  WRITE(c);
+  WRITE16(c);
 
   DC_HIGH();
 
@@ -150,11 +150,29 @@ void Arduino_AVRPAR16::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   WRITE16(d2);
 }
 
-INLINE void Arduino_AVRPAR16::WRITE(uint8_t d)
+void Arduino_AVRPAR16::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
+{
+  DC_LOW();
+
+  WRITE16(c);
+
+  DC_HIGH();
+
+  _data16.value = d1;
+  WRITE16(_data16.msb);
+  WRITE16(_data16.lsb);
+
+  _data16.value = d2;
+  WRITE16(_data16.msb);
+  WRITE16(_data16.lsb);
+}
+
+INLINE void Arduino_AVRPAR16::WRITE16(uint16_t d)
 {
   uint8_t wrMaskBase = *_wrPort & _wrPinMaskClr;
-  *_dataPortLow = d;
-  *_dataPortHigh = 0;
+  _data16.value = d;
+  *_dataPortLow = _data16.msb;
+  *_dataPortHigh = _data16.lsb;
   *_wrPort = wrMaskBase;
   *_wrPort = wrMaskBase | _wrPinMaskSet;
 }

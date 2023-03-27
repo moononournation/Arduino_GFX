@@ -27,7 +27,6 @@ public:
 
 protected:
 private:
-  INLINE void WRITE(uint8_t d);
   INLINE void WRITE16(uint16_t d);
   INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
   INLINE void DC_HIGH(void);
