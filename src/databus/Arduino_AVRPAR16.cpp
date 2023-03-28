@@ -47,8 +47,10 @@ bool Arduino_AVRPAR16::begin(int32_t speed, int8_t dataMode)
   }
   _rdPinMaskClr = ~_rdPinMaskSet;
 
+  *(portModeRegister(_portLow)) = 0xFF;
   _dataPortLow = portOutputRegister(_portLow);
   *_dataPortLow = 0xFF;
+  *(portModeRegister(_portHigh)) = 0xFF;
   _dataPortHigh = portOutputRegister(_portHigh);
   *_dataPortHigh = 0xFF;
 
@@ -99,8 +101,8 @@ void Arduino_AVRPAR16::writeRepeat(uint16_t p, uint32_t len)
   uint8_t wrMaskBase = *_wrPort & _wrPinMaskClr;
   uint8_t wrMaskSet = wrMaskBase | _wrPinMaskSet;
   _data16.value = p;
-  *_dataPortLow = _data16.msb;
-  *_dataPortHigh = _data16.lsb;
+  *_dataPortLow = _data16.lsb;
+  *_dataPortHigh = _data16.msb;
   while (len--)
   {
     *_wrPort = wrMaskBase;
@@ -171,8 +173,8 @@ INLINE void Arduino_AVRPAR16::WRITE16(uint16_t d)
 {
   uint8_t wrMaskBase = *_wrPort & _wrPinMaskClr;
   _data16.value = d;
-  *_dataPortLow = _data16.msb;
-  *_dataPortHigh = _data16.lsb;
+  *_dataPortLow = _data16.lsb;
+  *_dataPortHigh = _data16.msb;
   *_wrPort = wrMaskBase;
   *_wrPort = wrMaskBase | _wrPinMaskSet;
 }

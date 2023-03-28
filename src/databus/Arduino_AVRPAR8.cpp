@@ -47,6 +47,7 @@ bool Arduino_AVRPAR8::begin(int32_t speed, int8_t dataMode)
   }
   _rdPinMaskClr = ~_rdPinMaskSet;
 
+  *(portModeRegister(_port)) = 0xFF;
   _dataPort = portOutputRegister(_port);
   *_dataPort = 0xFF;
 
