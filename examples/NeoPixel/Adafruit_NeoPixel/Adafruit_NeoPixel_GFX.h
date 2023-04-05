@@ -2,7 +2,7 @@
 #define _ADAFRUIT_NEOPIXEL_GFX_H_
 
 #include <Adafruit_NeoPixel.h>
-#include <Arduino_GFX_Library.h>
+#include <Arduino_GFX.h>
 
 #ifdef __AVR__
 #include <avr/power.h> // Required for 16 MHz Adafruit Trinket

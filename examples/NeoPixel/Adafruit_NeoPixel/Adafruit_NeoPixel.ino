@@ -5,6 +5,7 @@
  * Dependent libraries:
  * Adafruit_NeoPixel: https://github.com/adafruit/Adafruit_NeoPixel.git
  ******************************************************************************/
+#include <Arduino_GFX_Library.h>
 
 // all settings in header file
 #include "Adafruit_NeoPixel_GFX.h"
