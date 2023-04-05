@@ -28,6 +28,7 @@
 #endif
 
 #define RGB565(r, g, b) ((((r)&0xF8) << 8) | (((g)&0xFC) << 3) | ((b) >> 3))
+#define RGB16TO24(c) ((((uint32_t)c & 0xF800) << 8) | ((c & 0x07E0) << 5) | ((c & 0x1F) << 3))
 
 #define RGB565_BLACK RGB565(0, 0, 0)
 #define RGB565_NAVY RGB565(0, 0, 123)
