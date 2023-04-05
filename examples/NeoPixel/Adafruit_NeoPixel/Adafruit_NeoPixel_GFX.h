@@ -52,7 +52,9 @@ public:
   {
     // select you matrix mode
     int32_t i = (x * NEOPIXEL_HEIGHT) + y; // vertical strip start from left top
-    // int32_t i = (x * NEOPIXEL_HEIGHT) + ((x % 2)?(NEOPIXEL_HEIGHT - y - 1):y); // vertical zigzag strip start from left top
+    // int32_t i = (x * NEOPIXEL_HEIGHT) + ((x % 2)?y:(NEOPIXEL_HEIGHT - y - 1)); // vertical zigzag strip start from left top
+    // int32_t i = (x * NEOPIXEL_HEIGHT) + (NEOPIXEL_HEIGHT - y - 1); // vertical strip start from left bottom
+    // int32_t i = (x * NEOPIXEL_HEIGHT) + ((x % 2)?(NEOPIXEL_HEIGHT - y - 1)):y; // vertical zigzag strip start from left bottom
 
     _pixels->setPixelColor(i, RGB16TO24(color));
   }
