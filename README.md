@@ -91,7 +91,20 @@ U8g2 Unifont list can be found at: <https://github.com/olikraus/u8g2/wiki/fntgrp
 
 Besides U8g2 generated font, Arduino_GFX also generated some useful font set:
 
-#### [QuanPixel](https://diaowinner.itch.io/galmuri-extended):
+#### [Fusion Pixel Font 2023.03.27](https://github.com/TakWolf/fusion-pixel-font.git)
+
+##### u8g2_font_fusion_h_utf8
+
+* Glyphs: 30011/30011
+* Size: 961,821
+* Generation script:
+
+```console
+otf2bdf fusion-pixel-proportional.otf -p 9 -o fusion-pixel-proportional.bdf
+bdfconv -v -f 1 -b 1 -m "0-4294967295" fusion-pixel-proportional.bdf -o u8g2_font_fusion_h_utf8.h -n u8g2_font_fusion_h_utf8
+```
+
+#### [QuanPixel May 7](https://diaowinner.itch.io/galmuri-extended)
 
 ##### u8g2_font_galmuriext_h_utf8
 
@@ -103,7 +116,7 @@ Besides U8g2 generated font, Arduino_GFX also generated some useful font set:
 bdfconv -v -f 1 -b 1 -m "0-4294967295" quan.bdf -o u8g2_font_quan_h_utf8.h -n u8g2_font_quan_h_utf8
 ```
 
-#### [unifont_jp-14.0.02](http://unifoundry.com/pub/unifont/unifont-14.0.02/font-builds/unifont_jp-14.0.02.bdf.gz):
+#### [unifont_jp-14.0.02](http://unifoundry.com/pub/unifont/unifont-14.0.02/font-builds/unifont_jp-14.0.02.bdf.gz)
 
 ##### u8g2_font_unifont_h_utf8
 

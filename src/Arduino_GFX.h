@@ -21,6 +21,7 @@
 #if __has_include(<U8g2lib.h>)
 #include <U8g2lib.h>
 #define U8G2_FONT_SUPPORT
+#include "font/u8g2_font_fusion_h_utf8.h"
 #include "font/u8g2_font_quan_h_utf8.h"
 #include "font/u8g2_font_unifont_h_utf8.h"
 #include "font/u8g2_font_unifont_t_chinese.h"
