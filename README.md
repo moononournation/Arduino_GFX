@@ -100,7 +100,7 @@ Besides U8g2 generated font, Arduino_GFX also generated some useful font set:
 * Generation script:
 
 ```console
-./bdfconv -v -f 1 -b 1 -m "0-4294967295" quan.bdf -o u8g2_font_quan_h_utf8.h -n u8g2_font_quan_h_utf8
+bdfconv -v -f 1 -b 1 -m "0-4294967295" quan.bdf -o u8g2_font_quan_h_utf8.h -n u8g2_font_quan_h_utf8
 ```
 
 #### [unifont_jp-14.0.02](http://unifoundry.com/pub/unifont/unifont-14.0.02/font-builds/unifont_jp-14.0.02.bdf.gz):
