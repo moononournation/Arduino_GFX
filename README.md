@@ -89,9 +89,23 @@ U8g2 Unifont list can be found at: <https://github.com/olikraus/u8g2/wiki/fntgrp
 
 ### Extra Fonts
 
-Besides U8g2 generated font, Arduino_GFX also generated some useful font set from latest [unifont_jp-14.0.02](http://unifoundry.com/pub/unifont/unifont-14.0.02/font-builds/unifont_jp-14.0.02.bdf.gz):
+Besides U8g2 generated font, Arduino_GFX also generated some useful font set:
 
-#### u8g2_font_unifont_h_utf8
+#### [QuanPixel](https://diaowinner.itch.io/galmuri-extended):
+
+##### u8g2_font_galmuriext_h_utf8
+
+* Glyphs: 18082/18082
+* Size: 335,225
+* Generation script:
+
+```console
+./bdfconv -v -f 1 -b 1 -m "0-4294967295" quan.bdf -o u8g2_font_quan_h_utf8.h -n u8g2_font_quan_h_utf8
+```
+
+#### [unifont_jp-14.0.02](http://unifoundry.com/pub/unifont/unifont-14.0.02/font-builds/unifont_jp-14.0.02.bdf.gz):
+
+##### u8g2_font_unifont_h_utf8
 
 * Glyphs: 57389/57389
 * Size: 2,250,360
@@ -101,7 +115,7 @@ Besides U8g2 generated font, Arduino_GFX also generated some useful font set fro
 bdfconv -v -f 1 -b 1 -m "0-1114111" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_h_utf8.h -n u8g2_font_unifont_h_utf8
 ```
 
-#### u8g2_font_unifont_t_chinese
+##### u8g2_font_unifont_t_chinese
 
 * Glyphs: 22145/57389
 * Size: 979,557
@@ -111,7 +125,7 @@ bdfconv -v -f 1 -b 1 -m "0-1114111" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_
 bdfconv -v -f 1 -m "32-127,11904-12351,19968-40959,63744-64255,65280-65376" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese.h -n u8g2_font_unifont_t_chinese
 ```
 
-#### u8g2_font_unifont_t_chinese4
+##### u8g2_font_unifont_t_chinese4
 
 * Glyphs: 7199/57389
 * Size: 298,564
@@ -124,7 +138,7 @@ bdfconv -v -f 1 -m "32-127,11904-12351,19968-40959,63744-64255,65280-65376" unif
 bdfconv -v -f 1 -M chinese4.list unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_chinese4.h -n u8g2_font_unifont_t_chinese4
 ```
 
-#### u8g2_font_unifont_t_cjk
+##### u8g2_font_unifont_t_cjk
 
 * Glyphs: 41364/57389
 * Size: 1,704,862
@@ -327,7 +341,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * Canvas to FastLED
 * Print color Emoji Characters
 * Load bitmap font files from flash / SD
-* Fill Gradient
+* Fill Gradient #128
 
 ## Using source code come from
 
