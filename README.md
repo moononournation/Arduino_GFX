@@ -56,33 +56,33 @@ U8g2 font list can be found at: <https://github.com/olikraus/u8g2/wiki/fntlistal
 Another U8g2 font advantage is the font support Unicode glyphs. Simply enable setUTF8Print:
 
 ```C
-    gfx->begin();
-    gfx->fillScreen(BLACK);
-    gfx->setUTF8Print(true);
+gfx->begin();
+gfx->fillScreen(BLACK);
+gfx->setUTF8Print(true);
 ```
 
 And then print UTF8 string as usual:
 
 ```C
-    gfx->setCursor(0, 16);
+gfx->setCursor(0, 16);
 
-    gfx->setFont(u8g2_font_unifont_tr);
-    gfx->println("Hello World!");
+gfx->setFont(u8g2_font_unifont_tr);
+gfx->println("Hello World!");
 
-    gfx->setFont(u8g2_font_unifont_t_polish);
-    gfx->println("Witaj świecie!");
+gfx->setFont(u8g2_font_unifont_t_polish);
+gfx->println("Witaj świecie!");
 
-    gfx->setFont(u8g2_font_unifont_t_vietnamese1);
-    gfx->println("Chào thế giới!");
+gfx->setFont(u8g2_font_unifont_t_vietnamese1);
+gfx->println("Chào thế giới!");
 
-    gfx->setFont(u8g2_font_unifont_t_chinese2);
-    gfx->println("世界你好!");
+gfx->setFont(u8g2_font_unifont_t_chinese2);
+gfx->println("世界你好!");
 
-    gfx->setFont(u8g2_font_unifont_t_japanese1);
-    gfx->println("こんにちは世界!");
+gfx->setFont(u8g2_font_unifont_t_japanese1);
+gfx->println("こんにちは世界!");
 
-    gfx->setFont(u8g2_font_unifont_t_korean1);
-    gfx->println("안녕하세요, 세계입니다!");
+gfx->setFont(u8g2_font_unifont_t_korean1);
+gfx->println("안녕하세요, 세계입니다!");
 ```
 
 U8g2 Unifont list can be found at: <https://github.com/olikraus/u8g2/wiki/fntgrpunifont>
@@ -158,7 +158,7 @@ bdfconv -v -f 1 -M chinese4.list unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_c
 * Generation script:
 
 ```console
- bdfconv -v -f 1 -m "32-127,4352-4607,11904-12255,12288-19903,19968-40943,43360-43391,44032-55203,55216-55295,63744-64255,65072-65103,65280-65519" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_cjk.h -n u8g2_font_unifont_t_cjk
+bdfconv -v -f 1 -m "32-127,4352-4607,11904-12255,12288-19903,19968-40943,43360-43391,44032-55203,55216-55295,63744-64255,65072-65103,65280-65519" unifont_jp-14.0.02.bdf -o u8g2_font_unifont_t_cjk.h -n u8g2_font_unifont_t_cjk
 ```
 
 ## Performance
