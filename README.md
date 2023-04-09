@@ -91,29 +91,30 @@ U8g2 Unifont list can be found at: <https://github.com/olikraus/u8g2/wiki/fntgrp
 
 Besides U8g2 generated font, Arduino_GFX also generated some useful font set:
 
-#### [Fusion Pixel Font 2023.03.27](https://github.com/TakWolf/fusion-pixel-font.git)
+#### [Chill-Bitmap v2.400](https://github.com/Warren2060/Chill-Bitmap)
 
-##### u8g2_font_fusion_h_utf8
+##### u8g2_font_chill7_h_cjk
 
-* Glyphs: 30011/30011
-* Size: 961,821
+* Glyphs: 13478/13478
+* Size: 254,960
 * Generation script:
 
 ```console
-otf2bdf fusion-pixel-proportional.otf -p 9 -o fusion-pixel-proportional.bdf
-bdfconv -v -f 1 -b 1 -m "0-4294967295" fusion-pixel-proportional.bdf -o u8g2_font_fusion_h_utf8.h -n u8g2_font_fusion_h_utf8
+otf2bdf ChillBitmap7x.ttf -p 6 -o ChillBitmap7x.bdf
+bdfconv -v -f 1 -b 1 -m "0-4294967295" ChillBitmap7x.bdf -o u8g2_font_chill7_h_cjk.h -n u8g2_font_chill7_h_cjk
 ```
 
-#### [QuanPixel May 7](https://diaowinner.itch.io/galmuri-extended)
+#### [Cubic 11 v1.013](https://github.com/ACh-K/Cubic-11)
 
-##### u8g2_font_galmuriext_h_utf8
+##### u8g2_font_cubic11_h_cjk
 
-* Glyphs: 18082/18082
-* Size: 335,225
+* Glyphs: 10167/10167
+* Size: 337,650
 * Generation script:
 
 ```console
-bdfconv -v -f 1 -b 1 -m "0-4294967295" quan.bdf -o u8g2_font_quan_h_utf8.h -n u8g2_font_quan_h_utf8
+otf2bdf Cubic_11_1.013_R.ttf -p 9 -o Cubic_11_1.013_R.bdf
+bdfconv -v -f 1 -b 1 -m "0-4294967295" Cubic_11_1.013_R.bdf -o u8g2_font_cubic11_h_cjk.h -n u8g2_font_cubic11_h_cjk
 ```
 
 #### [unifont_jp-14.0.02](http://unifoundry.com/pub/unifont/unifont-14.0.02/font-builds/unifont_jp-14.0.02.bdf.gz)
