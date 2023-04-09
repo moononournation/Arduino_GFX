@@ -62,7 +62,8 @@ void setup(void)
     /* select one font below and uncomment, chill7 and cubic11 are smaller size but lack of Korea characters */
     // gfx->setFont(u8g2_font_chill7_h_cjk);
     // gfx->setFont(u8g2_font_cubic11_h_cjk);
-    gfx->setFont(u8g2_font_unifont_t_cjk);
+    gfx->setFont(u8g2_font_quan7_h_cjk);
+    // gfx->setFont(u8g2_font_unifont_t_cjk);
     gfx->setCursor(0, 14);
 
     gfx->setTextColor(RED);

@@ -117,6 +117,19 @@ otf2bdf Cubic_11_1.013_R.ttf -p 9 -o Cubic_11_1.013_R.bdf
 bdfconv -v -f 1 -b 1 -m "0-4294967295" Cubic_11_1.013_R.bdf -o u8g2_font_cubic11_h_cjk.h -n u8g2_font_cubic11_h_cjk
 ```
 
+#### [QuanPixel](https://diaowinner.itch.io/galmuri-extended):
+
+##### u8g2_font_quan7_h_cjk
+
+* Glyphs: 18082/18082
+* Size: 335,225
+* Generation script:
+
+```console
+./bdfconv -v -f 1 -b 1 -m "0-4294967295" quan.bdf -o u8g2_font_quan7_h_cjk.h -n u8g2_font_quan7_h_cjk
+```
+
+
 #### [unifont_jp-14.0.02](http://unifoundry.com/pub/unifont/unifont-14.0.02/font-builds/unifont_jp-14.0.02.bdf.gz)
 
 ##### u8g2_font_unifont_h_utf8
