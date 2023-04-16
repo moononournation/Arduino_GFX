@@ -1013,37 +1013,171 @@ static const uint8_t st7701_type7_init_operations[] = {
     DELAY, 120,
 
     BEGIN_WRITE,
-    WRITE_COMMAND_8, 0x29,   // Display On
+    WRITE_COMMAND_8, 0x29, // Display On
     END_WRITE};
+
+static const uint8_t st7701_type8_init_operations[] = {
+    BEGIN_WRITE,
+
+    WRITE_COMMAND_8, 0xFF,
+    WRITE_BYTES, 5, 0x77, 0x01, 0x00, 0x00, 0x13,
+
+    WRITE_C8_D8, 0xEF, 0x08,
+
+    WRITE_COMMAND_8, 0xFF,
+    WRITE_BYTES, 5, 0x77, 0x01, 0x00, 0x00, 0x10,
+
+    WRITE_C8_D16, 0xC0, 0x2C, 0x00,
+    WRITE_C8_D16, 0xC1, 0x0D, 0x02,
+    WRITE_C8_D16, 0xC2, 0x31, 0x05,
+    WRITE_C8_D8, 0xCC, 0x10,
+
+    WRITE_COMMAND_8, 0xB0, // Positive Voltage Gamma Control
+    WRITE_BYTES, 16,
+    0x0A, 0x14, 0x1B, 0x0D,
+    0x10, 0x05, 0x07, 0x08,
+    0x06, 0x22, 0x03, 0x11,
+    0x10, 0xAD, 0x31, 0x1B,
+
+    WRITE_COMMAND_8, 0xB1, // Negative Voltage Gamma Control
+    WRITE_BYTES, 16,
+    0x0A, 0x14, 0x1B, 0x0D,
+    0x10, 0x05, 0x07, 0x08,
+    0x06, 0x22, 0x03, 0x11,
+    0x10, 0xAD, 0x31, 0x1B,
+
+    WRITE_COMMAND_8, 0xFF,
+    WRITE_BYTES, 5, 0x77, 0x01, 0x00, 0x00, 0x11,
+
+    WRITE_C8_D8, 0xB0, 0x50,
+    WRITE_C8_D8, 0xB1, 0x5E,
+    WRITE_C8_D8, 0xB2, 0x87,
+    WRITE_C8_D8, 0xB3, 0x80,
+    WRITE_C8_D8, 0xB5, 0x47,
+    WRITE_C8_D8, 0xB7, 0x85,
+    WRITE_C8_D8, 0xB8, 0x21,
+
+    WRITE_C8_D8, 0xC1, 0x78,
+    WRITE_C8_D8, 0xC2, 0x78,
+
+    WRITE_C8_D8, 0xD0, 0x88,
+
+    WRITE_C8_D8, 0xE0, 0x00,
+
+    WRITE_C8_D8, 0x1B, 0x02,
+
+    WRITE_COMMAND_8, 0xE1,
+    WRITE_BYTES, 11,
+    0x08, 0xA0, 0x00, 0x00,
+    0x07, 0xA0, 0x00, 0x00,
+    0x00, 0x44, 0x44,
+
+    WRITE_COMMAND_8, 0xE2,
+    WRITE_BYTES, 12,
+    0x11, 0x11, 0x44, 0x44,
+    0x75, 0xA0, 0x00, 0x00,
+    0x74, 0xA0, 0x00, 0x00,
+
+    WRITE_COMMAND_8, 0xE3,
+    WRITE_BYTES, 4, 0x00, 0x00, 0x11, 0x11,
+
+    WRITE_C8_D16, 0xE4, 0x44, 0x44,
+
+    WRITE_COMMAND_8, 0xE5,
+    WRITE_BYTES, 16,
+    0x0A, 0x71, 0xD8, 0xA0,
+    0x0C, 0x73, 0xD8, 0xA0,
+    0x0E, 0x75, 0xD8, 0xA0,
+    0x10, 0x77, 0xD8, 0xA0,
+
+    WRITE_COMMAND_8, 0xE6,
+    WRITE_BYTES, 4, 0x00, 0x00, 0x11, 0x11,
+
+    WRITE_C8_D16, 0xE7, 0x44, 0x44,
+
+    WRITE_COMMAND_8, 0xE8,
+    WRITE_BYTES, 16,
+    0x09, 0x70, 0xD8, 0xA0,
+    0x0B, 0x72, 0xD8, 0xA0,
+    0x0D, 0x74, 0xD8, 0xA0,
+    0x0F, 0x76, 0xD8, 0xA0,
+
+    WRITE_COMMAND_8, 0xEB,
+    WRITE_BYTES, 7,
+    0x02, 0x00, 0xE4, 0xE4,
+    0x88, 0x00, 0x40,
+
+    WRITE_C8_D16, 0xEC, 0x3C, 0x00,
+
+    WRITE_COMMAND_8, 0xED,
+    WRITE_BYTES, 16,
+    0xAB, 0x89, 0x76, 0x54,
+    0x02, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0x20,
+    0x45, 0x67, 0x98, 0xBA,
+
+    WRITE_COMMAND_8, 0xEF,
+    WRITE_BYTES, 6,
+    0x08, 0x08, 0x08, 0x45,
+    0x3F, 0x54,
+
+    WRITE_COMMAND_8, 0xFF,
+    WRITE_BYTES, 5, 0x77, 0x01, 0x00, 0x00, 0x13,
+
+    WRITE_C8_D16, 0xE8, 0x00, 0x0E,
+
+    WRITE_COMMAND_8, 0x20,   // 0x20 normal, 0x21 IPS
+    WRITE_C8_D8, 0x3A, 0x50, // 0x70 RGB888, 0x60 RGB666, 0x50 RGB565
+
+    WRITE_COMMAND_8, 0x11, // Sleep Out
+    END_WRITE,
+
+    DELAY, 150,
+
+    BEGIN_WRITE,
+    WRITE_C8_D16, 0xE8, 0x00, 0x0C,
+    END_WRITE,
+
+    DELAY, 100,
+
+    BEGIN_WRITE,
+    WRITE_C8_D16, 0xE8, 0x00, 0x00,
+
+    WRITE_COMMAND_8, 0xFF,
+    WRITE_BYTES, 5, 0x77, 0x01, 0x00, 0x00, 0x00,
+
+    WRITE_COMMAND_8, 0x29, // Display On
+    END_WRITE,
+    DELAY, 20};
 
 class Arduino_RGB_Display : public Arduino_GFX
 {
 public:
-  Arduino_RGB_Display(
-      int16_t w, int16_t h, Arduino_ESP32RGBPanel *rgbpanel, uint8_t r = 0, bool auto_flush = true,
-      Arduino_DataBus *bus = NULL, int8_t rst = GFX_NOT_DEFINED, const uint8_t *init_operations = NULL, size_t init_operations_len = GFX_NOT_DEFINED);
+    Arduino_RGB_Display(
+        int16_t w, int16_t h, Arduino_ESP32RGBPanel *rgbpanel, uint8_t r = 0, bool auto_flush = true,
+        Arduino_DataBus *bus = NULL, int8_t rst = GFX_NOT_DEFINED, const uint8_t *init_operations = NULL, size_t init_operations_len = GFX_NOT_DEFINED);
 
-  bool begin(int32_t speed = GFX_NOT_DEFINED) override;
-  void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
-  void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
-  void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
-  void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) override;
-  void drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h);
-  void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
-  void draw16bitBeRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
-  void flush(void) override;
+    bool begin(int32_t speed = GFX_NOT_DEFINED) override;
+    void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
+    void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
+    void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
+    void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) override;
+    void drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h);
+    void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
+    void draw16bitBeRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
+    void flush(void) override;
 
-  uint16_t *getFramebuffer();
+    uint16_t *getFramebuffer();
 
 protected:
-  uint16_t *_framebuffer;
-  size_t _framebuffer_size;
-  Arduino_ESP32RGBPanel *_rgbpanel;
-  bool _auto_flush;
-  Arduino_DataBus *_bus;
-  int8_t _rst;
-  const uint8_t *_init_operations;
-  size_t _init_operations_len;
+    uint16_t *_framebuffer;
+    size_t _framebuffer_size;
+    Arduino_ESP32RGBPanel *_rgbpanel;
+    bool _auto_flush;
+    Arduino_DataBus *_bus;
+    int8_t _rst;
+    const uint8_t *_init_operations;
+    size_t _init_operations_len;
 
 private:
 };
