@@ -77,7 +77,7 @@ void touch_init(int16_t w, int16_t h, uint8_t r)
       touch_map_y2 = 0;
       break;
     default: // case 0:
-      touch_swap_xy = true;
+      touch_swap_xy = false;
       touch_map_x1 = 0;
       touch_map_x2 = touch_max_x;
       touch_map_y1 = 0;
