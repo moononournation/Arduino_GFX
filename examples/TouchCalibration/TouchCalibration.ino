@@ -1,10 +1,17 @@
 /*******************************************************************************
- * Touch Calibration tool for helping other example touch screen support
+ * Touch Calibration tool for helping other example touchscreen support
  *
- * Touch libraries:
- * FT6X36: https://github.com/strange-v/FT6X36.git
- * GT911: https://github.com/TAMCTec/gt911-arduino.git
+ * For resistive touchscreen, you can follow the display hint for calibration.
+ * And then copy the serial output result to touch.h.
+ *
+ * For capacitive touchscreen, it should no need to calibrate.
+ * This tool just help you check the connection and orientation.
+ *
+ * Resistive touchscreen libraries
  * XPT2046: https://github.com/PaulStoffregen/XPT2046_Touchscreen.git
+ * 
+ * Capacitive touchscreen libraries
+ * TouchLib: https://github.com/mmMicky/TouchLib.git
  ******************************************************************************/
 
 /*******************************************************************************
@@ -82,7 +89,8 @@ void setup(void)
   // Init touch device
   w = gfx->width();
   h = gfx->height();
-  touch_init(w, h);
+  touch_init(w, h, gfx->getRotation());
+
   // Top left
   point_x[0] = w / 8;
   point_y[0] = h / 8;

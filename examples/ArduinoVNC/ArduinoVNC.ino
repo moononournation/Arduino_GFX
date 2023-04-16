@@ -178,9 +178,6 @@ void setup(void)
   GFX_EXTRA_PRE_INIT();
 #endif
 
-  // Init touch device
-  touch_init(gfx->width(), gfx->height());
-
   // Init keyboard device
   keyboard_init();
 
@@ -192,6 +189,10 @@ void setup(void)
   pinMode(GFX_BL, OUTPUT);
   digitalWrite(GFX_BL, HIGH);
 #endif
+
+  // Init touch device
+  touch_init(gfx->width(), gfx->height(), gfx->getRotation());
+
   TFTnoWifi();
 
   Serial.println("Init WiFi");

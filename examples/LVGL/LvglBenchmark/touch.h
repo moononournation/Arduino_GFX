@@ -1,31 +1,10 @@
 /*******************************************************************************
  * Touch libraries:
- * CST816T: https://github.com/fbiego/CST816S/issues/1
- * FT6X36: https://github.com/strange-v/FT6X36.git
- * GT911: https://github.com/TAMCTec/gt911-arduino.git
  * XPT2046: https://github.com/PaulStoffregen/XPT2046_Touchscreen.git
+ *
+ * Capacitive touchscreen libraries
+ * TouchLib: https://github.com/mmMicky/TouchLib.git
  ******************************************************************************/
-
-/* uncomment for CST816T */
-// #define TOUCH_CST816T
-// #define TOUCH_CST816T_SCL 13
-// #define TOUCH_CST816T_SDA 10
-// #define TOUCH_CST816T_INT 11
-// #define TOUCH_CST816T_RST 12
-
-/* uncomment for FT6X36 */
-// #define TOUCH_FT6X36
-// #define TOUCH_FT6X36_SCL 19
-// #define TOUCH_FT6X36_SDA 18
-// #define TOUCH_FT6X36_INT 39
-
-/* uncomment for GT911 */
-// #define TOUCH_GT911
-// #define TOUCH_GT911_SCL 41
-// #define TOUCH_GT911_SDA 40
-// #define TOUCH_GT911_INT -1
-// #define TOUCH_GT911_RST -1
-// #define TOUCH_GT911_ROTATION ROTATION_NORMAL
 
 /* uncomment for XPT2046 */
 // #define TOUCH_XPT2046
@@ -36,6 +15,14 @@
 // #define TOUCH_XPT2046_INT 18
 // #define TOUCH_XPT2046_ROTATION 0
 // #define TOUCH_XPT2046_SAMPLES 50
+
+// uncomment for most capacitive touchscreen
+// #define TOUCH_MODULES_FT5x06 // GT911 / CST_SELF / CST_MUTUAL / ZTW622 / L58 / FT3267 / FT5x06
+// #define TOUCH_MODULE_ADDR FT5x06_ADDR // CTS328_SLAVE_ADDRESS / L58_SLAVE_ADDRESS / CTS826_SLAVE_ADDRESS / CTS820_SLAVE_ADDRESS / CTS816S_SLAVE_ADDRESS / FT3267_SLAVE_ADDRESS / FT5x06_ADDR / GT911_SLAVE_ADDRESS1 / GT911_SLAVE_ADDRESS2 / ZTW622_SLAVE1_ADDRESS / ZTW622_SLAVE2_ADDRESS
+// #define TOUCH_SCL 5
+// #define TOUCH_SDA 6
+// #define TOUCH_RES -1
+// #define TOUCH_INT -1
 
 // Please fill below values from Arduino_GFX Example - TouchCalibration
 bool touch_swap_xy = false;
@@ -48,38 +35,92 @@ int16_t touch_max_x = 0, touch_max_y = 0;
 int16_t touch_raw_x = 0, touch_raw_y = 0;
 int16_t touch_last_x = 0, touch_last_y = 0;
 
-#if defined(TOUCH_CST816T)
-#include "CST816T.h"
-CST816T ts(TOUCH_CST816T_SDA, TOUCH_CST816T_SCL, TOUCH_CST816T_RST, TOUCH_CST816T_INT);
-
-#elif defined(TOUCH_FT6X36)
-#include <Wire.h>
-#include <FT6X36.h>
-FT6X36 ts(&Wire, TOUCH_FT6X36_INT);
-bool touch_touched_flag = true, touch_released_flag = true;
-
-#elif defined(TOUCH_GT911)
-#include <Wire.h>
-#include <TAMC_GT911.h>
-TAMC_GT911 ts = TAMC_GT911(TOUCH_GT911_SDA, TOUCH_GT911_SCL, TOUCH_GT911_INT, TOUCH_GT911_RST, 4096, 4096);
-
-#elif defined(TOUCH_XPT2046)
+#if defined(TOUCH_XPT2046)
 #include <XPT2046_Touchscreen.h>
 #include <SPI.h>
 XPT2046_Touchscreen ts(TOUCH_XPT2046_CS, TOUCH_XPT2046_INT);
 
-#endif
+#elif defined(TOUCH_MODULE_ADDR) // TouchLib
+#include <Wire.h>
+#include <TouchLib.h>
+TouchLib touch(Wire, TOUCH_SDA, TOUCH_SCL, TOUCH_MODULE_ADDR);
 
-#if defined(TOUCH_FT6X36)
-void touch(TPoint p, TEvent e)
+#endif // TouchLib
+
+void touch_init(int16_t w, int16_t h, uint8_t r)
 {
-  if (e != TEvent::Tap && e != TEvent::DragStart && e != TEvent::DragMove && e != TEvent::DragEnd)
+  touch_max_x = w - 1;
+  touch_max_y = h - 1;
+  if (touch_map_x1 == -1)
   {
-    return;
+    switch (r)
+    {
+    case 3:
+      touch_swap_xy = true;
+      touch_map_x1 = touch_max_x;
+      touch_map_x2 = 0;
+      touch_map_y1 = 0;
+      touch_map_y2 = touch_max_y;
+      break;
+    case 2:
+      touch_swap_xy = false;
+      touch_map_x1 = touch_max_x;
+      touch_map_x2 = 0;
+      touch_map_y1 = touch_max_y;
+      touch_map_y2 = 0;
+      break;
+    case 1:
+      touch_swap_xy = true;
+      touch_map_x1 = 0;
+      touch_map_x2 = touch_max_x;
+      touch_map_y1 = touch_max_y;
+      touch_map_y2 = 0;
+      break;
+    default: // case 0:
+      touch_swap_xy = true;
+      touch_map_x1 = 0;
+      touch_map_x2 = touch_max_x;
+      touch_map_y1 = 0;
+      touch_map_y2 = touch_max_y;
+      break;
+    }
   }
-  // translation logic depends on screen rotation
-  touch_raw_x = p.x;
-  touch_raw_y = p.y;
+
+#if defined(TOUCH_XPT2046)
+  SPI.begin(TOUCH_XPT2046_SCK, TOUCH_XPT2046_MISO, TOUCH_XPT2046_MOSI, TOUCH_XPT2046_CS);
+  ts.begin();
+  ts.setRotation(TOUCH_XPT2046_ROTATION);
+
+#elif defined(TOUCH_MODULE_ADDR) // TouchLib
+  // Reset touchscreen
+#if (TOUCH_RES > 0)
+  pinMode(TOUCH_RES, OUTPUT);
+  digitalWrite(TOUCH_RES, 0);
+  delay(200);
+  digitalWrite(TOUCH_RES, 1);
+  delay(200);
+#endif
+  Wire.begin(TOUCH_SDA, TOUCH_SCL);
+  touch.init();
+
+#endif // TouchLib
+}
+
+bool touch_has_signal()
+{
+#if defined(TOUCH_XPT2046)
+  return ts.tirqTouched();
+
+#elif defined(TOUCH_MODULE_ADDR) // TouchLib
+  // TODO: implement TOUCH_INT
+  return true;
+#endif                           // TouchLib
+
+  return false;
+}
+
+void translate_touch_raw()
+{
   if (touch_swap_xy)
   {
     touch_last_x = map(touch_raw_y, touch_map_x1, touch_map_x2, 0, touch_max_x);
@@ -90,128 +131,12 @@ void touch(TPoint p, TEvent e)
     touch_last_x = map(touch_raw_x, touch_map_x1, touch_map_x2, 0, touch_max_x);
     touch_last_y = map(touch_raw_y, touch_map_y1, touch_map_y2, 0, touch_max_y);
   }
-  switch (e)
-  {
-  case TEvent::Tap:
-    Serial.println("Tap");
-    touch_touched_flag = true;
-    touch_released_flag = true;
-    break;
-  case TEvent::DragStart:
-    Serial.println("DragStart");
-    touch_touched_flag = true;
-    break;
-  case TEvent::DragMove:
-    Serial.println("DragMove");
-    touch_touched_flag = true;
-    break;
-  case TEvent::DragEnd:
-    Serial.println("DragEnd");
-    touch_released_flag = true;
-    break;
-  default:
-    Serial.println("UNKNOWN");
-    break;
-  }
-}
-#endif
-
-void touch_init(int max_x, int max_y)
-{
-  touch_max_x = max_x;
-  touch_max_y = max_y;
-
-#if defined(TOUCH_CST816T)
-  ts.begin();
-
-#elif defined(TOUCH_FT6X36)
-  Wire.begin(TOUCH_FT6X36_SDA, TOUCH_FT6X36_SCL);
-  ts.begin();
-  ts.registerTouchHandler(touch);
-
-#elif defined(TOUCH_GT911)
-  Wire.begin(TOUCH_GT911_SDA, TOUCH_GT911_SCL);
-  ts.begin();
-  ts.setRotation(TOUCH_GT911_ROTATION);
-
-#elif defined(TOUCH_XPT2046)
-  SPI.begin(TOUCH_XPT2046_SCK, TOUCH_XPT2046_MISO, TOUCH_XPT2046_MOSI, TOUCH_XPT2046_CS);
-  ts.begin();
-  ts.setRotation(TOUCH_XPT2046_ROTATION);
-
-#endif
-}
-
-bool touch_has_signal()
-{
-#if defined(TOUCH_CST816T)
-  return true;
-
-#elif defined(TOUCH_FT6X36)
-  ts.loop();
-  return touch_touched_flag || touch_released_flag;
-
-#elif defined(TOUCH_GT911)
-  return true;
-
-#elif defined(TOUCH_XPT2046)
-  return ts.tirqTouched();
-
-#else
-  return false;
-#endif
+  // Serial.printf("touch_raw_x: %d, touch_raw_y: %d, touch_last_x: %d, touch_last_y: %d\n", touch_raw_x, touch_raw_y, touch_last_x, touch_last_y);
 }
 
 bool touch_touched()
 {
-#if defined(TOUCH_CST816T)
-  uint16_t touchX, touchY;
-  uint8_t gesture;
-  
-  if (ts.getTouch(&touchX, &touchY, &gesture))
-  {
-    touch_raw_x = touchX;
-    touch_raw_y = touchY;
-    if (touch_swap_xy)
-    {
-      touch_last_x = map(touch_raw_y, touch_map_x1, touch_map_x2, 0, touch_max_x);
-      touch_last_y = map(touch_raw_x, touch_map_y1, touch_map_y2, 0, touch_max_y);
-    }
-    else
-    {
-      touch_last_x = map(touch_raw_x, touch_map_x1, touch_map_x2, 0, touch_max_x);
-      touch_last_y = map(touch_raw_y, touch_map_y1, touch_map_y2, 0, touch_max_y);
-    }
-    return true;
-  }
-
-#elif defined(TOUCH_FT6X36)
-  if (touch_touched_flag)
-  {
-    touch_touched_flag = false;
-    return true;
-  }
-
-#elif defined(TOUCH_GT911)
-  ts.read();
-  if (ts.isTouched)
-  {
-    touch_raw_x = ts.points[0].x;
-    touch_raw_y = ts.points[0].y;
-    if (touch_swap_xy)
-    {
-      touch_last_x = map(touch_raw_y, touch_map_x1, touch_map_x2, 0, touch_max_x);
-      touch_last_y = map(touch_raw_x, touch_map_y1, touch_map_y2, 0, touch_max_y);
-    }
-    else
-    {
-      touch_last_x = map(touch_raw_x, touch_map_x1, touch_map_x2, 0, touch_max_x);
-      touch_last_y = map(touch_raw_y, touch_map_y1, touch_map_y2, 0, touch_max_y);
-    }
-    return true;
-  }
-
-#elif defined(TOUCH_XPT2046)
+#if defined(TOUCH_XPT2046)
   if (ts.touched())
   {
     TS_Point p = ts.getPoint();
@@ -232,43 +157,34 @@ bool touch_touched()
       }
       // Serial.printf("touch_raw_x: %d, touch_raw_y: %d, p.z: %d\n", touch_raw_x, touch_raw_y, p.z);
     }
-    if (touch_swap_xy)
-    {
-      touch_last_x = map(touch_raw_y, touch_map_x1, touch_map_x2, 0, touch_max_x);
-      touch_last_y = map(touch_raw_x, touch_map_y1, touch_map_y2, 0, touch_max_y);
-    }
-    else
-    {
-      touch_last_x = map(touch_raw_x, touch_map_x1, touch_map_x2, 0, touch_max_x);
-      touch_last_y = map(touch_raw_y, touch_map_y1, touch_map_y2, 0, touch_max_y);
-    }
+    translate_touch_raw();
+    return true;
+  }
+#elif defined(TOUCH_MODULE_ADDR) // TouchLib
+  if (touch.read())
+  {
+    TP_Point t = touch.getPoint(0);
+    touch_raw_x = t.x;
+    touch_raw_y = t.y;
+
+    touch_last_x = touch_raw_x;
+    touch_last_y = touch_raw_y;
+
+    translate_touch_raw();
     return true;
   }
 
-#endif
+#endif // TouchLib
+
   return false;
 }
 
 bool touch_released()
 {
-#if defined(TOUCH_FT6X36)
-  if (touch_released_flag)
-  {
-    touch_released_flag = false;
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-
-#elif defined(TOUCH_GT911)
+#if defined(TOUCH_XPT2046)
   return true;
 
-#elif defined(TOUCH_XPT2046)
-  return true;
-
-#else
+#elif defined(TOUCH_MODULE_ADDR) // TouchLib
   return false;
-#endif
+#endif                           // TouchLib
 }
