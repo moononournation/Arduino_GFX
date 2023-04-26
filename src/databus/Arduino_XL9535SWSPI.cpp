@@ -125,16 +125,6 @@ void Arduino_XL9535SWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repe
 {
   // not implemented
 }
-
-void Arduino_XL9535SWSPI::read_all_reg()
-{
-  uint8_t data;
-  for (uint8_t i = 0; i < 8; i++)
-  {
-    this->readRegister(i, &data, 1);
-    Serial.printf("0x%02x : 0x%02X \r\n", i, data);
-  }
-}
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 void Arduino_XL9535SWSPI::writeRegister(uint8_t reg, uint8_t *data, uint8_t len)
