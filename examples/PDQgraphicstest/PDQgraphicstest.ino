@@ -899,7 +899,11 @@ void loop(void)
   delay(60 * 1000L);
 }
 
+#ifdef ESP32
+void serialOut(const char *item, int32_t v, uint32_t d, bool clear)
+#else
 void serialOut(const __FlashStringHelper *item, int32_t v, uint32_t d, bool clear)
+#endif
 {
 #ifdef CANVAS
   gfx->flush();
@@ -920,7 +924,11 @@ void serialOut(const __FlashStringHelper *item, int32_t v, uint32_t d, bool clea
   }
 }
 
+#ifdef ESP32
+void printnice(const char *item, long int v)
+#else
 void printnice(const __FlashStringHelper *item, long int v)
+#endif
 {
   gfx->setTextSize(tsb);
   gfx->setTextColor(CYAN);
