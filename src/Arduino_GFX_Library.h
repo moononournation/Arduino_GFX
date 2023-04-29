@@ -265,8 +265,4 @@
 Arduino_DataBus *create_default_Arduino_DataBus();
 Arduino_GFX *create_default_Arduino_GFX();
 
-void gfx_draw_bitmap_to_framebuffer(
-    uint16_t *from_bitmap, int16_t bitmap_w, int16_t bitmap_h,
-    uint16_t *framebuffer, int16_t x, int16_t y, int16_t framebuffer_w, int16_t framebuffer_h);
-
 #endif // _ARDUINO_GFX_LIBRARIES_H_

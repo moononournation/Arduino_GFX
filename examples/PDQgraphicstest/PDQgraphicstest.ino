@@ -98,7 +98,7 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     1 /* pclk_active_neg */, 9000000 /* prefer_speed */,
     1 /* de_idle_high */, 1 /* pclk_idle_high */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
-    480 /* width */, 272 /* height */, rgbpanel);
+    480 /* width */, 272 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 // option 2:
 // Uncomment for ST7262 IPS LCD 800x480
 // Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
@@ -110,7 +110,7 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 //     0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 8 /* vsync_back_porch */,
 //     1 /* pclk_active_neg */, 16000000 /* prefer_speed */);
 // Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
-//     800 /* width */, 480 /* height */, rgbpanel);
+//     800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 // option 3:
 // Uncomment for RPi DPI 1024x600
 // Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
@@ -122,7 +122,7 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 //     0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 12 /* vsync_back_porch */,
 //     1 /* pclk_active_neg */, 9000000 /* prefer_speed */);
 // Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
-//     1024 /* width */, 600 /* height */, rgbpanel);
+//     1024 /* width */, 600 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 
 #elif defined(ESP32_8048S070)
 #define GFX_BL 2
@@ -134,7 +134,7 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     0 /* hsync_polarity */, 180 /* hsync_front_porch */, 30 /* hsync_pulse_width */, 16 /* hsync_back_porch */,
     0 /* vsync_polarity */, 12 /* vsync_front_porch */, 13 /* vsync_pulse_width */, 10 /* vsync_back_porch */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
-    800 /* width */, 480 /* height */, rgbpanel);
+    800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 
 #elif defined(ESP32_LCDKIT_SPI)
 #define GFX_BL 23
@@ -232,7 +232,7 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     1 /* hsync_polarity */, 40 /* hsync_front_porch */, 48 /* hsync_pulse_width */, 128 /* hsync_back_porch */,
     1 /* vsync_polarity */, 13 /* vsync_front_porch */, 3 /* vsync_pulse_width */, 45 /* vsync_back_porch */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
-    1024 /* width */, 600 /* height */, rgbpanel);
+    1024 /* width */, 600 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 
 #elif defined(ESP32S3_2_1_TP)
 #define GFX_BL 38
@@ -332,7 +332,7 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     0 /* vsync_polarity */, 13 /* vsync_front_porch */, 3 /* vsync_pulse_width */, 32 /* vsync_back_porch */,
     1 /* pclk_active_neg */, 16000000 /* prefer_speed */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
-    800 /* width */, 480 /* height */, rgbpanel);
+    800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 
 #elif defined(WT32_SC01)
 #define GFX_BL 23

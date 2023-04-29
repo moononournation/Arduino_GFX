@@ -30,4 +30,21 @@ protected:
 
 #endif // _ARDUINO_G_H_
 
+// utility functions
+bool gfx_draw_bitmap_to_framebuffer(
+    uint16_t *from_bitmap, int16_t bitmap_w, int16_t bitmap_h,
+    uint16_t *framebuffer, int16_t x, int16_t y, int16_t framebuffer_w, int16_t framebuffer_h);
+
+bool gfx_draw_bitmap_to_framebuffer_rotate_1(
+    uint16_t *from_bitmap, int16_t bitmap_w, int16_t bitmap_h,
+    uint16_t *framebuffer, int16_t x, int16_t y, int16_t framebuffer_w, int16_t framebuffer_h);
+
+bool gfx_draw_bitmap_to_framebuffer_rotate_2(
+    uint16_t *from_bitmap, int16_t bitmap_w, int16_t bitmap_h,
+    uint16_t *framebuffer, int16_t x, int16_t y, int16_t framebuffer_w, int16_t framebuffer_h);
+
+bool gfx_draw_bitmap_to_framebuffer_rotate_3(
+    uint16_t *from_bitmap, int16_t bitmap_w, int16_t bitmap_h,
+    uint16_t *framebuffer, int16_t x, int16_t y, int16_t framebuffer_w, int16_t framebuffer_h);
+
 #endif // !defined(LITTLE_FOOT_PRINT)

@@ -12,7 +12,9 @@ Arduino_RGB_Display::Arduino_RGB_Display(
       _bus(bus), _rst(rst), _init_operations(init_operations), _init_operations_len(init_operations_len)
 {
   _framebuffer_size = w * h * 2;
-  _rotation = r;
+  MAX_X = WIDTH - 1;
+  MAX_Y = HEIGHT - 1;
+  setRotation(r);
 }
 
 bool Arduino_RGB_Display::begin(int32_t speed)
@@ -67,26 +69,78 @@ bool Arduino_RGB_Display::begin(int32_t speed)
 void Arduino_RGB_Display::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
   uint16_t *fb = _framebuffer;
-  fb += (int32_t)y * _width;
-  fb += x;
-  *fb = color;
-  if (_auto_flush)
+  switch (_rotation)
   {
-    Cache_WriteBack_Addr((uint32_t)fb, 2);
+  case 1:
+    fb += (int32_t)x * _height;
+    fb += _max_y - y;
+    *fb = color;
+    if (_auto_flush)
+    {
+      Cache_WriteBack_Addr((uint32_t)fb, 2);
+    }
+    break;
+  case 2:
+    fb += (int32_t)(_max_y - y) * _width;
+    fb += _max_x - x;
+    *fb = color;
+    if (_auto_flush)
+    {
+      Cache_WriteBack_Addr((uint32_t)fb, 2);
+    }
+    break;
+  case 3:
+    fb += (int32_t)(_max_x - x) * _height;
+    fb += y;
+    *fb = color;
+    if (_auto_flush)
+    {
+      Cache_WriteBack_Addr((uint32_t)fb, 2);
+    }
+    break;
+  default: // case 0:
+    fb += (int32_t)y * _width;
+    fb += x;
+    *fb = color;
+    if (_auto_flush)
+    {
+      Cache_WriteBack_Addr((uint32_t)fb, 2);
+    }
   }
 }
 
 void Arduino_RGB_Display::writeFastVLine(int16_t x, int16_t y,
                                          int16_t h, uint16_t color)
 {
-  if (_ordered_in_range(x, 0, _max_x) && h)
+  // log_i("writeFastVLine(x: %d, y: %d, h: %d)", x, y, h);
+  switch (_rotation)
+  {
+  case 1:
+    writeFastHLineCore(_height - y - h, x, h, color);
+    break;
+  case 2:
+    writeFastVLineCore(_max_x - x, _height - y - h, h, color);
+    break;
+  case 3:
+    writeFastHLineCore(y, _max_x - x, h, color);
+    break;
+  default: // case 0:
+    writeFastVLineCore(x, y, h, color);
+  }
+}
+
+void Arduino_RGB_Display::writeFastVLineCore(int16_t x, int16_t y,
+                                             int16_t h, uint16_t color)
+{
+  // log_i("writeFastVLineCore(x: %d, y: %d, h: %d)", x, y, h);
+  if (_ordered_in_range(x, 0, MAX_X) && h)
   { // X on screen, nonzero height
     if (h < 0)
     {             // If negative height...
       y += h + 1; //   Move Y to top edge
       h = -h;     //   Use positive height
     }
-    if (y <= _max_y)
+    if (y <= MAX_Y)
     { // Not off bottom
       int16_t y2 = y + h - 1;
       if (y2 >= 0)
@@ -97,19 +151,19 @@ void Arduino_RGB_Display::writeFastVLine(int16_t x, int16_t y,
           y = 0;
           h = y2 + 1;
         } // Clip top
-        if (y2 > _max_y)
+        if (y2 > MAX_Y)
         {
-          h = _max_y - y + 1;
+          h = MAX_Y - y + 1;
         } // Clip bottom
 
-        uint16_t *fb = _framebuffer + ((int32_t)y * _width) + x;
+        uint16_t *fb = _framebuffer + ((int32_t)y * WIDTH) + x;
         if (_auto_flush)
         {
           while (h--)
           {
             *fb = color;
             Cache_WriteBack_Addr((uint32_t)fb, 2);
-            fb += _width;
+            fb += WIDTH;
           }
         }
         else
@@ -117,7 +171,7 @@ void Arduino_RGB_Display::writeFastVLine(int16_t x, int16_t y,
           while (h--)
           {
             *fb = color;
-            fb += _width;
+            fb += WIDTH;
           }
         }
       }
@@ -128,14 +182,35 @@ void Arduino_RGB_Display::writeFastVLine(int16_t x, int16_t y,
 void Arduino_RGB_Display::writeFastHLine(int16_t x, int16_t y,
                                          int16_t w, uint16_t color)
 {
-  if (_ordered_in_range(y, 0, _max_y) && w)
+  // log_i("writeFastHLine(x: %d, y: %d, w: %d)", x, y, w);
+  switch (_rotation)
+  {
+  case 1:
+    writeFastVLineCore(_max_y - y, x, w, color);
+    break;
+  case 2:
+    writeFastHLineCore(_width - x - w, _max_y - y, w, color);
+    break;
+  case 3:
+    writeFastVLineCore(y, _width - x - w, w, color);
+    break;
+  default: // case 0:
+    writeFastHLineCore(x, y, w, color);
+  }
+}
+
+void Arduino_RGB_Display::writeFastHLineCore(int16_t x, int16_t y,
+                                             int16_t w, uint16_t color)
+{
+  // log_i("writeFastHLineCore(x: %d, y: %d, w: %d)", x, y, w);
+  if (_ordered_in_range(y, 0, MAX_Y) && w)
   { // Y on screen, nonzero width
     if (w < 0)
     {             // If negative width...
       x += w + 1; //   Move X to left edge
       w = -w;     //   Use positive width
     }
-    if (x <= _max_x)
+    if (x <= MAX_X)
     { // Not off right
       int16_t x2 = x + w - 1;
       if (x2 >= 0)
@@ -146,12 +221,12 @@ void Arduino_RGB_Display::writeFastHLine(int16_t x, int16_t y,
           x = 0;
           w = x2 + 1;
         } // Clip left
-        if (x2 > _max_x)
+        if (x2 > MAX_X)
         {
-          w = _max_x - x + 1;
+          w = MAX_X - x + 1;
         } // Clip right
 
-        uint16_t *fb = _framebuffer + ((int32_t)y * _width) + x;
+        uint16_t *fb = _framebuffer + ((int32_t)y * WIDTH) + x;
         uint32_t cachePos = (uint32_t)fb;
         int16_t writeSize = w * 2;
         while (w--)
@@ -170,8 +245,35 @@ void Arduino_RGB_Display::writeFastHLine(int16_t x, int16_t y,
 void Arduino_RGB_Display::writeFillRectPreclipped(int16_t x, int16_t y,
                                                   int16_t w, int16_t h, uint16_t color)
 {
+  // log_i("writeFillRectPreclipped(x: %d, y: %d, w: %d, h: %d)", x, y, w, h);
+  if (_rotation > 0)
+  {
+    int16_t t = x;
+    switch (_rotation)
+    {
+    case 1:
+      x = WIDTH - y - h;
+      y = t;
+      t = w;
+      w = h;
+      h = t;
+      break;
+    case 2:
+      x = WIDTH - x - w;
+      y = HEIGHT - y - h;
+      break;
+    case 3:
+      x = y;
+      y = HEIGHT - t - w;
+      t = w;
+      w = h;
+      h = t;
+      break;
+    }
+  }
+  // log_i("adjusted writeFillRectPreclipped(x: %d, y: %d, w: %d, h: %d)", x, y, w, h);
   uint16_t *row = _framebuffer;
-  row += y * _width;
+  row += y * WIDTH;
   uint32_t cachePos = (uint32_t)row;
   row += x;
   for (int j = 0; j < h; j++)
@@ -180,11 +282,11 @@ void Arduino_RGB_Display::writeFillRectPreclipped(int16_t x, int16_t y,
     {
       row[i] = color;
     }
-    row += _width;
+    row += WIDTH;
   }
   if (_auto_flush)
   {
-    Cache_WriteBack_Addr(cachePos, _width * h * 2);
+    Cache_WriteBack_Addr(cachePos, WIDTH * h * 2);
   }
 }
 
@@ -201,45 +303,52 @@ void Arduino_RGB_Display::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitma
   }
   else
   {
-    int16_t xskip = 0;
-    if ((y + h - 1) > _max_y)
+    if (_rotation > 0)
     {
-      h -= (y + h - 1) - _max_y;
+      Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, w, h);
     }
-    if (y < 0)
+    else
     {
-      bitmap -= y * w;
-      h += y;
-      y = 0;
-    }
-    if ((x + w - 1) > _max_x)
-    {
-      xskip = (x + w - 1) - _max_x;
-      w -= xskip;
-    }
-    if (x < 0)
-    {
-      bitmap -= x;
-      xskip -= x;
-      w += x;
-      x = 0;
-    }
-    uint16_t *row = _framebuffer;
-    row += y * _width;
-    uint32_t cachePos = (uint32_t)row;
-    row += x;
-    for (int j = 0; j < h; j++)
-    {
-      for (int i = 0; i < w; i++)
+      int16_t xskip = 0;
+      if ((y + h - 1) > _max_y)
       {
-        row[i] = color_index[*bitmap++];
+        h -= (y + h - 1) - _max_y;
       }
-      bitmap += xskip;
-      row += _width;
-    }
-    if (_auto_flush)
-    {
-      Cache_WriteBack_Addr(cachePos, _width * h * 2);
+      if (y < 0)
+      {
+        bitmap -= y * w;
+        h += y;
+        y = 0;
+      }
+      if ((x + w - 1) > _max_x)
+      {
+        xskip = (x + w - 1) - _max_x;
+        w -= xskip;
+      }
+      if (x < 0)
+      {
+        bitmap -= x;
+        xskip -= x;
+        w += x;
+        x = 0;
+      }
+      uint16_t *row = _framebuffer;
+      row += y * _width;
+      uint32_t cachePos = (uint32_t)row;
+      row += x;
+      for (int j = 0; j < h; j++)
+      {
+        for (int i = 0; i < w; i++)
+        {
+          row[i] = color_index[*bitmap++];
+        }
+        bitmap += xskip;
+        row += _width;
+      }
+      if (_auto_flush)
+      {
+        Cache_WriteBack_Addr(cachePos, _width * h * 2);
+      }
     }
   }
 }
@@ -247,77 +356,48 @@ void Arduino_RGB_Display::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitma
 void Arduino_RGB_Display::draw16bitRGBBitmap(int16_t x, int16_t y,
                                              uint16_t *bitmap, int16_t w, int16_t h)
 {
-  if (
-      ((x + w - 1) < 0) || // Outside left
-      ((y + h - 1) < 0) || // Outside top
-      (x > _max_x) ||      // Outside right
-      (y > _max_y)         // Outside bottom
-  )
-  {
-    return;
-  }
-  else
-  {
-    int16_t xskip = 0;
-    if ((y + h - 1) > _max_y)
-    {
-      h -= (y + h - 1) - _max_y;
-    }
-    if (y < 0)
-    {
-      bitmap -= y * w;
-      h += y;
-      y = 0;
-    }
-    if ((x + w - 1) > _max_x)
-    {
-      xskip = (x + w - 1) - _max_x;
-      w -= xskip;
-    }
-    if (x < 0)
-    {
-      bitmap -= x;
-      xskip -= x;
-      w += x;
-      x = 0;
-    }
-    uint16_t *row = _framebuffer;
-    row += y * _width;
-    uint32_t cachePos = (uint32_t)row;
-    row += x;
-    if (((_width & 1) == 0) && ((xskip & 1) == 0) && ((w & 1) == 0))
-    {
-      uint32_t *row2 = (uint32_t *)row;
-      uint32_t *bitmap2 = (uint32_t *)bitmap;
-      int16_t _width2 = _width >> 1;
-      int16_t xskip2 = xskip >> 1;
-      int16_t w2 = w >> 1;
+  bool result;
 
-      for (int16_t j = 0; j < h; j++)
-      {
-        for (int16_t i = 0; i < w2; i++)
-        {
-          row2[i] = *bitmap2++;
-        }
-        bitmap2 += xskip2;
-        row2 += _width2;
-      }
-    }
-    else
-    {
-      for (int j = 0; j < h; j++)
-      {
-        for (int i = 0; i < w; i++)
-        {
-          row[i] = *bitmap++;
-        }
-        bitmap += xskip;
-        row += _width;
-      }
-    }
+  switch (_rotation)
+  {
+  case 1:
+    result = gfx_draw_bitmap_to_framebuffer_rotate_1(bitmap, w, h, _framebuffer, x, y, _width, _height);
+    break;
+  case 2:
+    result = gfx_draw_bitmap_to_framebuffer_rotate_2(bitmap, w, h, _framebuffer, x, y, _width, _height);
+    break;
+  case 3:
+    result = gfx_draw_bitmap_to_framebuffer_rotate_3(bitmap, w, h, _framebuffer, x, y, _width, _height);
+    break;
+  default: // case 0:
+    result = gfx_draw_bitmap_to_framebuffer(bitmap, w, h, _framebuffer, x, y, _width, _height);
+  }
+
+  if (result)
+  {
     if (_auto_flush)
     {
-      Cache_WriteBack_Addr(cachePos, _width * h * 2);
+      uint32_t cachePos;
+      size_t cache_size;
+      switch (_rotation)
+      {
+      case 1:
+        cachePos = (uint32_t)(_framebuffer + (x * WIDTH));
+        cache_size = HEIGHT * w * 2;
+        break;
+      case 2:
+        cachePos = (uint32_t)(_framebuffer + ((MAX_Y - y) * WIDTH));
+        cache_size = HEIGHT * h * 2;
+        break;
+      case 3:
+        cachePos = (uint32_t)(_framebuffer + ((MAX_Y - x) * WIDTH));
+        cache_size = HEIGHT * w * 2;
+        break;
+      default: // case 0:
+        cachePos = (uint32_t)(_framebuffer + (y * WIDTH));
+        cache_size = HEIGHT * h * 2;
+      }
+      Cache_WriteBack_Addr(cachePos, cache_size);
     }
   }
 }
@@ -336,47 +416,54 @@ void Arduino_RGB_Display::draw16bitBeRGBBitmap(int16_t x, int16_t y,
   }
   else
   {
-    int16_t xskip = 0;
-    if ((y + h - 1) > _max_y)
+    if (_rotation > 0)
     {
-      h -= (y + h - 1) - _max_y;
+      Arduino_GFX::draw16bitBeRGBBitmap(x, y, bitmap, w, h);
     }
-    if (y < 0)
+    else
     {
-      bitmap -= y * w;
-      h += y;
-      y = 0;
-    }
-    if ((x + w - 1) > _max_x)
-    {
-      xskip = (x + w - 1) - _max_x;
-      w -= xskip;
-    }
-    if (x < 0)
-    {
-      bitmap -= x;
-      xskip -= x;
-      w += x;
-      x = 0;
-    }
-    uint16_t *row = _framebuffer;
-    row += y * _width;
-    uint32_t cachePos = (uint32_t)row;
-    row += x;
-    uint16_t color;
-    for (int j = 0; j < h; j++)
-    {
-      for (int i = 0; i < w; i++)
+      int16_t xskip = 0;
+      if ((y + h - 1) > _max_y)
       {
-        color = *bitmap++;
-        MSB_16_SET(row[i], color);
+        h -= (y + h - 1) - _max_y;
       }
-      bitmap += xskip;
-      row += _width;
-    }
-    if (_auto_flush)
-    {
-      Cache_WriteBack_Addr(cachePos, _width * h * 2);
+      if (y < 0)
+      {
+        bitmap -= y * w;
+        h += y;
+        y = 0;
+      }
+      if ((x + w - 1) > _max_x)
+      {
+        xskip = (x + w - 1) - _max_x;
+        w -= xskip;
+      }
+      if (x < 0)
+      {
+        bitmap -= x;
+        xskip -= x;
+        w += x;
+        x = 0;
+      }
+      uint16_t *row = _framebuffer;
+      row += y * _width;
+      uint32_t cachePos = (uint32_t)row;
+      row += x;
+      uint16_t color;
+      for (int j = 0; j < h; j++)
+      {
+        for (int i = 0; i < w; i++)
+        {
+          color = *bitmap++;
+          MSB_16_SET(row[i], color);
+        }
+        bitmap += xskip;
+        row += _width;
+      }
+      if (_auto_flush)
+      {
+        Cache_WriteBack_Addr(cachePos, _width * h * 2);
+      }
     }
   }
 }
