@@ -119,15 +119,9 @@ void Arduino_ILI9481_18bit::tftInit()
 
   delay(280);
 
-  if (_ips)
-  {
-    _bus->sendCommand(ILI9481_INVON);
-  }
-  else
-  {
-    _bus->sendCommand(ILI9481_INVOFF);
-  }
   _bus->sendCommand(0x29);
+
+  invertDisplay(false);
 }
 
 void Arduino_ILI9481_18bit::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
@@ -194,7 +188,7 @@ void Arduino_ILI9481_18bit::setRotation(uint8_t r)
 
 void Arduino_ILI9481_18bit::invertDisplay(bool i)
 {
-  _bus->sendCommand(_ips ? (i ? ILI9481_INVOFF : ILI9481_INVON) : (i ? ILI9481_INVON : ILI9481_INVOFF));
+  _bus->sendCommand((_ips ^ i) ? ILI9481_INVON : ILI9481_INVOFF);
 }
 
 void Arduino_ILI9481_18bit::displayOn(void)

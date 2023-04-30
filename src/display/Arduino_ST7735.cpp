@@ -56,10 +56,7 @@ void Arduino_ST7735::tftInit()
 
   _bus->batchOperation(st7735_init_operations, sizeof(st7735_init_operations));
 
-  if (_ips)
-  {
-    _bus->sendCommand(ST7735_INVON);
-  }
+  invertDisplay(false);
 }
 
 void Arduino_ST7735::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
@@ -126,7 +123,7 @@ void Arduino_ST7735::setRotation(uint8_t r)
 
 void Arduino_ST7735::invertDisplay(bool i)
 {
-  _bus->sendCommand(_ips ? (i ? ST7735_INVOFF : ST7735_INVON) : (i ? ST7735_INVON : ST7735_INVOFF));
+  _bus->sendCommand((_ips ^ i) ? ST7735_INVON : ST7735_INVOFF);
 }
 
 void Arduino_ST7735::displayOn(void)

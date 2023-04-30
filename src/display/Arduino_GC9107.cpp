@@ -98,8 +98,5 @@ void Arduino_GC9107::tftInit()
 
   _bus->batchOperation(GC9107_init_operations, sizeof(GC9107_init_operations));
 
-  if (_ips)
-  {
-    _bus->sendCommand(GC9107_INVON);
-  }
+  invertDisplay(false);
 }

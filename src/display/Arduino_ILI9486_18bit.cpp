@@ -84,17 +84,10 @@ void Arduino_ILI9486_18bit::tftInit()
   _bus->sendData(0x20);
   _bus->sendData(0x00);
 
-  if (_ips)
-  {
-    _bus->sendCommand(ILI9486_INVON);
-  }
-  else
-  {
-    _bus->sendCommand(ILI9486_INVOFF);
-  }
-
   _bus->sendCommand(ILI9486_DISPON); // Display on
   delay(25);
+
+  invertDisplay(false);
 }
 
 void Arduino_ILI9486_18bit::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)

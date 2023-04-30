@@ -106,8 +106,5 @@ void Arduino_ILI9806::tftInit()
 
   _bus->batchOperation(ili9806_init_operations, sizeof(ili9806_init_operations));
 
-  if (_ips)
-  {
-    _bus->sendCommand(ILI9806_INVON);
-  }
+  invertDisplay(false);
 }

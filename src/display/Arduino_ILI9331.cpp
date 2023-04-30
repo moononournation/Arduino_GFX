@@ -134,10 +134,6 @@ void Arduino_ILI9331::tftInit()
   }
 
   _bus->batchOperation(ili9331_init_operations, sizeof(ili9331_init_operations));
-  if (_ips)
-  {
-    _bus->beginWrite();
-    _bus->writeC16D16(ILI9331_GSC2, _ips); // Invert display
-    _bus->endWrite();
-  }
+
+  invertDisplay(false);
 }

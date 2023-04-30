@@ -106,8 +106,5 @@ void Arduino_NT39125::tftInit()
 
   _bus->batchOperation(nt39125_init_operations, sizeof(nt39125_init_operations));
 
-  if (_ips)
-  {
-    _bus->sendCommand(NT39125_INVON);
-  }
+  invertDisplay(false);
 }

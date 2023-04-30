@@ -106,8 +106,5 @@ void Arduino_NT35310::tftInit()
 
   _bus->batchOperation(nt35310_init_operations, sizeof(nt35310_init_operations));
 
-  if (_ips)
-  {
-    _bus->sendCommand(NT35310_ENTER_INVERT_MODE);
-  }
+  invertDisplay(false);
 }

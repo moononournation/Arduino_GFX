@@ -98,8 +98,5 @@ void Arduino_HX8357B::tftInit()
 
   _bus->batchOperation(hx8357b_init_operations, sizeof(hx8357b_init_operations));
 
-  if (_ips)
-  {
-    _bus->sendCommand(HX8357B_ENTER_INVERSION_MODE);
-  }
+  invertDisplay(false);
 }

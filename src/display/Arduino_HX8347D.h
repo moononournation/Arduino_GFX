@@ -15,6 +15,11 @@
 
 #define HX8347D_RST_DELAY 120
 
+#define HX8347D_DISPLAY_MODE_CONTROL 0x01 // Display Mode control
+
+#define HX8347D_INV_OFF 0x00 // INV_ON disable
+#define HX8347D_INV_ON 0x02  // INV_ON enable
+
 static const uint8_t hx8347d_init_operations[] = {
     BEGIN_WRITE,
     WRITE_C8_D8, 0xEA, 0x00,

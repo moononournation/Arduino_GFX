@@ -70,7 +70,7 @@ void Arduino_ST7796::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t 
 
 void Arduino_ST7796::invertDisplay(bool i)
 {
-  _bus->sendCommand(_ips ? (i ? ST7796_INVOFF : ST7796_INVON) : (i ? ST7796_INVON : ST7796_INVOFF));
+  _bus->sendCommand((_ips ^ i) ? ST7796_INVON : ST7796_INVOFF);
 }
 
 void Arduino_ST7796::displayOn(void)
@@ -108,8 +108,5 @@ void Arduino_ST7796::tftInit()
 
   _bus->batchOperation(st7796_init_operations, sizeof(st7796_init_operations));
 
-  if (_ips)
-  {
-    _bus->sendCommand(ST7796_INVON);
-  }
+  invertDisplay(false);
 }

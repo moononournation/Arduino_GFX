@@ -78,14 +78,7 @@ void Arduino_HX8369A::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
 
 void Arduino_HX8369A::invertDisplay(bool i)
 {
-  if (_ips ^ i)
-  {
-    _bus->sendCommand(HX8369A_ENTER_INVERSION_MODE);
-  }
-  else
-  {
-    _bus->sendCommand(HX8369A_EXIT_INVERSION_MODE);
-  }
+  _bus->sendCommand((_ips ^ i) ? HX8369A_ENTER_INVERSION_MODE : HX8369A_EXIT_INVERSION_MODE);
 }
 
 void Arduino_HX8369A::displayOn(void)

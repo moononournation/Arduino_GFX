@@ -67,7 +67,7 @@ void Arduino_NV3041A::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
 
 void Arduino_NV3041A::invertDisplay(bool i)
 {
-  _bus->sendCommand(_ips ? (i ? NV3041A_INVOFF : NV3041A_INVON) : (i ? NV3041A_INVON : NV3041A_INVOFF));
+  _bus->sendCommand((_ips ^ i) ? NV3041A_INVON : NV3041A_INVOFF);
 }
 
 void Arduino_NV3041A::displayOn(void)
@@ -105,8 +105,5 @@ void Arduino_NV3041A::tftInit()
 
   _bus->batchOperation(nv3041a_init_operations, sizeof(nv3041a_init_operations));
 
-  if (_ips)
-  {
-    invertDisplay(false);
-  }
+  invertDisplay(false);
 }

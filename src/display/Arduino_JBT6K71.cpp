@@ -165,17 +165,10 @@ void Arduino_JBT6K71::setRotation(uint8_t r)
 
 void Arduino_JBT6K71::invertDisplay(bool i)
 {
-  if (
-      (_ips && (!i)) || ((!_ips) && i))
-  {
-    _bus->writeCommand16(0x0007); // Display mode
-    _bus->write16(0x4004);
-  }
-  else
-  {
-    _bus->writeCommand16(0x0007); // Display mode
-    _bus->write16(0x4000);
-  }
+  _bus->beginWrite();
+  _bus->writeCommand16(0x0007); // Display mode
+  _bus->write16((_ips ^ i) ? 0x4004 : 0x4000);
+  _bus->endWrite();
 }
 
 void Arduino_JBT6K71::displayOn(void)

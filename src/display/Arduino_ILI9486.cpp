@@ -109,12 +109,5 @@ void Arduino_ILI9486::tftInit()
 
   _bus->batchOperation(ili9486_init_operations, sizeof(ili9486_init_operations));
 
-  if (_ips)
-  {
-    _bus->sendCommand(ILI9486_INVON);
-  }
-  else
-  {
-    _bus->sendCommand(ILI9486_INVOFF);
-  }
+  invertDisplay(false);
 }

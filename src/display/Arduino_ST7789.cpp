@@ -78,7 +78,7 @@ void Arduino_ST7789::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t 
 
 void Arduino_ST7789::invertDisplay(bool i)
 {
-  _bus->sendCommand(_ips ? (i ? ST7789_INVOFF : ST7789_INVON) : (i ? ST7789_INVON : ST7789_INVOFF));
+  _bus->sendCommand((_ips ^ i) ? ST7789_INVON : ST7789_INVOFF);
 }
 
 void Arduino_ST7789::displayOn(void)
@@ -116,8 +116,5 @@ void Arduino_ST7789::tftInit()
 
   _bus->batchOperation(st7789_init_operations, sizeof(st7789_init_operations));
 
-  if (_ips)
-  {
-    _bus->sendCommand(ST7789_INVON);
-  }
+  invertDisplay(false);
 }

@@ -61,7 +61,7 @@ void Arduino_ILI9488_18bit::writeAddrWindow(int16_t x, int16_t y, uint16_t w, ui
 
 void Arduino_ILI9488_18bit::invertDisplay(bool i)
 {
-  _bus->sendCommand(i ? ILI9488_INVON : ILI9488_INVOFF);
+  _bus->sendCommand((_ips ^ i) ? ILI9488_INVON : ILI9488_INVOFF);
 }
 
 void Arduino_ILI9488_18bit::displayOn(void)
@@ -103,12 +103,5 @@ void Arduino_ILI9488_18bit::tftInit()
   _bus->writeC8D8(0x3A, 0x66); // Interface Pixel Format, 18 bit
   _bus->endWrite();
 
-  if (_ips)
-  {
-    _bus->sendCommand(ILI9488_INVON);
-  }
-  else
-  {
-    _bus->sendCommand(ILI9488_INVOFF);
-  }
+  invertDisplay(false);
 }
