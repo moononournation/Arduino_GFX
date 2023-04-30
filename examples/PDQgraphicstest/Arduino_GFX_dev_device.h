@@ -14,6 +14,7 @@
 // #define ESP32_S3_RGB
 // #define ESP32_S3_RPI_DPI
 // #define ESP32S3_2_1_TP
+// #define LILYGO_T_DECK
 // #define LILYGO_T_DISPLAY
 // #define LILYGO_T_DISPLAY_S3
 // #define LILYGO_T_RGB
@@ -253,6 +254,17 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
     bus, GFX_NOT_DEFINED /* RST */, st7701_type5_init_operations, sizeof(st7701_type5_init_operations));
+
+#elif defined(LILYGO_T_DECK)
+#define GFX_DEV_DEVICE LILYGO_T_DECK
+#define GFX_EXTRA_PRE_INIT()          \
+  {                                   \
+    pinMode(42 /* PWD */, OUTPUT);    \
+    digitalWrite(42 /* PWD */, HIGH); \
+  }
+#define GFX_BL 9
+Arduino_DataBus *bus = new Arduino_ESP32SPI(11 /* DC */, 12 /* CS */, 40 /* SCK */, 41 /* MOSI */, 38 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */, false /* IPS */);
 
 #elif defined(LILYGO_T_DISPLAY)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY
