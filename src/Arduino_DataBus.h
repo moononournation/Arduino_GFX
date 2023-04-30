@@ -107,9 +107,10 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #endif
 #define ATTR_UNUSED __attribute__((unused))
 
-#define MSB_16_SET(var, val)                             \
-  {                                                      \
-    (var) = (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8); \
+#define MSB_16(val) (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8)
+#define MSB_16_SET(var, val) \
+  {                          \
+    (var) = MSB_16(val);     \
   }
 #define MSB_32_SET(var, val)                                  \
   {                                                           \
