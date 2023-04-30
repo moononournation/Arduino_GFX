@@ -407,11 +407,10 @@ void Arduino_ESP32LCD8::writeBytes(uint8_t *data, uint32_t len)
     }
     else
     {
-      _data16.lsb = *data++;
       LCD_CAM.lcd_cmd_val.lcd_cmd_value = *data++;
       WAIT_LCD_NOT_BUSY;
       LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
-      LCD_CAM.lcd_cmd_val.lcd_cmd_value = _data16.lsb;
+      LCD_CAM.lcd_cmd_val.lcd_cmd_value = *data++;
       WAIT_LCD_NOT_BUSY;
       LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
 
