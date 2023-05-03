@@ -158,6 +158,8 @@ void Arduino_ESP32LCD8::writeCommand(uint8_t c)
   LCD_CAM.lcd_cmd_val.lcd_cmd_value = c;
   WAIT_LCD_NOT_BUSY;
   LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
+
+  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
 }
 
 void Arduino_ESP32LCD8::writeCommand16(uint16_t c)
@@ -171,12 +173,12 @@ void Arduino_ESP32LCD8::writeCommand16(uint16_t c)
   LCD_CAM.lcd_cmd_val.lcd_cmd_value = _data16.lsb;
   WAIT_LCD_NOT_BUSY;
   LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
+
+  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
 }
 
 void Arduino_ESP32LCD8::write(uint8_t d)
 {
-  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
-
   LCD_CAM.lcd_cmd_val.lcd_cmd_value = d;
   WAIT_LCD_NOT_BUSY;
   LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
@@ -184,35 +186,18 @@ void Arduino_ESP32LCD8::write(uint8_t d)
 
 void Arduino_ESP32LCD8::write16(uint16_t d)
 {
-  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
-
   _data16.value = d;
   LCD_CAM.lcd_cmd_val.lcd_cmd_value = _data16.msb;
   WAIT_LCD_NOT_BUSY;
   LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
-  LCD_CAM.lcd_cmd_val.lcd_cmd_value = _data16.msb;
+  LCD_CAM.lcd_cmd_val.lcd_cmd_value = _data16.lsb;
   WAIT_LCD_NOT_BUSY;
   LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
 }
 
 void Arduino_ESP32LCD8::writeRepeat(uint16_t p, uint32_t len)
 {
-  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
-
-  if (len < USE_DMA_THRESHOLD)
-  {
-    while (len--)
-    {
-      _data16.value = p;
-      LCD_CAM.lcd_cmd_val.lcd_cmd_value = _data16.msb;
-      WAIT_LCD_NOT_BUSY;
-      LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
-      LCD_CAM.lcd_cmd_val.lcd_cmd_value = _data16.lsb;
-      WAIT_LCD_NOT_BUSY;
-      LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
-    }
-  }
-  else
+  while (len > USE_DMA_THRESHOLD)
   {
     uint32_t bufLen = (len < LCD_MAX_PIXELS_AT_ONCE) ? len : LCD_MAX_PIXELS_AT_ONCE;
     uint32_t xferLen, l;
@@ -253,12 +238,21 @@ void Arduino_ESP32LCD8::writeRepeat(uint16_t p, uint32_t len)
       LCD_CAM.lcd_user.val = LCD_CAM_LCD_ALWAYS_OUT_EN | LCD_CAM_LCD_DOUT | LCD_CAM_LCD_CMD | LCD_CAM_LCD_CMD_2_CYCLE_EN | LCD_CAM_LCD_START;
     }
   }
+
+  while (len--)
+  {
+    _data16.value = p;
+    LCD_CAM.lcd_cmd_val.lcd_cmd_value = _data16.msb;
+    WAIT_LCD_NOT_BUSY;
+    LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
+    LCD_CAM.lcd_cmd_val.lcd_cmd_value = _data16.lsb;
+    WAIT_LCD_NOT_BUSY;
+    LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
+  }
 }
 
 void Arduino_ESP32LCD8::writePixels(uint16_t *data, uint32_t len)
 {
-  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
-
   while (len--)
   {
     _data16.value = *data++;
@@ -361,8 +355,6 @@ void Arduino_ESP32LCD8::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
 
 void Arduino_ESP32LCD8::writeBytes(uint8_t *data, uint32_t len)
 {
-  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
-
   uint32_t xferLen, l;
 
   while (len > USE_DMA_THRESHOLD * 2) // While pixels remain
@@ -429,8 +421,6 @@ void Arduino_ESP32LCD8::writePattern(uint8_t *data, uint8_t len, uint32_t repeat
 
 void Arduino_ESP32LCD8::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
-  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
-
   while (len--)
   {
     _data16.value = idx[*data++];
@@ -445,8 +435,6 @@ void Arduino_ESP32LCD8::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_
 
 void Arduino_ESP32LCD8::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
-  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
-
   while (len--)
   {
     _data16.value = idx[*data++];
