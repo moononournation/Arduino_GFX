@@ -9,6 +9,7 @@
 #include "databus/Arduino_ESP32PAR8.h"
 #include "databus/Arduino_ESP32PAR8Q.h"
 #include "databus/Arduino_ESP32PAR8QQ.h"
+#include "databus/Arduino_ESP32PAR8QQQ.h"
 #include "databus/Arduino_ESP32PAR16.h"
 #include "databus/Arduino_ESP32PAR16Q.h"
 #include "databus/Arduino_ESP32PAR16QQ.h"

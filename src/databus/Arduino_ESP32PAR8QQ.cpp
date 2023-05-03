@@ -79,11 +79,23 @@ bool Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
   pinMode(_d6, OUTPUT);
   pinMode(_d7, OUTPUT);
 
+  if (_d0 >= 32)
+  {
+    _dataPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
+    _dataPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+  }
+  else
+  {
+    _dataPortSet = (PORTreg_t)&GPIO.out_w1ts;
+    _dataPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  }
+  
+
   // INIT 8-bit mask
   _dataClrMask = (1 << _wr) | (1 << _d0) | (1 << _d1) | (1 << _d2) | (1 << _d3) | (1 << _d4) | (1 << _d5) | (1 << _d6) | (1 << _d7);
   for (int32_t c = 0; c < 256; c++)
   {
-    _xset_mask[c] = (1 << _wr);
+    _xset_mask[c] = 0;
     if (c & 0x01)
     {
       _xset_mask[c] |= (1 << _d0);
@@ -117,7 +129,7 @@ bool Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
       _xset_mask[c] |= (1 << _d7);
     }
   }
-  GPIO.out_w1tc = _dataClrMask;
+  *_dataPortClr = _dataClrMask;
 
   return true;
 }
@@ -171,9 +183,12 @@ void Arduino_ESP32PAR8QQ::writeRepeat(uint16_t p, uint32_t len)
   if (_data16.msb == _data16.lsb)
   {
     uint32_t setMask = _xset_mask[_data16.msb];
-    GPIO.out_w1tc = _dataClrMask;
-    GPIO.out_w1ts = setMask;
-    while (len--)
+    *_dataPortClr = _dataClrMask;
+    *_dataPortSet = setMask;
+    *_wrPortSet = _wrPinMask;
+    *_wrPortClr = _wrPinMask;
+    *_wrPortSet = _wrPinMask;
+    while (--len)
     {
       *_wrPortClr = _wrPinMask;
       *_wrPortSet = _wrPinMask;
@@ -187,11 +202,13 @@ void Arduino_ESP32PAR8QQ::writeRepeat(uint16_t p, uint32_t len)
     uint32_t loMask = _xset_mask[_data16.lsb];
     while (len--)
     {
-      GPIO.out_w1tc = _dataClrMask;
-      GPIO.out_w1ts = hiMask;
+      *_dataPortClr = _dataClrMask;
+      *_dataPortSet = hiMask;
+      *_wrPortSet = _wrPinMask;
 
-      GPIO.out_w1tc = _dataClrMask;
-      GPIO.out_w1ts = loMask;
+      *_dataPortClr = _dataClrMask;
+      *_dataPortSet = loMask;
+      *_wrPortSet = _wrPinMask;
     }
   }
 }
@@ -305,8 +322,9 @@ void Arduino_ESP32PAR8QQ::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx,
 INLINE void Arduino_ESP32PAR8QQ::WRITE(uint8_t d)
 {
   uint32_t setMask = _xset_mask[d];
-  GPIO.out_w1tc = _dataClrMask;
-  GPIO.out_w1ts = setMask;
+  *_dataPortClr = _dataClrMask;
+  *_dataPortSet = setMask;
+  *_wrPortSet = _wrPinMask;
 }
 
 /******** low level bit twiddling **********/

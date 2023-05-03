@@ -1,8 +1,8 @@
-#include "Arduino_ESP32PAR8Q.h"
+#include "Arduino_ESP32PAR8QQQ.h"
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
 
-Arduino_ESP32PAR8Q::Arduino_ESP32PAR8Q(
+Arduino_ESP32PAR8QQQ::Arduino_ESP32PAR8QQQ(
     int8_t dc, int8_t cs, int8_t wr, int8_t rd,
     int8_t d0, int8_t d1, int8_t d2, int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7)
     : _dc(dc), _cs(cs), _wr(wr), _rd(rd),
@@ -10,7 +10,7 @@ Arduino_ESP32PAR8Q::Arduino_ESP32PAR8Q(
 {
 }
 
-bool Arduino_ESP32PAR8Q::begin(int32_t speed, int8_t dataMode)
+bool Arduino_ESP32PAR8QQQ::begin(int32_t speed, int8_t dataMode)
 {
   UNUSED(speed);
   UNUSED(dataMode);
@@ -79,72 +79,61 @@ bool Arduino_ESP32PAR8Q::begin(int32_t speed, int8_t dataMode)
   pinMode(_d6, OUTPUT);
   pinMode(_d7, OUTPUT);
 
-  if (_d0 >= 32)
-  {
-    _dataPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    _dataPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
-  }
-  else
-  {
-    _dataPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    _dataPortClr = (PORTreg_t)&GPIO.out_w1tc;
-  }
   // INIT 8-bit mask
-  _dataClrMask = digitalPinToBitMask(_d0) | digitalPinToBitMask(_d1) | digitalPinToBitMask(_d2) | digitalPinToBitMask(_d3) | digitalPinToBitMask(_d4) | digitalPinToBitMask(_d5) | digitalPinToBitMask(_d6) | digitalPinToBitMask(_d7);
-
+  _dataClrMask = (1 << _wr) | (1 << _d0) | (1 << _d1) | (1 << _d2) | (1 << _d3) | (1 << _d4) | (1 << _d5) | (1 << _d6) | (1 << _d7);
   for (int32_t c = 0; c < 256; c++)
   {
-    _xset_mask[c] = 0;
+    _xset_mask[c] = (1 << _wr);
     if (c & 0x01)
     {
-      _xset_mask[c] |= digitalPinToBitMask(_d0);
+      _xset_mask[c] |= (1 << _d0);
     }
     if (c & 0x02)
     {
-      _xset_mask[c] |= digitalPinToBitMask(_d1);
+      _xset_mask[c] |= (1 << _d1);
     }
     if (c & 0x04)
     {
-      _xset_mask[c] |= digitalPinToBitMask(_d2);
+      _xset_mask[c] |= (1 << _d2);
     }
     if (c & 0x08)
     {
-      _xset_mask[c] |= digitalPinToBitMask(_d3);
+      _xset_mask[c] |= (1 << _d3);
     }
     if (c & 0x10)
     {
-      _xset_mask[c] |= digitalPinToBitMask(_d4);
+      _xset_mask[c] |= (1 << _d4);
     }
     if (c & 0x20)
     {
-      _xset_mask[c] |= digitalPinToBitMask(_d5);
+      _xset_mask[c] |= (1 << _d5);
     }
     if (c & 0x40)
     {
-      _xset_mask[c] |= digitalPinToBitMask(_d6);
+      _xset_mask[c] |= (1 << _d6);
     }
     if (c & 0x80)
     {
-      _xset_mask[c] |= digitalPinToBitMask(_d7);
+      _xset_mask[c] |= (1 << _d7);
     }
   }
-  *_dataPortClr = _dataClrMask;
+  GPIO.out_w1tc = _dataClrMask;
 
   return true;
 }
 
-void Arduino_ESP32PAR8Q::beginWrite()
+void Arduino_ESP32PAR8QQQ::beginWrite()
 {
   DC_HIGH();
   CS_LOW();
 }
 
-void Arduino_ESP32PAR8Q::endWrite()
+void Arduino_ESP32PAR8QQQ::endWrite()
 {
   CS_HIGH();
 }
 
-void Arduino_ESP32PAR8Q::writeCommand(uint8_t c)
+void Arduino_ESP32PAR8QQQ::writeCommand(uint8_t c)
 {
   DC_LOW();
 
@@ -153,7 +142,7 @@ void Arduino_ESP32PAR8Q::writeCommand(uint8_t c)
   DC_HIGH();
 }
 
-void Arduino_ESP32PAR8Q::writeCommand16(uint16_t c)
+void Arduino_ESP32PAR8QQQ::writeCommand16(uint16_t c)
 {
   DC_LOW();
 
@@ -164,26 +153,26 @@ void Arduino_ESP32PAR8Q::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
-void Arduino_ESP32PAR8Q::write(uint8_t d)
+void Arduino_ESP32PAR8QQQ::write(uint8_t d)
 {
   WRITE(d);
 }
 
-void Arduino_ESP32PAR8Q::write16(uint16_t d)
+void Arduino_ESP32PAR8QQQ::write16(uint16_t d)
 {
   _data16.value = d;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
 }
 
-void Arduino_ESP32PAR8Q::writeRepeat(uint16_t p, uint32_t len)
+void Arduino_ESP32PAR8QQQ::writeRepeat(uint16_t p, uint32_t len)
 {
   _data16.value = p;
   if (_data16.msb == _data16.lsb)
   {
     uint32_t setMask = _xset_mask[_data16.msb];
-    *_dataPortClr = _dataClrMask;
-    *_dataPortSet = setMask;
+    GPIO.out_w1tc = _dataClrMask;
+    GPIO.out_w1ts = setMask;
     while (len--)
     {
       *_wrPortClr = _wrPinMask;
@@ -198,20 +187,16 @@ void Arduino_ESP32PAR8Q::writeRepeat(uint16_t p, uint32_t len)
     uint32_t loMask = _xset_mask[_data16.lsb];
     while (len--)
     {
-      *_dataPortClr = _dataClrMask;
-      *_dataPortSet = hiMask;
-      *_wrPortClr = _wrPinMask;
-      *_wrPortSet = _wrPinMask;
+      GPIO.out_w1tc = _dataClrMask;
+      GPIO.out_w1ts = hiMask;
 
-      *_dataPortClr = _dataClrMask;
-      *_dataPortSet = loMask;
-      *_wrPortClr = _wrPinMask;
-      *_wrPortSet = _wrPinMask;
+      GPIO.out_w1tc = _dataClrMask;
+      GPIO.out_w1ts = loMask;
     }
   }
 }
 
-void Arduino_ESP32PAR8Q::writePixels(uint16_t *data, uint32_t len)
+void Arduino_ESP32PAR8QQQ::writePixels(uint16_t *data, uint32_t len)
 {
   while (len--)
   {
@@ -221,7 +206,7 @@ void Arduino_ESP32PAR8Q::writePixels(uint16_t *data, uint32_t len)
   }
 }
 
-void Arduino_ESP32PAR8Q::writeC8D8(uint8_t c, uint8_t d)
+void Arduino_ESP32PAR8QQQ::writeC8D8(uint8_t c, uint8_t d)
 {
   DC_LOW();
 
@@ -232,7 +217,7 @@ void Arduino_ESP32PAR8Q::writeC8D8(uint8_t c, uint8_t d)
   WRITE(d);
 }
 
-void Arduino_ESP32PAR8Q::writeC8D16(uint8_t c, uint16_t d)
+void Arduino_ESP32PAR8QQQ::writeC8D16(uint8_t c, uint16_t d)
 {
   DC_LOW();
 
@@ -245,7 +230,7 @@ void Arduino_ESP32PAR8Q::writeC8D16(uint8_t c, uint16_t d)
   WRITE(_data16.lsb);
 }
 
-void Arduino_ESP32PAR8Q::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
+void Arduino_ESP32PAR8QQQ::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 {
   DC_LOW();
 
@@ -262,7 +247,7 @@ void Arduino_ESP32PAR8Q::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   WRITE(_data16.lsb);
 }
 
-void Arduino_ESP32PAR8Q::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
+void Arduino_ESP32PAR8QQQ::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
 {
   DC_LOW();
 
@@ -279,7 +264,7 @@ void Arduino_ESP32PAR8Q::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
   WRITE(_data16.lsb);
 }
 
-void Arduino_ESP32PAR8Q::writeBytes(uint8_t *data, uint32_t len)
+void Arduino_ESP32PAR8QQQ::writeBytes(uint8_t *data, uint32_t len)
 {
   while (len--)
   {
@@ -287,7 +272,7 @@ void Arduino_ESP32PAR8Q::writeBytes(uint8_t *data, uint32_t len)
   }
 }
 
-void Arduino_ESP32PAR8Q::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
+void Arduino_ESP32PAR8QQQ::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
   while (repeat--)
   {
@@ -295,7 +280,7 @@ void Arduino_ESP32PAR8Q::writePattern(uint8_t *data, uint8_t len, uint32_t repea
   }
 }
 
-void Arduino_ESP32PAR8Q::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+void Arduino_ESP32PAR8QQQ::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   while (len--)
   {
@@ -305,7 +290,7 @@ void Arduino_ESP32PAR8Q::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32
   }
 }
 
-void Arduino_ESP32PAR8Q::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+void Arduino_ESP32PAR8QQQ::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   while (len--)
   {
@@ -317,28 +302,26 @@ void Arduino_ESP32PAR8Q::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, 
   }
 }
 
-INLINE void Arduino_ESP32PAR8Q::WRITE(uint8_t d)
+INLINE void Arduino_ESP32PAR8QQQ::WRITE(uint8_t d)
 {
   uint32_t setMask = _xset_mask[d];
-  *_dataPortClr = _dataClrMask;
-  *_dataPortSet = setMask;
-  *_wrPortClr = _wrPinMask;
-  *_wrPortSet = _wrPinMask;
+  GPIO.out_w1tc = _dataClrMask;
+  GPIO.out_w1ts = setMask;
 }
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_ESP32PAR8Q::DC_HIGH(void)
+INLINE void Arduino_ESP32PAR8QQQ::DC_HIGH(void)
 {
   *_dcPortSet = _dcPinMask;
 }
 
-INLINE void Arduino_ESP32PAR8Q::DC_LOW(void)
+INLINE void Arduino_ESP32PAR8QQQ::DC_LOW(void)
 {
   *_dcPortClr = _dcPinMask;
 }
 
-INLINE void Arduino_ESP32PAR8Q::CS_HIGH(void)
+INLINE void Arduino_ESP32PAR8QQQ::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -346,7 +329,7 @@ INLINE void Arduino_ESP32PAR8Q::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_ESP32PAR8Q::CS_LOW(void)
+INLINE void Arduino_ESP32PAR8QQQ::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {

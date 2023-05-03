@@ -2,13 +2,13 @@
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
 
-#ifndef _ARDUINO_ESP32PAR8Q_H_
-#define _ARDUINO_ESP32PAR8Q_H_
+#ifndef _ARDUINO_ESP32PAR8QQQ_H_
+#define _ARDUINO_ESP32PAR8QQQ_H_
 
-class Arduino_ESP32PAR8Q : public Arduino_DataBus
+class Arduino_ESP32PAR8QQQ : public Arduino_DataBus
 {
 public:
-  Arduino_ESP32PAR8Q(
+  Arduino_ESP32PAR8QQQ(
       int8_t dc, int8_t cs, int8_t wr, int8_t rd,
       int8_t d0, int8_t d1, int8_t d2, int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7); // Constructor
 
@@ -55,13 +55,11 @@ private:
   PORTreg_t _wrPortClr; ///< PORT register CLEAR
   uint32_t _wrPinMask;  ///< Bitmask
 
-  PORTreg_t _dataPortSet; ///< PORT register SET
-  PORTreg_t _dataPortClr; ///< PORT register CLEAR
   uint32_t _dataClrMask;
   // Lookup table for ESP32 parallel bus interface uses 1kbyte RAM,
   uint32_t _xset_mask[256];
 };
 
-#endif // _ARDUINO_ESP32PAR8Q_H_
+#endif // _ARDUINO_ESP32PAR8QQQ_H_
 
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
