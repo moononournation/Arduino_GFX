@@ -89,44 +89,44 @@ bool Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
     _dataPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _dataPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
-  
 
   // INIT 8-bit mask
-  _dataClrMask = (1 << _wr) | (1 << _d0) | (1 << _d1) | (1 << _d2) | (1 << _d3) | (1 << _d4) | (1 << _d5) | (1 << _d6) | (1 << _d7);
+  _dataClrMask = digitalPinToBitMask(_d0) | digitalPinToBitMask(_d1) | digitalPinToBitMask(_d2) | digitalPinToBitMask(_d3) | digitalPinToBitMask(_d4) | digitalPinToBitMask(_d5) | digitalPinToBitMask(_d6) | digitalPinToBitMask(_d7);
+
   for (int32_t c = 0; c < 256; c++)
   {
     _xset_mask[c] = 0;
     if (c & 0x01)
     {
-      _xset_mask[c] |= (1 << _d0);
+      _xset_mask[c] |= digitalPinToBitMask(_d0);
     }
     if (c & 0x02)
     {
-      _xset_mask[c] |= (1 << _d1);
+      _xset_mask[c] |= digitalPinToBitMask(_d1);
     }
     if (c & 0x04)
     {
-      _xset_mask[c] |= (1 << _d2);
+      _xset_mask[c] |= digitalPinToBitMask(_d2);
     }
     if (c & 0x08)
     {
-      _xset_mask[c] |= (1 << _d3);
+      _xset_mask[c] |= digitalPinToBitMask(_d3);
     }
     if (c & 0x10)
     {
-      _xset_mask[c] |= (1 << _d4);
+      _xset_mask[c] |= digitalPinToBitMask(_d4);
     }
     if (c & 0x20)
     {
-      _xset_mask[c] |= (1 << _d5);
+      _xset_mask[c] |= digitalPinToBitMask(_d5);
     }
     if (c & 0x40)
     {
-      _xset_mask[c] |= (1 << _d6);
+      _xset_mask[c] |= digitalPinToBitMask(_d6);
     }
     if (c & 0x80)
     {
-      _xset_mask[c] |= (1 << _d7);
+      _xset_mask[c] |= digitalPinToBitMask(_d7);
     }
   }
   *_dataPortClr = _dataClrMask;

@@ -89,6 +89,7 @@ bool Arduino_ESP32PAR8Q::begin(int32_t speed, int8_t dataMode)
     _dataPortSet = (PORTreg_t)&GPIO.out_w1ts;
     _dataPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
+
   // INIT 8-bit mask
   _dataClrMask = digitalPinToBitMask(_d0) | digitalPinToBitMask(_d1) | digitalPinToBitMask(_d2) | digitalPinToBitMask(_d3) | digitalPinToBitMask(_d4) | digitalPinToBitMask(_d5) | digitalPinToBitMask(_d6) | digitalPinToBitMask(_d7);
 
