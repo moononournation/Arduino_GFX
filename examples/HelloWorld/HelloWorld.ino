@@ -40,6 +40,10 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false 
 
 void setup(void)
 {
+#ifdef GFX_EXTRA_PRE_INIT
+  GFX_EXTRA_PRE_INIT();
+#endif
+
     gfx->begin();
     gfx->fillScreen(BLACK);
 

@@ -78,6 +78,10 @@ void setup()
   WiFi.disconnect();
   delay(100);
 
+#ifdef GFX_EXTRA_PRE_INIT
+  GFX_EXTRA_PRE_INIT();
+#endif
+
 #ifdef GFX_BL
   pinMode(GFX_BL, OUTPUT);
   digitalWrite(GFX_BL, HIGH);

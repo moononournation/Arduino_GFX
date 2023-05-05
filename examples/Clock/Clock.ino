@@ -77,6 +77,10 @@ static int16_t *last_cached_point;
 
 void setup(void)
 {
+#ifdef GFX_EXTRA_PRE_INIT
+  GFX_EXTRA_PRE_INIT();
+#endif
+
     gfx->begin();
     gfx->fillScreen(BACKGROUND);
 

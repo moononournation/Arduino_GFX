@@ -129,6 +129,10 @@ String helloWorldStrings[] = {
 
 void setup(void)
 {
+#ifdef GFX_EXTRA_PRE_INIT
+  GFX_EXTRA_PRE_INIT();
+#endif
+
     gfx->begin();
     gfx->fillScreen(BLACK);
     gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function

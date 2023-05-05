@@ -147,6 +147,10 @@ void setup()
   LwIP_Init();
   wifi_on(RTW_MODE_STA);
 
+#ifdef GFX_EXTRA_PRE_INIT
+  GFX_EXTRA_PRE_INIT();
+#endif
+
 #if defined(LCD_PWR_PIN)
   pinMode(LCD_PWR_PIN, OUTPUT);    // sets the pin as output
   digitalWrite(LCD_PWR_PIN, HIGH); // power on
