@@ -156,7 +156,12 @@ void Arduino_AVRPAR16::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
 {
   DC_LOW();
 
-  WRITE16(c);
+  uint8_t wrMaskBase = *_wrPort & _wrPinMaskClr;
+  _data16.value = c;
+  *_dataPortLow = _data16.lsb;
+  *_dataPortHigh = _data16.msb;
+  *_wrPort = wrMaskBase;
+  *_wrPort = wrMaskBase | _wrPinMaskSet;
 
   DC_HIGH();
 
