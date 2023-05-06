@@ -1394,9 +1394,41 @@ void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
   startWrite();
   for (int16_t j = 0; j < h; j++, y++)
   {
-    for (int16_t i = 0; i < w; i++)
+    for (int16_t i = 0; i < w; i++, x++)
     {
-      writePixel(x + i, y, color_index[bitmap[offset++]]);
+      writePixel(x, y, color_index[bitmap[offset++]]);
+    }
+  }
+  endWrite();
+}
+
+/**************************************************************************/
+/*!
+  @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+  @param  x           Top left corner x coordinate
+  @param  y           Top left corner y coordinate
+  @param  bitmap      byte array of Indexed color bitmap
+  @param  color_index byte array of 16-bit color index
+  @param  chroma_key  transparent color index
+  @param  w           Width of bitmap in pixels
+  @param  h           Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
+                                    uint8_t *bitmap, uint16_t *color_index, uint8_t chroma_key, int16_t w, int16_t h)
+{
+  int32_t offset = 0;
+  uint8_t color_key;
+  startWrite();
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++, x++)
+    {
+      color_key = bitmap[offset++];
+      if (color_key != chroma_key)
+      {
+        writePixel(x, y, color_index[color_key]);
+      }
     }
   }
   endWrite();
@@ -1488,6 +1520,38 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
     for (int16_t i = 0; i < w; i++)
     {
       writePixel(x + i, y, bitmap[offset++]);
+    }
+  }
+  endWrite();
+}
+
+/**************************************************************************/
+/*!
+  @brief  Draw a RAM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
+  @param  x       Top left corner x coordinate
+  @param  y       Top left corner y coordinate
+  @param  bitmap  byte array with 16-bit color bitmap
+  @param  transparent_color
+  @param  w       Width of bitmap in pixels
+  @param  h       Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_GFX::draw16bitRGBBitmap(
+    int16_t x, int16_t y,
+    uint16_t *bitmap, uint16_t transparent_color, int16_t w, int16_t h)
+{
+  int32_t offset = 0;
+  uint16_t color;
+  startWrite();
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
+    {
+      color = bitmap[offset++];
+      if (color != transparent_color)
+      {
+        writePixel(x + i, y, color);
+      }
     }
   }
   endWrite();

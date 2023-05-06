@@ -17,6 +17,8 @@ public:
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
   void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
   void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
+  void drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h) override;
+  void drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, uint8_t chroma_key, int16_t w, int16_t h) override;
   void flush(void) override;
 
   uint8_t *getFramebuffer();
