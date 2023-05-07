@@ -1,6 +1,6 @@
 /*******************************************************************************
  * GIFDEC Wrapper Class
- * 
+ *
  * Rewrite from: https://github.com/BasementCat/arduino-tft-gif
  ******************************************************************************/
 #ifndef _GIFCLASS_H_
@@ -29,7 +29,7 @@
 
 typedef struct gd_Palette
 {
-    uint8_t size;
+    int16_t len;
     uint16_t colors[256];
 } gd_Palette;
 
@@ -44,7 +44,7 @@ typedef struct gd_GCE
 
 typedef struct gd_Entry
 {
-    int32_t length;
+    int32_t len;
     uint16_t prefix;
     uint8_t suffix;
 } gd_Entry;
@@ -75,6 +75,7 @@ typedef struct gd_GIF
     uint16_t fx, fy, fw, fh;
     uint8_t bgindex;
     gd_Table *table;
+    bool processed_first_frame;
 } gd_GIF;
 
 class GifClass
@@ -85,7 +86,7 @@ public:
         uint8_t sigver[3];
         uint16_t width, height, depth;
         uint8_t fdsz, bgidx, aspect;
-        int32_t gct_sz;
+        int16_t gct_sz;
         gd_GIF *gif;
 
         // init global variables
@@ -139,6 +140,7 @@ public:
         gif->bgindex = bgidx;
         gif->anim_start = file_pos; // fd->position();
         gif->table = new_table();
+        gif->processed_first_frame = false;
         return gif;
     }
 
@@ -254,11 +256,11 @@ private:
         return gif_buf_read(fd) + (((uint16_t)gif_buf_read(fd)) << 8);
     }
 
-    void read_palette(File *fd, gd_Palette *dest, int32_t num_colors)
+    void read_palette(File *fd, gd_Palette *dest, int16_t num_colors)
     {
         uint8_t r, g, b;
-        dest->size = num_colors;
-        for (int32_t i = 0; i < num_colors; i++)
+        dest->len = num_colors;
+        for (int16_t i = 0; i < num_colors; i++)
         {
             r = gif_buf_read(fd);
             g = gif_buf_read(fd);
@@ -269,13 +271,13 @@ private:
 
     void discard_sub_blocks(gd_GIF *gif)
     {
-        uint8_t size;
+        uint8_t len;
 
         do
         {
-            gif_buf_read(gif->fd, &size, 1);
-            gif_buf_seek(gif->fd, size);
-        } while (size);
+            gif_buf_read(gif->fd, &len, 1);
+            gif_buf_seek(gif->fd, len);
+        } while (len);
     }
 
     void read_plain_text_ext(gd_GIF *gif)
@@ -424,10 +426,10 @@ private:
     }
 
     /* Add table entry. Return value:
- *  0 on success
- *  +1 if key size must be incremented after this addition
- *  -1 if could not realloc table */
-    int32_t add_entry(gd_Table *table, int32_t length, uint16_t prefix, uint8_t suffix)
+     *  0 on success
+     *  +1 if key size must be incremented after this addition
+     *  -1 if could not realloc table */
+    int32_t add_entry(gd_Table *table, int32_t len, uint16_t prefix, uint8_t suffix)
     {
         // Table *table = *tablep;
         // if (table->nentries == table->bulk) {
@@ -437,7 +439,7 @@ private:
         //     table->entries = (Entry *) &table[1];
         //     *tablep = table;
         // }
-        table->entries[table->nentries] = (gd_Entry){length, prefix, suffix};
+        table->entries[table->nentries] = (gd_Entry){len, prefix, suffix};
         table->nentries++;
         if ((table->nentries & (table->nentries - 1)) == 0)
             return 1;
@@ -494,7 +496,7 @@ private:
     }
 
     /* Decompress image pixels.
- * Return 0 on success or -1 on out-of-memory (w.r.t. LZW code table). */
+     * Return 0 on success or -1 on out-of-memory (w.r.t. LZW code table). */
     int8_t read_image_data(gd_GIF *gif, int16_t interlace, uint8_t *frame)
     {
         uint8_t sub_len, shift, byte, table_is_full = 0;
@@ -558,19 +560,19 @@ private:
             if (ret == 1)
                 key_size++;
             entry = gif->table->entries[key];
-            str_len = entry.length;
+            str_len = entry.len;
             uint8_t tindex = gif->gce.tindex;
             // Serial.println("Interpret key");
             while (1)
             {
-                p = frm_off + entry.length - 1;
+                p = frm_off + entry.len - 1;
                 x = p % gif->fw;
                 y = p / gif->fw;
                 if (interlace)
                 {
                     y = interlaced_line_index((int16_t)gif->fh, y);
                 }
-                if (tindex != entry.suffix)
+                if ((!gif->processed_first_frame) || (tindex != entry.suffix))
                 {
                     frame[(gif->fy + y) * gif->width + gif->fx + x] = entry.suffix;
                 }
@@ -587,11 +589,14 @@ private:
         // free(table);
         gif_buf_read(gif->fd, &sub_len, 1); /* Must be zero! */
         // gif_buf_seek(gif->fd, end, SeekSet);
+
+        gif->processed_first_frame = true;
+
         return 0;
     }
 
     /* Read image.
- * Return 0 on success or -1 on out-of-memory (w.r.t. LZW code table). */
+     * Return 0 on success or -1 on out-of-memory (w.r.t. LZW code table). */
     int8_t read_image(gd_GIF *gif, uint8_t *frame)
     {
         uint8_t fisrz;
@@ -635,8 +640,10 @@ private:
             {
                 index = frame[(gif->fy + j) * gif->width + gif->fx + k];
                 // color = &gif->palette->colors[index*2];
-                if (!gif->gce.transparency || index != gif->gce.tindex)
+                if ((!gif->gce.transparency) || (index != gif->gce.tindex))
+                {
                     buffer[(i + k)] = gif->palette->colors[index];
+                }
                 // memcpy(&buffer[(i+k)*2], color, 2);
             }
             i += gif->width;
