@@ -192,13 +192,24 @@ void Arduino_Canvas_Indexed::drawIndexedBitmap(
     uint8_t *row = _framebuffer;
     row += y * _width;
     row += x;
+    int16_t i;
+    int16_t wi;
     if (_isDirectUseColorIndex)
     {
       while (h--)
       {
-        for (int i = 0; i < w; i++)
+        i = 0;
+        wi = w;
+        while (wi >= 4)
         {
-          row[i] = *bitmap++;
+          *((uint32_t *)&row[i]) = *((uint32_t *)bitmap);
+          i += 4;
+          wi -= 4;
+          bitmap += 4;
+        }
+        while (i < w)
+        {
+          row[i++] = *bitmap++;
         }
         bitmap += xskip;
         row += _width;
@@ -210,7 +221,7 @@ void Arduino_Canvas_Indexed::drawIndexedBitmap(
       {
         for (int i = 0; i < w; i++)
         {
-          row[i] = color_index[*bitmap++];
+          row[i] = get_color_index(color_index[*bitmap++]);
         }
         bitmap += xskip;
         row += _width;
@@ -286,7 +297,7 @@ void Arduino_Canvas_Indexed::drawIndexedBitmap(
           color_key = *bitmap++;
           if (color_key != chroma_key)
           {
-            row[i] = color_index[color_key];
+            row[i] = get_color_index(color_index[color_key]);
           }
         }
         bitmap += xskip;
