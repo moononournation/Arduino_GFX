@@ -1394,9 +1394,9 @@ void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
   startWrite();
   for (int16_t j = 0; j < h; j++, y++)
   {
-    for (int16_t i = 0; i < w; i++, x++)
+    for (int16_t i = 0; i < w; i++)
     {
-      writePixel(x, y, color_index[bitmap[offset++]]);
+      writePixel(x + i, y, color_index[bitmap[offset++]]);
     }
   }
   endWrite();
@@ -1422,12 +1422,12 @@ void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
   startWrite();
   for (int16_t j = 0; j < h; j++, y++)
   {
-    for (int16_t i = 0; i < w; i++, x++)
+    for (int16_t i = 0; i < w; i++)
     {
       color_key = bitmap[offset++];
       if (color_key != chroma_key)
       {
-        writePixel(x, y, color_index[color_key]);
+        writePixel(x + i, y, color_index[color_key]);
       }
     }
   }
