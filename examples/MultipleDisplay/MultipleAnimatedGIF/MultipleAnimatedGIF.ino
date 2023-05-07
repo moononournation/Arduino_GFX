@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Animated GIF Image Viewer
- * This is a simple Animated GIF image viewer exsample
+ * Multiple Animated GIF Image Viewer
+ * This is a simple Multiple Animated GIF image viewer example
  * Image Source: https://www.geocities.ws/finalfantasyfive/ff5animations.html
  * optimized with ezgif.com
  *

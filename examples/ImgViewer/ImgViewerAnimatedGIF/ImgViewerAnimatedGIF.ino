@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Animated GIF Image Viewer
- * This is a simple Animated GIF image viewer exsample
+ * This is a simple Animated GIF image viewer example
  * Image Source: https://www.pexels.com/video/earth-rotating-video-856356/
  * cropped: x: 598 y: 178 width: 720 height: 720 resized: 240x240
  * optimized with ezgif.com
