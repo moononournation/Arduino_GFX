@@ -163,8 +163,8 @@ void Arduino_Canvas::drawIndexedBitmap(
     }
     if ((x + w - 1) > _max_x)
     {
-      x_skip = (x + w - 1) - _max_x;
-      w -= x_skip;
+      x_skip += (x + w - 1) - _max_x;
+      w -= (x + w - 1) - _max_x;
     }
     if (x < 0)
     {
@@ -229,8 +229,8 @@ void Arduino_Canvas::drawIndexedBitmap(
     }
     if ((x + w - 1) > _max_x)
     {
-      x_skip = (x + w - 1) - _max_x;
-      w -= x_skip;
+      x_skip += (x + w - 1) - _max_x;
+      w -= (x + w - 1) - _max_x;
     }
     if (x < 0)
     {
