@@ -64,15 +64,6 @@ void Arduino_TFT_18bit::writePixels(uint16_t *data, uint32_t len)
 
 // TFT tuned BITMAP / XBITMAP / GRAYSCALE / RGB BITMAP FUNCTIONS ---------------------
 
-/**************************************************************************/
-/*!
-    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param  bitmap      byte array of Indexed color bitmap
-    @param  color_index byte array of 16-bit color index
-    @param  w           Width of bitmap in pixels
-    @param  h           Height of bitmap in pixels
-*/
-/**************************************************************************/
 void Arduino_TFT_18bit::writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
 {
   uint16_t d;
@@ -85,15 +76,6 @@ void Arduino_TFT_18bit::writeIndexedPixels(uint8_t *bitmap, uint16_t *color_inde
   }
 }
 
-/**************************************************************************/
-/*!
-    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param  bitmap      byte array of Indexed color bitmap
-    @param  color_index byte array of 16-bit color index
-    @param  w           Width of bitmap in pixels
-    @param  h           Height of bitmap in pixels
-*/
-/**************************************************************************/
 void Arduino_TFT_18bit::writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
 {
   uint8_t r, g, b;
@@ -113,21 +95,9 @@ void Arduino_TFT_18bit::writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *colo
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief      Draw a PROGMEM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with monochrome bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-    @param    color 16-bit 5-6-5 Color to draw pixels with
-    @param    bg 16-bit 5-6-5 Color to draw background with
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::drawBitmap(int16_t x, int16_t y,
-                                   const uint8_t bitmap[], int16_t w, int16_t h,
-                                   uint16_t color, uint16_t bg)
+void Arduino_TFT_18bit::drawBitmap(
+    int16_t x, int16_t y,
+    const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -174,20 +144,9 @@ void Arduino_TFT_18bit::drawBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief      Draw a RAM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with monochrome bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-    @param    color 16-bit 5-6-5 Color to draw pixels with
-    @param    bg 16-bit 5-6-5 Color to draw background with
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::drawBitmap(int16_t x, int16_t y,
-                                   uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
+void Arduino_TFT_18bit::drawBitmap(
+    int16_t x, int16_t y,
+    uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -233,18 +192,9 @@ void Arduino_TFT_18bit::drawBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a PROGMEM-resident 8-bit image (grayscale) at the specified (x,y) pos.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with grayscale bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::drawGrayscaleBitmap(int16_t x, int16_t y,
-                                            const uint8_t bitmap[], int16_t w, int16_t h)
+void Arduino_TFT_18bit::drawGrayscaleBitmap(
+    int16_t x, int16_t y,
+    const uint8_t bitmap[], int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -283,18 +233,9 @@ void Arduino_TFT_18bit::drawGrayscaleBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a RAM-resident 8-bit image (grayscale) at the specified (x,y) pos.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with grayscale bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::drawGrayscaleBitmap(int16_t x, int16_t y,
-                                            uint8_t *bitmap, int16_t w, int16_t h)
+void Arduino_TFT_18bit::drawGrayscaleBitmap(
+    int16_t x, int16_t y,
+    uint8_t *bitmap, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -333,18 +274,9 @@ void Arduino_TFT_18bit::drawGrayscaleBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::drawIndexedBitmap(int16_t x, int16_t y,
-                                          uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
+void Arduino_TFT_18bit::drawIndexedBitmap(
+    int16_t x, int16_t y,
+    uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h, int16_t x_skip)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -362,30 +294,24 @@ void Arduino_TFT_18bit::drawIndexedBitmap(int16_t x, int16_t y,
       ((y + h - 1) > _max_y)    // Clip bottom
   )
   {
-    Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, w, h);
+    Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, w, h, x_skip);
   }
   else
   {
     startWrite();
     writeAddrWindow(x, y, w, h);
-    writeIndexedPixels(bitmap, color_index, w * h);
+    while (h--)
+    {
+      writeIndexedPixels(bitmap, color_index, w);
+      bitmap += w + x_skip;
+    }
     endWrite();
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-   For 16-bit display devices; no color reduction performed.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                           const uint16_t bitmap[], int16_t w, int16_t h)
+void Arduino_TFT_18bit::draw16bitRGBBitmap(
+    int16_t x, int16_t y,
+    const uint16_t bitmap[], int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -424,21 +350,9 @@ void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-    @brief  Draw a RAM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask
-            (set bits = opaque, unset bits = clear) at the specified (x,y) position.
-            BOTH buffers (color and mask) must be RAM-resident.
-    @param  x       Top left corner x coordinate
-    @param  y       Top left corner y coordinate
-    @param  bitmap  byte array with 16-bit color bitmap
-    @param  mask    byte array with monochrome mask bitmap
-    @param  w       Width of bitmap in pixels
-    @param  h       Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                           uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
+void Arduino_TFT_18bit::draw16bitRGBBitmap(
+    int16_t x, int16_t y,
+    uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -514,19 +428,9 @@ void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a RAM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-   For 16-bit display devices; no color reduction performed.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                           uint16_t *bitmap, int16_t w, int16_t h)
+void Arduino_TFT_18bit::draw16bitRGBBitmap(
+    int16_t x, int16_t y,
+    uint16_t *bitmap, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -565,19 +469,9 @@ void Arduino_TFT_18bit::draw16bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a RAM-resident 16-bit Big Endian image (RGB 5/6/5) at the specified (x,y) position.
-   For 16-bit display devices; no color reduction performed.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::draw16bitBeRGBBitmap(int16_t x, int16_t y,
-                                             uint16_t *bitmap, int16_t w, int16_t h)
+void Arduino_TFT_18bit::draw16bitBeRGBBitmap(
+    int16_t x, int16_t y,
+    uint16_t *bitmap, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -616,18 +510,9 @@ void Arduino_TFT_18bit::draw16bitBeRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a PROGMEM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::draw24bitRGBBitmap(int16_t x, int16_t y,
-                                           const uint8_t bitmap[], int16_t w, int16_t h)
+void Arduino_TFT_18bit::draw24bitRGBBitmap(
+    int16_t x, int16_t y,
+    const uint8_t bitmap[], int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -665,18 +550,9 @@ void Arduino_TFT_18bit::draw24bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a RAM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT_18bit::draw24bitRGBBitmap(int16_t x, int16_t y,
-                                           uint8_t *bitmap, int16_t w, int16_t h)
+void Arduino_TFT_18bit::draw24bitRGBBitmap(
+    int16_t x, int16_t y,
+    uint8_t *bitmap, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left

@@ -290,7 +290,7 @@ void Arduino_RGB_Display::writeFillRectPreclipped(int16_t x, int16_t y,
   }
 }
 
-void Arduino_RGB_Display::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
+void Arduino_RGB_Display::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h, int16_t x_skip)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -305,11 +305,10 @@ void Arduino_RGB_Display::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitma
   {
     if (_rotation > 0)
     {
-      Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, w, h);
+      Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, w, h, x_skip);
     }
     else
     {
-      int16_t xskip = 0;
       if ((y + h - 1) > _max_y)
       {
         h -= (y + h - 1) - _max_y;
@@ -322,13 +321,13 @@ void Arduino_RGB_Display::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitma
       }
       if ((x + w - 1) > _max_x)
       {
-        xskip = (x + w - 1) - _max_x;
-        w -= xskip;
+        x_skip = (x + w - 1) - _max_x;
+        w -= x_skip;
       }
       if (x < 0)
       {
         bitmap -= x;
-        xskip -= x;
+        x_skip -= x;
         w += x;
         x = 0;
       }
@@ -342,7 +341,7 @@ void Arduino_RGB_Display::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitma
         {
           row[i] = color_index[*bitmap++];
         }
-        bitmap += xskip;
+        bitmap += x_skip;
         row += _width;
       }
       if (_auto_flush)

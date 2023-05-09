@@ -83,7 +83,7 @@ void Arduino_ILI9488_3bit::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int
   UNUSED(bg);
 }
 
-void Arduino_ILI9488_3bit::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
+void Arduino_ILI9488_3bit::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h, int16_t x_skip)
 {
   printf("Not Implemented drawIndexedBitmap()");
   UNUSED(x);
@@ -92,6 +92,7 @@ void Arduino_ILI9488_3bit::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitm
   UNUSED(color_index);
   UNUSED(w);
   UNUSED(h);
+  UNUSED(x_skip);
 }
 
 void Arduino_ILI9488_3bit::draw3bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h)

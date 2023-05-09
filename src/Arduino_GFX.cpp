@@ -1385,10 +1385,12 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
   @param  color_index byte array of 16-bit color index
   @param  w           Width of bitmap in pixels
   @param  h           Height of bitmap in pixels
+  @param  x_skip      number of pixels required to skip for every bitmap row
 */
 /**************************************************************************/
-void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
-                                    uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
+void Arduino_GFX::drawIndexedBitmap(
+    int16_t x, int16_t y,
+    uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h, int16_t x_skip)
 {
   int32_t offset = 0;
   startWrite();
@@ -1398,6 +1400,7 @@ void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
     {
       writePixel(x + i, y, color_index[bitmap[offset++]]);
     }
+    offset += x_skip;
   }
   endWrite();
 }
@@ -1412,10 +1415,12 @@ void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
   @param  chroma_key  transparent color index
   @param  w           Width of bitmap in pixels
   @param  h           Height of bitmap in pixels
+  @param  x_skip      number of pixels required to skip for every bitmap row
 */
 /**************************************************************************/
-void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
-                                    uint8_t *bitmap, uint16_t *color_index, uint8_t chroma_key, int16_t w, int16_t h)
+void Arduino_GFX::drawIndexedBitmap(
+    int16_t x, int16_t y,
+    uint8_t *bitmap, uint16_t *color_index, uint8_t chroma_key, int16_t w, int16_t h, int16_t x_skip)
 {
   int32_t offset = 0;
   uint8_t color_key;
@@ -1429,6 +1434,7 @@ void Arduino_GFX::drawIndexedBitmap(int16_t x, int16_t y,
       {
         writePixel(x + i, y, color_index[color_key]);
       }
+      offset += x_skip;
     }
   }
   endWrite();

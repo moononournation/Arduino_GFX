@@ -58,20 +58,7 @@ void Arduino_TFT::writeRepeat(uint16_t color, uint32_t len)
   _bus->writeRepeat(color, len);
 }
 
-/*!
-    @brief  Draw a vertical line on the display. Performs edge clipping and
-            rejection. Not self-contained; should follow startWrite().
-            Typically used by higher-level graphics primitives; user code
-            shouldn't need to call this and is likely to use the self-
-            contained drawFastVLine() instead.
-    @param  x      Horizontal position of first point.
-    @param  y      Vertical position of first point.
-    @param  h      Line height in pixels (positive = below first point,
-                   negative = above first point).
-    @param  color  16-bit line color in '565' RGB format.
-*/
-void Arduino_TFT::writeFastVLine(int16_t x, int16_t y, int16_t h,
-                                 uint16_t color)
+void Arduino_TFT::writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color)
 {
   if (_ordered_in_range(x, 0, _max_x) && h)
   { // X on screen, nonzero height
@@ -101,20 +88,7 @@ void Arduino_TFT::writeFastVLine(int16_t x, int16_t y, int16_t h,
   }
 }
 
-/*!
-    @brief  Draw a horizontal line on the display. Performs edge clipping
-            and rejection. Not self-contained; should follow startWrite().
-            Typically used by higher-level graphics primitives; user code
-            shouldn't need to call this and is likely to use the self-
-            contained drawFastHLine() instead.
-    @param  x      Horizontal position of first point.
-    @param  y      Vertical position of first point.
-    @param  w      Line width in pixels (positive = right of first point,
-                   negative = point of first corner).
-    @param  color  16-bit line color in '565' RGB format.
-*/
-void Arduino_TFT::writeFastHLine(int16_t x, int16_t y, int16_t w,
-                                 uint16_t color)
+void Arduino_TFT::writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color)
 {
   if (_ordered_in_range(y, 0, _max_y) && w)
   { // Y on screen, nonzero width
@@ -144,28 +118,9 @@ void Arduino_TFT::writeFastHLine(int16_t x, int16_t y, int16_t w,
   }
 }
 
-/*!
-    @brief  A lower-level version of writeFillRect(). This version requires
-            all inputs are in-bounds, that width and height are positive,
-            and no part extends offscreen. NO EDGE CLIPPING OR REJECTION IS
-            PERFORMED. If higher-level graphics primitives are written to
-            handle their own clipping earlier in the drawing process, this
-            can avoid unnecessary function calls and repeated clipping
-            operations in the lower-level functions.
-    @param  x      Horizontal position of first corner. MUST BE WITHIN
-                   SCREEN BOUNDS.
-    @param  y      Vertical position of first corner. MUST BE WITHIN SCREEN
-                   BOUNDS.
-    @param  w      Rectangle width in pixels. MUST BE POSITIVE AND NOT
-                   EXTEND OFF SCREEN.
-    @param  h      Rectangle height in pixels. MUST BE POSITIVE AND NOT
-                   EXTEND OFF SCREEN.
-    @param  color  16-bit fill color in '565' RGB format.
-    @note   This is a new function, no graphics primitives besides rects
-            and horizontal/vertical lines are written to best use this yet.
-*/
-void Arduino_TFT::writeFillRectPreclipped(int16_t x, int16_t y,
-                                          int16_t w, int16_t h, uint16_t color)
+void Arduino_TFT::writeFillRectPreclipped(
+    int16_t x, int16_t y,
+    int16_t w, int16_t h, uint16_t color)
 {
 #ifdef ESP8266
   yield();
@@ -189,12 +144,6 @@ void Arduino_TFT::setAddrWindow(int16_t x0, int16_t y0, uint16_t w,
   endWrite();
 }
 
-/**************************************************************************/
-/*!
-    @brief      Set rotation setting for display
-    @param  x   0 thru 3 corresponding to 4 cardinal rotations
-*/
-/**************************************************************************/
 void Arduino_TFT::setRotation(uint8_t r)
 {
   Arduino_GFX::setRotation(r);
@@ -245,12 +194,6 @@ void Arduino_TFT::writePixels(uint16_t *data, uint32_t len)
   _bus->writePixels(data, len);
 }
 
-/**************************************************************************/
-/*!
-   @brief    Push a pixel, overwrite in subclasses if startWrite is defined!
-   @param    color 16-bit 5-6-5 Color to fill with
-*/
-/**************************************************************************/
 void Arduino_TFT::pushColor(uint16_t color)
 {
   _bus->beginWrite();
@@ -258,18 +201,7 @@ void Arduino_TFT::pushColor(uint16_t color)
   _bus->endWrite();
 }
 
-/**************************************************************************/
-/*!
-   @brief    Write a line.  Bresenham's algorithm - thx wikpedia
-    @param    x0  Start point x coordinate
-    @param    y0  Start point y coordinate
-    @param    x1  End point x coordinate
-    @param    y1  End point y coordinate
-    @param    color 16-bit 5-6-5 Color to draw with
-*/
-/**************************************************************************/
-void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-                                 uint16_t color)
+void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 {
   int16_t dx;
   int16_t dy;
@@ -323,49 +255,19 @@ void Arduino_TFT::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 
 // TFT tuned BITMAP / XBITMAP / GRAYSCALE / RGB BITMAP FUNCTIONS ---------------------
 
-/**************************************************************************/
-/*!
-    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param  bitmap      byte array of Indexed color bitmap
-    @param  color_index byte array of 16-bit color index
-    @param  w           Width of bitmap in pixels
-    @param  h           Height of bitmap in pixels
-*/
-/**************************************************************************/
 void Arduino_TFT::writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
 {
   _bus->writeIndexedPixels(bitmap, color_index, len);
 }
 
-/**************************************************************************/
-/*!
-    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param  bitmap      byte array of Indexed color bitmap
-    @param  color_index byte array of 16-bit color index
-    @param  w           Width of bitmap in pixels
-    @param  h           Height of bitmap in pixels
-*/
-/**************************************************************************/
 void Arduino_TFT::writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len)
 {
   _bus->writeIndexedPixelsDouble(bitmap, color_index, len);
 }
 
-/**************************************************************************/
-/*!
-   @brief      Draw a PROGMEM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with monochrome bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-    @param    color 16-bit 5-6-5 Color to draw pixels with
-    @param    bg 16-bit 5-6-5 Color to draw background with
-*/
-/**************************************************************************/
-void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
-                             const uint8_t bitmap[], int16_t w, int16_t h,
-                             uint16_t color, uint16_t bg)
+void Arduino_TFT::drawBitmap(
+    int16_t x, int16_t y,
+    const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -408,20 +310,9 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief      Draw a RAM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with monochrome bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-    @param    color 16-bit 5-6-5 Color to draw pixels with
-    @param    bg 16-bit 5-6-5 Color to draw background with
-*/
-/**************************************************************************/
-void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
-                             uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
+void Arduino_TFT::drawBitmap(
+    int16_t x, int16_t y,
+    uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -463,18 +354,9 @@ void Arduino_TFT::drawBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a PROGMEM-resident 8-bit image (grayscale) at the specified (x,y) pos.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with grayscale bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
-                                      const uint8_t bitmap[], int16_t w, int16_t h)
+void Arduino_TFT::drawGrayscaleBitmap(
+    int16_t x, int16_t y,
+    const uint8_t bitmap[], int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -509,18 +391,9 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a RAM-resident 8-bit image (grayscale) at the specified (x,y) pos.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with grayscale bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
-                                      uint8_t *bitmap, int16_t w, int16_t h)
+void Arduino_TFT::drawGrayscaleBitmap(
+    int16_t x, int16_t y,
+    uint8_t *bitmap, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -555,19 +428,9 @@ void Arduino_TFT::drawGrayscaleBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-    @brief  Draw a Indexed 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param  x           Top left corner x coordinate
-    @param  y           Top left corner y coordinate
-    @param  bitmap      byte array of Indexed color bitmap
-    @param  color_index byte array of 16-bit color index
-    @param  w           Width of bitmap in pixels
-    @param  h           Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT::drawIndexedBitmap(int16_t x, int16_t y,
-                                    uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h)
+void Arduino_TFT::drawIndexedBitmap(
+    int16_t x, int16_t y,
+    uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h, int16_t x_skip)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -585,31 +448,21 @@ void Arduino_TFT::drawIndexedBitmap(int16_t x, int16_t y,
       ((y + h - 1) > _max_y)    // Clip bottom
   )
   {
-    Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, w, h);
+    Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, w, h, x_skip);
   }
   else
   {
-    uint32_t len = w * h;
     startWrite();
     writeAddrWindow(x, y, w, h);
-    _bus->writeIndexedPixels(bitmap, color_index, len);
+    while (h--)
+    {
+      _bus->writeIndexedPixels(bitmap, color_index, w);
+      bitmap += w + x_skip;
+    }
     endWrite();
   }
 }
 
-/**************************************************************************/
-/*!
-    @brief  Draw a RAM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask
-            (set bits = opaque, unset bits = clear) at the specified (x,y) position.
-            BOTH buffers (color and mask) must be RAM-resident.
-    @param  x       Top left corner x coordinate
-    @param  y       Top left corner y coordinate
-    @param  bitmap  byte array with 16-bit color bitmap
-    @param  mask    byte array with monochrome mask bitmap
-    @param  w       Width of bitmap in pixels
-    @param  h       Height of bitmap in pixels
-*/
-/**************************************************************************/
 void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
                                      uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
@@ -674,19 +527,9 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-   For 16-bit display devices; no color reduction performed.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                     const uint16_t bitmap[], int16_t w, int16_t h)
+void Arduino_TFT::draw16bitRGBBitmap(
+    int16_t x, int16_t y,
+    const uint16_t bitmap[], int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -719,19 +562,9 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a RAM-resident 16-bit image (RGB 5/6/5) at the specified (x,y) position.
-   For 16-bit display devices; no color reduction performed.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                     uint16_t *bitmap, int16_t w, int16_t h)
+void Arduino_TFT::draw16bitRGBBitmap(
+    int16_t x, int16_t y,
+    uint16_t *bitmap, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -760,19 +593,9 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a RAM-resident 16-bit Big Endian image (RGB 5/6/5) at the specified (x,y) position.
-   For 16-bit display devices; no color reduction performed.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT::draw16bitBeRGBBitmap(int16_t x, int16_t y,
-                                       uint16_t *bitmap, int16_t w, int16_t h)
+void Arduino_TFT::draw16bitBeRGBBitmap(
+    int16_t x, int16_t y,
+    uint16_t *bitmap, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -801,18 +624,9 @@ void Arduino_TFT::draw16bitBeRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a PROGMEM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
-                                     const uint8_t bitmap[], int16_t w, int16_t h)
+void Arduino_TFT::draw24bitRGBBitmap(
+    int16_t x, int16_t y,
+    const uint8_t bitmap[], int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -847,18 +661,9 @@ void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-/**************************************************************************/
-/*!
-   @brief   Draw a RAM-resident 24-bit image (RGB 5/6/5) at the specified (x,y) position.
-    @param    x   Top left corner x coordinate
-    @param    y   Top left corner y coordinate
-    @param    bitmap  byte array with 16-bit color bitmap
-    @param    w   Width of bitmap in pixels
-    @param    h   Height of bitmap in pixels
-*/
-/**************************************************************************/
-void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
-                                     uint8_t *bitmap, int16_t w, int16_t h)
+void Arduino_TFT::draw24bitRGBBitmap(
+    int16_t x, int16_t y,
+    uint8_t *bitmap, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -893,17 +698,6 @@ void Arduino_TFT::draw24bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-// Draw a character
-/**************************************************************************/
-/*!
-   @brief   Draw a single character
-    @param    x   Bottom left corner x coordinate
-    @param    y   Bottom left corner y coordinate
-    @param    c   The 8-bit font-indexed character (likely ascii)
-    @param    color 16-bit 5-6-5 Color to draw chraracter with
-    @param    bg 16-bit 5-6-5 Color to fill background with (if same as color, no background)
-*/
-/**************************************************************************/
 void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg)
 {
   uint16_t block_w;
