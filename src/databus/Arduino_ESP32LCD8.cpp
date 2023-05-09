@@ -197,7 +197,7 @@ void Arduino_ESP32LCD8::write16(uint16_t d)
 
 void Arduino_ESP32LCD8::writeRepeat(uint16_t p, uint32_t len)
 {
-  while (len > USE_DMA_THRESHOLD)
+  if (len > USE_DMA_THRESHOLD)
   {
     uint32_t bufLen = (len < LCD_MAX_PIXELS_AT_ONCE) ? len : LCD_MAX_PIXELS_AT_ONCE;
     uint32_t xferLen, l;
@@ -215,7 +215,7 @@ void Arduino_ESP32LCD8::writeRepeat(uint16_t p, uint32_t len)
     _data32.lsb = _data16.msb;
     _data32.lsb_2 = _data16.lsb;
 
-    while (len) // While pixels remain
+    while (len > USE_DMA_THRESHOLD)
     {
       xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
 
@@ -421,6 +421,57 @@ void Arduino_ESP32LCD8::writePattern(uint8_t *data, uint8_t len, uint32_t repeat
 
 void Arduino_ESP32LCD8::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
+  if (len > USE_DMA_THRESHOLD)
+  {
+    uint32_t bufLen = (len < LCD_MAX_PIXELS_AT_ONCE) ? len : LCD_MAX_PIXELS_AT_ONCE;
+    uint32_t xferLen, l;
+
+    while (len > USE_DMA_THRESHOLD)
+    {
+      xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
+
+      _data16.value = idx[*data++];
+      _data32.value = 0;
+      _data32.lsb = _data16.msb;
+      _data32.lsb_2 = _data16.lsb;
+
+      LCD_CAM.lcd_cmd_val.val = _data32.value;
+      WAIT_LCD_NOT_BUSY;
+      LCD_CAM.lcd_user.val = LCD_CAM_LCD_CMD | LCD_CAM_LCD_CMD_2_CYCLE_EN | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
+
+      _data16.value = idx[*data++];
+      _data32.value = 0;
+      _data32.lsb = _data16.msb;
+      _data32.lsb_2 = _data16.lsb;
+
+      l = xferLen - 2;
+      l >>= 1;
+      for (uint32_t i = 0; i < l; i++)
+      {
+        _data16.value = idx[*data++];
+        _data32.lsb = _data16.msb;
+        _data32.msb = _data16.lsb;
+        _data16.value = idx[*data++];
+        _data32.lsb_2 = _data16.msb;
+        _data32.msb_2 = _data16.lsb;
+        _buffer32[i] = _data32.value;
+      }
+
+      l <<= 2;
+      *(uint32_t *)_dmadesc = ((l + 3) & (~3)) | l << 12 | 0xC0000000;
+      _dmadesc->buffer = _buffer;
+      _dmadesc->next = nullptr;
+      gdma_start(_dma_chan, (intptr_t)(_dmadesc));
+      LCD_CAM.lcd_cmd_val.val = _data32.value;
+      LCD_CAM.lcd_user.val = LCD_CAM_LCD_ALWAYS_OUT_EN | LCD_CAM_LCD_DOUT | LCD_CAM_LCD_CMD | LCD_CAM_LCD_CMD_2_CYCLE_EN | LCD_CAM_LCD_UPDATE_REG;
+
+      len -= xferLen;
+
+      WAIT_LCD_NOT_BUSY;
+      LCD_CAM.lcd_user.val = LCD_CAM_LCD_ALWAYS_OUT_EN | LCD_CAM_LCD_DOUT | LCD_CAM_LCD_CMD | LCD_CAM_LCD_CMD_2_CYCLE_EN | LCD_CAM_LCD_START;
+    }
+  }
+
   while (len--)
   {
     _data16.value = idx[*data++];
