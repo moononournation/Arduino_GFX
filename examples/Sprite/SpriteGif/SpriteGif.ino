@@ -98,6 +98,7 @@ IndexedSprite *background;
 IndexedSprite *road;
 IndexedSprite *cars;
 IndexedSprite *birds;
+IndexedSprite *sun;
 IndexedSprite *clouds;
 IndexedSprite *mpv;
 
@@ -197,10 +198,11 @@ void setup()
           uint16_t *palette = canvasGfx->getColorIndex();
           memcpy(palette, gif->palette->colors, gif->palette->len * 2);
 
-          background = new IndexedSprite(0, 0, spriteMaster, palette, 405, 180, 0, false, 1, 0);
+          background = new IndexedSprite(0, 0, spriteMaster, palette, 405, 180, 0, true, 1, 3);
           road = new IndexedSprite(0, 180, spriteMaster + (180 * 405), palette, 405, 60, 0, true, 1, 1);
           cars = new IndexedSprite(0, 182, spriteMaster + (240 * 405), palette, 405, 11, 0, true, 1, 1, gif->gce.tindex);
           birds = new IndexedSprite(0, 80, spriteMaster + (251 * 405), palette, 51, 32, (405 - 51), false, 4, 4, gif->gce.tindex);
+          sun = new IndexedSprite(16, 16, spriteMaster + (251 * 405) + 210, palette, 30, 30, (405 - 30), false, 1, 0, gif->gce.tindex);
           clouds = new IndexedSprite(0, 2, spriteMaster + (283 * 405), palette, 405, 94, 0, true, 1, 2, gif->gce.tindex);
           mpv = new IndexedSprite((canvasGfx->width() - 70) / 2, 182, spriteMaster + (377 * 405), palette, 50, 30, (405 - 50), false, 8, 2, gif->gce.tindex);
 
@@ -221,6 +223,7 @@ void testingLoop(void)
 {
   if (spriteInitiated)
   {
+    background->h_scroll(-1);
     background->draw(canvasGfx);
 
     road->h_scroll(-3);
@@ -232,6 +235,8 @@ void testingLoop(void)
     birds->h_scroll(1, 480);
     birds->next_frame();
     birds->draw(canvasGfx);
+
+    sun->draw(canvasGfx);
 
     clouds->h_scroll(1);
     clouds->draw(canvasGfx);
