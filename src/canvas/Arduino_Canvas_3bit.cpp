@@ -9,6 +9,13 @@ Arduino_Canvas_3bit::Arduino_Canvas_3bit(int16_t w, int16_t h, Arduino_G *output
 {
 }
 
+Arduino_Canvas_3bit::~Arduino_Canvas_3bit()
+{
+  if (_framebuffer) {
+    free(_framebuffer);
+  }
+}
+
 bool Arduino_Canvas_3bit::begin(int32_t speed)
 {
   if (speed != GFX_SKIP_OUTPUT_BEGIN)

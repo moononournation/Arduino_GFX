@@ -15,6 +15,13 @@ Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *
   _color_mask = mask_level_list[_current_mask_level];
 }
 
+Arduino_Canvas_Indexed::~Arduino_Canvas_Indexed()
+{
+  if (_framebuffer) {
+    free(_framebuffer);
+  }
+}
+
 bool Arduino_Canvas_Indexed::begin(int32_t speed)
 {
   if (speed != GFX_SKIP_OUTPUT_BEGIN)

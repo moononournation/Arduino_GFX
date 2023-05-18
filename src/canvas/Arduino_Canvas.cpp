@@ -10,6 +10,13 @@ Arduino_Canvas::Arduino_Canvas(
 {
 }
 
+Arduino_Canvas::~Arduino_Canvas()
+{
+  if (_framebuffer) {
+    free(_framebuffer);
+  }
+}
+
 bool Arduino_Canvas::begin(int32_t speed)
 {
   if (

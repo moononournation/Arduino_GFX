@@ -10,6 +10,7 @@ class Arduino_Canvas : public Arduino_GFX
 {
 public:
   Arduino_Canvas(int16_t w, int16_t h, Arduino_G *output, int16_t output_x = 0, int16_t output_y = 0);
+  ~Arduino_Canvas();
 
   bool begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;

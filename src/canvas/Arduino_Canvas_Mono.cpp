@@ -9,6 +9,13 @@ Arduino_Canvas_Mono::Arduino_Canvas_Mono(int16_t w, int16_t h, Arduino_G *output
 {
 }
 
+Arduino_Canvas_Mono::~Arduino_Canvas_Mono()
+{
+  if (_framebuffer) {
+    free(_framebuffer);
+  }
+}
+
 bool Arduino_Canvas_Mono::begin(int32_t speed)
 {
   if (speed != GFX_SKIP_OUTPUT_BEGIN)
