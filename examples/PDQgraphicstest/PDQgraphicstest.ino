@@ -29,6 +29,10 @@
  * End of Arduino_GFX setting
  ******************************************************************************/
 
+#ifdef ESP32
+#define F(s) (s)
+#endif
+
 int32_t w, h, n, n1, cx, cy, cx1, cy1, cn, cn1;
 uint8_t tsa, tsb, tsc, ds;
 
