@@ -11,7 +11,8 @@ Arduino_Canvas_3bit::Arduino_Canvas_3bit(int16_t w, int16_t h, Arduino_G *output
 
 Arduino_Canvas_3bit::~Arduino_Canvas_3bit()
 {
-  if (_framebuffer) {
+  if (_framebuffer)
+  {
     free(_framebuffer);
   }
 }
@@ -26,22 +27,25 @@ bool Arduino_Canvas_3bit::begin(int32_t speed)
     }
   }
 
-  size_t s = (_width * _height + 1) / 2;
-#if defined(ESP32)
-  if (psramFound())
-  {
-    _framebuffer = (uint8_t *)ps_malloc(s);
-  }
-  else
-  {
-    _framebuffer = (uint8_t *)malloc(s);
-  }
-#else
-  _framebuffer = (uint8_t *)malloc(s);
-#endif
   if (!_framebuffer)
   {
-    return false;
+    size_t s = (_width * _height + 1) / 2;
+#if defined(ESP32)
+    if (psramFound())
+    {
+      _framebuffer = (uint8_t *)ps_malloc(s);
+    }
+    else
+    {
+      _framebuffer = (uint8_t *)malloc(s);
+    }
+#else
+    _framebuffer = (uint8_t *)malloc(s);
+#endif
+    if (!_framebuffer)
+    {
+      return false;
+    }
   }
 
   return true;

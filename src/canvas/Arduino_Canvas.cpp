@@ -12,7 +12,8 @@ Arduino_Canvas::Arduino_Canvas(
 
 Arduino_Canvas::~Arduino_Canvas()
 {
-  if (_framebuffer) {
+  if (_framebuffer)
+  {
     free(_framebuffer);
   }
 }
@@ -28,22 +29,25 @@ bool Arduino_Canvas::begin(int32_t speed)
     }
   }
 
-  size_t s = _width * _height * 2;
-#if defined(ESP32)
-  if (psramFound())
-  {
-    _framebuffer = (uint16_t *)ps_malloc(s);
-  }
-  else
-  {
-    _framebuffer = (uint16_t *)malloc(s);
-  }
-#else
-  _framebuffer = (uint16_t *)malloc(s);
-#endif
   if (!_framebuffer)
   {
-    return false;
+    size_t s = _width * _height * 2;
+#if defined(ESP32)
+    if (psramFound())
+    {
+      _framebuffer = (uint16_t *)ps_malloc(s);
+    }
+    else
+    {
+      _framebuffer = (uint16_t *)malloc(s);
+    }
+#else
+    _framebuffer = (uint16_t *)malloc(s);
+#endif
+    if (!_framebuffer)
+    {
+      return false;
+    }
   }
 
   return true;
