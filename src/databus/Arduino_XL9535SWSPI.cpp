@@ -127,24 +127,24 @@ void Arduino_XL9535SWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repe
 }
 #endif // !defined(LITTLE_FOOT_PRINT)
 
-void Arduino_XL9535SWSPI::writeRegister(uint8_t reg, uint8_t *data, uint8_t len)
+void Arduino_XL9535SWSPI::writeRegister(uint8_t reg, uint8_t *data, size_t len)
 {
   _wire->beginTransmission(_address);
   _wire->write(reg);
-  for (uint8_t i = 0; i < len; i++)
+  for (size_t i = 0; i < len; i++)
   {
     _wire->write(data[i]);
   }
   _wire->endTransmission();
 }
 
-uint8_t Arduino_XL9535SWSPI::readRegister(uint8_t reg, uint8_t *data, uint8_t len)
+uint8_t Arduino_XL9535SWSPI::readRegister(uint8_t reg, uint8_t *data, size_t len)
 {
   _wire->beginTransmission(_address);
   _wire->write(reg);
   _wire->endTransmission();
   _wire->requestFrom(_address, len);
-  uint8_t index = 0;
+  size_t index = 0;
   while (index < len)
     data[index++] = _wire->read();
   return 0;
