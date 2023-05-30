@@ -19,8 +19,8 @@ public:
   uint8_t *getFramebuffer();
 
 protected:
-  uint8_t *_framebuffer;
-  Arduino_G *_output;
+  uint8_t *_framebuffer = nullptr;
+  Arduino_G *_output = nullptr;
   int16_t _output_x, _output_y;
 
 private:

@@ -31,8 +31,8 @@ public:
   void raise_mask_level();
 
 protected:
-  uint8_t *_framebuffer;
-  Arduino_G *_output;
+  uint8_t *_framebuffer = nullptr;
+  Arduino_G *_output = nullptr;
   int16_t _output_x, _output_y;
   uint16_t _color_index[COLOR_IDX_SIZE];
   uint8_t _indexed_size = 0;
