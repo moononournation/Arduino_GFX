@@ -23,11 +23,13 @@ public:
   void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, uint16_t transparent_color, int16_t w, int16_t h) override;
   void draw16bitBeRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
   void flush(void) override;
+  void flushQuad(void);
 
   uint16_t *getFramebuffer();
 
 protected:
   uint16_t *_framebuffer = nullptr;
+  uint16_t *_rowBuf = nullptr;
   Arduino_G *_output = nullptr;
   int16_t _output_x, _output_y;
 

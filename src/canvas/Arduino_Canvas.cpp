@@ -512,6 +512,37 @@ void Arduino_Canvas::flush()
   }
 }
 
+void Arduino_Canvas::flushQuad(void)
+{
+  int16_t y = _output_y;
+  uint16_t *row1 = _framebuffer;
+  uint16_t *row2 = _framebuffer + _width;
+  if (_output)
+  {
+    int16_t hQuad = _height / 2;
+    int16_t wQuad = _width / 2;
+    if (!_rowBuf)
+    {
+      _rowBuf = (uint16_t *)malloc(wQuad * 2);
+    }
+    uint16_t p;
+    while (hQuad--)
+    {
+      for (int16_t i = 0; i < wQuad; ++i)
+      {
+        p = (*row1++ & 0b1110011110011100) >> 2;
+        p += (*row1++ & 0b1110011110011100) >> 2;
+        p += (*row2++ & 0b1110011110011100) >> 2;
+        p += (*row2++ & 0b1110011110011100) >> 2;
+        _rowBuf[i] = p;
+      }
+      _output->draw16bitRGBBitmap(_output_x, _output_y + y++, _rowBuf, wQuad, 1);
+      row1 += _width;
+      row2 += _width;
+    }
+  }
+}
+
 uint16_t *Arduino_Canvas::getFramebuffer()
 {
   return _framebuffer;
