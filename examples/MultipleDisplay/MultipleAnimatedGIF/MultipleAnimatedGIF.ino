@@ -77,19 +77,33 @@ void setup()
   GFX_EXTRA_PRE_INIT();
 #endif
 
-  gfx1->begin();
+  // Init all displays
+
+  if (!gfx1->begin())
+  {
+    Serial.println("gfx1->begin() failed!");
+  }
   gfx1->fillScreen(RED);
   delay(200);
 
-  gfx2->begin();
+  if (!gfx2->begin())
+  {
+    Serial.println("gfx2->begin() failed!");
+  }
   gfx2->fillScreen(YELLOW);
   delay(200);
 
-  gfx3->begin();
+  if (!gfx3->begin())
+  {
+    Serial.println("gfx3->begin() failed!");
+  }
   gfx3->fillScreen(GREEN);
   delay(200);
 
-  gfx4->begin();
+  if (!gfx4->begin())
+  {
+    Serial.println("gfx4->begin() failed!");
+  }
   gfx4->fillScreen(BLUE);
   delay(200);
 

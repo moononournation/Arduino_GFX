@@ -78,7 +78,11 @@ void setup(void)
 #endif
 
   Serial.println("Init display");
-  gfx->begin();
+  // Init Display
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
   gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL

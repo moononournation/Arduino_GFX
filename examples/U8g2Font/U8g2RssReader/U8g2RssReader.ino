@@ -95,7 +95,10 @@ void setup(void)
 #endif
 
   Serial.println("Init display");
-  gfx->begin();
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
   gfx->fillScreen(BLACK);
   gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
 

@@ -6,7 +6,7 @@
 */
 /*******************************************************************************
  * Start of Arduino_GFX setting
- * 
+ *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
  * Defalult pin list for non display dev kit:
@@ -50,37 +50,41 @@ void setup(void)
   GFX_EXTRA_PRE_INIT();
 #endif
 
-    gfx->begin();
-    gfx->fillScreen(BLACK);
+  // Init Display
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
+  gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
-    gfx->setTextColor(GREEN);
+  gfx->setTextColor(GREEN);
+  for (int x = 0; x < 16; x++)
+  {
+    gfx->setCursor(10 + x * 8, 2);
+    gfx->print(x, 16);
+  }
+  gfx->setTextColor(BLUE);
+  for (int y = 0; y < 16; y++)
+  {
+    gfx->setCursor(2, 12 + y * 10);
+    gfx->print(y, 16);
+  }
+
+  char c = 0;
+  for (int y = 0; y < 16; y++)
+  {
     for (int x = 0; x < 16; x++)
     {
-        gfx->setCursor(10 + x * 8, 2);
-        gfx->print(x, 16);
+      gfx->drawChar(10 + x * 8, 12 + y * 10, c++, WHITE, BLACK);
     }
-    gfx->setTextColor(BLUE);
-    for (int y = 0; y < 16; y++)
-    {
-        gfx->setCursor(2, 12 + y * 10);
-        gfx->print(y, 16);
-    }
+  }
 
-    char c = 0;
-    for (int y = 0; y < 16; y++)
-    {
-        for (int x = 0; x < 16; x++)
-        {
-            gfx->drawChar(10 + x * 8, 12 + y * 10, c++, WHITE, BLACK);
-        }
-    }
-
-    delay(5000); // 5 seconds
+  delay(5000); // 5 seconds
 }
 
 void loop()

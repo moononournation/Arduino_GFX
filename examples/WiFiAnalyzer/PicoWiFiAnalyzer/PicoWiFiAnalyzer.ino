@@ -69,10 +69,6 @@ void setup()
   // while(!Serial);
   Serial.println("Pico WiFi Analyzer");
 
-#ifdef GFX_EXTRA_PRE_INIT
-  GFX_EXTRA_PRE_INIT();
-#endif
-
   // Set WiFi to station mode and disconnect from an AP if it was previously connected
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
@@ -87,8 +83,11 @@ void setup()
   digitalWrite(GFX_BL, HIGH);
 #endif
 
-  // init LCD
-  gfx->begin();
+  // Init Display
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
   w = gfx->width();
   h = gfx->height();
   text_size = (h < 200) ? 1 : 2;

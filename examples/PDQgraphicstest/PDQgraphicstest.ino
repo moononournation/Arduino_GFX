@@ -48,8 +48,12 @@ void setup()
   GFX_EXTRA_PRE_INIT();
 #endif
 
-  gfx->begin();
-  // gfx->begin(80000000); /* specify data bus speed */
+  // Init Display
+  if (!gfx->begin())
+  // if (!gfx->begin(80000000)) /* specify data bus speed */
+  {
+    Serial.println("gfx->begin() failed!");
+  }
 
   w = gfx->width();
   h = gfx->height();

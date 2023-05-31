@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Start of Arduino_GFX setting
- * 
+ *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
  * Defalult pin list for non display dev kit:
@@ -44,27 +44,31 @@ void setup(void)
   GFX_EXTRA_PRE_INIT();
 #endif
 
-    gfx->begin();
-    gfx->fillScreen(BLACK);
+  // Init Display
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
+  gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
-    gfx->setCursor(10, 10);
-    gfx->setTextColor(RED);
-    gfx->println("Hello World!");
+  gfx->setCursor(10, 10);
+  gfx->setTextColor(RED);
+  gfx->println("Hello World!");
 
-    delay(5000); // 5 seconds
+  delay(5000); // 5 seconds
 }
 
 void loop()
 {
-    gfx->setCursor(random(gfx->width()), random(gfx->height()));
-    gfx->setTextColor(random(0xffff), random(0xffff));
-    gfx->setTextSize(random(6) /* x scale */, random(6) /* y scale */, random(2) /* pixel_margin */);
-    gfx->println("Hello World!");
+  gfx->setCursor(random(gfx->width()), random(gfx->height()));
+  gfx->setTextColor(random(0xffff), random(0xffff));
+  gfx->setTextSize(random(6) /* x scale */, random(6) /* y scale */, random(2) /* pixel_margin */);
+  gfx->println("Hello World!");
 
-    delay(1000); // 1 second
+  delay(1000); // 1 second
 }

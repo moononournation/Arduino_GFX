@@ -118,7 +118,10 @@ void setup()
 #endif
 
   // Init Display
-  canvasGfx->begin();
+  if (!canvasGfx->begin())
+  {
+    Serial.println("canvasGfx->begin() failed!");
+  }
   canvasGfx->fillScreen(BLACK);
   canvasGfx->flush();
   canvasGfx->setDirectUseColorIndex(true);
