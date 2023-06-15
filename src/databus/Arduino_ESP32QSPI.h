@@ -54,6 +54,8 @@ private:
 
   spi_device_handle_t _handle;
   uint16_t *_send_buf;
+  spi_transaction_ext_t _spi_tran_ext;
+  spi_transaction_t *_spi_tran;
 };
 
 #endif // #if defined(ESP32)
