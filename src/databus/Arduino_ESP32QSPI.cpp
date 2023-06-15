@@ -111,7 +111,7 @@ void Arduino_ESP32QSPI::write(uint8_t d)
   CS_LOW();
   _spi_tran_ext.base.flags = SPI_TRANS_USE_TXDATA | SPI_TRANS_MODE_QIO;
   _spi_tran_ext.base.cmd = 0x32;
-  _spi_tran_ext.base.addr = 0x002C00;
+  _spi_tran_ext.base.addr = 0x003C00;
   _spi_tran_ext.base.tx_data[0] = d;
   _spi_tran_ext.base.length = 8;
   spi_device_polling_transmit(_handle, _spi_tran);
@@ -123,7 +123,7 @@ void Arduino_ESP32QSPI::write16(uint16_t d)
   CS_LOW();
   _spi_tran_ext.base.flags = SPI_TRANS_USE_TXDATA | SPI_TRANS_MODE_QIO;
   _spi_tran_ext.base.cmd = 0x32;
-  _spi_tran_ext.base.addr = 0x002C00;
+  _spi_tran_ext.base.addr = 0x003C00;
   _spi_tran_ext.base.tx_data[0] = d >> 8;
   _spi_tran_ext.base.tx_data[1] = d;
   _spi_tran_ext.base.length = 16;
@@ -282,6 +282,49 @@ void Arduino_ESP32QSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat
   {
     writeBytes(data, len);
   }
+}
+
+void Arduino_ESP32QSPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+{
+  // log_i("Arduino_ESP32QSPI::writeIndexedPixels(%d)", len);
+
+  bool first_send = 1;
+  uint32_t l = (len > (SEND_BUF_SIZE / 2)) ? (SEND_BUF_SIZE / 2) : len;
+
+  CS_LOW();
+  uint16_t p;
+  while (len)
+  {
+    if (len < l)
+    {
+      l = len;
+    }
+
+    if (first_send)
+    {
+      _spi_tran_ext.base.flags = SPI_TRANS_MODE_QIO;
+      _spi_tran_ext.base.cmd = 0x32;
+      _spi_tran_ext.base.addr = 0x003C00;
+      first_send = 0;
+    }
+    else
+    {
+      _spi_tran_ext.base.flags = SPI_TRANS_MODE_QIO | SPI_TRANS_VARIABLE_CMD |
+                                 SPI_TRANS_VARIABLE_ADDR | SPI_TRANS_VARIABLE_DUMMY;
+    }
+    for (uint32_t i = 0; i < l; ++i)
+    {
+      p = idx[*data++];
+      MSB_16_SET(_send_buf[i], p);
+    }
+
+    _spi_tran_ext.base.tx_buffer = _send_buf;
+    _spi_tran_ext.base.length = l * 16;
+
+    spi_device_polling_transmit(_handle, _spi_tran);
+    len -= l;
+  }
+  CS_HIGH();
 }
 
 /******** low level bit twiddling **********/
