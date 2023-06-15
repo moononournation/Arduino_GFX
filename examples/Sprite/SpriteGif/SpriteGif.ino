@@ -110,7 +110,7 @@ void setup()
 {
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
-  while(!Serial);
+  // while(!Serial);
   Serial.println("GIF Sprite Demo");
 
 #ifdef GFX_EXTRA_PRE_INIT
@@ -201,6 +201,7 @@ void setup()
           uint16_t *palette = canvasGfx->getColorIndex();
           memcpy(palette, gif->palette->colors, gif->palette->len * 2);
 
+          //IndexedSprite(x, y, *bitmap, *palette, w, h, x_skip, loop, frames, speed_divider, chroma_key)
           background = new IndexedSprite(0, 0, spriteMaster, palette, 405, 180, 0, true, 1, 3);
           road = new IndexedSprite(0, 180, spriteMaster + (180 * 405), palette, 405, 60, 0, true, 1, 1);
           cars = new IndexedSprite(0, 182, spriteMaster + (240 * 405), palette, 405, 11, 0, true, 1, 1, gif->gce.tindex);
