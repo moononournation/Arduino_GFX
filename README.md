@@ -276,8 +276,9 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [ESP32-S3-RGB](https://github.com/W00ng/ESP32-S3-RGB-Panel) [[LVGL demo video](https://youtu.be/d11yUvjh34A)]
 * ESP32S3-2.1-TP
 * [ESPboy](https://www.espboy.com) [[demo video](https://youtu.be/Cx82XWrc8-0)]
-* [LILYGO T-DISPLAY](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
-* [LILYGO T-DISPLAY-S3](https://www.lilygo.cc/products/t-display-s3) [[demo video](https://youtu.be/kpRC64QNQAo)]
+* [LILYGO T-Display](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
+* [LILYGO T-Display-S3](https://www.lilygo.cc/products/t-display-s3) [[demo video](https://youtu.be/kpRC64QNQAo)]
+* [LILYGO T-Display-S3 AMOLED](https://www.lilygo.cc/products/t-display-s3-amoled) [[demo video](https://youtu.be/NvOGJAMlh1M)]
 * [LILYGO T-RGB](https://www.lilygo.cc/products/t-rgb) [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
 * [LILYGO T-QT](https://www.lilygo.cc/products/t-qt-v1-1) [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM?feature=share)]
 * [LILYGO T-Watch](http://www.lilygo.cn/prod_view.aspx?TypeId=50053&Id=1123)
