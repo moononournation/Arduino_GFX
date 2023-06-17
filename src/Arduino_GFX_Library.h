@@ -106,6 +106,16 @@
 #define DF_GFX_DC 27
 #define DF_GFX_RST 33
 #define DF_GFX_BL 32
+#elif defined(ARDUINO_M5Stack_ATOMS3)
+#define DISPLAY_DEV_KIT
+#define M5STACK_ATOMS3
+#define DF_GFX_SCK 17
+#define DF_GFX_MOSI 21
+#define DF_GFX_MISO GFX_NOT_DEFINED
+#define DF_GFX_CS 15
+#define DF_GFX_DC 33
+#define DF_GFX_RST 34
+#define DF_GFX_BL 16
 #elif defined(ARDUINO_ODROID_ESP32)
 #define DISPLAY_DEV_KIT
 #define ODROID_GO

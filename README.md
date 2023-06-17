@@ -283,6 +283,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [LILYGO T-Watch](http://www.lilygo.cn/prod_view.aspx?TypeId=50053&Id=1123)
 * [LILYGO T-Watch 2021](https://www.lilygo.cc/products/t-watch-2021)
 * [M5Stack Core Family](https://shop.m5stack.com/collections/m5-controllers/CORE)
+* [M5Stack AtomS3](https://shop.m5stack.com/products/atoms3-dev-kit-w-0-85-inch-screen)[[demo video](https://youtu.be/8u4TwZHmnN0)]
 * [Makerfabs ESP32 3.5" TFT Touch with Camera](https://www.makerfabs.com/esp32-3.5-inch-tft-touch-capacitive-with-camera.html)
 * [Makerfabs ESP32-S3 TFT 4.0"](https://www.makerfabs.com/esp32-s3-parallel-tft-with-touch-4-inch.html) [[demo video](https://youtu.be/Fmxd-Xu97C8)]
 * [Makerfabs ESP32-S3 TFT 4.3" v1.3](https://www.makerfabs.com/esp32-s3-parallel-tft-with-touch-4-3-inch.html) [[demo video](https://youtu.be/oQ57L2gTHoo)]

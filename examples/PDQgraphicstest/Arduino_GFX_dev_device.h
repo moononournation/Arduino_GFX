@@ -433,6 +433,12 @@ Arduino_GFX *gfx = new Arduino_ILI9342(bus, TFT_RST, 0 /* rotation */);
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
 Arduino_GFX *gfx = new Arduino_ILI9342(bus, 33 /* RST */, 2 /* rotation */);
 
+#elif defined(ARDUINO_M5Stack_ATOMS3)
+#define GFX_DEV_DEVICE ARDUINO_M5Stack_ATOMS3
+#define GFX_BL 16
+Arduino_DataBus *bus = new Arduino_ESP32SPI(33 /* DC */, 15 /* CS */, 17 /* SCK */, 21 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_GC9107(bus, 34 /* RST */, 0 /* rotation */, true /* IPS */);
+
 /* Odroid-Go */
 #elif defined(ARDUINO_ODROID_ESP32)
 #define GFX_DEV_DEVICE ARDUINO_ODROID_ESP32

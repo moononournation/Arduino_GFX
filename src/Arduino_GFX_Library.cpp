@@ -24,6 +24,8 @@ Arduino_GFX *create_default_Arduino_GFX()
   return new Arduino_ILI9342(bus, DF_GFX_RST, 0 /* rotation */);
 #elif defined(M5STACK_CORE)
   return new Arduino_ILI9342(bus, DF_GFX_RST, 2 /* rotation */);
+#elif defined(M5STACK_ATOMS3)
+  return new Arduino_GC9107(bus, 34 /* RST */, 0 /* rotation */, true /* IPS */);
 #elif defined(ODROID_GO)
   return new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */);
 #elif defined(TTGO_T_WATCH)
