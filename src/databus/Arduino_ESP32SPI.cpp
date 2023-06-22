@@ -927,8 +927,8 @@ void Arduino_ESP32SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t
       len >>= 1; // 2 pixels to a 32-bit data
       for (uint32_t i = 0; i < len; i++)
       {
-        p1 = *data++;
-        p2 = *data++;
+        p1 = idx[*data++];
+        p2 = idx[*data++];
         MSB_32_16_16_SET(_spi->dev->data_buf[i], p1, p2);
       }
 #if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S3
@@ -943,7 +943,7 @@ void Arduino_ESP32SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t
     {
       while (len--)
       {
-        write16(*data++);
+        write16(idx[*data++]);
       }
     }
   }
