@@ -454,10 +454,14 @@ void Arduino_TFT::drawIndexedBitmap(
   {
     startWrite();
     writeAddrWindow(x, y, w, h);
-    while (h--)
-    {
-      _bus->writeIndexedPixels(bitmap, color_index, w);
-      bitmap += w + x_skip;
+    if (x_skip == 0) {
+      _bus->writeIndexedPixels(bitmap, color_index, h*w);
+    } else {
+      while (h--)
+      {
+        _bus->writeIndexedPixels(bitmap, color_index, w);
+        bitmap += w + x_skip;
+      }
     }
     endWrite();
   }
