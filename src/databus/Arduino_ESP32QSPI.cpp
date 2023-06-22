@@ -16,6 +16,7 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
 
   pinMode(_cs, OUTPUT);
   digitalWrite(_cs, HIGH); // disable chip select
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
   if (_cs >= 32)
   {
     _csPinMask = digitalPinToBitMask(_cs);
@@ -23,6 +24,8 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
     _csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
   }
   else
+#endif
+      if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
     _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
