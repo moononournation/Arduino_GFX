@@ -5,13 +5,6 @@
 #if defined(ESP32)
 #include <driver/spi_master.h>
 
-typedef struct
-{
-    uint8_t cmd;
-    uint8_t data[4];
-    uint8_t len;
-} lcd_cmd_t;
-
 #define SEND_BUF_SIZE (0x4000)
 #define QSPI_FREQUENCY 80000000
 #define QSPI_SPI_MODE SPI_MODE0
