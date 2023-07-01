@@ -3,8 +3,8 @@
 #if defined(ESP32)
 
 Arduino_ESP32QSPI::Arduino_ESP32QSPI(
-    int8_t cs, int8_t sck, int8_t mosi, int8_t miso, int8_t quadwp, int8_t quadhd)
-    : _cs(cs), _sck(sck), _mosi(mosi), _miso(miso), _quadwp(quadwp), _quadhd(quadhd)
+    int8_t cs, int8_t sck, int8_t mosi, int8_t miso, int8_t quadwp, int8_t quadhd, bool is_shared_interface /* = false */)
+    : _cs(cs), _sck(sck), _mosi(mosi), _miso(miso), _quadwp(quadwp), _quadhd(quadhd), _is_shared_interface(is_shared_interface)
 {
 }
 
@@ -39,7 +39,8 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .quadwp_io_num = _quadwp,
       .quadhd_io_num = _quadhd,
       .max_transfer_sz = (SEND_BUF_SIZE * 16) + 8,
-      .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS};
+      .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
+  };
   esp_err_t ret = spi_bus_initialize(QSPI_SPI_HOST, &buscfg, QSPI_DMA_CHANNEL);
   if (ret != ESP_OK)
   {
@@ -52,9 +53,10 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .address_bits = 24,
       .mode = _dataMode,
       .clock_speed_hz = _speed,
-      .spics_io_num = -1,
+      .spics_io_num = -1, // avoid use system CS control
       .flags = SPI_DEVICE_HALFDUPLEX,
-      .queue_size = 17};
+      .queue_size = 17,
+  };
   ret = spi_bus_add_device(QSPI_SPI_HOST, &devcfg, &_handle);
   if (ret != ESP_OK)
   {
@@ -69,6 +71,11 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
     return false;
   }
 
+  if (!_is_shared_interface)
+  {
+    spi_device_acquire_bus(_handle, portMAX_DELAY);
+  }
+
   memset(&_spi_tran_ext, 0, sizeof(_spi_tran_ext));
   _spi_tran = (spi_transaction_t *)&_spi_tran_ext;
 
@@ -77,12 +84,18 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
 
 void Arduino_ESP32QSPI::beginWrite()
 {
-  spi_device_acquire_bus(_handle, portMAX_DELAY);
+  if (_is_shared_interface)
+  {
+    spi_device_acquire_bus(_handle, portMAX_DELAY);
+  }
 }
 
 void Arduino_ESP32QSPI::endWrite()
 {
-  spi_device_release_bus(_handle);
+  if (_is_shared_interface)
+  {
+    spi_device_acquire_bus(_handle, portMAX_DELAY);
+  }
 }
 
 void Arduino_ESP32QSPI::writeCommand(uint8_t c)

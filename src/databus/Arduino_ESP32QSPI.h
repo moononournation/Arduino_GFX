@@ -15,7 +15,7 @@ class Arduino_ESP32QSPI : public Arduino_DataBus
 {
 public:
   Arduino_ESP32QSPI(
-    int8_t cs, int8_t sck, int8_t mosi, int8_t miso, int8_t quadwp, int8_t quadhd); // Constructor
+    int8_t cs, int8_t sck, int8_t mosi, int8_t miso, int8_t quadwp, int8_t quadhd, bool is_shared_interface = false); // Constructor
 
   bool begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = GFX_NOT_DEFINED) override;
   void beginWrite() override;
@@ -42,6 +42,7 @@ private:
   INLINE void CS_LOW(void);
 
   int8_t _cs, _sck, _mosi, _miso, _quadwp, _quadhd;
+  bool _is_shared_interface;
 
   PORTreg_t _csPortSet; ///< PORT register for chip select SET
   PORTreg_t _csPortClr; ///< PORT register for chip select CLEAR
