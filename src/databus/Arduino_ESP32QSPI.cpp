@@ -50,8 +50,8 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
   spi_device_interface_config_t devcfg = {
       .command_bits = 8,
       .address_bits = 24,
-      .mode = QSPI_SPI_MODE,
-      .clock_speed_hz = QSPI_FREQUENCY,
+      .mode = _dataMode,
+      .clock_speed_hz = _speed,
       .spics_io_num = -1,
       .flags = SPI_DEVICE_HALFDUPLEX,
       .queue_size = 17};
