@@ -9,10 +9,10 @@
  * LVGL Configuration file:
  * Copy your_arduino_path/libraries/lvgl/lv_conf_template.h
  * to your_arduino_path/libraries/lv_conf.h
- * 
+ *
  * In lv_conf.h around line 15, enable config file:
  * #if 1 // Set it to "1" to enable content
- * 
+ *
  * Then find and set:
  * #define LV_COLOR_DEPTH     16
  * #define LV_TICK_CUSTOM     1
@@ -21,11 +21,15 @@
  * #define LV_COLOR_16_SWAP   1 // for SPI and parallel 8
  * #define LV_COLOR_16_SWAP   0 // for parallel 16 and RGB
  *
- * Enable LVGL Demo Benchmark
+ * Enable LVGL Demo Benchmark:
  * #define LV_USE_DEMO_BENCHMARK 1
  *
- * Enables support for compressed fonts.
+ * Enables support for compressed fonts:
  * #define LV_USE_FONT_COMPRESSED 1
+ *
+ * Customize font size:
+ * #define LV_FONT_MONTSERRAT_12 1
+ * #define LV_FONT_DEFAULT &lv_font_montserrat_12
  ******************************************************************************/
 #include "lv_demo_benchmark.h"
 
