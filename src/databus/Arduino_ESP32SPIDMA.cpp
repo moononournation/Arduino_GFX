@@ -196,11 +196,8 @@ void Arduino_ESP32SPIDMA::writeCommand(uint8_t c)
     _spi_tran.tx_data[0] = c;
     _spi_tran.flags = SPI_TRANS_USE_TXDATA;
 
-    esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-    if (ret != ESP_OK)
-    {
-      log_e("spi_device_polling_transmit error: %d", ret);
-    }
+    POLL_START();
+    POLL_END();
 
     DC_HIGH();
   }
@@ -227,11 +224,8 @@ void Arduino_ESP32SPIDMA::writeCommand16(uint16_t c)
     MSB_16_SET(_spi_tran.tx_data[0], c);
     _spi_tran.flags = SPI_TRANS_USE_TXDATA;
 
-    esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-    if (ret != ESP_OK)
-    {
-      log_e("spi_device_polling_transmit error: %d", ret);
-    }
+    POLL_START();
+    POLL_END();
 
     DC_HIGH();
   }
@@ -322,11 +316,8 @@ void Arduino_ESP32SPIDMA::writeRepeat(uint16_t p, uint32_t len)
       _spi_tran.tx_buffer = _buffer32;
       _spi_tran.flags = 0;
 
-      esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-      if (ret != ESP_OK)
-      {
-        log_e("spi_device_queue_trans error: %d", ret);
-      }
+      POLL_START();
+      POLL_END();
 
       len -= xferLen;
     }
@@ -353,11 +344,8 @@ void Arduino_ESP32SPIDMA::writeRepeat(uint16_t p, uint32_t len)
       _spi_tran.tx_buffer = _buffer32;
       _spi_tran.flags = 0;
 
-      esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-      if (ret != ESP_OK)
-      {
-        log_e("spi_device_queue_trans error: %d", ret);
-      }
+      POLL_START();
+      POLL_END();
 
       len -= xferLen;
     }
@@ -397,11 +385,9 @@ void Arduino_ESP32SPIDMA::writePixels(uint16_t *data, uint32_t len)
           p2 = *data++;
           MSB_32_16_16_SET(_buffer32[i], p1, p2);
         }
-        esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-        if (ret != ESP_OK)
-        {
-          log_e("spi_device_queue_trans error: %d", ret);
-        }
+
+        POLL_START();
+        POLL_END();
 
         len -= SPI_MAX_PIXELS_AT_ONCE;
       }
@@ -424,11 +410,9 @@ void Arduino_ESP32SPIDMA::writePixels(uint16_t *data, uint32_t len)
         p2 = *data++;
         MSB_32_16_16_SET(_buffer32[i], p1, p2);
       }
-      esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-      if (ret != ESP_OK)
-      {
-        log_e("spi_device_queue_trans error: %d", ret);
-      }
+
+      POLL_START();
+      POLL_END();
     }
     else
     {
@@ -460,11 +444,8 @@ void Arduino_ESP32SPIDMA::writeC8D8(uint8_t c, uint8_t d)
     _spi_tran.tx_data[0] = c;
     _spi_tran.flags = SPI_TRANS_USE_TXDATA;
 
-    esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-    if (ret != ESP_OK)
-    {
-      log_e("spi_device_polling_transmit error: %d", ret);
-    }
+    POLL_START();
+    POLL_END();
 
     DC_HIGH();
 
@@ -472,11 +453,8 @@ void Arduino_ESP32SPIDMA::writeC8D8(uint8_t c, uint8_t d)
     _spi_tran.tx_data[0] = d;
     _spi_tran.flags = SPI_TRANS_USE_TXDATA;
 
-    ret = spi_device_polling_transmit(_handle, &_spi_tran);
-    if (ret != ESP_OK)
-    {
-      log_e("spi_device_polling_transmit error: %d", ret);
-    }
+    POLL_START();
+    POLL_END();
   }
 }
 
@@ -502,11 +480,8 @@ void Arduino_ESP32SPIDMA::writeC8D16(uint8_t c, uint16_t d)
     _spi_tran.tx_data[0] = c;
     _spi_tran.flags = SPI_TRANS_USE_TXDATA;
 
-    esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-    if (ret != ESP_OK)
-    {
-      log_e("Arduino_ESP32SPIDMA::write() spi_device_polling_transmit error: %d", ret);
-    }
+    POLL_START();
+    POLL_END();
 
     DC_HIGH();
 
@@ -515,11 +490,8 @@ void Arduino_ESP32SPIDMA::writeC8D16(uint8_t c, uint16_t d)
     _spi_tran.tx_data[1] = (d & 0xff);
     _spi_tran.flags = SPI_TRANS_USE_TXDATA;
 
-    ret = spi_device_polling_transmit(_handle, &_spi_tran);
-    if (ret != ESP_OK)
-    {
-      log_e("spi_device_polling_transmit error: %d", ret);
-    }
+    POLL_START();
+    POLL_END();
   }
 }
 
@@ -548,11 +520,8 @@ void Arduino_ESP32SPIDMA::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
     _spi_tran.tx_data[0] = c;
     _spi_tran.flags = SPI_TRANS_USE_TXDATA;
 
-    esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-    if (ret != ESP_OK)
-    {
-      log_e("spi_device_polling_transmit error: %d", ret);
-    }
+    POLL_START();
+    POLL_END();
 
     DC_HIGH();
 
@@ -563,11 +532,8 @@ void Arduino_ESP32SPIDMA::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
     _spi_tran.tx_data[3] = (d2 & 0xff);
     _spi_tran.flags = SPI_TRANS_USE_TXDATA;
 
-    ret = spi_device_polling_transmit(_handle, &_spi_tran);
-    if (ret != ESP_OK)
-    {
-      log_e("spi_device_polling_transmit error: %d", ret);
-    }
+    POLL_START();
+    POLL_END();
   }
 }
 
@@ -597,11 +563,8 @@ void Arduino_ESP32SPIDMA::writeBytes(uint8_t *data, uint32_t len)
         _spi_tran.tx_buffer = data;
         _spi_tran.flags = 0;
 
-        esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-        if (ret != ESP_OK)
-        {
-          log_e("spi_device_queue_trans error: %d", ret);
-        }
+        POLL_START();
+        POLL_END();
 
         len -= l;
         data += l;
@@ -627,11 +590,9 @@ void Arduino_ESP32SPIDMA::writeBytes(uint8_t *data, uint32_t len)
           {
             _buffer32[i] = *p++;
           }
-          esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-          if (ret != ESP_OK)
-          {
-            log_e("spi_device_queue_trans error: %d", ret);
-          }
+
+          POLL_START();
+          POLL_END();
 
           len -= (SPI_MAX_PIXELS_AT_ONCE << 1);
           data += (SPI_MAX_PIXELS_AT_ONCE << 1);
@@ -655,11 +616,8 @@ void Arduino_ESP32SPIDMA::writeBytes(uint8_t *data, uint32_t len)
           _buffer32[i] = *p++;
         }
 
-        esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-        if (ret != ESP_OK)
-        {
-          log_e("spi_device_queue_trans error: %d", ret);
-        }
+        POLL_START();
+        POLL_END();
       }
       else
       {
@@ -712,11 +670,8 @@ void Arduino_ESP32SPIDMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint3
         _spi_tran.tx_buffer = _buffer32;
         _spi_tran.flags = 0;
 
-        esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-        if (ret != ESP_OK)
-        {
-          log_e("spi_device_queue_trans error: %d", ret);
-        }
+        POLL_START();
+        POLL_END();
 
         len -= SPI_MAX_PIXELS_AT_ONCE;
       }
@@ -741,11 +696,8 @@ void Arduino_ESP32SPIDMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint3
       _spi_tran.tx_buffer = _buffer32;
       _spi_tran.flags = 0;
 
-      esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-      if (ret != ESP_OK)
-      {
-        log_e("spi_device_queue_trans error: %d", ret);
-      }
+      POLL_START();
+      POLL_END();
     }
     else
     {
@@ -795,11 +747,8 @@ void Arduino_ESP32SPIDMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx,
         _spi_tran.tx_buffer = _buffer32;
         _spi_tran.flags = 0;
 
-        esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-        if (ret != ESP_OK)
-        {
-          log_e("spi_device_queue_trans error: %d", ret);
-        }
+        POLL_START();
+        POLL_END();
 
         len -= SPI_MAX_PIXELS_AT_ONCE >> 1;
       }
@@ -822,11 +771,8 @@ void Arduino_ESP32SPIDMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx,
       _spi_tran.tx_buffer = _buffer32;
       _spi_tran.flags = 0;
 
-      esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-      if (ret != ESP_OK)
-      {
-        log_e("spi_device_queue_trans error: %d", ret);
-      }
+      POLL_START();
+      POLL_END();
     }
     else
     {
@@ -844,11 +790,8 @@ void Arduino_ESP32SPIDMA::flush_data_buf()
   _spi_tran.tx_buffer = _buffer32;
   _spi_tran.flags = 0;
 
-  esp_err_t ret = spi_device_polling_transmit(_handle, &_spi_tran);
-  if (ret != ESP_OK)
-  {
-    log_e("spi_device_polling_transmit error: %d", ret);
-  }
+  POLL_START();
+  POLL_END();
 
   _data_buf_bit_idx = 0;
 }
@@ -911,6 +854,24 @@ INLINE void Arduino_ESP32SPIDMA::CS_LOW(void)
   {
     *_csPortClr = _csPinMask;
   }
+}
+
+INLINE void Arduino_ESP32SPIDMA::POLL_START()
+{
+  esp_err_t ret = spi_device_polling_start(_handle, &_spi_tran, portMAX_DELAY);
+  // if (ret != ESP_OK)
+  // {
+  //   log_e("spi_device_polling_start error: %d", ret);
+  // }
+}
+
+INLINE void Arduino_ESP32SPIDMA::POLL_END()
+{
+  esp_err_t ret = spi_device_polling_end(_handle, portMAX_DELAY);
+  // if (ret != ESP_OK)
+  // {
+  //   log_e("spi_device_polling_end error: %d", ret);
+  // }
 }
 
 #endif // #if defined(ESP32)

@@ -5,7 +5,7 @@
 #if defined(ESP32)
 #include <driver/spi_master.h>
 
-#define SPI_MAX_PIXELS_AT_ONCE 254
+#define SPI_MAX_PIXELS_AT_ONCE 1024
 #define DMA_CHANNEL SPI_DMA_CH_AUTO
 
 class Arduino_ESP32SPIDMA : public Arduino_DataBus
@@ -46,6 +46,8 @@ protected:
   INLINE void DC_LOW(void);
   INLINE void CS_HIGH(void);
   INLINE void CS_LOW(void);
+  INLINE void POLL_START();
+  INLINE void POLL_END();
 
 private:
   int8_t _dc, _cs;
