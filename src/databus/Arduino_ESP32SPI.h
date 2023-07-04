@@ -91,6 +91,7 @@ private:
   union
   {
     uint8_t _buffer[SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
+    uint16_t _buffer16[SPI_MAX_PIXELS_AT_ONCE];
     uint32_t _buffer32[SPI_MAX_PIXELS_AT_ONCE / 2];
   };
   uint16_t _data_buf_bit_idx = 0;
