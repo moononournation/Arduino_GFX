@@ -305,18 +305,14 @@ void Arduino_ESP32QSPI::writeRepeat(uint16_t p, uint32_t len)
  */
 void Arduino_ESP32QSPI::writePixels(uint16_t *data, uint32_t len)
 {
-  bool first_send = true;
-  uint32_t l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
-  uint32_t l2;
 
   CS_LOW();
+  uint32_t l, l2;
   uint16_t p1, p2;
+  bool first_send = true;
   while (len)
   {
-    if (len < l)
-    {
-      l = len;
-    }
+    l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
 
     if (first_send)
     {
@@ -362,16 +358,12 @@ void Arduino_ESP32QSPI::writePixels(uint16_t *data, uint32_t len)
  */
 void Arduino_ESP32QSPI::writeBytes(uint8_t *data, uint32_t len)
 {
-  bool first_send = true;
-  uint32_t l = (len > (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
-
   CS_LOW();
+  uint32_t l;
+  bool first_send = true;
   while (len)
   {
-    if (len < l)
-    {
-      l = len;
-    }
+    l = (len >= (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
 
     if (first_send)
     {
@@ -422,18 +414,13 @@ void Arduino_ESP32QSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat
  */
 void Arduino_ESP32QSPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
-  bool first_send = true;
-  uint32_t l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
-  uint32_t l2;
-
   CS_LOW();
+  uint32_t l, l2;
   uint16_t p1, p2;
+  bool first_send = true;
   while (len)
   {
-    if (len < l)
-    {
-      l = len;
-    }
+    l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
 
     if (first_send)
     {
@@ -480,17 +467,13 @@ void Arduino_ESP32QSPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_
  */
 void Arduino_ESP32QSPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
-  bool first_send = true;
-  uint32_t l = (len > (SPI_MAX_PIXELS_AT_ONCE >> 1)) ? (SPI_MAX_PIXELS_AT_ONCE >> 1) : len;
-
   CS_LOW();
+  uint32_t l;
   uint16_t p;
-  while (len > 1)
+  bool first_send = true;
+  while (len)
   {
-    if (len < l)
-    {
-      l = len;
-    }
+    l = (len > (SPI_MAX_PIXELS_AT_ONCE >> 1)) ? (SPI_MAX_PIXELS_AT_ONCE >> 1) : len;
 
     if (first_send)
     {
