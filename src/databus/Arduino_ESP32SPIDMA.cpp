@@ -556,7 +556,7 @@ void Arduino_ESP32SPIDMA::writePixels(uint16_t *data, uint32_t len)
     while (len)
     {
       l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
-      l2 = l >> 1;
+      l2 = (l + 1) >> 1;
       for (uint32_t i = 0; i < l2; ++i)
       {
         p1 = *data++;
@@ -632,7 +632,7 @@ void Arduino_ESP32SPIDMA::writeBytes(uint8_t *data, uint32_t len)
       uint32_t *p;
       while (len)
       {
-        uint32_t l = (len > (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
+        l = (len > (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
         l4 = (l + 3) >> 2;
         p = (uint32_t *)data;
         for (uint32_t i = 0; i < l4; ++i)
@@ -641,7 +641,7 @@ void Arduino_ESP32SPIDMA::writeBytes(uint8_t *data, uint32_t len)
         }
 
         _spi_tran.tx_buffer = _buffer32;
-        _spi_tran.length = l << 4;
+        _spi_tran.length = l << 3;
         _spi_tran.flags = 0;
 
         POLL_START();
