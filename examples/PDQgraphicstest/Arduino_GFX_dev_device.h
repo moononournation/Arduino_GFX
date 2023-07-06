@@ -423,8 +423,8 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rota
 #elif defined(ARDUINO_ESP32_S3_BOX)
 #define GFX_DEV_DEVICE ARDUINO_ESP32_S3_BOX
 #define GFX_BL 45
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_CLK, TFT_MOSI, TFT_MISO);
-Arduino_GFX *gfx = new Arduino_ILI9342(bus, TFT_RST, 0 /* rotation */);
+Arduino_DataBus *bus = new Arduino_ESP32SPI(4 /* DC */, 5 /* CS */, 7 /* SCK */, 6 /* MOSI */, 0 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ILI9342(bus, 48 /* RST */, 0 /* rotation */);
 
 /* M5Stack */
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
