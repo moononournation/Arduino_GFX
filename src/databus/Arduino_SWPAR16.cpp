@@ -905,14 +905,6 @@ void Arduino_SWPAR16::writeBytes(uint8_t *data, uint32_t len)
   }
 }
 
-void Arduino_SWPAR16::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
-{
-  while (repeat--)
-  {
-    writeBytes(data, len);
-  }
-}
-
 void Arduino_SWPAR16::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   while (len--)

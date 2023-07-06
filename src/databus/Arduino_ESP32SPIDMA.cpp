@@ -655,21 +655,6 @@ void Arduino_ESP32SPIDMA::writeBytes(uint8_t *data, uint32_t len)
 }
 
 /**
- * @brief writePattern
- *
- * @param data
- * @param len
- * @param repeat
- */
-void Arduino_ESP32SPIDMA::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
-{
-  while (repeat--)
-  {
-    writeBytes(data, len);
-  }
-}
-
-/**
  * @brief writeIndexedPixels
  *
  * @param data
