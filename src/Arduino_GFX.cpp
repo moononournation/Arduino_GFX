@@ -2530,15 +2530,15 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
         uint8_t gw = pgm_read_byte(&glyph->width),
                 gh = pgm_read_byte(&glyph->height),
                 xa = pgm_read_byte(&glyph->xAdvance);
-        int16_t xo = pgm_read_byte(&glyph->xOffset),
-                yo = pgm_read_byte(&glyph->yOffset);
+        int8_t xo = pgm_read_byte(&glyph->xOffset),
+               yo = pgm_read_byte(&glyph->yOffset);
         if (wrap && ((*x + ((xo + gw) * textsize_x) - 1) > _max_x))
         {
           *x = 0; // Reset x to zero, advance y by one line
           *y += (int16_t)textsize_y * (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
         }
-        int16_t x1 = *x + xo * textsize_x,
-                y1 = *y + yo * textsize_y,
+        int16_t x1 = *x + ((int16_t)xo * textsize_x),
+                y1 = *y + ((int16_t)yo * textsize_y),
                 x2 = x1 + ((int16_t)gw * textsize_x) - 1,
                 y2 = y1 + ((int16_t)gh * textsize_y) - 1;
         if (x1 < *minx)
