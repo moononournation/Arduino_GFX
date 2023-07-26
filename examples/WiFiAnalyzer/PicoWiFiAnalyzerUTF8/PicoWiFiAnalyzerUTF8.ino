@@ -70,10 +70,6 @@ void setup()
   // while(!Serial);
   Serial.println("Pico WiFi Analyzer UTF8");
 
-#ifdef GFX_EXTRA_PRE_INIT
-  GFX_EXTRA_PRE_INIT();
-#endif
-
   // Set WiFi to station mode and disconnect from an AP if it was previously connected
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
@@ -88,8 +84,11 @@ void setup()
   digitalWrite(GFX_BL, HIGH);
 #endif
 
-  // init LCD
-  gfx->begin();
+  // Init Display
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
   gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
   gfx->setFont(u8g2_font_unifont_t_cjk);
 

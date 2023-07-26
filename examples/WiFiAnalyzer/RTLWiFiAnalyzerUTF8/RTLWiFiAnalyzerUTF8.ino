@@ -164,8 +164,11 @@ void setup()
     digitalWrite(GFX_BL, HIGH);
 #endif
 
-  // init LCD
-  gfx->begin();
+  // Init Display
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
   gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
   gfx->setFont(u8g2_font_unifont_t_chinese);
 

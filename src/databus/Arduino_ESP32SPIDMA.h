@@ -3,28 +3,20 @@
 #include "Arduino_DataBus.h"
 
 #if defined(ESP32)
-#include "soc/spi_struct.h"
-#if CONFIG_IDF_TARGET_ESP32S3
-#include "driver/periph_ctrl.h"
-#elif CONFIG_IDF_TARGET_ESP32C3
-#include "driver/periph_ctrl.h"
-#include "esp32c3/rom/gpio.h"
-#include "soc/periph_defs.h"
-#else
-#include "soc/dport_reg.h"
-#endif
+#include <driver/spi_master.h>
 
-#define SPI_MAX_PIXELS_AT_ONCE 32
+#define SPI_MAX_PIXELS_AT_ONCE 1024
+#define DMA_CHANNEL SPI_DMA_CH_AUTO
 
-class Arduino_ESP32SPI : public Arduino_DataBus
+class Arduino_ESP32SPIDMA : public Arduino_DataBus
 {
 public:
 #if CONFIG_IDF_TARGET_ESP32
-  Arduino_ESP32SPI(int8_t dc = GFX_NOT_DEFINED, int8_t cs = GFX_NOT_DEFINED, int8_t sck = GFX_NOT_DEFINED, int8_t mosi = GFX_NOT_DEFINED, int8_t miso = GFX_NOT_DEFINED, uint8_t spi_num = VSPI, bool is_shared_interface = true); // Constructor
+  Arduino_ESP32SPIDMA(int8_t dc = GFX_NOT_DEFINED, int8_t cs = GFX_NOT_DEFINED, int8_t sck = GFX_NOT_DEFINED, int8_t mosi = GFX_NOT_DEFINED, int8_t miso = GFX_NOT_DEFINED, uint8_t spi_num = VSPI, bool is_shared_interface = false); // Constructor
 #elif CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
-  Arduino_ESP32SPI(int8_t dc = GFX_NOT_DEFINED, int8_t cs = GFX_NOT_DEFINED, int8_t sck = GFX_NOT_DEFINED, int8_t mosi = GFX_NOT_DEFINED, int8_t miso = GFX_NOT_DEFINED, uint8_t spi_num = HSPI, bool is_shared_interface = true); // Constructor
+  Arduino_ESP32SPIDMA(int8_t dc = GFX_NOT_DEFINED, int8_t cs = GFX_NOT_DEFINED, int8_t sck = GFX_NOT_DEFINED, int8_t mosi = GFX_NOT_DEFINED, int8_t miso = GFX_NOT_DEFINED, uint8_t spi_num = HSPI, bool is_shared_interface = false); // Constructor
 #else
-  Arduino_ESP32SPI(int8_t dc = GFX_NOT_DEFINED, int8_t cs = GFX_NOT_DEFINED, int8_t sck = GFX_NOT_DEFINED, int8_t mosi = GFX_NOT_DEFINED, int8_t miso = GFX_NOT_DEFINED, uint8_t spi_num = FSPI, bool is_shared_interface = true); // Constructor
+  Arduino_ESP32SPIDMA(int8_t dc = GFX_NOT_DEFINED, int8_t cs = GFX_NOT_DEFINED, int8_t sck = GFX_NOT_DEFINED, int8_t mosi = GFX_NOT_DEFINED, int8_t miso = GFX_NOT_DEFINED, uint8_t spi_num = FSPI, bool is_shared_interface = false); // Constructor
 #endif
 
   bool begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = SPI_MODE0) override;
@@ -55,7 +47,8 @@ protected:
   INLINE void DC_LOW(void);
   INLINE void CS_HIGH(void);
   INLINE void CS_LOW(void);
-  INLINE void POLL(uint32_t len);
+  INLINE void POLL_START();
+  INLINE void POLL_END();
 
 private:
   int8_t _dc, _cs;
@@ -71,7 +64,8 @@ private:
   uint32_t _dcPinMask;  ///< Bitmask for data/command
   uint32_t _csPinMask;  ///< Bitmask for chip select
 
-  spi_t *_spi;
+  spi_device_handle_t _handle;
+  spi_transaction_t _spi_tran;
   uint8_t _bitOrder = SPI_MSBFIRST;
   union
   {

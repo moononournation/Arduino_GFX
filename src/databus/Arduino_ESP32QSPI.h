@@ -2,17 +2,20 @@
 
 #include "Arduino_DataBus.h"
 
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+#if defined(ESP32)
+#include <driver/spi_master.h>
 
-#define LCD_MAX_PIXELS_AT_ONCE 2046
-#define USE_DMA_THRESHOLD 6
+#define SPI_MAX_PIXELS_AT_ONCE 1024
+#define QSPI_FREQUENCY 80000000
+#define QSPI_SPI_MODE SPI_MODE0
+#define QSPI_SPI_HOST SPI2_HOST
+#define QSPI_DMA_CHANNEL SPI_DMA_CH_AUTO
 
-class Arduino_ESP32LCD8 : public Arduino_DataBus
+class Arduino_ESP32QSPI : public Arduino_DataBus
 {
 public:
-  Arduino_ESP32LCD8(
-      int8_t dc, int8_t cs, int8_t wr, int8_t rd,
-      int8_t d0, int8_t d1, int8_t d2, int8_t d3, int8_t d4, int8_t d5, int8_t d6, int8_t d7); // Constructor
+  Arduino_ESP32QSPI(
+    int8_t cs, int8_t sck, int8_t mosi, int8_t miso, int8_t quadwp, int8_t quadhd, bool is_shared_interface = false); // Constructor
 
   bool begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = GFX_NOT_DEFINED) override;
   void beginWrite() override;
@@ -25,7 +28,6 @@ public:
   void writeC8D8(uint8_t c, uint8_t d) override;
   void writeC8D16(uint8_t c, uint16_t d) override;
   void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2) override;
-  void writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2) override;
 
   void writeRepeat(uint16_t p, uint32_t len) override;
   void writePixels(uint16_t *data, uint32_t len) override;
@@ -39,41 +41,25 @@ protected:
 private:
   INLINE void CS_HIGH(void);
   INLINE void CS_LOW(void);
+  INLINE void POLL_START();
+  INLINE void POLL_END();
 
-  int8_t _dc, _cs, _wr, _rd;
-  int8_t _d0, _d1, _d2, _d3, _d4, _d5, _d6, _d7;
+  int8_t _cs, _sck, _mosi, _miso, _quadwp, _quadhd;
+  bool _is_shared_interface;
 
   PORTreg_t _csPortSet; ///< PORT register for chip select SET
   PORTreg_t _csPortClr; ///< PORT register for chip select CLEAR
   uint32_t _csPinMask;  ///< Bitmask for chip select
 
-  esp_lcd_i80_bus_handle_t _i80_bus = nullptr;
-  dma_descriptor_t *_dmadesc = nullptr;
-  gdma_channel_handle_t _dma_chan;
-
+  spi_device_handle_t _handle;
+  spi_transaction_ext_t _spi_tran_ext;
+  spi_transaction_t *_spi_tran;
   union
   {
-    uint32_t value;
-    struct
-    {
-      uint16_t value16;
-      uint16_t value16_2;
-    };
-    struct
-    {
-      uint8_t lsb;
-      uint8_t msb;
-      uint8_t lsb_2;
-      uint8_t msb_2;
-    };
-  } _data32;
-
-  union
-  {
-    uint8_t _buffer[LCD_MAX_PIXELS_AT_ONCE * 2] = {0};
-    uint16_t _buffer16[LCD_MAX_PIXELS_AT_ONCE];
-    uint32_t _buffer32[LCD_MAX_PIXELS_AT_ONCE / 2];
+    uint8_t _buffer[SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
+    uint16_t _buffer16[SPI_MAX_PIXELS_AT_ONCE];
+    uint32_t _buffer32[SPI_MAX_PIXELS_AT_ONCE / 2];
   };
 };
 
-#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+#endif // #if defined(ESP32)

@@ -105,8 +105,11 @@ void setup()
     digitalWrite(GFX_BL, HIGH);
 #endif
 
-  // init LCD
-  gfx->begin();
+  // Init Display
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
   w = gfx->width();
   h = gfx->height();
   text_size = (h < 200) ? 1 : 2;

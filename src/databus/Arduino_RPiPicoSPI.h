@@ -29,7 +29,6 @@ public:
   void writeC8D16(uint8_t c, uint16_t d) override;
   void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2) override;
   void writeBytes(uint8_t *data, uint32_t len) override;
-  void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
 
 protected:
 
@@ -59,8 +58,9 @@ private:
 
   union
   {
-    uint8_t _buffer[SPI_MAX_PIXELS_AT_ONCE * 2];
+    uint8_t _buffer[SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
     uint16_t _buffer16[SPI_MAX_PIXELS_AT_ONCE];
+    uint32_t _buffer32[SPI_MAX_PIXELS_AT_ONCE / 2];
   };
 };
 

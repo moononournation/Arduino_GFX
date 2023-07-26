@@ -276,7 +276,7 @@ public:
 
 #if !defined(LITTLE_FOOT_PRINT)
   virtual void writeBytes(uint8_t *data, uint32_t len) = 0;
-  virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) = 0;
+  virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat);
   virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
   virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
 #endif // !defined(LITTLE_FOOT_PRINT)

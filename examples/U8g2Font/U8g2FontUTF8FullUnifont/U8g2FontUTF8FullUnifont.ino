@@ -51,80 +51,80 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 /* more fonts at: https://github.com/moononournation/ArduinoFreeFontFile.git */
 
 String helloWorldStrings[] = {
-"Hello Wêreld!", // Afrikaans
-"Përshendetje Botë!", // Albanian
-"ሰላም ልዑል!", // Amharic
-"مرحبا بالعالم!", // Arabic
-"Բարեւ աշխարհ!", // Armenian
-"Kaixo Mundua!", // Basque
-"Прывітанне Сусвет!", // Belarussian
-"ওহে বিশ্ব!", // Bengali
-"Здравей свят!", // Bulgarian
-"Hola món!", // Catalan
-"Moni Dziko Lapansi!", // Chichewa
-"世界你好！", // Chinese
-"Pozdrav svijete!", // Croatian
-"Ahoj světe!", // Czech
-"Hej Verden!", // Danish
-"Hallo Wereld!", // Dutch
-"Hello World!", // English
-"Tere maailm!", // Estonian
-"Hei maailma!", // Finnish
-"Bonjour monde!", // French
-"Hallo wrâld!", // Frisian
-"გამარჯობა მსოფლიო!", // Georgian
-"Hallo Welt!", // German
-"Γειά σου Κόσμε!", // Greek
-"Sannu Duniya!", // Hausa
-"שלום עולם!", // Hebrew
-"नमस्ते दुनिया!", // Hindi
-"Helló Világ!", // Hungarian
-"Halló heimur!", // Icelandic
-"Ndewo Ụwa!", // Igbo
-"Halo Dunia!", // Indonesian
-"Ciao mondo!", // Italian
-"こんにちは世界！", // Japanese
-"Сәлем Әлем!", // Kazakh
-"សួស្តី​ពិភពលោក!", // Khmer
-"Салам дүйнө!", // Kyrgyz
-"ສະ​ບາຍ​ດີ​ຊາວ​ໂລກ!", // Lao
-"Sveika pasaule!", // Latvian
-"Labas pasauli!", // Lithuanian
-"Moien Welt!", // Luxemburgish
-"Здраво свету!", // Macedonian
-"Hai dunia!", // Malay
-"ഹലോ വേൾഡ്!", // Malayalam
-"Сайн уу дэлхий!", // Mongolian
-"မင်္ဂလာပါကမ္ဘာလောက!", // Myanmar
-"नमस्कार संसार!", // Nepali
-"Hei Verden!", // Norwegian
-"سلام نړی!", // Pashto
-"سلام دنیا!", // Persian
-"Witaj świecie!", // Polish
-"Olá Mundo!", // Portuguese
-"ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ ਦੁਨਿਆ!", // Punjabi
-"Salut Lume!", // Romanian
-"Привет мир!", // Russian
-"Hàlo a Shaoghail!", // Scots Gaelic
-"Здраво Свете!", // Serbian
-"Lefatše Lumela!", // Sesotho
-"හෙලෝ වර්ල්ඩ්!", // Sinhala
-"Pozdravljen svet!", // Slovenian
-"¡Hola Mundo!", // Spanish, Leading '¡' optional
-"Halo Dunya!", // Sundanese
-"Salamu Dunia!", // Swahili
-"Hej världen!", // Swedish
-"Салом Ҷаҳон!", // Tajik
-"สวัสดีชาวโลก!", // Thai
-"Selam Dünya!", // Turkish
-"Привіт Світ!", // Ukrainian
-"Salom Dunyo!", // Uzbek
-"Chào thế giới!", // Vietnamese
-"Helo Byd!", // Welsh
-"Molo Lizwe!", // Xhosa
-"העלא וועלט!", // Yiddish
-"Mo ki O Ile Aiye!", // Yoruba
-"Sawubona Mhlaba!" // Zulu
+    "Hello Wêreld!",                                        // Afrikaans
+    "Përshendetje Botë!",                                   // Albanian
+    "ሰላም ልዑል!",                                             // Amharic
+    "مرحبا بالعالم!",                                       // Arabic
+    "Բարեւ աշխարհ!",                                        // Armenian
+    "Kaixo Mundua!",                                        // Basque
+    "Прывітанне Сусвет!",                                   // Belarussian
+    "ওহে বিশ্ব!",                                            // Bengali
+    "Здравей свят!",                                        // Bulgarian
+    "Hola món!",                                            // Catalan
+    "Moni Dziko Lapansi!",                                  // Chichewa
+    "世界你好！",                                           // Chinese
+    "Pozdrav svijete!",                                     // Croatian
+    "Ahoj světe!",                                          // Czech
+    "Hej Verden!",                                          // Danish
+    "Hallo Wereld!",                                        // Dutch
+    "Hello World!",                                         // English
+    "Tere maailm!",                                         // Estonian
+    "Hei maailma!",                                         // Finnish
+    "Bonjour monde!",                                       // French
+    "Hallo wrâld!",                                         // Frisian
+    "გამარჯობა მსოფლიო!",                                   // Georgian
+    "Hallo Welt!",                                          // German
+    "Γειά σου Κόσμε!",                                      // Greek
+    "Sannu Duniya!",                                        // Hausa
+    "שלום עולם!",                                           // Hebrew
+    "नमस्ते दुनिया!",                                          // Hindi
+    "Helló Világ!",                                         // Hungarian
+    "Halló heimur!",                                        // Icelandic
+    "Ndewo Ụwa!",                                           // Igbo
+    "Halo Dunia!",                                          // Indonesian
+    "Ciao mondo!",                                          // Italian
+    "こんにちは世界！",                                     // Japanese
+    "Сәлем Әлем!",                                          // Kazakh
+    "សួស្តី​ពិភពលោក!",          // Khmer
+    "Салам дүйнө!",                                         // Kyrgyz
+    "ສະ​ບາຍ​ດີ​ຊາວ​ໂລກ!", // Lao
+    "Sveika pasaule!",                                      // Latvian
+    "Labas pasauli!",                                       // Lithuanian
+    "Moien Welt!",                                          // Luxemburgish
+    "Здраво свету!",                                        // Macedonian
+    "Hai dunia!",                                           // Malay
+    "ഹലോ വേൾഡ്!",                                           // Malayalam
+    "Сайн уу дэлхий!",                                      // Mongolian
+    "မင်္ဂလာပါကမ္ဘာလောက!",                                     // Myanmar
+    "नमस्कार संसार!",                                         // Nepali
+    "Hei Verden!",                                          // Norwegian
+    "سلام نړی!",                                            // Pashto
+    "سلام دنیا!",                                           // Persian
+    "Witaj świecie!",                                       // Polish
+    "Olá Mundo!",                                           // Portuguese
+    "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ ਦੁਨਿਆ!",                                   // Punjabi
+    "Salut Lume!",                                          // Romanian
+    "Привет мир!",                                          // Russian
+    "Hàlo a Shaoghail!",                                    // Scots Gaelic
+    "Здраво Свете!",                                        // Serbian
+    "Lefatše Lumela!",                                      // Sesotho
+    "හෙලෝ වර්ල්ඩ්!",                                           // Sinhala
+    "Pozdravljen svet!",                                    // Slovenian
+    "¡Hola Mundo!",                                         // Spanish, Leading '¡' optional
+    "Halo Dunya!",                                          // Sundanese
+    "Salamu Dunia!",                                        // Swahili
+    "Hej världen!",                                         // Swedish
+    "Салом Ҷаҳон!",                                         // Tajik
+    "สวัสดีชาวโลก!",                                          // Thai
+    "Selam Dünya!",                                         // Turkish
+    "Привіт Світ!",                                         // Ukrainian
+    "Salom Dunyo!",                                         // Uzbek
+    "Chào thế giới!",                                       // Vietnamese
+    "Helo Byd!",                                            // Welsh
+    "Molo Lizwe!",                                          // Xhosa
+    "העלא וועלט!",                                          // Yiddish
+    "Mo ki O Ile Aiye!",                                    // Yoruba
+    "Sawubona Mhlaba!"                                      // Zulu
 };
 
 void setup(void)
@@ -133,28 +133,32 @@ void setup(void)
   GFX_EXTRA_PRE_INIT();
 #endif
 
-    gfx->begin();
-    gfx->fillScreen(BLACK);
-    gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
+  // Init Display
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
+  gfx->fillScreen(BLACK);
+  gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
-    gfx->setCursor(0, 14);
-    gfx->setFont(u8g2_font_unifont_h_utf8);
-    gfx->println("Hello world in multiple languages");
+  gfx->setCursor(0, 14);
+  gfx->setFont(u8g2_font_unifont_h_utf8);
+  gfx->println("Hello world in multiple languages");
 
-    delay(2000); // 2 seconds
+  delay(2000); // 2 seconds
 }
 
 void loop()
 {
-    gfx->setCursor(random(gfx->width() / 4), random(gfx->height() - 32) + 16);
-    gfx->setTextColor(random(0xffff), random(0xffff));
-    gfx->setTextSize(random(2) + 2 /* x scale */, random(2) + 2 /* y scale */);
-    gfx->println(helloWorldStrings[random(74)]);
+  gfx->setCursor(random(gfx->width() / 4), random(gfx->height() - 32) + 16);
+  gfx->setTextColor(random(0xffff), random(0xffff));
+  gfx->setTextSize(random(2) + 2 /* x scale */, random(2) + 2 /* y scale */);
+  gfx->println(helloWorldStrings[random(74)]);
 
-    delay(500); // 0.5 second
+  delay(500); // 0.5 second
 }

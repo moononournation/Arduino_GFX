@@ -97,7 +97,10 @@ void setup()
 #endif
 
   // Init Display
-  gfx->begin();
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
   gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL
@@ -110,9 +113,9 @@ void setup()
   screenWidth = gfx->width();
   screenHeight = gfx->height();
 #ifdef ESP32
-  disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * screenWidth * 32, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+  disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * screenWidth * 40, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
 #else
-  disp_draw_buf = (lv_color_t *)malloc(sizeof(lv_color_t) * screenWidth * 32);
+  disp_draw_buf = (lv_color_t *)malloc(sizeof(lv_color_t) * screenWidth * 40);
 #endif
   if (!disp_draw_buf)
   {
@@ -120,7 +123,7 @@ void setup()
   }
   else
   {
-    lv_disp_draw_buf_init(&draw_buf, disp_draw_buf, NULL, screenWidth * 32);
+    lv_disp_draw_buf_init(&draw_buf, disp_draw_buf, NULL, screenWidth * 40);
 
     /* Initialize the display */
     lv_disp_drv_init(&disp_drv);

@@ -33,7 +33,6 @@ public:
 
 #if !defined(LITTLE_FOOT_PRINT)
   void writeBytes(uint8_t *data, uint32_t len) override;
-  void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
 #endif // !defined(LITTLE_FOOT_PRINT)
 
   void pinMode(uint8_t pin, uint8_t mode);
@@ -43,8 +42,8 @@ public:
   int digitalRead(uint8_t pin);
 
 protected:
-  void writeRegister(uint8_t reg, uint8_t *data, uint8_t len);
-  uint8_t readRegister(uint8_t reg, uint8_t *data, uint8_t len);
+  void writeRegister(uint8_t reg, uint8_t *data, size_t len);
+  uint8_t readRegister(uint8_t reg, uint8_t *data, size_t len);
 
   uint8_t _address;
   bool is_found;

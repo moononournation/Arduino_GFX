@@ -54,40 +54,44 @@ void setup(void)
   GFX_EXTRA_PRE_INIT();
 #endif
 
-    gfx->begin();
-    gfx->fillScreen(BLACK);
-    gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
+  // Init Display
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
+  gfx->fillScreen(BLACK);
+  gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
-    /* select one font below and uncomment, chill7 and cubic11 are smaller size but lack of Korea characters */
-    // gfx->setFont(u8g2_font_chill7_h_cjk);
-    // gfx->setFont(u8g2_font_cubic11_h_cjk);
-    gfx->setFont(u8g2_font_quan7_h_cjk);
-    // gfx->setFont(u8g2_font_unifont_t_cjk);
-    gfx->setCursor(0, 14);
+  /* select one font below and uncomment, chill7 and cubic11 are smaller size but lack of Korea characters */
+  // gfx->setFont(u8g2_font_chill7_h_cjk);
+  // gfx->setFont(u8g2_font_cubic11_h_cjk);
+  gfx->setFont(u8g2_font_quan7_h_cjk);
+  // gfx->setFont(u8g2_font_unifont_t_cjk);
+  gfx->setCursor(0, 14);
 
-    gfx->setTextColor(RED);
-    gfx->println("世界你好，今天的天氣真好啊！");
-    gfx->println();
+  gfx->setTextColor(RED);
+  gfx->println("世界你好，今天的天氣真好啊！");
+  gfx->println();
 
-    gfx->setTextColor(YELLOW);
-    gfx->println("世界你好，今天的天气真好啊！");
-    gfx->println();
+  gfx->setTextColor(YELLOW);
+  gfx->println("世界你好，今天的天气真好啊！");
+  gfx->println();
 
-    gfx->setTextColor(GREEN);
-    gfx->println("こんにちは世界、今日はいいお天気ですね！");
-    gfx->println();
+  gfx->setTextColor(GREEN);
+  gfx->println("こんにちは世界、今日はいいお天気ですね！");
+  gfx->println();
 
-    gfx->setTextColor(BLUE);
-    gfx->println("안녕하세요 세계, 오늘 날씨가 너무 좋습니다!");
-    gfx->println();
+  gfx->setTextColor(BLUE);
+  gfx->println("안녕하세요 세계, 오늘 날씨가 너무 좋습니다!");
+  gfx->println();
 
-    gfx->setTextColor(MAGENTA);
-    gfx->println("Hello world, the weather is so nice today!");
+  gfx->setTextColor(MAGENTA);
+  gfx->println("Hello world, the weather is so nice today!");
 }
 
 void loop()

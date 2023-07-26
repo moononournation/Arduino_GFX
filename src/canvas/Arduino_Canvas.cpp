@@ -10,6 +10,14 @@ Arduino_Canvas::Arduino_Canvas(
 {
 }
 
+Arduino_Canvas::~Arduino_Canvas()
+{
+  if (_framebuffer)
+  {
+    free(_framebuffer);
+  }
+}
+
 bool Arduino_Canvas::begin(int32_t speed)
 {
   if (
@@ -21,22 +29,25 @@ bool Arduino_Canvas::begin(int32_t speed)
     }
   }
 
-  size_t s = _width * _height * 2;
-#if defined(ESP32)
-  if (psramFound())
-  {
-    _framebuffer = (uint16_t *)ps_malloc(s);
-  }
-  else
-  {
-    _framebuffer = (uint16_t *)malloc(s);
-  }
-#else
-  _framebuffer = (uint16_t *)malloc(s);
-#endif
   if (!_framebuffer)
   {
-    return false;
+    size_t s = _width * _height * 2;
+#if defined(ESP32)
+    if (psramFound())
+    {
+      _framebuffer = (uint16_t *)ps_malloc(s);
+    }
+    else
+    {
+      _framebuffer = (uint16_t *)malloc(s);
+    }
+#else
+    _framebuffer = (uint16_t *)malloc(s);
+#endif
+    if (!_framebuffer)
+    {
+      return false;
+    }
   }
 
   return true;
@@ -498,6 +509,37 @@ void Arduino_Canvas::flush()
   if (_output)
   {
     _output->draw16bitRGBBitmap(_output_x, _output_y, _framebuffer, _width, _height);
+  }
+}
+
+void Arduino_Canvas::flushQuad(void)
+{
+  int16_t y = _output_y;
+  uint16_t *row1 = _framebuffer;
+  uint16_t *row2 = _framebuffer + _width;
+  if (_output)
+  {
+    int16_t hQuad = _height / 2;
+    int16_t wQuad = _width / 2;
+    if (!_rowBuf)
+    {
+      _rowBuf = (uint16_t *)malloc(wQuad * 2);
+    }
+    uint16_t p;
+    while (hQuad--)
+    {
+      for (int16_t i = 0; i < wQuad; ++i)
+      {
+        p = (*row1++ & 0b1110011110011100) >> 2;
+        p += (*row1++ & 0b1110011110011100) >> 2;
+        p += (*row2++ & 0b1110011110011100) >> 2;
+        p += (*row2++ & 0b1110011110011100) >> 2;
+        _rowBuf[i] = p;
+      }
+      _output->draw16bitRGBBitmap(_output_x, _output_y + y++, _rowBuf, wQuad, 1);
+      row1 += _width;
+      row2 += _width;
+    }
   }
 }
 

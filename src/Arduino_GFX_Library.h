@@ -13,12 +13,14 @@
 #include "databus/Arduino_ESP32PAR16.h"
 #include "databus/Arduino_ESP32PAR16Q.h"
 #include "databus/Arduino_ESP32PAR16QQ.h"
+#include "databus/Arduino_ESP32QSPI.h"
 #include "databus/Arduino_ESP32RGBPanel.h"
 #include "databus/Arduino_ESP32S2PAR8.h"
 #include "databus/Arduino_ESP32S2PAR8Q.h"
 #include "databus/Arduino_ESP32S2PAR16.h"
 #include "databus/Arduino_ESP32S2PAR16Q.h"
 #include "databus/Arduino_ESP32SPI.h"
+#include "databus/Arduino_ESP32SPIDMA.h"
 #include "databus/Arduino_ESP8266SPI.h"
 #include "databus/Arduino_HWSPI.h"
 #include "databus/Arduino_mbedSPI.h"
@@ -68,6 +70,7 @@
 #include "display/Arduino_NV3041A.h"
 #include "display/Arduino_OTM8009A.h"
 #include "display/Arduino_R61529.h"
+#include "display/Arduino_RM67162.h"
 #include "display/Arduino_RGB_Display.h"
 #include "display/Arduino_SEPS525.h"
 #include "display/Arduino_SSD1283A.h"
@@ -104,6 +107,16 @@
 #define DF_GFX_DC 27
 #define DF_GFX_RST 33
 #define DF_GFX_BL 32
+#elif defined(ARDUINO_M5Stack_ATOMS3)
+#define DISPLAY_DEV_KIT
+#define M5STACK_ATOMS3
+#define DF_GFX_SCK 17
+#define DF_GFX_MOSI 21
+#define DF_GFX_MISO GFX_NOT_DEFINED
+#define DF_GFX_CS 15
+#define DF_GFX_DC 33
+#define DF_GFX_RST 34
+#define DF_GFX_BL 16
 #elif defined(ARDUINO_ODROID_ESP32)
 #define DISPLAY_DEV_KIT
 #define ODROID_GO

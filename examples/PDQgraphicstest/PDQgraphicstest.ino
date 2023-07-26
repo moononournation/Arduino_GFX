@@ -29,6 +29,11 @@
  * End of Arduino_GFX setting
  ******************************************************************************/
 
+#ifdef ESP32
+#undef F
+#define F(s) (s)
+#endif
+
 int32_t w, h, n, n1, cx, cy, cx1, cy1, cn, cn1;
 uint8_t tsa, tsb, tsc, ds;
 
@@ -43,8 +48,12 @@ void setup()
   GFX_EXTRA_PRE_INIT();
 #endif
 
-  gfx->begin();
-  // gfx->begin(80000000); /* specify data bus speed */
+  // Init Display
+  if (!gfx->begin())
+  // if (!gfx->begin(80000000)) /* specify data bus speed */
+  {
+    Serial.println("gfx->begin() failed!");
+  }
 
   w = gfx->width();
   h = gfx->height();

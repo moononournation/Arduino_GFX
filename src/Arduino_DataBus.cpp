@@ -124,6 +124,14 @@ void Arduino_DataBus::batchOperation(const uint8_t *operations, size_t len)
 }
 
 #if !defined(LITTLE_FOOT_PRINT)
+void Arduino_DataBus::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
+{
+  while (repeat--)
+  {
+    writeBytes(data, len);
+  }
+}
+
 void Arduino_DataBus::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   while (len--)

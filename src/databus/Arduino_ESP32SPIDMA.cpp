@@ -1,70 +1,12 @@
-/*
- * start rewrite from:
- * https://github.com/espressif/arduino-esp32.git
- */
-#include "Arduino_ESP32SPI.h"
+#include "Arduino_ESP32SPIDMA.h"
 
 #if defined(ESP32)
 
-struct spi_struct_t
-{
-  spi_dev_t *dev;
-#if !CONFIG_DISABLE_HAL_LOCKS
-  xSemaphoreHandle lock;
-#endif
-  uint8_t num;
-};
-
-#if CONFIG_DISABLE_HAL_LOCKS
-#define SPI_MUTEX_LOCK()
-#define SPI_MUTEX_UNLOCK()
-
-static spi_t _spi_bus_array[] = {
-#if CONFIG_IDF_TARGET_ESP32S2
-    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 1},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 2}
-#elif CONFIG_IDF_TARGET_ESP32S3
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 1}
-#else
-    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 1},
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 2},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 3}
-#endif
-};
-#else // !CONFIG_DISABLE_HAL_LOCKS
-#define SPI_MUTEX_LOCK() \
-  do                     \
-  {                      \
-  } while (xSemaphoreTake(_spi->lock, portMAX_DELAY) != pdPASS)
-#define SPI_MUTEX_UNLOCK() xSemaphoreGive(_spi->lock)
-
-static spi_t _spi_bus_array[] = {
-#if CONFIG_IDF_TARGET_ESP32S2
-    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 1},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 2}
-#elif CONFIG_IDF_TARGET_ESP32S3
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 1}
-#elif CONFIG_IDF_TARGET_ESP32C3
-    {(volatile spi_dev_t *)(&GPSPI2), NULL, FSPI}
-#else
-    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), NULL, 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 1},
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 2},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 3}
-#endif
-};
-#endif // CONFIG_DISABLE_HAL_LOCKS
-
 /**
- * @brief Arduino_ESP32SPI
+ * @brief Arduino_ESP32SPIDMA
  *
  */
-Arduino_ESP32SPI::Arduino_ESP32SPI(
+Arduino_ESP32SPIDMA::Arduino_ESP32SPIDMA(
     int8_t dc /* = GFX_NOT_DEFINED */, int8_t cs /* = GFX_NOT_DEFINED */, int8_t sck /* = GFX_NOT_DEFINED */, int8_t mosi /* = GFX_NOT_DEFINED */, int8_t miso /* = GFX_NOT_DEFINED */, uint8_t spi_num /* = VSPI for ESP32, HSPI for S2 & S3, FSPI for C3 */, bool is_shared_interface /* = true */)
     : _dc(dc), _spi_num(spi_num), _is_shared_interface(is_shared_interface)
 {
@@ -102,48 +44,6 @@ Arduino_ESP32SPI::Arduino_ESP32SPI(
 #endif
 }
 
-static void _on_apb_change(void *arg, apb_change_ev_t ev_type, uint32_t old_apb, uint32_t new_apb)
-{
-  spi_t *_spi = (spi_t *)arg;
-  if (ev_type == APB_BEFORE_CHANGE)
-  {
-    SPI_MUTEX_LOCK();
-    while (_spi->dev->cmd.usr)
-      ;
-  }
-  else
-  {
-    _spi->dev->clock.val = spiFrequencyToClockDiv(old_apb / ((_spi->dev->clock.clkdiv_pre + 1) * (_spi->dev->clock.clkcnt_n + 1)));
-    SPI_MUTEX_UNLOCK();
-  }
-}
-
-static void spiInitBus(spi_t *spi)
-{
-#if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32
-  spi->dev->slave.trans_done = 0;
-#endif
-  spi->dev->slave.val = 0;
-#if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3
-  spi->dev->misc.val = 0;
-#else
-  spi->dev->pin.val = 0;
-#endif
-  spi->dev->user.val = 0;
-  spi->dev->user1.val = 0;
-  spi->dev->ctrl.val = 0;
-#if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32
-  spi->dev->ctrl1.val = 0;
-  spi->dev->ctrl2.val = 0;
-#else
-  spi->dev->clk_gate.val = 0;
-  spi->dev->dma_conf.val = 0;
-  spi->dev->dma_conf.rx_afifo_rst = 1;
-  spi->dev->dma_conf.buf_afifo_rst = 1;
-#endif
-  spi->dev->clock.val = 0;
-}
-
 /**
  * @brief begin
  *
@@ -152,7 +52,7 @@ static void spiInitBus(spi_t *spi)
  * @return true
  * @return false
  */
-bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
+bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
 {
   // set SPI parameters
   _speed = (speed == GFX_NOT_DEFINED) ? SPI_DEFAULT_FREQ : speed;
@@ -208,112 +108,48 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     _csPortClr = (PORTreg_t)&GPIO.out_w1tc;
   }
 
-  // SPI.begin(_sck, _miso, _mosi);
-  // _spi = spiStartBus(_spi_num, _div, SPI_MODE0, SPI_MSBFIRST);
-  _spi = &_spi_bus_array[_spi_num];
-
-#if !CONFIG_DISABLE_HAL_LOCKS
-  if (_spi->lock == NULL)
+  spi_bus_config_t buscfg = {
+      .mosi_io_num = _mosi,
+      .miso_io_num = _miso,
+      .sclk_io_num = _sck,
+      .quadwp_io_num = -1,
+      .quadhd_io_num = -1,
+      .max_transfer_sz = (SPI_MAX_PIXELS_AT_ONCE * 16) + 8,
+  };
+  esp_err_t ret = spi_bus_initialize((spi_host_device_t)_spi_num, &buscfg, DMA_CHANNEL);
+  if (ret != ESP_OK)
   {
-    _spi->lock = xSemaphoreCreateMutex();
-  }
-#endif
-
-#if CONFIG_IDF_TARGET_ESP32S2
-  if (_spi_num == FSPI)
-  {
-    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI2_CLK_EN);
-    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI2_RST);
-  }
-  else if (_spi_num == HSPI)
-  {
-    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI3_CLK_EN);
-    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI3_RST);
-  }
-  else
-  {
-    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI01_CLK_EN);
-    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI01_RST);
-  }
-#elif CONFIG_IDF_TARGET_ESP32S3
-  if (_spi_num == FSPI)
-  {
-    periph_module_reset(PERIPH_SPI2_MODULE);
-    periph_module_enable(PERIPH_SPI2_MODULE);
-  }
-  else if (_spi_num == HSPI)
-  {
-    periph_module_reset(PERIPH_SPI3_MODULE);
-    periph_module_enable(PERIPH_SPI3_MODULE);
-  }
-#elif CONFIG_IDF_TARGET_ESP32
-  if (_spi_num == HSPI)
-  {
-    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI2_CLK_EN);
-    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI2_RST);
-  }
-  else if (_spi_num == VSPI)
-  {
-    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI3_CLK_EN);
-    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI3_RST);
-  }
-  else
-  {
-    DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI01_CLK_EN);
-    DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI01_RST);
-  }
-#elif CONFIG_IDF_TARGET_ESP32C3
-  periph_module_reset(PERIPH_SPI2_MODULE);
-  periph_module_enable(PERIPH_SPI2_MODULE);
-#endif
-
-  SPI_MUTEX_LOCK();
-  spiInitBus(_spi);
-#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S3
-  _spi->dev->clk_gate.clk_en = 1;
-  _spi->dev->clk_gate.mst_clk_sel = 1;
-  _spi->dev->clk_gate.mst_clk_active = 1;
-  _spi->dev->dma_conf.tx_seg_trans_clr_en = 1;
-  _spi->dev->dma_conf.rx_seg_trans_clr_en = 1;
-  _spi->dev->dma_conf.dma_seg_trans_en = 0;
-#endif
-  _spi->dev->user.usr_mosi = 1;
-  if (_miso == GFX_NOT_DEFINED)
-  {
-    _spi->dev->user.usr_miso = 0;
-    _spi->dev->user.doutdin = 0;
-  }
-  else
-  {
-    _spi->dev->user.usr_miso = 1;
-    _spi->dev->user.doutdin = 1;
+    ESP_ERROR_CHECK(ret);
+    return false;
   }
 
-  for (uint8_t i = 0; i < 16; i++)
+  spi_device_interface_config_t devcfg = {
+      .command_bits = 0,
+      .address_bits = 0,
+      .dummy_bits = 0,
+      .mode = (uint8_t)_dataMode,
+      .duty_cycle_pos = 128,
+      .cs_ena_pretrans = 0,
+      .cs_ena_posttrans = 0,
+      .clock_speed_hz = _speed,
+      .input_delay_ns = 0,
+      .spics_io_num = -1, // avoid use system CS control
+      .flags = (_miso < 0) ? (uint32_t)SPI_DEVICE_NO_DUMMY : 0,
+      .queue_size = 1,
+  };
+  ret = spi_bus_add_device((spi_host_device_t)_spi_num, &devcfg, &_handle);
+  if (ret != ESP_OK)
   {
-    _spi->dev->data_buf[i] = 0x00000000;
+    ESP_ERROR_CHECK(ret);
+    return false;
   }
-  SPI_MUTEX_UNLOCK();
-
-  spiSetDataMode(_spi, _dataMode);
-  spiSetBitOrder(_spi, _bitOrder);
-  spiSetClockDiv(_spi, _div);
-
-  addApbChangeCallback(_spi, _on_apb_change);
-
-  spiAttachSCK(_spi, _sck);
-
-  if (_miso != GFX_NOT_DEFINED)
-  {
-    spiAttachMISO(_spi, _miso);
-  }
-
-  spiAttachMOSI(_spi, _mosi);
 
   if (!_is_shared_interface)
   {
-    spiTransaction(_spi, _div, _dataMode, _bitOrder);
+    spi_device_acquire_bus(_handle, portMAX_DELAY);
   }
+
+  memset(&_spi_tran, 0, sizeof(_spi_tran));
 
   return true;
 }
@@ -322,14 +158,14 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
  * @brief beginWrite
  *
  */
-void Arduino_ESP32SPI::beginWrite()
+void Arduino_ESP32SPIDMA::beginWrite()
 {
   _data_buf_bit_idx = 0;
   _buffer[0] = 0;
 
   if (_is_shared_interface)
   {
-    spiTransaction(_spi, _div, _dataMode, _bitOrder);
+    spi_device_acquire_bus(_handle, portMAX_DELAY);
   }
 
   if (_dc != GFX_NOT_DEFINED)
@@ -343,7 +179,7 @@ void Arduino_ESP32SPI::beginWrite()
  * @brief endWrite
  *
  */
-void Arduino_ESP32SPI::endWrite()
+void Arduino_ESP32SPIDMA::endWrite()
 {
   if (_data_buf_bit_idx > 0)
   {
@@ -352,7 +188,7 @@ void Arduino_ESP32SPI::endWrite()
 
   if (_is_shared_interface)
   {
-    spiEndTransaction(_spi);
+    spi_device_release_bus(_handle);
   }
 
   CS_HIGH();
@@ -363,7 +199,7 @@ void Arduino_ESP32SPI::endWrite()
  *
  * @param c
  */
-void Arduino_ESP32SPI::writeCommand(uint8_t c)
+void Arduino_ESP32SPIDMA::writeCommand(uint8_t c)
 {
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
@@ -378,8 +214,12 @@ void Arduino_ESP32SPI::writeCommand(uint8_t c)
 
     DC_LOW();
 
-    _spi->dev->data_buf[0] = c;
-    POLL(7);
+    _spi_tran.length = 8;
+    _spi_tran.tx_data[0] = c;
+    _spi_tran.flags = SPI_TRANS_USE_TXDATA;
+
+    POLL_START();
+    POLL_END();
 
     DC_HIGH();
   }
@@ -390,7 +230,7 @@ void Arduino_ESP32SPI::writeCommand(uint8_t c)
  *
  * @param c
  */
-void Arduino_ESP32SPI::writeCommand16(uint16_t c)
+void Arduino_ESP32SPIDMA::writeCommand16(uint16_t c)
 {
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
@@ -407,8 +247,12 @@ void Arduino_ESP32SPI::writeCommand16(uint16_t c)
 
     DC_LOW();
 
-    MSB_16_SET(_spi->dev->data_buf[0], c);
-    POLL(15);
+    _spi_tran.length = 16;
+    MSB_16_SET(_spi_tran.tx_data[0], c);
+    _spi_tran.flags = SPI_TRANS_USE_TXDATA;
+
+    POLL_START();
+    POLL_END();
 
     DC_HIGH();
   }
@@ -419,7 +263,7 @@ void Arduino_ESP32SPI::writeCommand16(uint16_t c)
  *
  * @param d
  */
-void Arduino_ESP32SPI::write(uint8_t d)
+void Arduino_ESP32SPIDMA::write(uint8_t d)
 {
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
@@ -436,7 +280,7 @@ void Arduino_ESP32SPI::write(uint8_t d)
  *
  * @param d
  */
-void Arduino_ESP32SPI::write16(uint16_t d)
+void Arduino_ESP32SPIDMA::write16(uint16_t d)
 {
   _data16.value = d;
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
@@ -457,7 +301,7 @@ void Arduino_ESP32SPI::write16(uint16_t d)
  * @param c
  * @param d
  */
-void Arduino_ESP32SPI::writeC8D8(uint8_t c, uint8_t d)
+void Arduino_ESP32SPIDMA::writeC8D8(uint8_t c, uint8_t d)
 {
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
@@ -473,13 +317,21 @@ void Arduino_ESP32SPI::writeC8D8(uint8_t c, uint8_t d)
 
     DC_LOW();
 
-    _spi->dev->data_buf[0] = c;
-    POLL(7);
+    _spi_tran.length = 8;
+    _spi_tran.tx_data[0] = c;
+    _spi_tran.flags = SPI_TRANS_USE_TXDATA;
+
+    POLL_START();
+    POLL_END();
 
     DC_HIGH();
 
-    _spi->dev->data_buf[0] = d;
-    POLL(7);
+    _spi_tran.length = 8;
+    _spi_tran.tx_data[0] = d;
+    _spi_tran.flags = SPI_TRANS_USE_TXDATA;
+
+    POLL_START();
+    POLL_END();
   }
 }
 
@@ -489,7 +341,7 @@ void Arduino_ESP32SPI::writeC8D8(uint8_t c, uint8_t d)
  * @param c
  * @param d
  */
-void Arduino_ESP32SPI::writeC8D16(uint8_t c, uint16_t d)
+void Arduino_ESP32SPIDMA::writeC8D16(uint8_t c, uint16_t d)
 {
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
@@ -507,13 +359,22 @@ void Arduino_ESP32SPI::writeC8D16(uint8_t c, uint16_t d)
 
     DC_LOW();
 
-    _spi->dev->data_buf[0] = c;
-    POLL(7);
+    _spi_tran.length = 8;
+    _spi_tran.tx_data[0] = c;
+    _spi_tran.flags = SPI_TRANS_USE_TXDATA;
+
+    POLL_START();
+    POLL_END();
 
     DC_HIGH();
 
-    MSB_16_SET(_spi->dev->data_buf[0], d);
-    POLL(15);
+    _spi_tran.length = 16;
+    _spi_tran.tx_data[0] = (d >> 8);
+    _spi_tran.tx_data[1] = (d & 0xff);
+    _spi_tran.flags = SPI_TRANS_USE_TXDATA;
+
+    POLL_START();
+    POLL_END();
   }
 }
 
@@ -524,7 +385,7 @@ void Arduino_ESP32SPI::writeC8D16(uint8_t c, uint16_t d)
  * @param d1
  * @param d2
  */
-void Arduino_ESP32SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
+void Arduino_ESP32SPIDMA::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 {
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
@@ -545,13 +406,24 @@ void Arduino_ESP32SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 
     DC_LOW();
 
-    _spi->dev->data_buf[0] = c;
-    POLL(7);
+    _spi_tran.length = 8;
+    _spi_tran.tx_data[0] = c;
+    _spi_tran.flags = SPI_TRANS_USE_TXDATA;
+
+    POLL_START();
+    POLL_END();
 
     DC_HIGH();
 
-    MSB_32_16_16_SET(_spi->dev->data_buf[0], d1, d2);
-    POLL(31);
+    _spi_tran.length = 32;
+    _spi_tran.tx_data[0] = (d1 >> 8);
+    _spi_tran.tx_data[1] = (d1 & 0xff);
+    _spi_tran.tx_data[2] = (d2 >> 8);
+    _spi_tran.tx_data[3] = (d2 & 0xff);
+    _spi_tran.flags = SPI_TRANS_USE_TXDATA;
+
+    POLL_START();
+    POLL_END();
   }
 }
 
@@ -561,7 +433,7 @@ void Arduino_ESP32SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
  * @param p
  * @param len
  */
-void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
+void Arduino_ESP32SPIDMA::writeRepeat(uint16_t p, uint32_t len)
 {
   if (_data_buf_bit_idx > 0)
   {
@@ -609,30 +481,18 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
       _data_buf_bit_idx += 9;
     }
 
-    if (_miso == GFX_NOT_DEFINED)
-    {
-      l = (_data_buf_bit_idx + 31) / 32;
-      for (uint32_t i = 0; i < l; i++)
-      {
-        _spi->dev->data_buf[i] = _buffer32[i];
-      }
-    }
-
     // Issue pixels in blocks from temp buffer
     while (len) // While pixels remain
     {
       xferLen = (bufLen < len) ? bufLen : len; // How many this pass?
       _data_buf_bit_idx = xferLen * 18;
 
-      if (_miso != GFX_NOT_DEFINED)
-      {
-        l = (_data_buf_bit_idx + 31) / 32;
-        for (uint32_t i = 0; i < l; i++)
-        {
-          _spi->dev->data_buf[i] = _buffer32[i];
-        }
-      }
-      POLL(_data_buf_bit_idx - 1);
+      _spi_tran.tx_buffer = _buffer32;
+      _spi_tran.length = _data_buf_bit_idx;
+      _spi_tran.flags = 0;
+
+      POLL_START();
+      POLL_END();
 
       len -= xferLen;
     }
@@ -645,13 +505,9 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
     MSB_32_16_16_SET(c32, p, p);
 
     l = (bufLen + 1) / 2;
-    if (_miso == GFX_NOT_DEFINED)
+    for (uint32_t i = 0; i < l; i++)
     {
-      l = (bufLen + 1) >> 1;
-      for (uint32_t i = 0; i < l; i++)
-      {
-        _spi->dev->data_buf[i] = c32;
-      }
+      _buffer32[i] = c32;
     }
 
     // Issue pixels in blocks from temp buffer
@@ -659,15 +515,12 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
     {
       xferLen = (bufLen <= len) ? bufLen : len; // How many this pass?
 
-      if (_miso != GFX_NOT_DEFINED)
-      {
-        l = (xferLen + 1) >> 1;
-        for (uint32_t i = 0; i < l; i++)
-        {
-          _spi->dev->data_buf[i] = c32;
-        }
-      }
-      POLL((xferLen << 4) - 1);
+      _spi_tran.tx_buffer = _buffer32;
+      _spi_tran.length = xferLen << 4;
+      _spi_tran.flags = 0;
+
+      POLL_START();
+      POLL_END();
 
       len -= xferLen;
     }
@@ -682,7 +535,7 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
  * @param data
  * @param len
  */
-void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
+void Arduino_ESP32SPIDMA::writePixels(uint16_t *data, uint32_t len)
 {
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
@@ -700,7 +553,6 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
 
     uint32_t l, l2;
     uint16_t p1, p2;
-    uint32_t *p32 = (uint32_t *)_spi->dev->data_buf;
     while (len)
     {
       l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
@@ -709,9 +561,20 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
       {
         p1 = *data++;
         p2 = *data++;
-        MSB_32_16_16_SET(p32[i], p1, p2);
+        MSB_32_16_16_SET(_buffer32[i], p1, p2);
       }
-      POLL((l << 4) - 1);
+      if (l & 1)
+      {
+        p1 = *data++;
+        MSB_16_SET(_buffer16[l - 1], p1);
+      }
+
+      _spi_tran.tx_buffer = _buffer32;
+      _spi_tran.length = l << 4;
+      _spi_tran.flags = 0;
+
+      POLL_START();
+      POLL_END();
 
       len -= l;
     }
@@ -724,7 +587,7 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
  * @param data
  * @param len
  */
-void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
+void Arduino_ESP32SPIDMA::writeBytes(uint8_t *data, uint32_t len)
 {
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
@@ -735,27 +598,58 @@ void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
   }
   else // 8-bit SPI
   {
-    if (_data_buf_bit_idx > 0)
+    if (esp_ptr_dma_capable(data))
     {
-      flush_data_buf();
-    }
-
-    uint32_t l, l4;
-    uint32_t *p;
-    uint32_t *buf32 = (uint32_t *)_spi->dev->data_buf;
-    while (len)
-    {
-      l = (len > (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
-      l4 = (l + 3) >> 2;
-      p = (uint32_t *)data;
-      for (uint32_t i = 0; i < l4; ++i)
+      if (_data_buf_bit_idx > 0)
       {
-        buf32[i] = *p++;
+        flush_data_buf();
       }
-      POLL((l << 3) - 1);
 
-      len -= l;
-      data += l;
+      uint32_t l;
+      while (len)
+      {
+        l = (len >= (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
+
+        _spi_tran.tx_buffer = data;
+        _spi_tran.length = l << 3;
+        _spi_tran.flags = 0;
+
+        POLL_START();
+        POLL_END();
+
+        len -= l;
+        data += l;
+      }
+    }
+    else
+    {
+      if (_data_buf_bit_idx > 0)
+      {
+        flush_data_buf();
+      }
+
+      uint32_t l, l4;
+      uint32_t *p;
+      while (len)
+      {
+        l = (len > (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
+        l4 = (l + 3) >> 2;
+        p = (uint32_t *)data;
+        for (uint32_t i = 0; i < l4; ++i)
+        {
+          _buffer32[i] = *p++;
+        }
+
+        _spi_tran.tx_buffer = _buffer32;
+        _spi_tran.length = l << 3;
+        _spi_tran.flags = 0;
+
+        POLL_START();
+        POLL_END();
+
+        len -= l;
+        data += l;
+      }
     }
   }
 }
@@ -767,7 +661,7 @@ void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
  * @param idx
  * @param len
  */
-void Arduino_ESP32SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
+void Arduino_ESP32SPIDMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
@@ -793,14 +687,20 @@ void Arduino_ESP32SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t
       {
         p1 = idx[*data++];
         p2 = idx[*data++];
-        MSB_32_16_16_SET(_spi->dev->data_buf[i], p1, p2);
+        MSB_32_16_16_SET(_buffer32[i], p1, p2);
       }
       if (l & 1)
       {
         p1 = idx[*data++];
-        MSB_16_SET(_spi->dev->data_buf[l - 1], p1);
+        MSB_16_SET(_buffer16[l - 1], p1);
       }
-      POLL((l << 4) - 1);
+
+      _spi_tran.tx_buffer = _buffer32;
+      _spi_tran.length = l << 4;
+      _spi_tran.flags = 0;
+
+      POLL_START();
+      POLL_END();
 
       len -= l;
     }
@@ -814,9 +714,8 @@ void Arduino_ESP32SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t
  * @param idx
  * @param len
  */
-void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
+void Arduino_ESP32SPIDMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
-  uint16_t p;
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
     uint16_t hi, lo;
@@ -846,9 +745,15 @@ void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, ui
       for (uint32_t i = 0; i < l; ++i)
       {
         p = idx[*data++];
-        MSB_32_16_16_SET(_spi->dev->data_buf[i], p, p);
+        MSB_32_16_16_SET(_buffer32[i], p, p);
       }
-      POLL((l << 5) - 1);
+
+      _spi_tran.tx_buffer = _buffer32;
+      _spi_tran.length = l << 5;
+      _spi_tran.flags = 0;
+
+      POLL_START();
+      POLL_END();
 
       len -= l;
     }
@@ -859,14 +764,14 @@ void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, ui
  * @brief flush_data_buf
  *
  */
-void Arduino_ESP32SPI::flush_data_buf()
+void Arduino_ESP32SPIDMA::flush_data_buf()
 {
-  uint32_t len = (_data_buf_bit_idx + 31) / 32;
-  for (uint32_t i = 0; i < len; i++)
-  {
-    _spi->dev->data_buf[i] = _buffer32[i];
-  }
-  POLL(_data_buf_bit_idx - 1);
+  _spi_tran.tx_buffer = _buffer32;
+  _spi_tran.length = _data_buf_bit_idx;
+  _spi_tran.flags = 0;
+
+  POLL_START();
+  POLL_END();
 
   _data_buf_bit_idx = 0;
 }
@@ -877,7 +782,7 @@ void Arduino_ESP32SPI::flush_data_buf()
  * @param d
  * @return INLINE
  */
-INLINE void Arduino_ESP32SPI::WRITE8BIT(uint8_t d)
+INLINE void Arduino_ESP32SPIDMA::WRITE8BIT(uint8_t d)
 {
   uint16_t idx = _data_buf_bit_idx >> 3;
   _buffer[idx] = d;
@@ -894,7 +799,7 @@ INLINE void Arduino_ESP32SPI::WRITE8BIT(uint8_t d)
  * @param d
  * @return INLINE
  */
-INLINE void Arduino_ESP32SPI::WRITE9BIT(uint32_t d)
+INLINE void Arduino_ESP32SPIDMA::WRITE9BIT(uint32_t d)
 {
   uint16_t idx = _data_buf_bit_idx >> 3;
   uint8_t shift = (_data_buf_bit_idx % 8);
@@ -922,7 +827,7 @@ INLINE void Arduino_ESP32SPI::WRITE9BIT(uint32_t d)
  *
  * @return INLINE
  */
-INLINE void Arduino_ESP32SPI::DC_HIGH(void)
+INLINE void Arduino_ESP32SPIDMA::DC_HIGH(void)
 {
   *_dcPortSet = _dcPinMask;
 }
@@ -932,7 +837,7 @@ INLINE void Arduino_ESP32SPI::DC_HIGH(void)
  *
  * @return INLINE
  */
-INLINE void Arduino_ESP32SPI::DC_LOW(void)
+INLINE void Arduino_ESP32SPIDMA::DC_LOW(void)
 {
   *_dcPortClr = _dcPinMask;
 }
@@ -942,7 +847,7 @@ INLINE void Arduino_ESP32SPI::DC_LOW(void)
  *
  * @return INLINE
  */
-INLINE void Arduino_ESP32SPI::CS_HIGH(void)
+INLINE void Arduino_ESP32SPIDMA::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -955,7 +860,7 @@ INLINE void Arduino_ESP32SPI::CS_HIGH(void)
  *
  * @return INLINE
  */
-INLINE void Arduino_ESP32SPI::CS_LOW(void)
+INLINE void Arduino_ESP32SPIDMA::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -964,34 +869,31 @@ INLINE void Arduino_ESP32SPI::CS_LOW(void)
 }
 
 /**
- * @brief POLL
+ * @brief POLL_START
  *
  * @return INLINE
  */
-INLINE void Arduino_ESP32SPI::POLL(uint32_t len)
+INLINE void Arduino_ESP32SPIDMA::POLL_START()
 {
-  #if (CONFIG_IDF_TARGET_ESP32)
-_spi->dev->mosi_dlen.usr_mosi_dbitlen = len;
-#elif (CONFIG_IDF_TARGET_ESP32S2)
-_spi->dev->mosi_dlen.usr_mosi_bit_len = len;
-#elif (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3)
-_spi->dev->ms_dlen.ms_data_bitlen = len;
-#endif
+  esp_err_t ret = spi_device_polling_start(_handle, &_spi_tran, portMAX_DELAY);
+  // if (ret != ESP_OK)
+  // {
+  //   log_e("spi_device_polling_start error: %d", ret);
+  // }
+}
 
-#if (CONFIG_IDF_TARGET_ESP32)
-_spi->dev->miso_dlen.usr_miso_dbitlen = 0;
-#elif (CONFIG_IDF_TARGET_ESP32S2)
-_spi->dev->miso_dlen.usr_miso_bit_len = 0;
-#endif
-
-#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S3
-  _spi->dev->cmd.update = 1;
-  while (_spi->dev->cmd.update)
-    ;
-#endif
-  _spi->dev->cmd.usr = 1;
-  while (_spi->dev->cmd.usr)
-    ;
+/**
+ * @brief POLL_END
+ *
+ * @return INLINE
+ */
+INLINE void Arduino_ESP32SPIDMA::POLL_END()
+{
+  esp_err_t ret = spi_device_polling_end(_handle, portMAX_DELAY);
+  // if (ret != ESP_OK)
+  // {
+  //   log_e("spi_device_polling_end error: %d", ret);
+  // }
 }
 
 #endif // #if defined(ESP32)

@@ -174,7 +174,10 @@ void setup()
 #endif
 
   // Init Display
-  gfx->begin();
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
   gfx->fillScreen(BLACK);
 
   w = gfx->width(), h = gfx->height();

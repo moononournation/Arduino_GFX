@@ -17,6 +17,7 @@
 // #define LILYGO_T_DECK
 // #define LILYGO_T_DISPLAY
 // #define LILYGO_T_DISPLAY_S3
+// #define LILYGO_T_Display_S3_AMOLED
 // #define LILYGO_T_RGB
 // #define LILYGO_T_QT
 // #define LILYGO_T_WATCH_2021
@@ -285,6 +286,12 @@ Arduino_DataBus *bus = new Arduino_ESP32PAR8Q(
     39 /* D0 */, 40 /* D1 */, 41 /* D2 */, 42 /* D3 */, 45 /* D4 */, 46 /* D5 */, 47 /* D6 */, 48 /* D7 */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 5 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */, 35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
 
+#elif defined(LILYGO_T_Display_S3_AMOLED)
+#define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3_AMOLED
+Arduino_DataBus *bus = new Arduino_ESP32QSPI(
+    6 /* cs */, 47 /* sck */, 18 /* d0 */, 7 /* d1 */, 48 /* d2 */, 5 /* d3 */);
+Arduino_GFX *gfx = new Arduino_RM67162(bus, 17 /* RST */, 0 /* rotation */);
+
 #elif defined(LILYGO_T_RGB)
 #define GFX_DEV_DEVICE LILYGO_T_RGB
 #include <Wire.h>
@@ -416,8 +423,8 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rota
 #elif defined(ARDUINO_ESP32_S3_BOX)
 #define GFX_DEV_DEVICE ARDUINO_ESP32_S3_BOX
 #define GFX_BL 45
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_CLK, TFT_MOSI, TFT_MISO);
-Arduino_GFX *gfx = new Arduino_ILI9342(bus, TFT_RST, 0 /* rotation */);
+Arduino_DataBus *bus = new Arduino_ESP32SPI(4 /* DC */, 5 /* CS */, 7 /* SCK */, 6 /* MOSI */, 0 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ILI9342(bus, 48 /* RST */, 0 /* rotation */);
 
 /* M5Stack */
 #elif defined(ARDUINO_M5Stack_Core_ESP32) || defined(ARDUINO_M5STACK_FIRE)
@@ -425,6 +432,12 @@ Arduino_GFX *gfx = new Arduino_ILI9342(bus, TFT_RST, 0 /* rotation */);
 // #define GFX_BL 32
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
 Arduino_GFX *gfx = new Arduino_ILI9342(bus, 33 /* RST */, 2 /* rotation */);
+
+#elif defined(ARDUINO_M5Stack_ATOMS3)
+#define GFX_DEV_DEVICE ARDUINO_M5Stack_ATOMS3
+#define GFX_BL 16
+Arduino_DataBus *bus = new Arduino_ESP32SPI(33 /* DC */, 15 /* CS */, 17 /* SCK */, 21 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_GC9107(bus, 34 /* RST */, 0 /* rotation */, true /* IPS */);
 
 /* Odroid-Go */
 #elif defined(ARDUINO_ODROID_ESP32)

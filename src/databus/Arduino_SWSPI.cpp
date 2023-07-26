@@ -375,17 +375,6 @@ void Arduino_SWSPI::writeBytes(uint8_t *data, uint32_t len)
     WRITE(*data++);
   }
 }
-
-void Arduino_SWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
-{
-  while (repeat--)
-  {
-    for (uint8_t i = 0; i < len; i++)
-    {
-      WRITE(data[i]);
-    }
-  }
-}
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 INLINE void Arduino_SWSPI::WRITE9BITCOMMAND(uint8_t c)

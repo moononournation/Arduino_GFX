@@ -116,7 +116,10 @@ void setup()
 #endif
 
   Serial.println("Init display");
-  gfx->begin();
+  if (!gfx->begin())
+  {
+    Serial.println("gfx->begin() failed!");
+  }
   gfx->fillScreen(BLACK);
 
 #ifdef GFX_BL

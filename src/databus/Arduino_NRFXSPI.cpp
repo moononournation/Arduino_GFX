@@ -230,14 +230,6 @@ void Arduino_NRFXSPI::writeBytes(uint8_t *data, uint32_t len)
   WRITEBUF(data, len);
 }
 
-void Arduino_NRFXSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
-{
-  while (repeat--)
-  {
-    WRITEBUF(data, len);
-  }
-}
-
 INLINE void Arduino_NRFXSPI::WRITE(uint8_t d)
 {
   const nrfx_spi_xfer_desc_t xfer_desc = NRFX_SPI_SINGLE_XFER(&d, 1, NULL, 0);

@@ -172,14 +172,6 @@ void Arduino_RPiPicoSPI::writeBytes(uint8_t *data, uint32_t len)
   WRITEBUF(data, len);
 }
 
-void Arduino_RPiPicoSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
-{
-  while (repeat--)
-  {
-    WRITEBUF(data, len);
-  }
-}
-
 INLINE void Arduino_RPiPicoSPI::WRITE(uint8_t d)
 {
   spi_write_blocking(_spi, (const uint8_t *)&d, 1);

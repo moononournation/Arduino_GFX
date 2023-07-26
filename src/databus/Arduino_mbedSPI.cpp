@@ -174,17 +174,6 @@ void Arduino_mbedSPI::writeBytes(uint8_t *data, uint32_t len)
   WRITEBUF(data, len);
 }
 
-void Arduino_mbedSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
-{
-  while (repeat--)
-  {
-    for (uint8_t i = 0; i < len; i++)
-    {
-      write(data[i]);
-    }
-  }
-}
-
 INLINE void Arduino_mbedSPI::WRITE(uint8_t d)
 {
   _dev->write((const char *)&d, 1, NULL, 0);
