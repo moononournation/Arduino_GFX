@@ -1,5 +1,3 @@
-#ifdef __AVR__
-
 #ifndef _ARDUINO_UNOPAR8_H_
 #define _ARDUINO_UNOPAR8_H_
 
@@ -25,7 +23,9 @@ public:
   void writeC8D8(uint8_t c, uint8_t d) override;
   void writeC8D16(uint8_t c, uint16_t d) override;
   void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2) override;
-
+#if !defined(LITTLE_FOOT_PRINT)
+  void writeBytes(uint8_t *data, uint32_t len) override;
+#endif
 protected:
 private:
   INLINE void WRITE(uint8_t d);
@@ -37,6 +37,7 @@ private:
   int8_t _dc, _cs, _wr, _rd;
   uint8_t _port;
 
+#ifdef __AVR__
   PORTreg_t _dcPort;                 ///< PORT register for data/command
   ARDUINOGFX_PORT_t _dcPinMaskSet;   ///< Bitmask for data/command SET (OR)
   ARDUINOGFX_PORT_t _dcPinMaskClr;   ///< Bitmask for data/command CLEAR (AND)
@@ -55,8 +56,7 @@ private:
 
   PORTreg_t _dataPort_B;             ///< PORT register for data/command, bits 0..1
   PORTreg_t _dataPort_D;             ///< PORT register for data/command, bits 2..7
+#endif // #ifdef __AVR__
 };
 
 #endif // _ARDUINO_UNOPAR8_H_
-
-#endif // #ifdef __AVR__

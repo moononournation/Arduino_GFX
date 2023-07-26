@@ -33,10 +33,12 @@ Arduino_GFX *gfx = create_default_Arduino_GFX();
 #else /* !defined(DISPLAY_DEV_KIT) */
 
 /* More data bus class: https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class */
-Arduino_DataBus *bus = create_default_Arduino_DataBus();
+//Arduino_DataBus *bus = create_default_Arduino_DataBus(); // original
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false /* IPS */);
+//Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false /* IPS */); // original
+
+#include "known_good.h"
 
 #endif /* !defined(DISPLAY_DEV_KIT) */
 /*******************************************************************************
@@ -112,10 +114,10 @@ void setup(void)
 
   // Draw 60 clock marks
   draw_round_clock_mark(
-      // draw_square_clock_mark(
-      center - markLen, center,
-      center - (markLen * 2 / 3), center,
-      center - (markLen / 2), center);
+    // draw_square_clock_mark(
+    center - markLen, center,
+    center - (markLen * 2 / 3), center,
+    center - (markLen / 2), center);
 
   hh = conv2d(__TIME__);
   mm = conv2d(__TIME__ + 3);
