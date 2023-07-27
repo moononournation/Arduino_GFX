@@ -292,6 +292,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [seeed studio Wio Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
 * [Waveshare RP2040-LCD-1.28](https://www.waveshare.com/wiki/RP2040-LCD-1.28)
 * [wireless-tag WT-32-SC01](http://www.wireless-tag.com/portfolio/wt32-sc01/)
+* [Elecrow Wizee-ESP32 WZ8048C050](https://www.elecrow.com/esp32-display-5-inch-hmi-display-rgb-tft-lcd-touch-screen-support-lvgl.html)
 * [wireless-tag ZX2D10GE10R-V4848](https://github.com/wireless-tag-com/ZX2D10GE01R-V4848)
 * [wireless-tag ZX3D50CE02S](https://github.com/wireless-tag-com/ZX3D50CE02S)
 * [wireless-tag ZX3D95CE01S-AR](https://github.com/wireless-tag-com/ZX3D95CE01S-AR-4848)
@@ -308,6 +309,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * HX8357A 320x480 [[demo video](https://youtu.be/wJkLO_xCTXA)] (currently only portrait works, i.e. rotation 0 and 2)
 * HX8357B (9-bit SPI) 320x480 [[demo video](https://youtu.be/pB6_LOCiUqg)]
 * HX8369A 480x800 [[demo video](https://youtu.be/sXpU8bhtXKQ)] [[LVGL demo video](https://youtu.be/q575lTuVDcU)]
+* ILI6122 (RGB) 480x800
 * ILI6485 (RGB) 480x272 [[demo video](https://youtu.be/60rl7QoU4Sc)]
 * ILI9225 176x220 [[demo video](https://youtu.be/jm2UrCG27F4)]
 * ILI9341 240x320 [[demo video](https://youtu.be/NtlEEL7MkQY)]
