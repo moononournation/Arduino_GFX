@@ -292,6 +292,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [seeed studio Wio Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
 * [Waveshare RP2040-LCD-1.28](https://www.waveshare.com/wiki/RP2040-LCD-1.28)
 * [wireless-tag WT-32-SC01](http://www.wireless-tag.com/portfolio/wt32-sc01/)
+* [Elecrow ESP Terminal with 3.5" parallel RGB display DLC35010R](https://www.elecrow.com/esp-terminal-with-esp32-3-5-inch-parallel-480x320-tft-capacitive-touch-display-rgb-by-chip-ili9488.html) [[demo video](https://youtu.be/QRDVuwayNFw)]
 * [Elecrow Wizee-ESP32 WZ8048C050](https://www.elecrow.com/esp32-display-5-inch-hmi-display-rgb-tft-lcd-touch-screen-support-lvgl.html)
 * [wireless-tag ZX2D10GE10R-V4848](https://github.com/wireless-tag-com/ZX2D10GE01R-V4848)
 * [wireless-tag ZX3D50CE02S](https://github.com/wireless-tag-com/ZX3D50CE02S)
