@@ -1,3 +1,4 @@
+// #define DLC35010R // or called "Elecrow ESP Terminal with 3.5inch Parallel RGB Capacitive Touch Display (ILI9488)"
 // #define DRAGON_RADAR
 // #define ESP32_1732S019
 // #define ESP32_2424012
@@ -30,7 +31,16 @@
 // #define ZX3D50CE02S // or called "WT32-SC01 PLUS"
 // #define ZX3D95CE01S_AR
 
-#if defined(DRAGON_RADAR)
+#if defined(DLC35010R)
+#define GFX_DEV_DEVICE DLC35010R
+#define GFX_BL 46
+Arduino_DataBus *bus = new Arduino_ESP32PAR16(
+    45 /* DC */, GFX_NOT_DEFINED /* CS */, 18 /* WR */, 48 /* RD */,
+    47 /* D0 */, 21 /* D1 */, 14 /* D2 */, 13 /* D3 */, 12 /* D4 */, 11 /* D5 */, 10 /* D6 */, 9 /* D7 */,
+     3 /* D8 */,  8 /* D9 */, 16 /* D10 */, 15 /* D11 */, 7 /* D12 */, 6 /* D13 */, 5 /* D14 */, 4 /* D15 */);
+Arduino_GFX *gfx = new Arduino_ILI9488(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, false /* IPS */);
+
+#elif defined(DRAGON_RADAR)
 #define GFX_DEV_DEVICE DRAGON_RADAR
 #define GFX_BL 38
 Arduino_DataBus *bus = new Arduino_SWSPI(
