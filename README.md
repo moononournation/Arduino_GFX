@@ -377,7 +377,6 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 ## Using source code come from
 
-* <http://elm-chan.org/fsw/tjpgd/00index.html>
 * <https://github.com/adafruit/Adafruit-GFX-Library.git>
 * <https://github.com/adafruit/Adafruit_ILI9341.git>
 * <https://github.com/adafruit/Adafruit-SSD1351-library.git>
@@ -392,6 +391,5 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * <https://github.com/lcdwiki/LCDWIKI_SPI.git>
 * <https://github.com/Xinyuan-LilyGO/T-RGB.git>
 * <https://github.com/lovyan03/LovyanGFX.git>
-* <https://github.com/lovyan03/M5Stack_JpgLoopAnime.git>
 * <https://github.com/nopnop2002/esp-idf-parallel-tft.git>
 * <https://github.com/olikraus/u8g2.git>
