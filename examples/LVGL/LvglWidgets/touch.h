@@ -187,4 +187,6 @@ bool touch_released()
 #elif defined(TOUCH_MODULE_ADDR) // TouchLib
   return false;
 #endif                           // TouchLib
+
+  return false;
 }
