@@ -5,7 +5,7 @@
 #if defined(ESP32)
 #include <driver/spi_master.h>
 
-#define SPI_MAX_PIXELS_AT_ONCE 1024
+#define ESP32QSPI_MAX_PIXELS_AT_ONCE 1024
 #define QSPI_FREQUENCY 80000000
 #define QSPI_SPI_MODE SPI_MODE0
 #define QSPI_SPI_HOST SPI2_HOST
@@ -56,9 +56,9 @@ private:
   spi_transaction_t *_spi_tran;
   union
   {
-    uint8_t _buffer[SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
-    uint16_t _buffer16[SPI_MAX_PIXELS_AT_ONCE];
-    uint32_t _buffer32[SPI_MAX_PIXELS_AT_ONCE / 2];
+    uint8_t _buffer[ESP32QSPI_MAX_PIXELS_AT_ONCE * 2] = {0};
+    uint16_t _buffer16[ESP32QSPI_MAX_PIXELS_AT_ONCE];
+    uint32_t _buffer32[ESP32QSPI_MAX_PIXELS_AT_ONCE / 2];
   };
 };
 

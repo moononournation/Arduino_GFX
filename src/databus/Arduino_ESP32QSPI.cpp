@@ -50,7 +50,7 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .sclk_io_num = _sck,
       .quadwp_io_num = _quadwp,
       .quadhd_io_num = _quadhd,
-      .max_transfer_sz = (SPI_MAX_PIXELS_AT_ONCE * 16) + 8,
+      .max_transfer_sz = (ESP32QSPI_MAX_PIXELS_AT_ONCE * 16) + 8,
       .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
   };
   esp_err_t ret = spi_bus_initialize(QSPI_SPI_HOST, &buscfg, QSPI_DMA_CHANNEL);
@@ -257,7 +257,7 @@ void Arduino_ESP32QSPI::writeRepeat(uint16_t p, uint32_t len)
 {
   bool first_send = true;
 
-  uint16_t bufLen = (len >= SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
+  uint16_t bufLen = (len >= ESP32QSPI_MAX_PIXELS_AT_ONCE) ? ESP32QSPI_MAX_PIXELS_AT_ONCE : len;
   int16_t xferLen, l;
   uint32_t c32;
   MSB_32_16_16_SET(c32, p, p);
@@ -312,7 +312,7 @@ void Arduino_ESP32QSPI::writePixels(uint16_t *data, uint32_t len)
   bool first_send = true;
   while (len)
   {
-    l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
+    l = (len > ESP32QSPI_MAX_PIXELS_AT_ONCE) ? ESP32QSPI_MAX_PIXELS_AT_ONCE : len;
 
     if (first_send)
     {
@@ -363,7 +363,7 @@ void Arduino_ESP32QSPI::writeBytes(uint8_t *data, uint32_t len)
   bool first_send = true;
   while (len)
   {
-    l = (len >= (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
+    l = (len >= (ESP32QSPI_MAX_PIXELS_AT_ONCE << 1)) ? (ESP32QSPI_MAX_PIXELS_AT_ONCE << 1) : len;
 
     if (first_send)
     {
@@ -405,7 +405,7 @@ void Arduino_ESP32QSPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_
   bool first_send = true;
   while (len)
   {
-    l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
+    l = (len > ESP32QSPI_MAX_PIXELS_AT_ONCE) ? ESP32QSPI_MAX_PIXELS_AT_ONCE : len;
 
     if (first_send)
     {
@@ -458,7 +458,7 @@ void Arduino_ESP32QSPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, u
   bool first_send = true;
   while (len)
   {
-    l = (len > (SPI_MAX_PIXELS_AT_ONCE >> 1)) ? (SPI_MAX_PIXELS_AT_ONCE >> 1) : len;
+    l = (len > (ESP32QSPI_MAX_PIXELS_AT_ONCE >> 1)) ? (ESP32QSPI_MAX_PIXELS_AT_ONCE >> 1) : len;
 
     if (first_send)
     {

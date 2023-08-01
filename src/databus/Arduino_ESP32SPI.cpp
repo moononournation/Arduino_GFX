@@ -639,7 +639,7 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
   }
   else // 8-bit SPI
   {
-    uint16_t bufLen = (len >= SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
+    uint16_t bufLen = (len >= ESP32SPI_MAX_PIXELS_AT_ONCE) ? ESP32SPI_MAX_PIXELS_AT_ONCE : len;
     int16_t xferLen, l;
     uint32_t c32;
     MSB_32_16_16_SET(c32, p, p);
@@ -703,7 +703,7 @@ void Arduino_ESP32SPI::writePixels(uint16_t *data, uint32_t len)
     uint32_t *p32 = (uint32_t *)_spi->dev->data_buf;
     while (len)
     {
-      l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
+      l = (len > ESP32SPI_MAX_PIXELS_AT_ONCE) ? ESP32SPI_MAX_PIXELS_AT_ONCE : len;
       l2 = (l + 1) >> 1;
       for (uint32_t i = 0; i < l2; ++i)
       {
@@ -745,7 +745,7 @@ void Arduino_ESP32SPI::writeBytes(uint8_t *data, uint32_t len)
     uint32_t *buf32 = (uint32_t *)_spi->dev->data_buf;
     while (len)
     {
-      l = (len > (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
+      l = (len > (ESP32SPI_MAX_PIXELS_AT_ONCE << 1)) ? (ESP32SPI_MAX_PIXELS_AT_ONCE << 1) : len;
       l4 = (l + 3) >> 2;
       p = (uint32_t *)data;
       for (uint32_t i = 0; i < l4; ++i)
@@ -787,7 +787,7 @@ void Arduino_ESP32SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t
     uint16_t p1, p2;
     while (len)
     {
-      l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
+      l = (len > ESP32SPI_MAX_PIXELS_AT_ONCE) ? ESP32SPI_MAX_PIXELS_AT_ONCE : len;
       l2 = l >> 1;
       for (uint32_t i = 0; i < l2; ++i)
       {
@@ -842,7 +842,7 @@ void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, ui
     uint16_t p;
     while (len)
     {
-      l = (len > (SPI_MAX_PIXELS_AT_ONCE >> 1)) ? (SPI_MAX_PIXELS_AT_ONCE >> 1) : len;
+      l = (len > (ESP32SPI_MAX_PIXELS_AT_ONCE >> 1)) ? (ESP32SPI_MAX_PIXELS_AT_ONCE >> 1) : len;
       for (uint32_t i = 0; i < l; ++i)
       {
         p = idx[*data++];
@@ -882,7 +882,7 @@ INLINE void Arduino_ESP32SPI::WRITE8BIT(uint8_t d)
   uint16_t idx = _data_buf_bit_idx >> 3;
   _buffer[idx] = d;
   _data_buf_bit_idx += 8;
-  if (_data_buf_bit_idx >= (SPI_MAX_PIXELS_AT_ONCE << 4))
+  if (_data_buf_bit_idx >= (ESP32SPI_MAX_PIXELS_AT_ONCE << 4))
   {
     flush_data_buf();
   }
