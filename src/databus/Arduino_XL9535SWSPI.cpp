@@ -5,11 +5,8 @@ Arduino_XL9535SWSPI::Arduino_XL9535SWSPI(int8_t sda, int8_t scl, int8_t pwd, int
 {
 }
 
-bool Arduino_XL9535SWSPI::begin(int32_t speed, int8_t dataMode)
+bool Arduino_XL9535SWSPI::begin(int32_t, int8_t)
 {
-  UNUSED(speed);
-  UNUSED(dataMode);
-
   _address = XL9535_IIC_ADDRESS;
   _wire->beginTransmission(_address);
   if (!_wire->endTransmission())
@@ -105,12 +102,12 @@ void Arduino_XL9535SWSPI::write16(uint16_t)
   // not implemented
 }
 
-void Arduino_XL9535SWSPI::writeRepeat(uint16_t p, uint32_t len)
+void Arduino_XL9535SWSPI::writeRepeat(uint16_t, uint32_t)
 {
   // not implemented
 }
 
-void Arduino_XL9535SWSPI::writePixels(uint16_t *data, uint32_t len)
+void Arduino_XL9535SWSPI::writePixels(uint16_t *, uint32_t)
 {
   // not implemented
 }

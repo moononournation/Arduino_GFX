@@ -2873,10 +2873,9 @@ void Arduino_GFX::getTextBounds(const __FlashStringHelper *str,
   @param  i   True if you want to invert, false to make 'normal'
 */
 /**************************************************************************/
-void Arduino_GFX::invertDisplay(bool i)
+void Arduino_GFX::invertDisplay(bool)
 {
   // Do nothing, must be subclassed if supported by hardware
-  UNUSED(i);
 }
 
 /**************************************************************************/

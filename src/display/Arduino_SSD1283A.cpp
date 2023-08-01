@@ -193,10 +193,9 @@ void Arduino_SSD1283A::setRotation(uint8_t r)
   _bus->endWrite();
 }
 
-void Arduino_SSD1283A::invertDisplay(bool i)
+void Arduino_SSD1283A::invertDisplay(bool)
 {
   // Not Implemented
-  UNUSED(i);
 }
 
 void Arduino_SSD1283A::displayOn(void)

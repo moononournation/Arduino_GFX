@@ -816,7 +816,6 @@ void Arduino_ESP32SPI::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t
  */
 void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
-  uint16_t p;
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
     uint16_t hi, lo;

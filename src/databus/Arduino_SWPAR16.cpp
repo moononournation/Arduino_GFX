@@ -10,11 +10,8 @@ Arduino_SWPAR16::Arduino_SWPAR16(
 {
 }
 
-bool Arduino_SWPAR16::begin(int32_t speed, int8_t dataMode)
+bool Arduino_SWPAR16::begin(int32_t, int8_t)
 {
-  UNUSED(speed);
-  UNUSED(dataMode);
-
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
   if (_cs != GFX_NOT_DEFINED)

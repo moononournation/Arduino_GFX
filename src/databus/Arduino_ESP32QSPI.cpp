@@ -50,9 +50,13 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .sclk_io_num = _sck,
       .quadwp_io_num = _quadwp,
       .quadhd_io_num = _quadhd,
+      .data4_io_num = -1,
+      .data5_io_num = -1,
+      .data6_io_num = -1,
+      .data7_io_num = -1,
       .max_transfer_sz = (ESP32QSPI_MAX_PIXELS_AT_ONCE * 16) + 8,
       .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
-  };
+      .intr_flags = 0};
   esp_err_t ret = spi_bus_initialize(QSPI_SPI_HOST, &buscfg, QSPI_DMA_CHANNEL);
   if (ret != ESP_OK)
   {
@@ -63,12 +67,18 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
   spi_device_interface_config_t devcfg = {
       .command_bits = 8,
       .address_bits = 24,
-      .mode = _dataMode,
+      .dummy_bits = 0,
+      .mode = (uint8_t)_dataMode,
+      .duty_cycle_pos = 0,
+      .cs_ena_pretrans = 0,
+      .cs_ena_posttrans = 0,
       .clock_speed_hz = _speed,
+      .input_delay_ns = 0,
       .spics_io_num = -1, // avoid use system CS control
       .flags = SPI_DEVICE_HALFDUPLEX,
       .queue_size = 1,
-  };
+      .pre_cb = nullptr,
+      .post_cb = nullptr};
   ret = spi_bus_add_device(QSPI_SPI_HOST, &devcfg, &_handle);
   if (ret != ESP_OK)
   {
@@ -518,11 +528,7 @@ INLINE void Arduino_ESP32QSPI::CS_LOW(void)
  */
 INLINE void Arduino_ESP32QSPI::POLL_START()
 {
-  esp_err_t ret = spi_device_polling_start(_handle, _spi_tran, portMAX_DELAY);
-  // if (ret != ESP_OK)
-  // {
-  //   log_e("spi_device_polling_start error: %d", ret);
-  // }
+  spi_device_polling_start(_handle, _spi_tran, portMAX_DELAY);
 }
 
 /**
@@ -532,11 +538,7 @@ INLINE void Arduino_ESP32QSPI::POLL_START()
  */
 INLINE void Arduino_ESP32QSPI::POLL_END()
 {
-  esp_err_t ret = spi_device_polling_end(_handle, portMAX_DELAY);
-  // if (ret != ESP_OK)
-  // {
-  //   log_e("spi_device_polling_end error: %d", ret);
-  // }
+  spi_device_polling_end(_handle, portMAX_DELAY);
 }
 
 #endif // #if defined(ESP32)
