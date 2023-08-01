@@ -8,7 +8,7 @@
 class Arduino_UNOPAR8 : public Arduino_DataBus
 {
 public:
-  Arduino_UNOPAR8(int8_t dc = A2, int8_t cs = A3, int8_t wr = A1, int8_t rd = A0); // Constructor
+  Arduino_UNOPAR8(); // Constructor
 
   bool begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = GFX_NOT_DEFINED) override;
   void beginWrite() override;
@@ -34,29 +34,15 @@ private:
   INLINE void CS_HIGH(void);
   INLINE void CS_LOW(void);
 
-  int8_t _dc, _cs, _wr, _rd;
-  uint8_t _port;
+  static const int16_t _dc = A2;
+  static const int16_t _cs = A3;
+  static const int16_t _wr = A1;
+  static const int16_t _rd = A0;
 
-#ifdef __AVR__
-  PORTreg_t _dcPort;                 ///< PORT register for data/command
-  ARDUINOGFX_PORT_t _dcPinMaskSet;   ///< Bitmask for data/command SET (OR)
-  ARDUINOGFX_PORT_t _dcPinMaskClr;   ///< Bitmask for data/command CLEAR (AND)
+#if defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI)
+  static const int16_t _p1_map[];
+#endif
 
-  PORTreg_t _csPort;                 ///< PORT register for data/command
-  ARDUINOGFX_PORT_t _csPinMaskSet;   ///< Bitmask for data/command SET (OR)
-  ARDUINOGFX_PORT_t _csPinMaskClr;   ///< Bitmask for data/command CLEAR (AND)
-
-  PORTreg_t _wrPort;                 ///< PORT register for data/command
-  ARDUINOGFX_PORT_t _wrPinMaskSet;   ///< Bitmask for data/command SET (OR)
-  ARDUINOGFX_PORT_t _wrPinMaskClr;   ///< Bitmask for data/command CLEAR (AND)
-
-  PORTreg_t _rdPort;                 ///< PORT register for data/command
-  ARDUINOGFX_PORT_t _rdPinMaskSet;   ///< Bitmask for data/command SET (OR)
-  ARDUINOGFX_PORT_t _rdPinMaskClr;   ///< Bitmask for data/command CLEAR (AND)
-
-  PORTreg_t _dataPort_B;             ///< PORT register for data/command, bits 0..1
-  PORTreg_t _dataPort_D;             ///< PORT register for data/command, bits 2..7
-#endif // #ifdef __AVR__
 };
 
 #endif // _ARDUINO_UNOPAR8_H_

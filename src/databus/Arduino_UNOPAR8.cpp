@@ -2,73 +2,27 @@
 
 // for MCUFriend UNO kind of shields. -jz-
 
-Arduino_UNOPAR8::Arduino_UNOPAR8(int8_t dc, int8_t cs, int8_t wr, int8_t rd)
-  : _dc(dc), _cs(cs), _wr(wr), _rd(rd)
+Arduino_UNOPAR8::Arduino_UNOPAR8()
 {
 }
+
+#ifdef ARDUINO_AVR_UNO
+#define BMASK         0x03
+#define DMASK         0xFC
+#endif
 
 bool Arduino_UNOPAR8::begin(int32_t speed, int8_t dataMode)
 {
   UNUSED(speed);
   UNUSED(dataMode);
-
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
-#ifdef __AVR__
-  _dcPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_dc));
-  _dcPinMaskSet = digitalPinToBitMask(_dc);
-  _dcPinMaskClr = ~_dcPinMaskSet;
-#endif
-
-  if (_cs != GFX_NOT_DEFINED)
-  {
-    pinMode(_cs, OUTPUT);
-    digitalWrite(_cs, HIGH); // Disable chip select
-#ifdef __AVR__
-    _csPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_cs));
-    _csPinMaskSet = digitalPinToBitMask(_cs);
-#endif
-  }
-#ifdef __AVR__
-  _csPinMaskClr = ~_csPinMaskSet;
-#endif
-
+  pinMode(_cs, OUTPUT);
+  digitalWrite(_cs, HIGH); // Disable chip select
   pinMode(_wr, OUTPUT);
   digitalWrite(_wr, HIGH); // Set write strobe high (inactive)
-#ifdef __AVR__
-  _wrPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_wr));
-  _wrPinMaskSet = digitalPinToBitMask(_wr);
-  _wrPinMaskClr = ~_wrPinMaskSet;
-#endif
-
-  if (_rd != GFX_NOT_DEFINED)
-  {
-    pinMode(_rd, OUTPUT);
-    digitalWrite(_rd, HIGH); // Disable RD
-#ifdef __AVR__
-    _rdPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_rd));
-    _rdPinMaskSet = digitalPinToBitMask(_rd);
-#endif
-  }
-  else
-  {
-#ifdef __AVR__
-    _rdPort = _dcPort;
-    _rdPinMaskSet = 0;
-#endif
-  }
-#ifdef __AVR__
-  _rdPinMaskClr = ~_rdPinMaskSet;
-#endif
-
-#ifdef __AVR__
-  *(portModeRegister(4)) |= 0xFC;
-  _dataPort_D = portOutputRegister(4);
-  *_dataPort_D |= 0xFC;
-  *(portModeRegister(2)) |= 0x03;
-  _dataPort_B = portOutputRegister(2);
-  *_dataPort_B |= 0x03;
-#else
+  pinMode(_rd, OUTPUT);
+  digitalWrite(_rd, HIGH); // Disable RD
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
   pinMode(2, OUTPUT);
@@ -77,10 +31,35 @@ bool Arduino_UNOPAR8::begin(int32_t speed, int8_t dataMode)
   pinMode(5, OUTPUT);
   pinMode(6, OUTPUT);
   pinMode(7, OUTPUT);
-#endif
-
   return true;
 }
+
+#if defined(ARDUINO_UNOR4_WIFI)
+const int16_t Arduino_UNOPAR8::_p1_map[] =
+{ // 0x0     0x1     0x2     0x3     0x4     0x5     0x6     0x7
+  0x0000, 0x0010, 0x0020, 0x0030, 0x0040, 0x0050, 0x0060, 0x0070,
+  0x0080, 0x0090, 0x00A0, 0x00B0, 0x00C0, 0x00D0, 0x00E0, 0x00F0,
+  0x0800, 0x0810, 0x0820, 0x0830, 0x0840, 0x0850, 0x0860, 0x0870,
+  0x0880, 0x0890, 0x08A0, 0x08B0, 0x08C0, 0x08D0, 0x08E0, 0x08F0,
+  0x1000, 0x1010, 0x1020, 0x1030, 0x1040, 0x1050, 0x1060, 0x1070,
+  0x1080, 0x1090, 0x10A0, 0x10B0, 0x10C0, 0x10D0, 0x10E0, 0x10F0,
+  0x1800, 0x1810, 0x1820, 0x1830, 0x1840, 0x1850, 0x1860, 0x1870,
+  0x1880, 0x1890, 0x18A0, 0x18B0, 0x18C0, 0x18D0, 0x18E0, 0x18F0,
+};
+#elif defined(ARDUINO_UNOR4_MINIMA)
+// preliminary, untested. swapped P104, P105, uses P106, P107 instead of P111, P112
+const int16_t Arduino_UNOPAR8::_p1_map[] =
+{ // 0x0     0x1     0x2     0x3     0x4     0x5     0x6     0x7
+  0x0000, 0x0020, 0x0010, 0x0030, 0x0008, 0x0028, 0x0018, 0x0038,
+  0x0004, 0x0024, 0x0014, 0x0034, 0x000C, 0x002C, 0x001C, 0x003C,
+  0x0040, 0x0060, 0x0050, 0x0070, 0x0048, 0x0068, 0x0058, 0x0078,
+  0x0044, 0x0064, 0x0054, 0x0074, 0x004C, 0x006C, 0x005C, 0x007C,
+  0x0080, 0x00A0, 0x0090, 0x00B0, 0x0088, 0x00A8, 0x0098, 0x00B8,
+  0x0084, 0x00A4, 0x0094, 0x00B4, 0x008C, 0x00AC, 0x009C, 0x00BC,
+  0x00C0, 0x00E0, 0x00D0, 0x00F0, 0x00C8, 0x00E8, 0x00D8, 0x00F8,
+  0x00C4, 0x00E4, 0x00D4, 0x00F4, 0x00CC, 0x00EC, 0x00DC, 0x00FC,
+};
+#endif
 
 void Arduino_UNOPAR8::beginWrite()
 {
@@ -96,20 +75,16 @@ void Arduino_UNOPAR8::endWrite()
 void Arduino_UNOPAR8::writeCommand(uint8_t c)
 {
   DC_LOW();
-
   WRITE(c);
-
   DC_HIGH();
 }
 
 void Arduino_UNOPAR8::writeCommand16(uint16_t c)
 {
   DC_LOW();
-
   _data16.value = c;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
-
   DC_HIGH();
 }
 
@@ -127,22 +102,16 @@ void Arduino_UNOPAR8::write16(uint16_t d)
 
 void Arduino_UNOPAR8::writeRepeat(uint16_t p, uint32_t len)
 {
-#ifdef __AVR__
-  uint8_t wrMaskBase = *_wrPort & _wrPinMaskClr;
-  uint8_t wrMaskSet = wrMaskBase | _wrPinMaskSet;
-#endif
   _data16.value = p;
   if (_data16.msb == _data16.lsb)
   {
-#ifdef __AVR__
-    *_dataPort_B = (*_dataPort_B & 0xFC) | (_data16.msb & 0x03);
-    *_dataPort_D = (*_dataPort_D & 0x03) | (_data16.msb & 0xFC);
+#ifdef ARDUINO_AVR_UNO
+    PORTB = (PORTB & ~BMASK) | ((_data16.msb) & BMASK);
+    PORTD = (PORTD & ~DMASK) | ((_data16.msb) & DMASK);
     while (len--)
     {
-      *_wrPort = wrMaskBase;
-      *_wrPort = wrMaskSet;
-      *_wrPort = wrMaskBase;
-      *_wrPort = wrMaskSet;
+      PORTC &= ~_BV(1); PORTC |= _BV(1); // WR_STB;
+      PORTC &= ~_BV(1); PORTC |= _BV(1); // WR_STB;
     }
 #elif defined(ARDUINO_UNOR4_MINIMA)
     (_data16.msb & 0x01) ? R_PORT3->POSR = bit(4) : R_PORT3->PORR = bit(4);
@@ -153,54 +122,24 @@ void Arduino_UNOPAR8::writeRepeat(uint16_t p, uint32_t len)
     (_data16.msb & 0x20) ? R_PORT1->POSR = bit(2) : R_PORT1->PORR = bit(2);
     (_data16.msb & 0x40) ? R_PORT1->POSR = bit(6) : R_PORT1->PORR = bit(6);
     (_data16.msb & 0x80) ? R_PORT1->POSR = bit(7) : R_PORT1->PORR = bit(7);
-    if (_wr == A1)
+    while (len--)
     {
-      while (len--)
-      {
-        R_PORT0->PORR = bit(0);
-        R_PORT0->POSR = bit(0);
-        R_PORT0->PORR = bit(0);
-        R_PORT0->POSR = bit(0);
-      }
-    }
-    else
-    {
-      while (len--)
-      {
-        digitalWrite(_wr, LOW);
-        digitalWrite(_wr, HIGH);
-        digitalWrite(_wr, LOW);
-        digitalWrite(_wr, HIGH);
-      }
+      R_PORT0->PORR = bit(0);
+      R_PORT0->POSR = bit(0);
+      R_PORT0->PORR = bit(0);
+      R_PORT0->POSR = bit(0);
     }
 #elif defined(ARDUINO_UNOR4_WIFI)
     (_data16.msb & 0x01) ? R_PORT3->POSR = bit(4) : R_PORT3->PORR = bit(4);
     (_data16.msb & 0x02) ? R_PORT3->POSR = bit(3) : R_PORT3->PORR = bit(3);
-    (_data16.msb & 0x04) ? R_PORT1->POSR = bit(4) : R_PORT1->PORR = bit(4);
-    (_data16.msb & 0x08) ? R_PORT1->POSR = bit(5) : R_PORT1->PORR = bit(5);
-    (_data16.msb & 0x10) ? R_PORT1->POSR = bit(6) : R_PORT1->PORR = bit(6);
-    (_data16.msb & 0x20) ? R_PORT1->POSR = bit(7) : R_PORT1->PORR = bit(7);
-    (_data16.msb & 0x40) ? R_PORT1->POSR = bit(11) : R_PORT1->PORR = bit(11);
-    (_data16.msb & 0x80) ? R_PORT1->POSR = bit(12) : R_PORT1->PORR = bit(12);
-    if (_wr == A1)
+    R_PORT1->PORR = 0x18F0;
+    R_PORT1->POSR = ((_data16.msb & 0x3C) << 2) | ((_data16.msb & 0xC0) << 5);
+    while (len--)
     {
-      while (len--)
-      {
-        R_PORT0->PORR = bit(0);
-        R_PORT0->POSR = bit(0);
-        R_PORT0->PORR = bit(0);
-        R_PORT0->POSR = bit(0);
-      }
-    }
-    else
-    {
-      while (len--)
-      {
-        digitalWrite(_wr, LOW);
-        digitalWrite(_wr, HIGH);
-        digitalWrite(_wr, LOW);
-        digitalWrite(_wr, HIGH);
-      }
+      R_PORT0->PORR = bit(0);
+      R_PORT0->POSR = bit(0);
+      R_PORT0->PORR = bit(0);
+      R_PORT0->POSR = bit(0);
     }
 #else
     digitalWrite(8, (_data16.msb & 0x01) ? HIGH : LOW);
@@ -224,16 +163,14 @@ void Arduino_UNOPAR8::writeRepeat(uint16_t p, uint32_t len)
   {
     while (len--)
     {
-#ifdef __AVR__
-      *_dataPort_B = (*_dataPort_B & 0xFC) | (_data16.msb & 0x03);
-      *_dataPort_D = (*_dataPort_D & 0x03) | (_data16.msb & 0xFC);
-      *_wrPort = wrMaskBase;
-      *_wrPort = wrMaskSet;
+#ifdef ARDUINO_AVR_UNO
+      PORTB = (PORTB & ~BMASK) | ((_data16.msb) & BMASK);
+      PORTD = (PORTD & ~DMASK) | ((_data16.msb) & DMASK);
+      PORTC &= ~_BV(1); PORTC |= _BV(1); // WR_STB;
 
-      *_dataPort_B = (*_dataPort_B & 0xFC) | (_data16.lsb & 0x03);
-      *_dataPort_D = (*_dataPort_D & 0x03) | (_data16.lsb & 0xFC);
-      *_wrPort = wrMaskBase;
-      *_wrPort = wrMaskSet;
+      PORTB = (PORTB & ~BMASK) | ((_data16.lsb) & BMASK);
+      PORTD = (PORTD & ~DMASK) | ((_data16.lsb) & DMASK);
+      PORTC &= ~_BV(1); PORTC |= _BV(1); // WR_STB;
 #elif defined(ARDUINO_UNOR4_MINIMA)
       (_data16.msb & 0x01) ? R_PORT3->POSR = bit(4) : R_PORT3->PORR = bit(4);
       (_data16.msb & 0x02) ? R_PORT3->POSR = bit(3) : R_PORT3->PORR = bit(3);
@@ -243,16 +180,8 @@ void Arduino_UNOPAR8::writeRepeat(uint16_t p, uint32_t len)
       (_data16.msb & 0x20) ? R_PORT1->POSR = bit(2) : R_PORT1->PORR = bit(2);
       (_data16.msb & 0x40) ? R_PORT1->POSR = bit(6) : R_PORT1->PORR = bit(6);
       (_data16.msb & 0x80) ? R_PORT1->POSR = bit(7) : R_PORT1->PORR = bit(7);
-      if (_wr == A1)
-      {
-        R_PORT0->PORR = bit(0);
-        R_PORT0->POSR = bit(0);
-      }
-      else
-      {
-        digitalWrite(_wr, LOW);
-        digitalWrite(_wr, HIGH);
-      }
+      R_PORT0->PORR = bit(0);
+      R_PORT0->POSR = bit(0);
       (_data16.lsb & 0x01) ? R_PORT3->POSR = bit(4) : R_PORT3->PORR = bit(4);
       (_data16.lsb & 0x02) ? R_PORT3->POSR = bit(3) : R_PORT3->PORR = bit(3);
       (_data16.lsb & 0x04) ? R_PORT1->POSR = bit(5) : R_PORT1->PORR = bit(5);
@@ -261,53 +190,21 @@ void Arduino_UNOPAR8::writeRepeat(uint16_t p, uint32_t len)
       (_data16.lsb & 0x20) ? R_PORT1->POSR = bit(2) : R_PORT1->PORR = bit(2);
       (_data16.lsb & 0x40) ? R_PORT1->POSR = bit(6) : R_PORT1->PORR = bit(6);
       (_data16.lsb & 0x80) ? R_PORT1->POSR = bit(7) : R_PORT1->PORR = bit(7);
-      if (_wr == A1)
-      {
-        R_PORT0->PORR = bit(0);
-        R_PORT0->POSR = bit(0);
-      }
-      else
-      {
-        digitalWrite(_wr, LOW);
-        digitalWrite(_wr, HIGH);
-      }
+      R_PORT0->PORR = bit(0);
+      R_PORT0->POSR = bit(0);
 #elif defined(ARDUINO_UNOR4_WIFI)
       (_data16.msb & 0x01) ? R_PORT3->POSR = bit(4) : R_PORT3->PORR = bit(4);
       (_data16.msb & 0x02) ? R_PORT3->POSR = bit(3) : R_PORT3->PORR = bit(3);
-      (_data16.msb & 0x04) ? R_PORT1->POSR = bit(4) : R_PORT1->PORR = bit(4);
-      (_data16.msb & 0x08) ? R_PORT1->POSR = bit(5) : R_PORT1->PORR = bit(5);
-      (_data16.msb & 0x10) ? R_PORT1->POSR = bit(6) : R_PORT1->PORR = bit(6);
-      (_data16.msb & 0x20) ? R_PORT1->POSR = bit(7) : R_PORT1->PORR = bit(7);
-      (_data16.msb & 0x40) ? R_PORT1->POSR = bit(11) : R_PORT1->PORR = bit(11);
-      (_data16.msb & 0x80) ? R_PORT1->POSR = bit(12) : R_PORT1->PORR = bit(12);
-      if (_wr == A1)
-      {
-        R_PORT0->PORR = bit(0);
-        R_PORT0->POSR = bit(0);
-      }
-      else
-      {
-        digitalWrite(_wr, LOW);
-        digitalWrite(_wr, HIGH);
-      }
+      R_PORT1->PORR = 0x18F0;
+      R_PORT1->POSR = ((_data16.msb & 0x3C) << 2) | ((_data16.msb & 0xC0) << 5);
+      R_PORT0->PORR = bit(0);
+      R_PORT0->POSR = bit(0);
       (_data16.lsb & 0x01) ? R_PORT3->POSR = bit(4) : R_PORT3->PORR = bit(4);
       (_data16.lsb & 0x02) ? R_PORT3->POSR = bit(3) : R_PORT3->PORR = bit(3);
-      (_data16.lsb & 0x04) ? R_PORT1->POSR = bit(4) : R_PORT1->PORR = bit(4);
-      (_data16.lsb & 0x08) ? R_PORT1->POSR = bit(5) : R_PORT1->PORR = bit(5);
-      (_data16.lsb & 0x10) ? R_PORT1->POSR = bit(6) : R_PORT1->PORR = bit(6);
-      (_data16.lsb & 0x20) ? R_PORT1->POSR = bit(7) : R_PORT1->PORR = bit(7);
-      (_data16.lsb & 0x40) ? R_PORT1->POSR = bit(11) : R_PORT1->PORR = bit(11);
-      (_data16.lsb & 0x80) ? R_PORT1->POSR = bit(12) : R_PORT1->PORR = bit(12);
-      if (_wr == A1)
-      {
-        R_PORT0->PORR = bit(0);
-        R_PORT0->POSR = bit(0);
-      }
-      else
-      {
-        digitalWrite(_wr, LOW);
-        digitalWrite(_wr, HIGH);
-      }
+      R_PORT1->PORR = 0x18F0;
+      R_PORT1->POSR = ((_data16.lsb & 0x3C) << 2) | ((_data16.lsb & 0xC0) << 5);
+      R_PORT0->PORR = bit(0);
+      R_PORT0->POSR = bit(0);
 #else
       digitalWrite(8, (_data16.msb & 0x01) ? HIGH : LOW);
       digitalWrite(9, (_data16.msb & 0x02) ? HIGH : LOW);
@@ -347,22 +244,16 @@ void Arduino_UNOPAR8::writePixels(uint16_t *data, uint32_t len)
 void Arduino_UNOPAR8::writeC8D8(uint8_t c, uint8_t d)
 {
   DC_LOW();
-
   WRITE(c);
-
   DC_HIGH();
-
   WRITE(d);
 }
 
 void Arduino_UNOPAR8::writeC8D16(uint8_t c, uint16_t d)
 {
   DC_LOW();
-
   WRITE(c);
-
   DC_HIGH();
-
   _data16.value = d;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
@@ -371,15 +262,11 @@ void Arduino_UNOPAR8::writeC8D16(uint8_t c, uint16_t d)
 void Arduino_UNOPAR8::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 {
   DC_LOW();
-
   WRITE(c);
-
   DC_HIGH();
-
   _data16.value = d1;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
-
   _data16.value = d2;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
@@ -398,12 +285,10 @@ void Arduino_UNOPAR8::writeBytes(uint8_t *data, uint32_t len)
 
 INLINE void Arduino_UNOPAR8::WRITE(uint8_t d)
 {
-#ifdef __AVR__
-  uint8_t wrMaskBase = *_wrPort & _wrPinMaskClr;
-  *_dataPort_B = (*_dataPort_B & 0xFC) | (d & 0x03);
-  *_dataPort_D = (*_dataPort_D & 0x03) | (d & 0xFC);
-  *_wrPort = wrMaskBase;
-  *_wrPort = wrMaskBase | _wrPinMaskSet;
+#ifdef ARDUINO_AVR_UNO
+  PORTB = (PORTB & ~BMASK) | ((d) & BMASK);
+  PORTD = (PORTD & ~DMASK) | ((d) & DMASK);
+  PORTC &= ~_BV(1); PORTC |= _BV(1); // WR_STB;
 #elif defined(ARDUINO_UNOR4_MINIMA)
   (d & 0x01) ? R_PORT3->POSR = bit(4) : R_PORT3->PORR = bit(4);
   (d & 0x02) ? R_PORT3->POSR = bit(3) : R_PORT3->PORR = bit(3);
@@ -413,35 +298,23 @@ INLINE void Arduino_UNOPAR8::WRITE(uint8_t d)
   (d & 0x20) ? R_PORT1->POSR = bit(2) : R_PORT1->PORR = bit(2);
   (d & 0x40) ? R_PORT1->POSR = bit(6) : R_PORT1->PORR = bit(6);
   (d & 0x80) ? R_PORT1->POSR = bit(7) : R_PORT1->PORR = bit(7);
-  if (_wr == A1)
-  {
-    R_PORT0->PORR = bit(0);
-    R_PORT0->POSR = bit(0);
-  }
-  else
-  {
-    digitalWrite(_wr, LOW);
-    digitalWrite(_wr, HIGH);
-  }
+  R_PORT0->PORR = bit(0);
+  R_PORT0->POSR = bit(0);
 #elif defined(ARDUINO_UNOR4_WIFI)
   (d & 0x01) ? R_PORT3->POSR = bit(4) : R_PORT3->PORR = bit(4);
   (d & 0x02) ? R_PORT3->POSR = bit(3) : R_PORT3->PORR = bit(3);
-  (d & 0x04) ? R_PORT1->POSR = bit(4) : R_PORT1->PORR = bit(4);
-  (d & 0x08) ? R_PORT1->POSR = bit(5) : R_PORT1->PORR = bit(5);
-  (d & 0x10) ? R_PORT1->POSR = bit(6) : R_PORT1->PORR = bit(6);
-  (d & 0x20) ? R_PORT1->POSR = bit(7) : R_PORT1->PORR = bit(7);
-  (d & 0x40) ? R_PORT1->POSR = bit(11) : R_PORT1->PORR = bit(11);
-  (d & 0x80) ? R_PORT1->POSR = bit(12) : R_PORT1->PORR = bit(12);
-  if (_wr == A1)
-  {
-    R_PORT0->PORR = bit(0);
-    R_PORT0->POSR = bit(0);
-  }
-  else
-  {
-    digitalWrite(_wr, LOW);
-    digitalWrite(_wr, HIGH);
-  }
+  //  (d & 0x04) ? R_PORT1->POSR = bit(4) : R_PORT1->PORR = bit(4);
+  //  (d & 0x08) ? R_PORT1->POSR = bit(5) : R_PORT1->PORR = bit(5);
+  //  (d & 0x10) ? R_PORT1->POSR = bit(6) : R_PORT1->PORR = bit(6);
+  //  (d & 0x20) ? R_PORT1->POSR = bit(7) : R_PORT1->PORR = bit(7);
+  //  (d & 0x40) ? R_PORT1->POSR = bit(11) : R_PORT1->PORR = bit(11);
+  //  (d & 0x80) ? R_PORT1->POSR = bit(12) : R_PORT1->PORR = bit(12);
+  //R_PORT1->PODR = (R_PORT1->PODR & ~0x18F0) | ((d & 0x3C) << 2) | ((d & 0xC0) << 5);
+  R_PORT1->PORR = 0x18F0;
+  //R_PORT1->POSR = _p1_map[d / 4]; // about same speed
+  R_PORT1->POSR = ((d & 0x3C) << 2) | ((d & 0xC0) << 5); // slightly faster
+  R_PORT0->PORR = bit(0);
+  R_PORT0->POSR = bit(0);
 #else
   digitalWrite(8, (d & 0x01) ? HIGH : LOW);
   digitalWrite(9, (d & 0x02) ? HIGH : LOW);
@@ -460,8 +333,10 @@ INLINE void Arduino_UNOPAR8::WRITE(uint8_t d)
 
 INLINE void Arduino_UNOPAR8::DC_HIGH(void)
 {
-#ifdef __AVR__
-  *_dcPort |= _dcPinMaskSet;
+#ifdef ARDUINO_AVR_UNO
+  PORTC |= _BV(2); // RS_H;
+#elif defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI)
+  R_PORT0->POSR = bit(1);
 #else
   digitalWrite(_dc, HIGH);
 #endif
@@ -469,8 +344,10 @@ INLINE void Arduino_UNOPAR8::DC_HIGH(void)
 
 INLINE void Arduino_UNOPAR8::DC_LOW(void)
 {
-#ifdef __AVR__
-  *_dcPort &= _dcPinMaskClr;
+#ifdef ARDUINO_AVR_UNO
+  PORTC &= ~_BV(2); // RS_L;
+#elif defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI)
+  R_PORT0->PORR = bit(1);
 #else
   digitalWrite(_dc, LOW);
 #endif
@@ -478,24 +355,22 @@ INLINE void Arduino_UNOPAR8::DC_LOW(void)
 
 INLINE void Arduino_UNOPAR8::CS_HIGH(void)
 {
-  if (_cs != GFX_NOT_DEFINED)
-  {
-#ifdef __AVR__
-    *_csPort |= _csPinMaskSet;
+#ifdef ARDUINO_AVR_UNO
+  PORTC |= _BV(3); // CS_H;
+#elif defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI)
+  R_PORT0->POSR = bit(2);
 #else
-    digitalWrite(_cs, HIGH);
+  digitalWrite(_cs, HIGH);
 #endif
-  }
 }
 
 INLINE void Arduino_UNOPAR8::CS_LOW(void)
 {
-  if (_cs != GFX_NOT_DEFINED)
-  {
-#ifdef __AVR__
-    *_csPort &= _csPinMaskClr;
+#ifdef ARDUINO_AVR_UNO
+  PORTC &= ~_BV(3); // CS_L;
+#elif defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI)
+  R_PORT0->PORR = bit(2);
 #else
-    digitalWrite(_cs, LOW);
+  digitalWrite(_cs, LOW);
 #endif
-  }
 }
