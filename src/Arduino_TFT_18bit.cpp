@@ -350,7 +350,7 @@ void Arduino_TFT_18bit::draw16bitRGBBitmap(
   }
 }
 
-void Arduino_TFT_18bit::draw16bitRGBBitmap(
+void Arduino_TFT_18bit::draw16bitRGBBitmapWithMask(
     int16_t x, int16_t y,
     uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
@@ -370,7 +370,7 @@ void Arduino_TFT_18bit::draw16bitRGBBitmap(
       ((y + h - 1) > _max_y)    // Clip bottom
   )
   {
-    Arduino_GFX::draw16bitRGBBitmap(x, y, bitmap, mask, w, h);
+    Arduino_GFX::draw16bitRGBBitmapWithMask(x, y, bitmap, mask, w, h);
   }
   else
   {

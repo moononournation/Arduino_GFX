@@ -1542,7 +1542,7 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
   @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::draw16bitRGBBitmap(
+void Arduino_GFX::draw16bitRGBBitmapWithTranColor(
     int16_t x, int16_t y,
     uint16_t *bitmap, uint16_t transparent_color, int16_t w, int16_t h)
 {
@@ -1604,9 +1604,9 @@ void Arduino_GFX::draw16bitBeRGBBitmap(int16_t x, int16_t y,
   @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                     const uint16_t bitmap[], const uint8_t mask[],
-                                     int16_t w, int16_t h)
+void Arduino_GFX::draw16bitRGBBitmapWithMask(int16_t x, int16_t y,
+                                             const uint16_t bitmap[], const uint8_t mask[],
+                                             int16_t w, int16_t h)
 {
   int32_t offset = 0;
   int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
@@ -1647,8 +1647,8 @@ void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
   @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                     uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
+void Arduino_GFX::draw16bitRGBBitmapWithMask(int16_t x, int16_t y,
+                                             uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
   int32_t offset = 0, maskIdx = 0;
   uint8_t byte = 0;
