@@ -37,7 +37,7 @@
 Arduino_DataBus *bus = new Arduino_ESP32PAR16(
     45 /* DC */, GFX_NOT_DEFINED /* CS */, 18 /* WR */, 48 /* RD */,
     47 /* D0 */, 21 /* D1 */, 14 /* D2 */, 13 /* D3 */, 12 /* D4 */, 11 /* D5 */, 10 /* D6 */, 9 /* D7 */,
-     3 /* D8 */,  8 /* D9 */, 16 /* D10 */, 15 /* D11 */, 7 /* D12 */, 6 /* D13 */, 5 /* D14 */, 4 /* D15 */);
+    3 /* D8 */, 8 /* D9 */, 16 /* D10 */, 15 /* D11 */, 7 /* D12 */, 6 /* D13 */, 5 /* D14 */, 4 /* D15 */);
 Arduino_GFX *gfx = new Arduino_ILI9488(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, false /* IPS */);
 
 #elif defined(DRAGON_RADAR)
@@ -269,6 +269,12 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 
 #elif defined(LILYGO_T_DECK)
 #define GFX_DEV_DEVICE LILYGO_T_DECK
+#define GFX_EXTRA_PRE_INIT()                \
+  {                                         \
+    pinMode(TDECK_PERI_POWERON, OUTPUT);    \
+    digitalWrite(TDECK_PERI_POWERON, HIGH); \
+    delay(500);                             \
+  }
 #define GFX_BL 42
 Arduino_DataBus *bus = new Arduino_ESP32SPI(11 /* DC */, 12 /* CS */, 40 /* SCK */, 41 /* MOSI */, 38 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */, false /* IPS */);
