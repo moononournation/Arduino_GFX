@@ -270,6 +270,10 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 #define GFX_DEV_DEVICE LILYGO_T_DECK
 #define GFX_EXTRA_PRE_INIT()                         \
   {                                                  \
+    pinMode(39 /* TDECK_SDCARD_CS */, OUTPUT);       \
+    digitalWrite(39 /* TDECK_SDCARD_CS */, HIGH);    \
+    pinMode(9 /* TDECK_RADIO_CS */, OUTPUT);         \
+    digitalWrite(9 /* TDECK_RADIO_CS */, HIGH);      \
     pinMode(10 /* TDECK_PERI_POWERON */, OUTPUT);    \
     digitalWrite(10 /* TDECK_PERI_POWERON */, HIGH); \
     delay(500);                                      \
