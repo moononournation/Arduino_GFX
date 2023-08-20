@@ -268,11 +268,11 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 
 #elif defined(LILYGO_T_DECK)
 #define GFX_DEV_DEVICE LILYGO_T_DECK
-#define GFX_EXTRA_PRE_INIT()                \
-  {                                         \
-    pinMode(TDECK_PERI_POWERON, OUTPUT);    \
-    digitalWrite(TDECK_PERI_POWERON, HIGH); \
-    delay(500);                             \
+#define GFX_EXTRA_PRE_INIT()                         \
+  {                                                  \
+    pinMode(10 /* TDECK_PERI_POWERON */, OUTPUT);    \
+    digitalWrite(10 /* TDECK_PERI_POWERON */, HIGH); \
+    delay(500);                                      \
   }
 #define GFX_BL 42
 Arduino_DataBus *bus = new Arduino_ESP32SPI(11 /* DC */, 12 /* CS */, 40 /* SCK */, 41 /* MOSI */, 38 /* MISO */);
