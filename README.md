@@ -276,6 +276,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [ESP32-S3-RGB](https://github.com/W00ng/ESP32-S3-RGB-Panel) [[LVGL demo video](https://youtu.be/d11yUvjh34A)]
 * ESP32S3-2.1-TP
 * [ESPboy](https://www.espboy.com) [[demo video](https://youtu.be/Cx82XWrc8-0)]
+* [LILYGO T-Deck](https://www.lilygo.cc/products/t-deck) [[demo video](https://youtube.com/shorts/fXKTVqjUoPM)]
 * [LILYGO T-Display](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
 * [LILYGO T-Display-S3](https://www.lilygo.cc/products/t-display-s3) [[demo video](https://youtu.be/kpRC64QNQAo)]
 * [LILYGO T-Display-S3 AMOLED](https://www.lilygo.cc/products/t-display-s3-amoled) [[demo video](https://youtu.be/NvOGJAMlh1M)]
