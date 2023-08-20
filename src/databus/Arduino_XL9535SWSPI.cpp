@@ -17,14 +17,14 @@ bool Arduino_XL9535SWSPI::begin(int32_t, int8_t)
     if (_pwd != GFX_NOT_DEFINED)
     {
       // this->pinMode(_pwd, OUTPUT);
-      this->digitalWrite(_pwd, 1);
+      this->digitalWriteXL(_pwd, 1);
     }
     // this->pinMode(_cs, OUTPUT);
-    this->digitalWrite(_cs, 1);
+    this->digitalWriteXL(_cs, 1);
     // this->pinMode(_sck, OUTPUT);
-    this->digitalWrite(_sck, 1);
+    this->digitalWriteXL(_sck, 1);
     // this->pinMode(_mosi, OUTPUT);
-    this->digitalWrite(_mosi, 1);
+    this->digitalWriteXL(_mosi, 1);
   }
   else
   {
@@ -37,35 +37,35 @@ bool Arduino_XL9535SWSPI::begin(int32_t, int8_t)
 
 void Arduino_XL9535SWSPI::beginWrite()
 {
-  this->digitalWrite(_cs, 0);
+  this->digitalWriteXL(_cs, 0);
 }
 
 void Arduino_XL9535SWSPI::endWrite()
 {
-  this->digitalWrite(_cs, 1);
+  this->digitalWriteXL(_cs, 1);
 }
 
 void Arduino_XL9535SWSPI::writeCommand(uint8_t c)
 {
   // D/C bit, command
-  this->digitalWrite(_mosi, 0);
-  this->digitalWrite(_sck, 0);
-  this->digitalWrite(_sck, 1);
+  this->digitalWriteXL(_mosi, 0);
+  this->digitalWriteXL(_sck, 0);
+  this->digitalWriteXL(_sck, 1);
 
   uint8_t bit = 0x80;
   while (bit)
   {
     if (c & bit)
     {
-      this->digitalWrite(_mosi, 1);
+      this->digitalWriteXL(_mosi, 1);
     }
     else
     {
-      this->digitalWrite(_mosi, 0);
+      this->digitalWriteXL(_mosi, 0);
     }
-    this->digitalWrite(_sck, 0);
+    this->digitalWriteXL(_sck, 0);
     bit >>= 1;
-    this->digitalWrite(_sck, 1);
+    this->digitalWriteXL(_sck, 1);
   }
 }
 
@@ -76,24 +76,24 @@ void Arduino_XL9535SWSPI::writeCommand16(uint16_t)
 void Arduino_XL9535SWSPI::write(uint8_t d)
 {
   // D/C bit, data
-  this->digitalWrite(_mosi, 1);
-  this->digitalWrite(_sck, 0);
-  this->digitalWrite(_sck, 1);
+  this->digitalWriteXL(_mosi, 1);
+  this->digitalWriteXL(_sck, 0);
+  this->digitalWriteXL(_sck, 1);
 
   uint8_t bit = 0x80;
   while (bit)
   {
     if (d & bit)
     {
-      this->digitalWrite(_mosi, 1);
+      this->digitalWriteXL(_mosi, 1);
     }
     else
     {
-      this->digitalWrite(_mosi, 0);
+      this->digitalWriteXL(_mosi, 0);
     }
-    this->digitalWrite(_sck, 0);
+    this->digitalWriteXL(_sck, 0);
     bit >>= 1;
-    this->digitalWrite(_sck, 1);
+    this->digitalWriteXL(_sck, 1);
   }
 }
 
@@ -142,7 +142,7 @@ uint8_t Arduino_XL9535SWSPI::readRegister(uint8_t reg, uint8_t *data, size_t len
   return 0;
 }
 
-void Arduino_XL9535SWSPI::pinMode(uint8_t pin, uint8_t mode)
+void Arduino_XL9535SWSPI::pinModeXL(uint8_t pin, uint8_t mode)
 {
   if (is_found)
   {
@@ -199,7 +199,7 @@ void Arduino_XL9535SWSPI::pinMode8(uint8_t port, uint8_t pin, uint8_t mode)
   }
 }
 
-void Arduino_XL9535SWSPI::digitalWrite(uint8_t pin, uint8_t val)
+void Arduino_XL9535SWSPI::digitalWriteXL(uint8_t pin, uint8_t val)
 {
   if (is_found)
   {
@@ -226,7 +226,7 @@ void Arduino_XL9535SWSPI::digitalWrite(uint8_t pin, uint8_t val)
   }
 }
 
-int Arduino_XL9535SWSPI::digitalRead(uint8_t pin)
+int Arduino_XL9535SWSPI::digitalReadXL(uint8_t pin)
 {
   if (is_found)
   {
