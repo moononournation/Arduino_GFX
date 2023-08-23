@@ -298,6 +298,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [wireless-tag ZX2D10GE10R-V4848](https://github.com/wireless-tag-com/ZX2D10GE01R-V4848)
 * [wireless-tag ZX3D50CE02S](https://github.com/wireless-tag-com/ZX3D50CE02S)
 * [wireless-tag ZX3D95CE01S-AR](https://github.com/wireless-tag-com/ZX3D95CE01S-AR-4848)
+* [wireless-tag ZX3D95CE01S-TR](https://github.com/wireless-tag-com/ZX3D95CE01S-TR-4848) [[demo video](https://www.youtube.com/shorts/5u6_C-krK2Q)]
 
 ## Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
 
