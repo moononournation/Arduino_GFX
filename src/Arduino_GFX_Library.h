@@ -34,6 +34,7 @@
 #include "databus/Arduino_SWPAR16.h"
 #include "databus/Arduino_SWSPI.h"
 #include "databus/Arduino_XL9535SWSPI.h"
+#include "databus/Arduino_XCA9554SWSPI.h"
 
 #include "Arduino_GFX.h" // Core graphics library
 #if !defined(LITTLE_FOOT_PRINT)
