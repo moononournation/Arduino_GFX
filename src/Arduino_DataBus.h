@@ -16,6 +16,10 @@
 #define LITTLE_FOOT_PRINT // reduce program size for limited flash MCU
 #define USE_FAST_PINIO    ///< Use direct PORT register access
 typedef uint8_t ARDUINOGFX_PORT_t;
+#elif defined(ARDUINO_ARCH_AIRMCU)
+#define LITTLE_FOOT_PRINT // reduce program size for limited flash MCU
+#define USE_FAST_PINIO    ///< Use direct PORT register access
+typedef uint32_t ARDUINOGFX_PORT_t;
 #elif defined(ARDUINO_ARCH_NRF52840)
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
