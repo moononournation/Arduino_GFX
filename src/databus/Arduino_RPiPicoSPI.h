@@ -8,7 +8,7 @@
 
 #include "Arduino_DataBus.h"
 
-#define SPI_MAX_PIXELS_AT_ONCE 32
+#define RPIPICOSPI_MAX_PIXELS_AT_ONCE 32
 
 class Arduino_RPiPicoSPI : public Arduino_DataBus
 {
@@ -58,9 +58,9 @@ private:
 
   union
   {
-    uint8_t _buffer[SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
-    uint16_t _buffer16[SPI_MAX_PIXELS_AT_ONCE];
-    uint32_t _buffer32[SPI_MAX_PIXELS_AT_ONCE / 2];
+    uint8_t _buffer[RPIPICOSPI_MAX_PIXELS_AT_ONCE * 2] = {0};
+    uint16_t _buffer16[RPIPICOSPI_MAX_PIXELS_AT_ONCE];
+    uint32_t _buffer32[RPIPICOSPI_MAX_PIXELS_AT_ONCE / 2];
   };
 };
 

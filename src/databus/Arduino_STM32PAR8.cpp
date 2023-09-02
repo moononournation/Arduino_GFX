@@ -7,10 +7,8 @@ Arduino_STM32PAR8::Arduino_STM32PAR8(int8_t dc, int8_t cs, int8_t wr, int8_t rd,
 {
 }
 
-bool Arduino_STM32PAR8::begin(int32_t speed, int8_t dataMode)
+bool Arduino_STM32PAR8::begin(int32_t, int8_t)
 {
-  UNUSED(speed);
-  UNUSED(dataMode);
   set_GPIO_Port_Clock(STM_PORT(_port)); // Enable data port
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode

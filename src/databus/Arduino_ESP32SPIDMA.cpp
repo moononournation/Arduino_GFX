@@ -114,8 +114,13 @@ bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
       .sclk_io_num = _sck,
       .quadwp_io_num = -1,
       .quadhd_io_num = -1,
-      .max_transfer_sz = (SPI_MAX_PIXELS_AT_ONCE * 16) + 8,
-  };
+      .data4_io_num = -1,
+      .data5_io_num = -1,
+      .data6_io_num = -1,
+      .data7_io_num = -1,
+      .max_transfer_sz = (ESP32SPIDMA_MAX_PIXELS_AT_ONCE * 16) + 8,
+      .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
+      .intr_flags = 0};
   esp_err_t ret = spi_bus_initialize((spi_host_device_t)_spi_num, &buscfg, DMA_CHANNEL);
   if (ret != ESP_OK)
   {
@@ -136,7 +141,8 @@ bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
       .spics_io_num = -1, // avoid use system CS control
       .flags = (_miso < 0) ? (uint32_t)SPI_DEVICE_NO_DUMMY : 0,
       .queue_size = 1,
-  };
+      .pre_cb = nullptr,
+      .post_cb = nullptr};
   ret = spi_bus_add_device((spi_host_device_t)_spi_num, &devcfg, &_handle);
   if (ret != ESP_OK)
   {
@@ -447,7 +453,6 @@ void Arduino_ESP32SPIDMA::writeRepeat(uint16_t p, uint32_t len)
     uint32_t lo = 0x100 | _data16.lsb;
     uint16_t idx;
     uint8_t shift;
-    uint32_t l;
     uint16_t bufLen = (len <= 28) ? len : 28;
     int16_t xferLen;
     for (uint32_t t = 0; t < bufLen; t++)
@@ -499,7 +504,7 @@ void Arduino_ESP32SPIDMA::writeRepeat(uint16_t p, uint32_t len)
   }
   else // 8-bit SPI
   {
-    uint16_t bufLen = (len >= SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
+    uint16_t bufLen = (len >= ESP32SPIDMA_MAX_PIXELS_AT_ONCE) ? ESP32SPIDMA_MAX_PIXELS_AT_ONCE : len;
     int16_t xferLen, l;
     uint32_t c32;
     MSB_32_16_16_SET(c32, p, p);
@@ -555,7 +560,7 @@ void Arduino_ESP32SPIDMA::writePixels(uint16_t *data, uint32_t len)
     uint16_t p1, p2;
     while (len)
     {
-      l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
+      l = (len > ESP32SPIDMA_MAX_PIXELS_AT_ONCE) ? ESP32SPIDMA_MAX_PIXELS_AT_ONCE : len;
       l2 = (l + 1) >> 1;
       for (uint32_t i = 0; i < l2; ++i)
       {
@@ -608,7 +613,7 @@ void Arduino_ESP32SPIDMA::writeBytes(uint8_t *data, uint32_t len)
       uint32_t l;
       while (len)
       {
-        l = (len >= (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
+        l = (len >= (ESP32SPIDMA_MAX_PIXELS_AT_ONCE << 1)) ? (ESP32SPIDMA_MAX_PIXELS_AT_ONCE << 1) : len;
 
         _spi_tran.tx_buffer = data;
         _spi_tran.length = l << 3;
@@ -632,7 +637,7 @@ void Arduino_ESP32SPIDMA::writeBytes(uint8_t *data, uint32_t len)
       uint32_t *p;
       while (len)
       {
-        l = (len > (SPI_MAX_PIXELS_AT_ONCE << 1)) ? (SPI_MAX_PIXELS_AT_ONCE << 1) : len;
+        l = (len > (ESP32SPIDMA_MAX_PIXELS_AT_ONCE << 1)) ? (ESP32SPIDMA_MAX_PIXELS_AT_ONCE << 1) : len;
         l4 = (l + 3) >> 2;
         p = (uint32_t *)data;
         for (uint32_t i = 0; i < l4; ++i)
@@ -681,7 +686,7 @@ void Arduino_ESP32SPIDMA::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint3
     uint16_t p1, p2;
     while (len)
     {
-      l = (len > SPI_MAX_PIXELS_AT_ONCE) ? SPI_MAX_PIXELS_AT_ONCE : len;
+      l = (len > ESP32SPIDMA_MAX_PIXELS_AT_ONCE) ? ESP32SPIDMA_MAX_PIXELS_AT_ONCE : len;
       l2 = l >> 1;
       for (uint32_t i = 0; i < l2; ++i)
       {
@@ -741,7 +746,7 @@ void Arduino_ESP32SPIDMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx,
     uint16_t p;
     while (len)
     {
-      l = (len > (SPI_MAX_PIXELS_AT_ONCE >> 1)) ? (SPI_MAX_PIXELS_AT_ONCE >> 1) : len;
+      l = (len > (ESP32SPIDMA_MAX_PIXELS_AT_ONCE >> 1)) ? (ESP32SPIDMA_MAX_PIXELS_AT_ONCE >> 1) : len;
       for (uint32_t i = 0; i < l; ++i)
       {
         p = idx[*data++];
@@ -787,7 +792,7 @@ INLINE void Arduino_ESP32SPIDMA::WRITE8BIT(uint8_t d)
   uint16_t idx = _data_buf_bit_idx >> 3;
   _buffer[idx] = d;
   _data_buf_bit_idx += 8;
-  if (_data_buf_bit_idx >= (SPI_MAX_PIXELS_AT_ONCE << 4))
+  if (_data_buf_bit_idx >= (ESP32SPIDMA_MAX_PIXELS_AT_ONCE << 4))
   {
     flush_data_buf();
   }
@@ -875,11 +880,7 @@ INLINE void Arduino_ESP32SPIDMA::CS_LOW(void)
  */
 INLINE void Arduino_ESP32SPIDMA::POLL_START()
 {
-  esp_err_t ret = spi_device_polling_start(_handle, &_spi_tran, portMAX_DELAY);
-  // if (ret != ESP_OK)
-  // {
-  //   log_e("spi_device_polling_start error: %d", ret);
-  // }
+  spi_device_polling_start(_handle, &_spi_tran, portMAX_DELAY);
 }
 
 /**
@@ -889,11 +890,7 @@ INLINE void Arduino_ESP32SPIDMA::POLL_START()
  */
 INLINE void Arduino_ESP32SPIDMA::POLL_END()
 {
-  esp_err_t ret = spi_device_polling_end(_handle, portMAX_DELAY);
-  // if (ret != ESP_OK)
-  // {
-  //   log_e("spi_device_polling_end error: %d", ret);
-  // }
+  spi_device_polling_end(_handle, portMAX_DELAY);
 }
 
 #endif // #if defined(ESP32)

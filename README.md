@@ -268,7 +268,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * ESP32-2424012 [[demo video](https://youtu.be/EXw_yEMgug8)]
 * ESP32-3248S035
 * ESP32-4827A043 [[demo video](https://youtu.be/pd1DTW9QHkg)] [[LVGL demo video](https://youtu.be/L8iYjiy-DUI)]
-* [ESP32-4827S043](https://www.aliexpress.com/item/1005004788147691.html) [[demo video](https://youtu.be/60rl7QoU4Sc)] [[LVGL demo video](https://youtu.be/VvpILAVyPt8)]
+* [ESP32-4827S043](https://www.aliexpress.com/item/1005004788147691.html) [[demo video 1](https://youtu.be/60rl7QoU4Sc)] [[demo video 2](https://youtube.com/shorts/QY09u37htIk)] [[LVGL demo video](https://youtu.be/VvpILAVyPt8)]
 * [ESP32-8048S070](https://www.aliexpress.com/item/1005004952726089.html) [[LVGL demo video](https://youtu.be/7BRGVsnQpgE)]
 * [ESP32 LCDKIT](https://docs.espressif.com/projects/espressif-esp-dev-kits/en/latest/esp32/esp32-lcdkit/user_guide.html)
 * [ESP32-S3-EYE](https://github.com/espressif/esp-who/blob/master/docs/en/get-started/ESP32-S3-EYE_Getting_Started_Guide.md)
@@ -276,6 +276,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [ESP32-S3-RGB](https://github.com/W00ng/ESP32-S3-RGB-Panel) [[LVGL demo video](https://youtu.be/d11yUvjh34A)]
 * ESP32S3-2.1-TP
 * [ESPboy](https://www.espboy.com) [[demo video](https://youtu.be/Cx82XWrc8-0)]
+* [LILYGO T-Deck](https://www.lilygo.cc/products/t-deck) [[demo video](https://youtube.com/shorts/fXKTVqjUoPM)]
 * [LILYGO T-Display](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
 * [LILYGO T-Display-S3](https://www.lilygo.cc/products/t-display-s3) [[demo video](https://youtu.be/kpRC64QNQAo)]
 * [LILYGO T-Display-S3 AMOLED](https://www.lilygo.cc/products/t-display-s3-amoled) [[demo video](https://youtu.be/NvOGJAMlh1M)]
@@ -292,9 +293,12 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [seeed studio Wio Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
 * [Waveshare RP2040-LCD-1.28](https://www.waveshare.com/wiki/RP2040-LCD-1.28)
 * [wireless-tag WT-32-SC01](http://www.wireless-tag.com/portfolio/wt32-sc01/)
+* [Elecrow ESP Terminal with 3.5" parallel RGB display DLC35010R](https://www.elecrow.com/esp-terminal-with-esp32-3-5-inch-parallel-480x320-tft-capacitive-touch-display-rgb-by-chip-ili9488.html) [[demo video](https://youtu.be/QRDVuwayNFw)]
+* [Elecrow Wizee-ESP32 WZ8048C050](https://www.elecrow.com/esp32-display-5-inch-hmi-display-rgb-tft-lcd-touch-screen-support-lvgl.html)
 * [wireless-tag ZX2D10GE10R-V4848](https://github.com/wireless-tag-com/ZX2D10GE01R-V4848)
 * [wireless-tag ZX3D50CE02S](https://github.com/wireless-tag-com/ZX3D50CE02S)
 * [wireless-tag ZX3D95CE01S-AR](https://github.com/wireless-tag-com/ZX3D95CE01S-AR-4848)
+* [wireless-tag ZX3D95CE01S-TR](https://github.com/wireless-tag-com/ZX3D95CE01S-TR-4848) [[demo video](https://www.youtube.com/shorts/5u6_C-krK2Q)]
 
 ## Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
 
@@ -308,6 +312,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * HX8357A 320x480 [[demo video](https://youtu.be/wJkLO_xCTXA)] (currently only portrait works, i.e. rotation 0 and 2)
 * HX8357B (9-bit SPI) 320x480 [[demo video](https://youtu.be/pB6_LOCiUqg)]
 * HX8369A 480x800 [[demo video](https://youtu.be/sXpU8bhtXKQ)] [[LVGL demo video](https://youtu.be/q575lTuVDcU)]
+* ILI6122 (RGB) 480x800
 * ILI6485 (RGB) 480x272 [[demo video](https://youtu.be/60rl7QoU4Sc)]
 * ILI9225 176x220 [[demo video](https://youtu.be/jm2UrCG27F4)]
 * ILI9341 240x320 [[demo video](https://youtu.be/NtlEEL7MkQY)]
@@ -374,7 +379,6 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 ## Using source code come from
 
-* <http://elm-chan.org/fsw/tjpgd/00index.html>
 * <https://github.com/adafruit/Adafruit-GFX-Library.git>
 * <https://github.com/adafruit/Adafruit_ILI9341.git>
 * <https://github.com/adafruit/Adafruit-SSD1351-library.git>
@@ -389,6 +393,5 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * <https://github.com/lcdwiki/LCDWIKI_SPI.git>
 * <https://github.com/Xinyuan-LilyGO/T-RGB.git>
 * <https://github.com/lovyan03/LovyanGFX.git>
-* <https://github.com/lovyan03/M5Stack_JpgLoopAnime.git>
 * <https://github.com/nopnop2002/esp-idf-parallel-tft.git>
 * <https://github.com/olikraus/u8g2.git>

@@ -124,6 +124,9 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
 
   _rgb_panel = __containerof(_panel_handle, esp_rgb_panel_t, base);
 
+  LCD_CAM.lcd_ctrl2.lcd_vsync_idle_pol = _vsync_polarity;
+  LCD_CAM.lcd_ctrl2.lcd_hsync_idle_pol = _hsync_polarity;
+
   return (uint16_t *)_rgb_panel->fb;
 }
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)

@@ -97,10 +97,9 @@ void Arduino_ILI9225::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
   _bus->writeCommand(ILI9225_GRAM_DATA_REG); // write to RAM
 }
 
-void Arduino_ILI9225::invertDisplay(bool i)
+void Arduino_ILI9225::invertDisplay(bool)
 {
   // Not Implemented
-  UNUSED(i);
 }
 
 void Arduino_ILI9225::displayOn(void)

@@ -369,7 +369,7 @@ void Arduino_Canvas::draw16bitRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-void Arduino_Canvas::draw16bitRGBBitmap(
+void Arduino_Canvas::draw16bitRGBBitmapWithTranColor(
     int16_t x, int16_t y,
     uint16_t *bitmap, uint16_t transparent_color, int16_t w, int16_t h)
 {

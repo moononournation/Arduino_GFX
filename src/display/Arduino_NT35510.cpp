@@ -76,10 +76,9 @@ void Arduino_NT35510::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
   _bus->writeCommand16(NT35510_RAMWR); // write to RAM
 }
 
-void Arduino_NT35510::invertDisplay(bool i)
+void Arduino_NT35510::invertDisplay(bool)
 {
   // Not Implemented
-  UNUSED(i);
 }
 
 void Arduino_NT35510::displayOn(void)

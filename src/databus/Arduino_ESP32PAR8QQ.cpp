@@ -10,11 +10,8 @@ Arduino_ESP32PAR8QQ::Arduino_ESP32PAR8QQ(
 {
 }
 
-bool Arduino_ESP32PAR8QQ::begin(int32_t speed, int8_t dataMode)
+bool Arduino_ESP32PAR8QQ::begin(int32_t, int8_t)
 {
-  UNUSED(speed);
-  UNUSED(dataMode);
-
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
   if (_dc >= 32)

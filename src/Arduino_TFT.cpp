@@ -454,9 +454,12 @@ void Arduino_TFT::drawIndexedBitmap(
   {
     startWrite();
     writeAddrWindow(x, y, w, h);
-    if (x_skip == 0) {
-      _bus->writeIndexedPixels(bitmap, color_index, h*w);
-    } else {
+    if (x_skip == 0)
+    {
+      _bus->writeIndexedPixels(bitmap, color_index, h * w);
+    }
+    else
+    {
       while (h--)
       {
         _bus->writeIndexedPixels(bitmap, color_index, w);
@@ -467,8 +470,8 @@ void Arduino_TFT::drawIndexedBitmap(
   }
 }
 
-void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
-                                     uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
+void Arduino_TFT::draw16bitRGBBitmapWithMask(int16_t x, int16_t y,
+                                             uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
   if (
       ((x + w - 1) < 0) || // Outside left
@@ -486,7 +489,7 @@ void Arduino_TFT::draw16bitRGBBitmap(int16_t x, int16_t y,
       ((y + h - 1) > _max_y)    // Clip bottom
   )
   {
-    Arduino_GFX::draw16bitRGBBitmap(x, y, bitmap, mask, w, h);
+    Arduino_GFX::draw16bitRGBBitmapWithMask(x, y, bitmap, mask, w, h);
   }
   else
   {
