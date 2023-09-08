@@ -39,7 +39,7 @@ protected:
   void writeRegister(uint8_t reg, uint8_t *data, size_t len);
   uint8_t readRegister(uint8_t reg, uint8_t *data, size_t len);
 
-  uint8_t _address;
+  uint8_t _address, output_buf = 0;
   bool is_found;
 
   int8_t _rst, _cs, _sck, _mosi;
