@@ -86,6 +86,11 @@ uint16_t channelIdx(int channel)
 
 void setup()
 {
+  Serial.begin(115200);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
+  Serial.println("Arduino_GFX Wio Terminal WiFi Analyzer example");
+
   // Set WiFi to station mode and disconnect from an AP if it was previously connected
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();

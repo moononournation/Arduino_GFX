@@ -88,7 +88,7 @@ void setup(void)
   Serial.begin(115200);
   // while (!Serial);
   // Serial.setDebugOutput(true);
-  Serial.println("U8g2 RSS Reader");
+  Serial.println("Arduino_GFX U8g2 Font RSS Reader example");
 
 #ifdef GFX_EXTRA_PRE_INIT
   GFX_EXTRA_PRE_INIT();
