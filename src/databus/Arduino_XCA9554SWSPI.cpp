@@ -228,8 +228,8 @@ int Arduino_XCA9554SWSPI::digitalRead(uint8_t pin)
     int state = 0;
     uint8_t port = 0;
     this->readRegister(XCA9554_INPUT_PORT_REG, &port, 1);
-    state = (port & pin) ? HIGH : LOW;
-    return state;
+    //Serial.printf("Read 0x%02X\n", port);
+    return(port & (1UL << pin)) ? HIGH : LOW;
   }
   else
   {
