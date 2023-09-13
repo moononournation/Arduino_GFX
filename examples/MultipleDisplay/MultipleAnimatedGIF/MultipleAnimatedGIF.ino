@@ -71,7 +71,7 @@ void setup()
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
   // while(!Serial);
-  Serial.println("Arduino_GFX library Multiple Device Animated GIF Test!");
+  Serial.println("Arduino_GFX Multiple Display Animated GIF example!");
 
 #ifdef GFX_EXTRA_PRE_INIT
   GFX_EXTRA_PRE_INIT();

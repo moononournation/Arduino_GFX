@@ -1,3 +1,4 @@
+// #define DLC35010R // or called "Elecrow ESP Terminal with 3.5inch Parallel RGB Capacitive Touch Display (ILI9488)"
 // #define DRAGON_RADAR
 // #define ESP32_1732S019
 // #define ESP32_2424012
@@ -25,11 +26,22 @@
 // #define MAKERFABS_ESP32_S3_TFT_4_0
 // #define MAKERFABS_ESP32_S3_TFT_4_3_v1_3
 // #define WT32_SC01
+// #define WZ8048C050 // or called "Elecrow Wizee-ESP32"
 // #define ZX2D10GE10R_V4848
 // #define ZX3D50CE02S // or called "WT32-SC01 PLUS"
 // #define ZX3D95CE01S_AR
+// #define ZX3D95CE01S_TR
 
-#if defined(DRAGON_RADAR)
+#if defined(DLC35010R)
+#define GFX_DEV_DEVICE DLC35010R
+#define GFX_BL 46
+Arduino_DataBus *bus = new Arduino_ESP32PAR16(
+    45 /* DC */, GFX_NOT_DEFINED /* CS */, 18 /* WR */, 48 /* RD */,
+    47 /* D0 */, 21 /* D1 */, 14 /* D2 */, 13 /* D3 */, 12 /* D4 */, 11 /* D5 */, 10 /* D6 */, 9 /* D7 */,
+    3 /* D8 */, 8 /* D9 */, 16 /* D10 */, 15 /* D11 */, 7 /* D12 */, 6 /* D13 */, 5 /* D14 */, 4 /* D15 */);
+Arduino_GFX *gfx = new Arduino_ILI9488(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, false /* IPS */);
+
+#elif defined(DRAGON_RADAR)
 #define GFX_DEV_DEVICE DRAGON_RADAR
 #define GFX_BL 38
 Arduino_DataBus *bus = new Arduino_SWSPI(
@@ -40,8 +52,8 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     11 /* R0 */, 12 /* R1 */, 13 /* R2 */, 45 /* R3 */, 0 /* R4 */,
     8 /* G0 */, 19 /* G1 */, 20 /* G2 */, 46 /* G3 */, 9 /* G4 */, 10 /* G5 */,
     4 /* B0 */, 5 /* B1 */, 6 /* B2 */, 7 /* B3 */, 15 /* B4 */,
-    1 /* hsync_polarity */, 22 /* hsync_front_porch */, 3 /* hsync_pulse_width */, 45 /* hsync_back_porch */,
-    1 /* vsync_polarity */, 4 /* vsync_front_porch */, 12 /* vsync_pulse_width */, 40 /* vsync_back_porch */);
+    1 /* hsync_polarity */, 50 /* hsync_front_porch */, 1 /* hsync_pulse_width */, 30 /* hsync_back_porch */,
+    1 /* vsync_polarity */, 20 /* vsync_front_porch */, 1 /* vsync_pulse_width */, 30 /* vsync_back_porch */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
     bus, GFX_NOT_DEFINED /* RST */, st7701_type6_init_operations, sizeof(st7701_type6_init_operations));
@@ -67,7 +79,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 0 /* rota
 #elif defined(ESP32_3248S035)
 #define GFX_DEV_DEVICE ESP32_3248S035
 #define GFX_BL 27
-Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */, HSPI /* spi_num */);
+Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */, VSPI /* spi_num */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */);
 
 #elif defined(ESP32_4827A043)
@@ -89,10 +101,9 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     45 /* R0 */, 48 /* R1 */, 47 /* R2 */, 21 /* R3 */, 14 /* R4 */,
     5 /* G0 */, 6 /* G1 */, 7 /* G2 */, 15 /* G3 */, 16 /* G4 */, 4 /* G5 */,
     8 /* B0 */, 3 /* B1 */, 46 /* B2 */, 9 /* B3 */, 1 /* B4 */,
-    0 /* hsync_polarity */, 8 /* hsync_front_porch */, 4 /* hsync_pulse_width */, 43 /* hsync_back_porch */,
-    0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 12 /* vsync_back_porch */,
-    1 /* pclk_active_neg */, 9000000 /* prefer_speed */,
-    1 /* de_idle_high */, 1 /* pclk_idle_high */);
+    0 /* hsync_polarity */, 1 /* hsync_front_porch */, 1 /* hsync_pulse_width */, 43 /* hsync_back_porch */,
+    0 /* vsync_polarity */, 3 /* vsync_front_porch */, 1 /* vsync_pulse_width */, 12 /* vsync_back_porch */,
+    1 /* pclk_active_neg */, 10000000 /* prefer_speed */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 272 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 // option 2:
@@ -258,12 +269,17 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 
 #elif defined(LILYGO_T_DECK)
 #define GFX_DEV_DEVICE LILYGO_T_DECK
-#define GFX_EXTRA_PRE_INIT()          \
-  {                                   \
-    pinMode(42 /* PWD */, OUTPUT);    \
-    digitalWrite(42 /* PWD */, HIGH); \
+#define GFX_EXTRA_PRE_INIT()                         \
+  {                                                  \
+    pinMode(39 /* TDECK_SDCARD_CS */, OUTPUT);       \
+    digitalWrite(39 /* TDECK_SDCARD_CS */, HIGH);    \
+    pinMode(9 /* TDECK_RADIO_CS */, OUTPUT);         \
+    digitalWrite(9 /* TDECK_RADIO_CS */, HIGH);      \
+    pinMode(10 /* TDECK_PERI_POWERON */, OUTPUT);    \
+    digitalWrite(10 /* TDECK_PERI_POWERON */, HIGH); \
+    delay(500);                                      \
   }
-#define GFX_BL 9
+#define GFX_BL 42
 Arduino_DataBus *bus = new Arduino_ESP32SPI(11 /* DC */, 12 /* CS */, 40 /* SCK */, 41 /* MOSI */, 38 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */, false /* IPS */);
 
@@ -370,6 +386,21 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 Arduino_DataBus *bus = new Arduino_ESP32SPI(21 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, 22 /* RST */, 3 /* rotation */);
 
+#elif defined(WZ8048C050)
+#define GFX_DEV_DEVICE WZ8048C050
+#define GFX_BL 2
+// ILI6122
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    40 /* DE */, 41 /* VSYNC */, 39 /* HSYNC */, 0 /* PCLK */,
+    45 /* R0 */, 48 /* R1 */, 47 /* R2 */, 21 /* R3 */, 14 /* R4 */,
+    5 /* G0 */, 6 /* G1 */, 7 /* G2 */, 15 /* G3 */, 16 /* G4 */, 4 /* G5 */,
+    8 /* B0 */, 3 /* B1 */, 46 /* B2 */, 9 /* B3 */, 1 /* B4 */,
+    0 /* hsync_polarity */, 8 /* hsync_front_porch */, 1 /* hsync_pulse_width */, 32 /* hsync_back_porch */,
+    0 /* vsync_polarity */, 8 /* vsync_front_porch */, 1 /* vsync_pulse_width */, 8 /* vsync_back_porch */,
+    1 /* pclk_active_neg */, 16000000 /* prefer_speed */);
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+    800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
+
 #elif defined(ZX2D10GE10R_V4848)
 #define GFX_DEV_DEVICE ZX2D10GE10R_V4848
 #define GFX_BL 38
@@ -411,6 +442,20 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
     bus, GFX_NOT_DEFINED /* RST */, gc9503v_type1_init_operations, sizeof(gc9503v_type1_init_operations));
+
+#elif defined(ZX3D95CE01S_TR)
+#define GFX_DEV_DEVICE ZX3D95CE01S_TR
+#define GFX_BL 5
+Arduino_DataBus *bus = new Arduino_SWSPI(
+    GFX_NOT_DEFINED /* DC */, 38 /* CS */,
+    45 /* SCK or SCLK */, 48 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    40 /* DE */, 41 /* VSYNC */, 42 /* HSYNC */, 39 /* PCLK */,
+    18 /* R0 */, 8 /* R1 */, 3 /* R2 */, 46 /* R3 */, 10 /* R4 */,
+    14 /* G0 */, 13 /* G1 */, 12 /* G2 */, 11 /* G3 */, 16 /* G4 */, 17 /* G5 */,
+    45 /* B0 */, 48 /* B1 */, 47 /* B2 */, 0 /* B3 */, 21 /* B4 */,
+    1 /* hsync_polarity */, 8 /* hsync_front_porch */, 10 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
+    1 /* vsync_polarity */, 8 /* vsync_front_porch */, 10 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
 
 /* Wio Terminal */
 #elif defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)

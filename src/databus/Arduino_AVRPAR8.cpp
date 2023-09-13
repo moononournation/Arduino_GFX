@@ -7,11 +7,8 @@ Arduino_AVRPAR8::Arduino_AVRPAR8(int8_t dc, int8_t cs, int8_t wr, int8_t rd, uin
 {
 }
 
-bool Arduino_AVRPAR8::begin(int32_t speed, int8_t dataMode)
+bool Arduino_AVRPAR8::begin(int32_t, int8_t)
 {
-  UNUSED(speed);
-  UNUSED(dataMode);
-
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
   _dcPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_dc));

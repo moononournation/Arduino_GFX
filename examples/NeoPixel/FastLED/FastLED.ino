@@ -15,6 +15,11 @@ uint16_t w, tw;
 
 void setup(void)
 {
+  Serial.begin(115200);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
+  Serial.println("Arduino_GFX FastLED example");
+
   // Init Display
   if (!gfx->begin())
   {

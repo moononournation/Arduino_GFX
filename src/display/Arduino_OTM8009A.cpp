@@ -72,10 +72,9 @@ void Arduino_OTM8009A::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_
   _bus->writeCommand16(OTM8009A_RAMWR); // write to RAM
 }
 
-void Arduino_OTM8009A::invertDisplay(bool i)
+void Arduino_OTM8009A::invertDisplay(bool)
 {
   // Not Implemented
-  UNUSED(i);
 }
 
 void Arduino_OTM8009A::displayOn(void)

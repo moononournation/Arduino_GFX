@@ -88,7 +88,7 @@ void Arduino_RPiPicoSPI::write16(uint16_t d)
 void Arduino_RPiPicoSPI::writeRepeat(uint16_t p, uint32_t len)
 {
   MSB_16_SET(p, p);
-  uint32_t bufLen = (len < SPI_MAX_PIXELS_AT_ONCE) ? len : SPI_MAX_PIXELS_AT_ONCE;
+  uint32_t bufLen = (len < RPIPICOSPI_MAX_PIXELS_AT_ONCE) ? len : RPIPICOSPI_MAX_PIXELS_AT_ONCE;
   uint32_t xferLen;
   for (uint32_t i = 0; i < bufLen; i++)
   {
@@ -118,7 +118,7 @@ void Arduino_RPiPicoSPI::writePixels(uint16_t *data, uint32_t len)
   } t;
   while (len)
   {
-    xferLen = (len < SPI_MAX_PIXELS_AT_ONCE) ? len : SPI_MAX_PIXELS_AT_ONCE;
+    xferLen = (len < RPIPICOSPI_MAX_PIXELS_AT_ONCE) ? len : RPIPICOSPI_MAX_PIXELS_AT_ONCE;
     p = _buffer;
     for (uint32_t i = 0; i < xferLen; i++)
     {

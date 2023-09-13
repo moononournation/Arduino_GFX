@@ -5,7 +5,7 @@
 #if defined(ESP32)
 #include <driver/spi_master.h>
 
-#define SPI_MAX_PIXELS_AT_ONCE 1024
+#define ESP32SPIDMA_MAX_PIXELS_AT_ONCE 1024
 #define DMA_CHANNEL SPI_DMA_CH_AUTO
 
 class Arduino_ESP32SPIDMA : public Arduino_DataBus
@@ -69,9 +69,9 @@ private:
   uint8_t _bitOrder = SPI_MSBFIRST;
   union
   {
-    uint8_t _buffer[SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
-    uint16_t _buffer16[SPI_MAX_PIXELS_AT_ONCE];
-    uint32_t _buffer32[SPI_MAX_PIXELS_AT_ONCE / 2];
+    uint8_t _buffer[ESP32SPIDMA_MAX_PIXELS_AT_ONCE * 2] = {0};
+    uint16_t _buffer16[ESP32SPIDMA_MAX_PIXELS_AT_ONCE];
+    uint32_t _buffer32[ESP32SPIDMA_MAX_PIXELS_AT_ONCE / 2];
   };
   uint16_t _data_buf_bit_idx = 0;
 };
