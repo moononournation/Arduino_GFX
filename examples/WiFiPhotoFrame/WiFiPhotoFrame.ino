@@ -109,7 +109,7 @@ void setup()
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
   // while(!Serial);
-  Serial.println("WiFi Photo Frame");
+  Serial.println("Arduino_GFX WiFi Photo Frame example");
 
 #ifdef GFX_EXTRA_PRE_INIT
   GFX_EXTRA_PRE_INIT();

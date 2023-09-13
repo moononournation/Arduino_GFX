@@ -144,6 +144,11 @@ static int8_t scanNetworks()
 
 void setup()
 {
+  Serial.begin(115200);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
+  Serial.println("Arduino_GFX RTL WiFi Analyzer example");
+
   LwIP_Init();
   wifi_on(RTW_MODE_STA);
 

@@ -147,6 +147,11 @@ int8_t scanNetworks()
 
 void setup()
 {
+  Serial.begin(115200);
+  // Serial.setDebugOutput(true);
+  // while(!Serial);
+  Serial.println("Arduino_GFX RTL WiFi Analyzer UTF8 example");
+
   LwIP_Init();
   wifi_on(RTW_MODE_STA);
 
