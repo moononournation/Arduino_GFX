@@ -1,6 +1,7 @@
 #include "Arduino_UNOPAR8.h"
 
 // for MCUFriend UNO kind of shields. -jz-
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_UNOR4_WIFI)
 
 Arduino_UNOPAR8::Arduino_UNOPAR8()
 {
@@ -364,3 +365,5 @@ INLINE void Arduino_UNOPAR8::CS_LOW(void)
   digitalWrite(_cs, LOW);
 #endif
 }
+
+#endif // #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_UNOR4_WIFI)
