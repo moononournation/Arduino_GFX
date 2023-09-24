@@ -274,6 +274,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [ESP32 LCDKIT](https://docs.espressif.com/projects/espressif-esp-dev-kits/en/latest/esp32/esp32-lcdkit/user_guide.html)
 * [ESP32-S3-EYE](https://github.com/espressif/esp-who/blob/master/docs/en/get-started/ESP32-S3-EYE_Getting_Started_Guide.md)
 * [ESP32-S3-Box](https://www.espressif.com/en/news/ESP32-S3-BOX_video)
+* [ESP32-S3-Box-3](https://www.espressif.com/en/news/ESP32-S3-BOX-3)
 * [ESP32-S3-RGB](https://github.com/W00ng/ESP32-S3-RGB-Panel) [[LVGL demo video](https://youtu.be/d11yUvjh34A)]
 * ESP32S3-2.1-TP
 * [ESPboy](https://www.espboy.com) [[demo video](https://youtu.be/Cx82XWrc8-0)]
