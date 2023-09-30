@@ -3,14 +3,14 @@
 //#define XCA9554_DEBUG
 
 Arduino_XCA9554SWSPI::Arduino_XCA9554SWSPI(int8_t rst, int8_t cs, int8_t sck, int8_t mosi, TwoWire *wire, uint8_t i2c_addr)
-  : _rst(rst), _cs(cs), _sck(sck), _mosi(mosi), _wire(wire), _address(i2c_addr)
+  : _rst(rst), _cs(cs), _sck(sck), _mosi(mosi), _wire(wire), _i2c_addr(i2c_addr)
 {
 }
 
 bool Arduino_XCA9554SWSPI::begin(int32_t, int8_t)
 {
   _wire->begin();
-  _wire->beginTransmission(_address);
+  _wire->beginTransmission(_i2c_addr);
   if (!_wire->endTransmission())
   {
     Serial.println("Found xCA9554");
@@ -148,7 +148,7 @@ void Arduino_XCA9554SWSPI::writeRegister(uint8_t reg, uint8_t *data, size_t len)
 #ifdef XCA9554_DEBUG
   Serial.printf("Writing to $%02X: ", reg);
 #endif
-  _wire->beginTransmission(_address);
+  _wire->beginTransmission(_i2c_addr);
   _wire->write(reg);
   for (size_t i = 0; i < len; i++)
   {
@@ -165,13 +165,13 @@ void Arduino_XCA9554SWSPI::writeRegister(uint8_t reg, uint8_t *data, size_t len)
 
 uint8_t Arduino_XCA9554SWSPI::readRegister(uint8_t reg, uint8_t *data, size_t len)
 {
-  _wire->beginTransmission(_address);
+  _wire->beginTransmission(_i2c_addr);
   _wire->write(reg);
 #ifdef XCA9554_DEBUG
   Serial.printf("Read from $%02X: ", reg);
 #endif
   _wire->endTransmission();
-  _wire->requestFrom(_address, len);
+  _wire->requestFrom(_i2c_addr, len);
   size_t index = 0;
   while (index < len) {
     data[index++] = _wire->read();
@@ -225,7 +225,6 @@ int Arduino_XCA9554SWSPI::digitalRead(uint8_t pin)
 {
   if (is_found)
   {
-    int state = 0;
     uint8_t port = 0;
     this->readRegister(XCA9554_INPUT_PORT_REG, &port, 1);
     //Serial.printf("Read 0x%02X\n", port);
