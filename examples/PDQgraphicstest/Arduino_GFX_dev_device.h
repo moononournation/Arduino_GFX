@@ -142,8 +142,8 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     5 /* G0 */, 6 /* G1 */, 7 /* G2 */, 15 /* G3 */, 16 /* G4 */, 4 /* G5 */,
     8 /* B0 */, 3 /* B1 */, 46 /* B2 */, 9 /* B3 */, 1 /* B4 */,
     0 /* hsync_polarity */, 8 /* hsync_front_porch */, 4 /* hsync_pulse_width */, 8 /* hsync_back_porch */,
-    0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 8 /* vsync_back_porch */
-);
+    0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 8 /* vsync_back_porch */,
+    1 /* pclk_active_neg */, 16000000 /* prefer_speed */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 
@@ -291,16 +291,16 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 
 #elif defined(LILYGO_T_DECK)
 #define GFX_DEV_DEVICE LILYGO_T_DECK
-#define GFX_EXTRA_PRE_INIT()                         \
-  {                                                  \
-    pinMode(39 /* TDECK_SDCARD_CS */, OUTPUT);       \
-    digitalWrite(39 /* TDECK_SDCARD_CS */, HIGH);    \
-    pinMode(9 /* TDECK_RADIO_CS */, OUTPUT);         \
-    digitalWrite(9 /* TDECK_RADIO_CS */, HIGH);      \
-    pinMode(10 /* TDECK_PERI_POWERON */, OUTPUT);    \
-    digitalWrite(10 /* TDECK_PERI_POWERON */, HIGH); \
-    delay(500);                                      \
-  }
+#define GFX_EXTRA_PRE_INIT()                             \
+    {                                                    \
+        pinMode(39 /* TDECK_SDCARD_CS */, OUTPUT);       \
+        digitalWrite(39 /* TDECK_SDCARD_CS */, HIGH);    \
+        pinMode(9 /* TDECK_RADIO_CS */, OUTPUT);         \
+        digitalWrite(9 /* TDECK_RADIO_CS */, HIGH);      \
+        pinMode(10 /* TDECK_PERI_POWERON */, OUTPUT);    \
+        digitalWrite(10 /* TDECK_PERI_POWERON */, HIGH); \
+        delay(500);                                      \
+    }
 #define GFX_BL 42
 Arduino_DataBus *bus = new Arduino_ESP32SPI(11 /* DC */, 12 /* CS */, 40 /* SCK */, 41 /* MOSI */, 38 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */, false /* IPS */);
@@ -313,11 +313,11 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 23 /* RST */, 0 /* rotation */, true 
 
 #elif defined(LILYGO_T_DISPLAY_S3)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3
-#define GFX_EXTRA_PRE_INIT()          \
-  {                                   \
-    pinMode(15 /* PWD */, OUTPUT);    \
-    digitalWrite(15 /* PWD */, HIGH); \
-  }
+#define GFX_EXTRA_PRE_INIT()              \
+    {                                     \
+        pinMode(15 /* PWD */, OUTPUT);    \
+        digitalWrite(15 /* PWD */, HIGH); \
+    }
 #define GFX_BL 38
 Arduino_DataBus *bus = new Arduino_ESP32PAR8Q(
     7 /* DC */, 6 /* CS */, 8 /* WR */, 9 /* RD */,
@@ -333,10 +333,10 @@ Arduino_GFX *gfx = new Arduino_RM67162(bus, 17 /* RST */, 0 /* rotation */);
 #elif defined(LILYGO_T_RGB)
 #define GFX_DEV_DEVICE LILYGO_T_RGB
 #include <Wire.h>
-#define GFX_EXTRA_PRE_INIT()                                    \
-  {                                                             \
-    Wire.begin(8 /* SDA */, 48 /* SCL */, 800000L /* speed */); \
-  }
+#define GFX_EXTRA_PRE_INIT()                                        \
+    {                                                               \
+        Wire.begin(8 /* SDA */, 48 /* SCL */, 800000L /* speed */); \
+    }
 #define GFX_BL 46
 Arduino_DataBus *bus = new Arduino_XL9535SWSPI(8 /* SDA */, 48 /* SCL */, 2 /* XL PWD */, 3 /* XL CS */, 5 /* XL SCK */, 4 /* XL MOSI */);
 Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
@@ -353,11 +353,11 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 
 #elif defined(LILYGO_T_QT)
 #define GFX_DEV_DEVICE LILYGO_T_QT
-#define GFX_EXTRA_PRE_INIT()        \
-  {                                 \
-    pinMode(10 /* BL */, OUTPUT);   \
-    digitalWrite(10 /* BL */, LOW); \
-  }
+#define GFX_EXTRA_PRE_INIT()            \
+    {                                   \
+        pinMode(10 /* BL */, OUTPUT);   \
+        digitalWrite(10 /* BL */, LOW); \
+    }
 Arduino_DataBus *bus = new Arduino_ESP32SPI(6 /* DC */, 5 /* CS */, 3 /* SCK */, 2 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */);
 
