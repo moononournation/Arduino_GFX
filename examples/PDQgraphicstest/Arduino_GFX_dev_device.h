@@ -6,11 +6,13 @@
 // #define ESP32_3248S035
 // #define ESP32_4827A043
 // #define ESP32_4827S043
+// #define ESP32_8048S043
 // #define ESP32_8048S070
 // #define ESP32_LCDKIT_SPI
 // #define ESP32_LCDKIT_PAR8A
 // #define ESP32_LCDKIT_PAR8B
 // #define ESP32_LCDKIT_PAR16
+// #define ESP32_S3_BOX_3
 // #define ESP32_S3_EYE
 // #define ESP32_S3_RGB
 // #define ESP32_S3_RPI_DPI
@@ -131,6 +133,20 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 // Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 //     1024 /* width */, 600 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 
+#elif defined(ESP32_8048S043)
+#define GFX_DEV_DEVICE ESP32_8048S043
+#define GFX_BL 2
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    40 /* DE */, 41 /* VSYNC */, 39 /* HSYNC */, 42 /* PCLK */,
+    45 /* R0 */, 48 /* R1 */, 47 /* R2 */, 21 /* R3 */, 14 /* R4 */,
+    5 /* G0 */, 6 /* G1 */, 7 /* G2 */, 15 /* G3 */, 16 /* G4 */, 4 /* G5 */,
+    8 /* B0 */, 3 /* B1 */, 46 /* B2 */, 9 /* B3 */, 1 /* B4 */,
+    0 /* hsync_polarity */, 8 /* hsync_front_porch */, 4 /* hsync_pulse_width */, 8 /* hsync_back_porch */,
+    0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 8 /* vsync_back_porch */
+);
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+    800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
+
 #elif defined(ESP32_8048S070)
 #define GFX_DEV_DEVICE ESP32_8048S070
 #define GFX_BL 2
@@ -167,6 +183,12 @@ Arduino_DataBus *bus = new Arduino_ESP32PAR16(
     19 /* D0 */, 21 /* D1 */, 0 /* D2 */, 22 /* D3 */, 23 /* D4 */, 33 /* D5 */, 32 /* D6 */, 27 /* D7 */,
     25 /* D8 */, 26 /* D9 */, 12 /* D10 */, 13 /* D11 */, 14 /* D12 */, 15 /* D13 */, 2 /* D14 */, 4 /* D15 */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */);
+
+#elif defined(ESP32_S3_BOX_3)
+#define GFX_DEV_DEVICE ARDUINO_ESP32_S3_BOX_3
+#define GFX_BL 47
+Arduino_DataBus *bus = new Arduino_ESP32SPI(4 /* DC */, 5 /* CS */, 7 /* SCK */, 6 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_ILI9342(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */);
 
 #elif defined(ESP32_S3_EYE)
 #define GFX_DEV_DEVICE ESP32_S3_EYE

@@ -167,7 +167,7 @@ void setup()
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
   // while(!Serial);
-  Serial.println("PNG Image Viewer");
+  Serial.println("Arduino_GFX PNG Image Viewer example");
 
 #ifdef GFX_EXTRA_PRE_INIT
   GFX_EXTRA_PRE_INIT();

@@ -5,7 +5,7 @@
 
 #include "Arduino_DataBus.h"
 
-#define XCA9554_IIC_ADDRESS 0x38
+#define XCA9554_IIC_i2c_addr 0x38
 
 #define XCA9554_INPUT_PORT_REG 0x00
 #define XCA9554_OUTPUT_PORT_REG 0x01
@@ -15,7 +15,7 @@
 class Arduino_XCA9554SWSPI : public Arduino_DataBus
 {
 public:
-  Arduino_XCA9554SWSPI(int8_t rst, int8_t cs, int8_t sck, int8_t mosi, TwoWire *wire = &Wire, uint8_t i2c_addr = XCA9554_IIC_ADDRESS);
+  Arduino_XCA9554SWSPI(int8_t rst, int8_t cs, int8_t sck, int8_t mosi, TwoWire *wire = &Wire, uint8_t i2c_addr = XCA9554_IIC_i2c_addr);
 
   bool begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = GFX_NOT_DEFINED) override;
   void beginWrite() override;
@@ -39,11 +39,12 @@ protected:
   void writeRegister(uint8_t reg, uint8_t *data, size_t len);
   uint8_t readRegister(uint8_t reg, uint8_t *data, size_t len);
 
-  uint8_t _address, output_buf = 0;
+  uint8_t output_buf = 0;
   bool is_found;
 
   int8_t _rst, _cs, _sck, _mosi;
   TwoWire *_wire;
+  uint8_t _i2c_addr;
 
 private:
 };

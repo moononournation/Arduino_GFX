@@ -121,7 +121,11 @@ bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
       .max_transfer_sz = (ESP32SPIDMA_MAX_PIXELS_AT_ONCE * 16) + 8,
       .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
       .intr_flags = 0};
+#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S3
   esp_err_t ret = spi_bus_initialize((spi_host_device_t)_spi_num, &buscfg, DMA_CHANNEL);
+#else
+  esp_err_t ret = spi_bus_initialize((spi_host_device_t)(_spi_num - 1), &buscfg, DMA_CHANNEL);
+#endif
   if (ret != ESP_OK)
   {
     ESP_ERROR_CHECK(ret);
@@ -143,7 +147,11 @@ bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
       .queue_size = 1,
       .pre_cb = nullptr,
       .post_cb = nullptr};
+#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S3
   ret = spi_bus_add_device((spi_host_device_t)_spi_num, &devcfg, &_handle);
+#else
+  ret = spi_bus_add_device((spi_host_device_t)(_spi_num - 1), &devcfg, &_handle);
+#endif
   if (ret != ESP_OK)
   {
     ESP_ERROR_CHECK(ret);
