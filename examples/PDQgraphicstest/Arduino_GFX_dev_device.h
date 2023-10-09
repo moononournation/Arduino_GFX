@@ -21,8 +21,9 @@
 // #define LILYGO_T_DISPLAY
 // #define LILYGO_T_DISPLAY_S3
 // #define LILYGO_T_Display_S3_AMOLED
-// #define LILYGO_T_RGB
 // #define LILYGO_T_QT
+// #define LILYGO_T_RGB
+// #define LILYGO_T_TRACK
 // #define LILYGO_T_WATCH_2021
 // #define MAKERFABS_TFT_TOUCH_3_5
 // #define MAKERFABS_ESP32_S3_TFT_4_0
@@ -330,6 +331,16 @@ Arduino_DataBus *bus = new Arduino_ESP32QSPI(
     6 /* cs */, 47 /* sck */, 18 /* d0 */, 7 /* d1 */, 48 /* d2 */, 5 /* d3 */);
 Arduino_GFX *gfx = new Arduino_RM67162(bus, 17 /* RST */, 0 /* rotation */);
 
+#elif defined(LILYGO_T_QT)
+#define GFX_DEV_DEVICE LILYGO_T_QT
+#define GFX_EXTRA_PRE_INIT()            \
+    {                                   \
+        pinMode(10 /* BL */, OUTPUT);   \
+        digitalWrite(10 /* BL */, LOW); \
+    }
+Arduino_DataBus *bus = new Arduino_ESP32SPI(6 /* DC */, 5 /* CS */, 3 /* SCK */, 2 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */);
+
 #elif defined(LILYGO_T_RGB)
 #define GFX_DEV_DEVICE LILYGO_T_RGB
 #include <Wire.h>
@@ -351,15 +362,17 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
     bus, GFX_NOT_DEFINED /* RST */, st7701_type4_init_operations, sizeof(st7701_type4_init_operations));
 
-#elif defined(LILYGO_T_QT)
-#define GFX_DEV_DEVICE LILYGO_T_QT
-#define GFX_EXTRA_PRE_INIT()            \
-    {                                   \
-        pinMode(10 /* BL */, OUTPUT);   \
-        digitalWrite(10 /* BL */, LOW); \
+#elif defined(LILYGO_T_TRACK)
+#define GFX_DEV_DEVICE LILYGO_T_TRACK
+#define GFX_EXTRA_PRE_INIT()               \
+    {                                      \
+        pinMode(4 /* POWER */, OUTPUT);    \
+        digitalWrite(4 /* POWER */, HIGH); \
     }
-Arduino_DataBus *bus = new Arduino_ESP32SPI(6 /* DC */, 5 /* CS */, 3 /* SCK */, 2 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
-Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /* IPS */);
+Arduino_DataBus *bus = new Arduino_ESP32SPIDMA(7 /* DC */, 9 /* CS */, 5 /* SCK */, 6 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_G *g = new Arduino_JD9613(bus, 8 /* RST */);
+Arduino_GFX *gfx = new Arduino_Canvas(126 /* width */, 294 /* height */, g, 0, 0, 3);
+#define CANVAS
 
 #elif defined(LILYGO_T_WATCH_2021)
 #define GFX_DEV_DEVICE LILYGO_T_WATCH_2021
