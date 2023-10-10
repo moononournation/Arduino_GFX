@@ -11,13 +11,16 @@
 class Arduino_Canvas_Indexed : public Arduino_GFX
 {
 public:
-  Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *output, int16_t output_x = 0, int16_t output_y = 0, uint8_t mask_level = 0);
+  Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *output, int16_t output_x = 0, int16_t output_y = 0, uint8_t rotation = 0, uint8_t mask_level = 0);
   ~Arduino_Canvas_Indexed();
 
   bool begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
   void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
+  void writeFastVLineCore(int16_t x, int16_t y, int16_t h, uint8_t idx);
   void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
+  void writeFastHLineCore(int16_t x, int16_t y, int16_t w, uint8_t idx);
+  void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) override;
   void drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h, int16_t x_skip = 0) override;
   void drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, uint8_t chroma_key, int16_t w, int16_t h, int16_t x_skip = 0) override;
   void flush(void) override;
@@ -34,6 +37,8 @@ protected:
   uint8_t *_framebuffer = nullptr;
   Arduino_G *_output = nullptr;
   int16_t _output_x, _output_y;
+  int16_t MAX_X, MAX_Y;
+
   uint16_t _color_index[COLOR_IDX_SIZE];
   uint8_t _indexed_size = 0;
   bool _isDirectUseColorIndex = false;

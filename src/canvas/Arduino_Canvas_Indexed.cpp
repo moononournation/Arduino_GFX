@@ -4,9 +4,13 @@
 #include "../Arduino_GFX.h"
 #include "Arduino_Canvas_Indexed.h"
 
-Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *output, int16_t output_x, int16_t output_y, uint8_t mask_level)
+Arduino_Canvas_Indexed::Arduino_Canvas_Indexed(int16_t w, int16_t h, Arduino_G *output, int16_t output_x, int16_t output_y, uint8_t r, uint8_t mask_level)
     : Arduino_GFX(w, h), _output(output), _output_x(output_x), _output_y(output_y)
 {
+  MAX_X = WIDTH - 1;
+  MAX_Y = HEIGHT - 1;
+  setRotation(r);
+
   if (mask_level >= MAXMASKLEVEL)
   {
     mask_level = MAXMASKLEVEL - 1;
@@ -59,27 +63,81 @@ bool Arduino_Canvas_Indexed::begin(int32_t speed)
 
 void Arduino_Canvas_Indexed::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
+  uint8_t idx;
   if (_isDirectUseColorIndex)
   {
-    _framebuffer[((int32_t)y * _width) + x] = (uint8_t)color;
+    idx = (uint8_t)color;
   }
   else
   {
-    _framebuffer[((int32_t)y * _width) + x] = get_color_index(color);
+    idx = get_color_index(color);
+  }
+
+  uint8_t *fb = _framebuffer;
+  switch (_rotation)
+  {
+  case 1:
+    fb += (int32_t)x * _height;
+    fb += _max_y - y;
+    *fb = idx;
+    break;
+  case 2:
+    fb += (int32_t)(_max_y - y) * _width;
+    fb += _max_x - x;
+    *fb = idx;
+    break;
+  case 3:
+    fb += (int32_t)(_max_x - x) * _height;
+    fb += y;
+    *fb = idx;
+    break;
+  default: // case 0:
+    fb += (int32_t)y * _width;
+    fb += x;
+    *fb = idx;
   }
 }
 
 void Arduino_Canvas_Indexed::writeFastVLine(int16_t x, int16_t y,
                                             int16_t h, uint16_t color)
 {
-  if (_ordered_in_range(x, 0, _max_x) && h)
+  uint8_t idx;
+  if (_isDirectUseColorIndex)
+  {
+    idx = (uint8_t)color;
+  }
+  else
+  {
+    idx = get_color_index(color);
+  }
+
+  switch (_rotation)
+  {
+  case 1:
+    writeFastHLineCore(_height - y - h, x, h, idx);
+    break;
+  case 2:
+    writeFastVLineCore(_max_x - x, _height - y - h, h, idx);
+    break;
+  case 3:
+    writeFastHLineCore(y, _max_x - x, h, idx);
+    break;
+  default: // case 0:
+    writeFastVLineCore(x, y, h, idx);
+  }
+}
+
+void Arduino_Canvas_Indexed::writeFastVLineCore(int16_t x, int16_t y,
+                                                int16_t h, uint8_t idx)
+{
+  if (_ordered_in_range(x, 0, MAX_X) && h)
   { // X on screen, nonzero height
     if (h < 0)
     {             // If negative height...
       y += h + 1; //   Move Y to top edge
       h = -h;     //   Use positive height
     }
-    if (y <= _max_y)
+    if (y <= MAX_Y)
     { // Not off bottom
       int16_t y2 = y + h - 1;
       if (y2 >= 0)
@@ -90,26 +148,16 @@ void Arduino_Canvas_Indexed::writeFastVLine(int16_t x, int16_t y,
           y = 0;
           h = y2 + 1;
         } // Clip top
-        if (y2 > _max_y)
+        if (y2 > MAX_Y)
         {
-          h = _max_y - y + 1;
+          h = MAX_Y - y + 1;
         } // Clip bottom
 
-        uint8_t idx;
-        if (_isDirectUseColorIndex)
-        {
-          idx = color;
-        }
-        else
-        {
-          idx = get_color_index(color);
-        }
-
-        uint8_t *fb = _framebuffer + ((int32_t)y * _width) + x;
+        uint8_t *fb = _framebuffer + ((int32_t)y * WIDTH) + x;
         while (h--)
         {
           *fb = idx;
-          fb += _width;
+          fb += WIDTH;
         }
       }
     }
@@ -119,14 +167,43 @@ void Arduino_Canvas_Indexed::writeFastVLine(int16_t x, int16_t y,
 void Arduino_Canvas_Indexed::writeFastHLine(int16_t x, int16_t y,
                                             int16_t w, uint16_t color)
 {
-  if (_ordered_in_range(y, 0, _max_y) && w)
+  uint8_t idx;
+  if (_isDirectUseColorIndex)
+  {
+    idx = (uint8_t)color;
+  }
+  else
+  {
+    idx = get_color_index(color);
+  }
+
+  switch (_rotation)
+  {
+  case 1:
+    writeFastVLineCore(_max_y - y, x, w, idx);
+    break;
+  case 2:
+    writeFastHLineCore(_width - x - w, _max_y - y, w, idx);
+    break;
+  case 3:
+    writeFastVLineCore(y, _width - x - w, w, idx);
+    break;
+  default: // case 0:
+    writeFastHLineCore(x, y, w, idx);
+  }
+}
+
+void Arduino_Canvas_Indexed::writeFastHLineCore(int16_t x, int16_t y,
+                                                int16_t w, uint8_t idx)
+{
+  if (_ordered_in_range(y, 0, MAX_Y) && w)
   { // Y on screen, nonzero width
     if (w < 0)
     {             // If negative width...
       x += w + 1; //   Move X to left edge
       w = -w;     //   Use positive width
     }
-    if (x <= _max_x)
+    if (x <= MAX_X)
     { // Not off right
       int16_t x2 = x + w - 1;
       if (x2 >= 0)
@@ -137,22 +214,12 @@ void Arduino_Canvas_Indexed::writeFastHLine(int16_t x, int16_t y,
           x = 0;
           w = x2 + 1;
         } // Clip left
-        if (x2 > _max_x)
+        if (x2 > MAX_X)
         {
-          w = _max_x - x + 1;
+          w = MAX_X - x + 1;
         } // Clip right
 
-        uint8_t idx;
-        if (_isDirectUseColorIndex)
-        {
-          idx = color;
-        }
-        else
-        {
-          idx = get_color_index(color);
-        }
-
-        uint8_t *fb = _framebuffer + ((int32_t)y * _width) + x;
+        uint8_t *fb = _framebuffer + ((int32_t)y * WIDTH) + x;
         while (w--)
         {
           *(fb++) = idx;
@@ -162,79 +229,153 @@ void Arduino_Canvas_Indexed::writeFastHLine(int16_t x, int16_t y,
   }
 }
 
+void Arduino_Canvas_Indexed::writeFillRectPreclipped(int16_t x, int16_t y,
+                                                     int16_t w, int16_t h, uint16_t color)
+{
+  uint8_t idx;
+  if (_isDirectUseColorIndex)
+  {
+    idx = (uint8_t)color;
+  }
+  else
+  {
+    idx = get_color_index(color);
+  }
+
+  if (_rotation > 0)
+  {
+    int16_t t = x;
+    switch (_rotation)
+    {
+    case 1:
+      x = WIDTH - y - h;
+      y = t;
+      t = w;
+      w = h;
+      h = t;
+      break;
+    case 2:
+      x = WIDTH - x - w;
+      y = HEIGHT - y - h;
+      break;
+    case 3:
+      x = y;
+      y = HEIGHT - t - w;
+      t = w;
+      w = h;
+      h = t;
+      break;
+    }
+  }
+  // log_i("adjusted writeFillRectPreclipped(x: %d, y: %d, w: %d, h: %d)", x, y, w, h);
+  uint8_t *row = _framebuffer;
+  row += y * WIDTH;
+  row += x;
+  for (int j = 0; j < h; j++)
+  {
+    for (int i = 0; i < w; i++)
+    {
+      row[i] = idx;
+    }
+    row += WIDTH;
+  }
+}
+
 void Arduino_Canvas_Indexed::drawIndexedBitmap(
     int16_t x, int16_t y,
     uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h, int16_t x_skip)
 {
-  if (
-      ((x + w - 1) < 0) || // Outside left
-      ((y + h - 1) < 0) || // Outside top
-      (x > _max_x) ||      // Outside right
-      (y > _max_y)         // Outside bottom
-  )
+  if (_rotation > 0)
   {
-    return;
-  }
-  else
-  {
-    if ((y + h - 1) > _max_y)
+    if (!_isDirectUseColorIndex)
     {
-      h -= (y + h - 1) - _max_y;
-    }
-    if (y < 0)
-    {
-      bitmap -= y * w;
-      h += y;
-      y = 0;
-    }
-    if ((x + w - 1) > _max_x)
-    {
-      x_skip += (x + w - 1) - _max_x;
-      w -= (x + w - 1) - _max_x;
-    }
-    if (x < 0)
-    {
-      bitmap -= x;
-      x_skip -= x;
-      w += x;
-      x = 0;
-    }
-    uint8_t *row = _framebuffer;
-    row += y * _width;
-    row += x;
-    int16_t i;
-    int16_t wi;
-    if (_isDirectUseColorIndex)
-    {
-      while (h--)
-      {
-        i = 0;
-        wi = w;
-        while (wi >= 4)
-        {
-          *((uint32_t *)&row[i]) = *((uint32_t *)bitmap);
-          i += 4;
-          wi -= 4;
-          bitmap += 4;
-        }
-        while (i < w)
-        {
-          row[i++] = *bitmap++;
-        }
-        bitmap += x_skip;
-        row += _width;
-      }
+      Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, w, h, x_skip);
     }
     else
     {
-      while (h--)
+      int32_t offset = 0;
+      for (int16_t j = 0; j < h; j++, y++)
       {
-        for (int i = 0; i < w; i++)
+        for (int16_t i = 0; i < w; i++)
         {
-          row[i] = get_color_index(color_index[*bitmap++]);
+          writePixel(x + i, y, bitmap[offset++]);
         }
-        bitmap += x_skip;
-        row += _width;
+        offset += x_skip;
+      }
+    }
+  }
+  else
+  {
+    if (
+        ((x + w - 1) < 0) || // Outside left
+        ((y + h - 1) < 0) || // Outside top
+        (x > _max_x) ||      // Outside right
+        (y > _max_y)         // Outside bottom
+    )
+    {
+      return;
+    }
+    else
+    {
+      if ((y + h - 1) > _max_y)
+      {
+        h -= (y + h - 1) - _max_y;
+      }
+      if (y < 0)
+      {
+        bitmap -= y * w;
+        h += y;
+        y = 0;
+      }
+      if ((x + w - 1) > _max_x)
+      {
+        x_skip += (x + w - 1) - _max_x;
+        w -= (x + w - 1) - _max_x;
+      }
+      if (x < 0)
+      {
+        bitmap -= x;
+        x_skip -= x;
+        w += x;
+        x = 0;
+      }
+      uint8_t *row = _framebuffer;
+      row += y * _width;
+      row += x;
+      int16_t i;
+      int16_t wi;
+      if (_isDirectUseColorIndex)
+      {
+        while (h--)
+        {
+          i = 0;
+          wi = w;
+          while (wi >= 4)
+          {
+            *((uint32_t *)&row[i]) = *((uint32_t *)bitmap);
+            i += 4;
+            wi -= 4;
+            bitmap += 4;
+          }
+          while (i < w)
+          {
+            row[i++] = *bitmap++;
+          }
+          bitmap += x_skip;
+          row += _width;
+        }
+      }
+      else
+      {
+        while (h--)
+        {
+          for (int i = 0; i < w; i++)
+          {
+            row[i] = get_color_index(color_index[*bitmap++]);
+          }
+          bitmap += x_skip;
+          row += _width;
+        }
       }
     }
   }
@@ -244,73 +385,100 @@ void Arduino_Canvas_Indexed::drawIndexedBitmap(
     int16_t x, int16_t y,
     uint8_t *bitmap, uint16_t *color_index, uint8_t chroma_key, int16_t w, int16_t h, int16_t x_skip)
 {
-  if (
-      ((x + w - 1) < 0) || // Outside left
-      ((y + h - 1) < 0) || // Outside top
-      (x > _max_x) ||      // Outside right
-      (y > _max_y)         // Outside bottom
-  )
+  if (_rotation > 0)
   {
-    return;
-  }
-  else
-  {
-    if ((y + h - 1) > _max_y)
+    if (!_isDirectUseColorIndex)
     {
-      h -= (y + h - 1) - _max_y;
-    }
-    if (y < 0)
-    {
-      bitmap -= y * w;
-      h += y;
-      y = 0;
-    }
-    if ((x + w - 1) > _max_x)
-    {
-      x_skip += (x + w - 1) - _max_x;
-      w -= (x + w - 1) - _max_x;
-    }
-    if (x < 0)
-    {
-      bitmap -= x;
-      x_skip -= x;
-      w += x;
-      x = 0;
-    }
-    uint8_t *row = _framebuffer;
-    row += y * _width;
-    row += x;
-    uint8_t color_key;
-    if (_isDirectUseColorIndex)
-    {
-      while (h--)
-      {
-        for (int i = 0; i < w; i++)
-        {
-          color_key = *bitmap++;
-          if (color_key != chroma_key)
-          {
-            row[i] = color_key;
-          }
-        }
-        bitmap += x_skip;
-        row += _width;
-      }
+      Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, chroma_key, w, h, x_skip);
     }
     else
     {
-      while (h--)
+      int32_t offset = 0;
+      uint8_t color_key;
+      for (int16_t j = 0; j < h; j++, y++)
       {
-        for (int i = 0; i < w; i++)
+        for (int16_t i = 0; i < w; i++)
         {
-          color_key = *bitmap++;
+          color_key = bitmap[offset++];
           if (color_key != chroma_key)
           {
-            row[i] = get_color_index(color_index[color_key]);
+            writePixel(x + i, y, color_key);
           }
         }
-        bitmap += x_skip;
-        row += _width;
+        offset += x_skip;
+      }
+    }
+  }
+  else
+  {
+    if (
+        ((x + w - 1) < 0) || // Outside left
+        ((y + h - 1) < 0) || // Outside top
+        (x > _max_x) ||      // Outside right
+        (y > _max_y)         // Outside bottom
+    )
+    {
+      return;
+    }
+    else
+    {
+      if ((y + h - 1) > _max_y)
+      {
+        h -= (y + h - 1) - _max_y;
+      }
+      if (y < 0)
+      {
+        bitmap -= y * w;
+        h += y;
+        y = 0;
+      }
+      if ((x + w - 1) > _max_x)
+      {
+        x_skip += (x + w - 1) - _max_x;
+        w -= (x + w - 1) - _max_x;
+      }
+      if (x < 0)
+      {
+        bitmap -= x;
+        x_skip -= x;
+        w += x;
+        x = 0;
+      }
+      uint8_t *row = _framebuffer;
+      row += y * _width;
+      row += x;
+      uint8_t color_key;
+      if (_isDirectUseColorIndex)
+      {
+        while (h--)
+        {
+          for (int i = 0; i < w; i++)
+          {
+            color_key = *bitmap++;
+            if (color_key != chroma_key)
+            {
+              row[i] = color_key;
+            }
+          }
+          bitmap += x_skip;
+          row += _width;
+        }
+      }
+      else
+      {
+        while (h--)
+        {
+          for (int i = 0; i < w; i++)
+          {
+            color_key = *bitmap++;
+            if (color_key != chroma_key)
+            {
+              row[i] = get_color_index(color_index[color_key]);
+            }
+          }
+          bitmap += x_skip;
+          row += _width;
+        }
       }
     }
   }
@@ -318,7 +486,7 @@ void Arduino_Canvas_Indexed::drawIndexedBitmap(
 
 void Arduino_Canvas_Indexed::flush()
 {
-  _output->drawIndexedBitmap(_output_x, _output_y, _framebuffer, _color_index, _width, _height);
+  _output->drawIndexedBitmap(_output_x, _output_y, _framebuffer, _color_index, WIDTH, HEIGHT);
 }
 
 uint8_t *Arduino_Canvas_Indexed::getFramebuffer()
@@ -358,7 +526,7 @@ uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)
   return _indexed_size++;
 }
 
-uint16_t Arduino_Canvas_Indexed::get_index_color(uint8_t idx)
+INLINE uint16_t Arduino_Canvas_Indexed::get_index_color(uint8_t idx)
 {
   return _color_index[idx];
 }
