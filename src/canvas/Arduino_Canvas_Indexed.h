@@ -44,7 +44,7 @@ protected:
   uint16_t mask_level_list[MAXMASKLEVEL] = {
       0b1111111111111111, // 16-bit, 65536 colors
       0b1111011110011110, // 12-bit, 4096 colors
-      0b1100011000011000  // 7-bit, 128 colors
+      0b1100011100011000  // 7-bit, 128 colors
   };
 
 private:
