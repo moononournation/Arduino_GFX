@@ -566,11 +566,11 @@ void Arduino_Canvas::flushQuad(void)
 {
   int16_t y = _output_y;
   uint16_t *row1 = _framebuffer;
-  uint16_t *row2 = _framebuffer + _width;
+  uint16_t *row2 = _framebuffer + WIDTH;
   if (_output)
   {
-    int16_t hQuad = _height / 2;
-    int16_t wQuad = _width / 2;
+    int16_t hQuad = HEIGHT / 2;
+    int16_t wQuad = WIDTH / 2;
     if (!_rowBuf)
     {
       _rowBuf = (uint16_t *)malloc(wQuad * 2);
@@ -587,8 +587,8 @@ void Arduino_Canvas::flushQuad(void)
         _rowBuf[i] = p;
       }
       _output->draw16bitRGBBitmap(_output_x, _output_y + y++, _rowBuf, wQuad, 1);
-      row1 += _width;
-      row2 += _width;
+      row1 += WIDTH;
+      row2 += WIDTH;
     }
   }
 }
