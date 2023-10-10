@@ -1434,8 +1434,8 @@ void Arduino_GFX::drawIndexedBitmap(
       {
         writePixel(x + i, y, color_index[color_key]);
       }
-      offset += x_skip;
     }
+    offset += x_skip;
   }
   endWrite();
 }
