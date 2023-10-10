@@ -31,7 +31,6 @@ public:
 
 protected:
   uint16_t *_framebuffer = nullptr;
-  size_t _framebuffer_size;
   Arduino_G *_output = nullptr;
   int16_t _output_x, _output_y;
   int16_t MAX_X, MAX_Y;
