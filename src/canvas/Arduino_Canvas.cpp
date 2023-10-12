@@ -263,7 +263,7 @@ void Arduino_Canvas::drawIndexedBitmap(
     }
     if (y < 0)
     {
-      bitmap -= y * w;
+      bitmap -= y * (w + x_skip);
       h += y;
       y = 0;
     }
@@ -329,7 +329,7 @@ void Arduino_Canvas::drawIndexedBitmap(
     }
     if (y < 0)
     {
-      bitmap -= y * w;
+      bitmap -= y * (w + x_skip);
       h += y;
       y = 0;
     }

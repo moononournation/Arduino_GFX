@@ -315,7 +315,7 @@ void Arduino_RGB_Display::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitma
       }
       if (y < 0)
       {
-        bitmap -= y * w;
+        bitmap -= y * (w + x_skip);
         h += y;
         y = 0;
       }
