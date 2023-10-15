@@ -300,6 +300,28 @@ public:
 
   /**********************************************************************/
   /*!
+    @brief  Set text bound for printing
+    @param  x    X coordinate in pixels
+    @param  y    Y coordinate in pixels
+  */
+  void setTextBound(int16_t x, int16_t y, int16_t w, int16_t h)
+  {
+    _min_text_x = (x < 0) ? 0 : x;
+    _min_text_y = (y < 0) ? 0 : y;
+    _max_text_x = x + w - 1;
+    if (_max_text_x > _max_x)
+    {
+      _max_text_x = _max_x;
+    }
+    _max_text_y = y + h - 1;
+    if (_max_text_y > _max_y)
+    {
+      _max_text_y = _max_y;
+    }
+  }
+
+  /**********************************************************************/
+  /*!
     @brief   Set text font color with transparant background
     @param   c   16-bit 5-6-5 Color to draw text with
     @note    For 'transparent' background, background and foreground
@@ -392,10 +414,14 @@ public:
 protected:
   void charBounds(char c, int16_t *x, int16_t *y, int16_t *minx, int16_t *miny, int16_t *maxx, int16_t *maxy);
   int16_t
-      _width,   ///< Display width as modified by current rotation
-      _height,  ///< Display height as modified by current rotation
-      _max_x,   ///< x zero base bound (_width - 1)
-      _max_y,   ///< y zero base bound (_height - 1)
+      _width,  ///< Display width as modified by current rotation
+      _height, ///< Display height as modified by current rotation
+      _max_x,  ///< x zero base bound (_width - 1)
+      _max_y,  ///< y zero base bound (_height - 1)
+      _min_text_x,
+      _min_text_y,
+      _max_text_x,
+      _max_text_y,
       cursor_x, ///< x location to start print()ing text
       cursor_y; ///< y location to start print()ing text
   uint16_t

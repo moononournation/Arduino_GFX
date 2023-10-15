@@ -747,10 +747,10 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color
     block_h = yAdvance * textsize_y;
     int16_t x1 = (xo < 0) ? (x + xo) : x;
     if (
-        (x1 < 0) ||                             // Clip left
-        ((y - baseline) < 0) ||                 // Clip top
-        ((x1 + block_w - 1) > _max_x) ||        // Clip right
-        ((y - baseline + block_h - 1) > _max_y) // Clip bottom
+        (x1 < _min_text_x) ||                        // Clip left
+        ((y - baseline) < _min_text_y) ||            // Clip top
+        ((x1 + block_w - 1) > _max_text_x) ||        // Clip right
+        ((y - baseline + block_h - 1) > _max_text_y) // Clip bottom
     )
     {
       // partial draw char by parent class
@@ -884,10 +884,10 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color
     block_w = 6 * textsize_x;
     block_h = 8 * textsize_y;
     if (
-        (x < 0) ||                      // Clip left
-        (y < 0) ||                      // Clip top
-        ((x + block_w - 1) > _max_x) || // Clip right
-        ((y + block_h - 1) > _max_y)    // Clip bottom
+        (x < _min_text_x) ||                 // Clip left
+        (y < _min_text_y) ||                 // Clip top
+        ((x + block_w - 1) > _max_text_x) || // Clip right
+        ((y + block_h - 1) > _max_text_y)    // Clip bottom
     )
     {
       // partial draw char by parent class
