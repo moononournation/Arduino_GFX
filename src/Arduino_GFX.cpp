@@ -2591,7 +2591,7 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
   {
     if (c == '\n') // Newline
     {
-      *x = 0; // Reset x to zero, advance y by one line
+      *x = _min_text_x; // Reset x to zero, advance y by one line
       *y += (int16_t)textsize_y * (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
     }
     else if (c != '\r') // Not a carriage return; is normal char
@@ -2691,7 +2691,7 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
     {
       if (_encoding == '\n')
       {
-        *x = 0;
+        *x = _min_text_x;
         *y += (int16_t)textsize_y * _u8g2_max_char_height;
       }
       else if (_encoding != '\r')
@@ -2808,7 +2808,7 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
   {
     if (c == '\n')
     {                       // Newline?
-      *x = 0;               // Reset x to zero,
+      *x = _min_text_x;     // Reset x to zero,
       *y += textsize_y * 8; // advance y one line
                             // min/max x/y unchaged -- that waits for next 'normal' character
     }
