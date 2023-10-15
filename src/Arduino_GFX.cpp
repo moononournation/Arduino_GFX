@@ -2606,9 +2606,9 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
                 xa = pgm_read_byte(&glyph->xAdvance);
         int8_t xo = pgm_read_byte(&glyph->xOffset),
                yo = pgm_read_byte(&glyph->yOffset);
-        if (wrap && ((*x + ((xo + gw) * textsize_x) - 1) > _max_x))
+        if (wrap && ((*x + ((xo + gw) * textsize_x) - 1) > _max_text_x))
         {
-          *x = 0; // Reset x to zero, advance y by one line
+          *x = _min_text_x; // Reset x to zero, advance y by one line
           *y += (int16_t)textsize_y * (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
         }
         int16_t x1 = *x + ((int16_t)xo * textsize_x),
@@ -2771,9 +2771,9 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
 
           if (_u8g2_char_width > 0)
           {
-            if (wrap && ((*x + (textsize_x * _u8g2_char_width) - 1) > _max_x))
+            if (wrap && ((*x + (textsize_x * _u8g2_char_width) - 1) > _max_text_x))
             {
-              *x = 0;
+              *x = _min_text_x;
               *y += (int16_t)textsize_y * _u8g2_max_char_height;
             }
           }
@@ -2814,9 +2814,9 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
     }
     else if (c != '\r') // Normal char; ignore carriage returns
     {
-      if (wrap && ((*x + (textsize_x * 6) - 1) > _max_x)) // Off right?
+      if (wrap && ((*x + (textsize_x * 6) - 1) > _max_text_x)) // Off right?
       {
-        *x = 0;               // Reset x to zero,
+        *x = _min_text_x;     // Reset x to zero,
         *y += textsize_y * 8; // advance y one line
       }
       int16_t x2 = *x + textsize_x * 6 - 1; // Lower-right pixel of char
