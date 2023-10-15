@@ -1959,7 +1959,7 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
 void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                            uint16_t color, uint16_t bg)
 {
-  int16_t block_w, block_h, curX, curY, curH;
+  int16_t block_w, block_h, curX, curY, curW, curH;
 
 #if !defined(ATTINY_CORE)
   if (gfxFont) // custom font
@@ -2005,29 +2005,67 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
     startWrite();
     if (bg != color) // have background color
     {
-      writeFillRect(x, y - (baseline * textsize_y), block_w, block_h, bg);
-    }
-    for (yy = 0; yy < h; yy++)
-    {
-      for (xx = 0; xx < w; xx++)
+      curW = block_w;
+      while ((x + curW - 1) > _max_text_x)
       {
-        if (!(bit++ & 7))
+        curW -= textsize_x;
+      }
+      curY = y - (baseline * textsize_y);
+      curH = block_h;
+      while ((curY + curH - 1) > _max_text_y)
+      {
+        curH -= textsize_y;
+      }
+      writeFillRectPreclipped(x, curY, curW, curH, bg);
+    }
+    if (textsize_x == 1 && textsize_y == 1)
+    {
+      curY = y + yo;
+      for (yy = 0; yy < h; ++yy, ++curY)
+      {
+        if (curY <= _max_text_y)
         {
-          bits = pgm_read_byte(&bitmap[bo++]);
+          curX = x + xo;
+          for (xx = 0; xx < w; ++xx, ++curX, bits <<= 1)
+          {
+            if (!(bit++ & 7))
+            {
+              bits = pgm_read_byte(&bitmap[bo++]);
+            }
+            if (curX <= _max_text_x)
+            {
+              if (bits & 0x80)
+              {
+                writePixelPreclipped(curX, curY, color);
+              }
+            }
+          }
         }
-        if (bits & 0x80)
+      }
+    }
+    else // (textsize_x > 1 || textsize_y > 1)
+    {
+      curY = y + (yo16 * textsize_y);
+      for (yy = 0; yy < h; ++yy, curY += textsize_y)
+      {
+        if ((curY + textsize_y - 1) <= _max_text_y)
         {
-          if (textsize_x == 1 && textsize_y == 1)
+          curX = x + (xo16 * textsize_x);
+          for (xx = 0; xx < w; ++xx, curX += textsize_x, bits <<= 1)
           {
-            writePixel(x + xo + xx, y + yo + yy, color);
-          }
-          else
-          {
-            writeFillRect(x + (xo16 + xx) * textsize_x, y + (yo16 + yy) * textsize_y,
-                          textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
+            if (!(bit++ & 7))
+            {
+              bits = pgm_read_byte(&bitmap[bo++]);
+            }
+            if ((curX + textsize_x - 1) <= _max_text_x)
+            {
+              if (bits & 0x80)
+              {
+                writeFillRectPreclipped(curX, curY, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
+              }
+            }
           }
         }
-        bits <<= 1;
       }
     }
     endWrite();
@@ -2085,16 +2123,16 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
     startWrite();
     if (textsize_x == 1 && textsize_y == 1)
     {
-      for (int8_t i = 0; i < 5; i++) // Char bitmap = 5 columns
+      curX = x;
+      for (int8_t i = 0; i < 5; ++i, ++curX) // Char bitmap = 5 columns
       {
-        curX = x + i;
-        if ((curX >= _min_text_x) && (curX <= _max_text_x))
+        uint8_t line = pgm_read_byte(&font[c * 5 + i]);
+        if (curX <= _max_text_x)
         {
-          uint8_t line = pgm_read_byte(&font[c * 5 + i]);
-          for (int8_t j = 0; j < 8; j++, line >>= 1)
+          curY = y;
+          for (int8_t j = 0; j < 8; ++j, ++curY, line >>= 1)
           {
-            curY = y + j;
-            if ((curY >= _min_text_y) && (curY <= _max_text_y))
+            if (curY <= _max_text_y)
             {
               if (line & 1)
               {
@@ -2120,16 +2158,16 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
     }
     else // (textsize_x > 1 || textsize_y > 1)
     {
-      for (int8_t i = 0; i < 5; i++) // Char bitmap = 5 columns
+      curX = x;
+      for (int8_t i = 0; i < 5; ++i, curX += textsize_x) // Char bitmap = 5 columns
       {
-        curX = x + (i * textsize_x);
-        if ((curX >= _min_text_x) && ((curX + textsize_x - 1) <= _max_text_x))
+        if ((curX + textsize_x - 1) <= _max_text_x)
         {
           uint8_t line = pgm_read_byte(&font[c * 5 + i]);
           curY = y;
-          for (int8_t j = 0; j < 8; j++, line >>= 1)
+          for (int8_t j = 0; j < 8; j++, line >>= 1, curY += textsize_y)
           {
-            if ((curY >= _min_text_y) && ((curY + textsize_y - 1) <= _max_text_y))
+            if ((curY + textsize_y - 1) <= _max_text_y)
             {
               if (line & 1)
               {
@@ -2148,7 +2186,6 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
               {
                 writeFillRectPreclipped(curX, curY, textsize_x, textsize_y, bg);
               }
-              curY += textsize_y;
             }
           }
         }
