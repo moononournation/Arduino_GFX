@@ -191,6 +191,7 @@ public:
   virtual void invertDisplay(bool i);
   virtual void displayOn();
   virtual void displayOff();
+  bool enableRoundMode();
 
   // BASIC DRAW API
   // These MAY be overridden by the subclass to provide device-specific
@@ -479,6 +480,10 @@ protected:
       WIDTH,  ///< This is the 'raw' display width - never changes
       HEIGHT; ///< This is the 'raw' display height - never changes
 #endif        // defined(LITTLE_FOOT_PRINT)
+
+  bool _isRoundMode = false;
+  int16_t *_roundMinX;
+  int16_t *_roundMaxX;
 };
 
 #endif // _ARDUINO_GFX_H_

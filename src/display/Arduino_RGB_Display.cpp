@@ -355,6 +355,22 @@ void Arduino_RGB_Display::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitma
 void Arduino_RGB_Display::draw16bitRGBBitmap(int16_t x, int16_t y,
                                              uint16_t *bitmap, int16_t w, int16_t h)
 {
+  if (_isRoundMode)
+  {
+    if (
+        ((y + h - 1) < 0) || // Outside top
+        (y > _max_y) ||      // Outside bottom
+        (
+            (x > _roundMaxX[y + h - 1]) &&        // top left
+            ((x + w - 1) < _roundMinX[y]) &&      // top right
+            (x > _roundMaxX[y + h - 1]) &&        // bottom left
+            ((x + w - 1) < _roundMinX[y + h - 1]) // bottom right
+            ))
+    {
+      return;
+    }
+  }
+
   bool result;
 
   switch (_rotation)

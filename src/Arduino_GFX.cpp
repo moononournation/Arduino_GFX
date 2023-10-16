@@ -142,9 +142,19 @@ INLINE void Arduino_GFX::startWrite()
 
 void Arduino_GFX::writePixel(int16_t x, int16_t y, uint16_t color)
 {
-  if (_ordered_in_range(x, 0, _max_x) && _ordered_in_range(y, 0, _max_y))
+  if (_ordered_in_range(y, 0, _max_y))
   {
-    writePixelPreclipped(x, y, color);
+    if (_isRoundMode)
+    {
+      if (_ordered_in_range(x, _roundMinX[y], _roundMaxX[y]))
+      {
+        writePixelPreclipped(x, y, color);
+      }
+    }
+    else if (_ordered_in_range(x, 0, _max_x))
+    {
+      writePixelPreclipped(x, y, color);
+    }
   }
 }
 
@@ -2990,4 +3000,80 @@ void Arduino_GFX::displayOn()
 /**************************************************************************/
 void Arduino_GFX::displayOff()
 {
+}
+
+/**************************************************************************/
+/*!
+  @brief  Enable Round Mode For Round Display
+*/
+/**************************************************************************/
+bool Arduino_GFX::enableRoundMode()
+{
+  if (WIDTH != HEIGHT)
+  {
+    return false;
+  }
+  else
+  {
+    // startWrite();
+    _isRoundMode = true;
+    _roundMinX = (int16_t *)malloc(HEIGHT * sizeof(int16_t));
+    _roundMaxX = (int16_t *)malloc(HEIGHT * sizeof(int16_t));
+
+    int32_t xt, yt, s, i;
+    int16_t r = (WIDTH >> 1);
+    int32_t r2 = r * r;
+
+    i = -1;
+    xt = 0;
+    yt = r;
+    s = (r2 << 1) + r2 * (1 - (r << 1));
+    do
+    {
+      while (s < 0)
+      {
+        s += r2 * ((++xt << 2) + 2);
+      }
+      // writePixelPreclipped(r - xt, r - yt, RED);
+      _roundMinX[r - yt] = r - xt - 1;
+      // writePixelPreclipped(r - xt, r + yt - 1, RED);
+      _roundMinX[r + yt - 1] = r - xt - 1;
+      // writePixelPreclipped(r + xt - 1, r - yt, BLUE);
+      _roundMaxX[r - yt] = r + xt;
+      // writePixelPreclipped(r + xt - 1, r + yt - 1, BLUE);
+      _roundMaxX[r + yt - 1] = r + xt;
+      i = xt;
+      s -= (--yt) * r2 << 2;
+    } while (r2 * xt <= r2 * yt);
+
+    s = 1 - r;
+    int16_t ddF_x = 1;
+    int16_t ddF_y = -2 * r;
+    xt = 0;
+    yt = r;
+    while (xt < yt)
+    {
+      if (s >= 0)
+      {
+        yt--;
+        ddF_y += 2;
+        s += ddF_y;
+      }
+      xt++;
+      ddF_x += 2;
+      s += ddF_x;
+
+      // writePixel(r - yt, r + xt - 1, RED);
+      _roundMinX[r + xt - 1] = r - yt - 1;
+      // writePixel(r - yt, r - xt, RED);
+      _roundMinX[r - xt] = r - yt - 1;
+      // writePixel(r + yt - 1, r + xt - 1, BLUE);
+      _roundMaxX[r + xt - 1] = r + yt;
+      // writePixel(r + yt - 1, r - xt, BLUE);
+      _roundMaxX[r - xt] = r + yt;
+    }
+    // endWrite();
+
+    return true;
+  }
 }
