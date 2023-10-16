@@ -394,9 +394,7 @@ void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 void Arduino_GFX::drawCircle(int16_t x, int16_t y,
                              int16_t r, uint16_t color)
 {
-  startWrite();
   drawEllipseHelper(x, y, r, r, 0xf, color);
-  endWrite();
 }
 
 /**************************************************************************/
@@ -420,14 +418,16 @@ void Arduino_GFX::drawEllipseHelper(int32_t x, int32_t y,
   }
   if (ry == 0)
   {
-    drawFastHLine(x - rx, y, (ry << 2) + 1, color);
+    writeFastHLine(x - rx, y, (ry << 2) + 1, color);
     return;
   }
   if (rx == 0)
   {
-    drawFastVLine(x, y - ry, (rx << 2) + 1, color);
+    writeFastVLine(x, y - ry, (rx << 2) + 1, color);
     return;
   }
+
+  startWrite();
 
   int32_t xt, yt, s, i;
   int32_t rx2 = rx * rx;
@@ -488,6 +488,8 @@ void Arduino_GFX::drawEllipseHelper(int32_t x, int32_t y,
     i = yt;
     s -= (--xt) * ry2 << 2;
   } while (rx2 * yt <= ry2 * xt);
+
+  endWrite();
 }
 
 /**************************************************************************/
@@ -502,9 +504,7 @@ void Arduino_GFX::drawEllipseHelper(int32_t x, int32_t y,
 void Arduino_GFX::fillCircle(int16_t x, int16_t y,
                              int16_t r, uint16_t color)
 {
-  startWrite();
   fillEllipseHelper(x, y, r, r, 3, 0, color);
-  endWrite();
 }
 
 /**************************************************************************/
@@ -529,14 +529,16 @@ void Arduino_GFX::fillEllipseHelper(int32_t x, int32_t y,
   }
   if (ry == 0)
   {
-    drawFastHLine(x - rx, y, (ry << 2) + 1, color);
+    writeFastHLine(x - rx, y, (ry << 2) + 1, color);
     return;
   }
   if (rx == 0)
   {
-    drawFastVLine(x, y - ry, (rx << 2) + 1, color);
+    writeFastVLine(x, y - ry, (rx << 2) + 1, color);
     return;
   }
+
+  startWrite();
 
   int32_t xt, yt, i;
   int32_t rx2 = (int32_t)rx * rx;
@@ -585,6 +587,8 @@ void Arduino_GFX::fillEllipseHelper(int32_t x, int32_t y,
     }
     s -= (--yt) * rx2 << 2;
   } while (ry2 * xt <= rx2 * yt);
+
+  endWrite();
 }
 
 /**************************************************************************/
@@ -601,9 +605,7 @@ void Arduino_GFX::fillEllipseHelper(int32_t x, int32_t y,
 /**************************************************************************/
 void Arduino_GFX::drawEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color)
 {
-  startWrite();
   drawEllipseHelper(x, y, rx, ry, 0xf, color);
-  endWrite();
 }
 
 /**************************************************************************/
@@ -620,9 +622,7 @@ void Arduino_GFX::drawEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint
 /**************************************************************************/
 void Arduino_GFX::fillEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color)
 {
-  startWrite();
   fillEllipseHelper(x, y, rx, ry, 3, 0, color);
-  endWrite();
 }
 
 /**************************************************************************/
@@ -660,15 +660,15 @@ void Arduino_GFX::drawArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float st
     end += 360.0;
 
   startWrite();
-  fillArcHelper(x, y, r1, r2, start, start, color);
-  fillArcHelper(x, y, r1, r2, end, end, color);
+  writeFillArcHelper(x, y, r1, r2, start, start, color);
+  writeFillArcHelper(x, y, r1, r2, end, end, color);
   if (!equal && (fabsf(start - end) <= 0.0001))
   {
     start = .0;
     end = 360.0;
   }
-  fillArcHelper(x, y, r1, r1, start, end, color);
-  fillArcHelper(x, y, r2, r2, start, end, color);
+  writeFillArcHelper(x, y, r1, r1, start, end, color);
+  writeFillArcHelper(x, y, r2, r2, start, end, color);
   endWrite();
 }
 
@@ -712,7 +712,7 @@ void Arduino_GFX::fillArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float st
   }
 
   startWrite();
-  fillArcHelper(x, y, r1, r2, start, end, color);
+  writeFillArcHelper(x, y, r1, r2, start, end, color);
   endWrite();
 }
 
@@ -728,7 +728,7 @@ void Arduino_GFX::fillArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float st
   @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
-void Arduino_GFX::fillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t iradius, float start, float end, uint16_t color)
+void Arduino_GFX::writeFillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t iradius, float start, float end, uint16_t color)
 {
   if ((start == 90.0) || (start == 180.0) || (start == 270.0) || (start == 360.0))
   {
