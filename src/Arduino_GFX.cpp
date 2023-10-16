@@ -1879,6 +1879,7 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
   uint8_t lx = _u8g2_dx;
   uint8_t ly = _u8g2_dy;
 
+  int16_t curW;
   for (;;)
   {
     /* calculate the number of pixel to the right edge of the glyph */
@@ -1901,13 +1902,21 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
       y = _u8g2_target_y + ly;
 
       /* draw foreground and background (if required) */
-      if (is_foreground)
+      if ((x <= _max_text_x) && (y <= _max_text_y))
       {
-        writeFastHLine(x, y, current, color);
-      }
-      else if (bg != color)
-      {
-        writeFastHLine(x, y, current, bg);
+        curW = current;
+        if ((x + curW - 1) > _max_text_x)
+        {
+          curW = _max_text_x - x + 1;
+        }
+        if (is_foreground)
+        {
+          writeFillRectPreclipped(x, y, curW, 1, color);
+        }
+        else if (bg != color)
+        {
+          writeFillRectPreclipped(x, y, curW, 1, bg);
+        }
       }
     }
     else
@@ -1917,15 +1926,23 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
       y = _u8g2_target_y + (ly * textsize_y);
 
       /* draw foreground and background (if required) */
-      if (is_foreground)
+      if (((x + textsize_x - 1) <= _max_text_x) && ((y + textsize_y - 1) <= _max_text_y))
       {
-        writeFillRect(x, y, (current * textsize_x) - text_pixel_margin,
-                      textsize_y - text_pixel_margin, color);
-      }
-      else if (bg != color)
-      {
-        writeFillRect(x, y, (current * textsize_x) - text_pixel_margin,
-                      textsize_y - text_pixel_margin, bg);
+        curW = current * textsize_x;
+        while ((x + curW - 1) > _max_text_x)
+        {
+          curW -= textsize_x;
+        }
+        if (is_foreground)
+        {
+          writeFillRectPreclipped(x, y, curW - text_pixel_margin,
+                                  textsize_y - text_pixel_margin, color);
+        }
+        else if (bg != color)
+        {
+          writeFillRectPreclipped(x, y, curW - text_pixel_margin,
+                                  textsize_y - text_pixel_margin, bg);
+        }
       }
     }
 
@@ -1990,9 +2007,10 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 
     block_w = xAdvance * textsize_x;
     block_h = yAdvance * textsize_y;
+    curY = y - (baseline * textsize_y);
     if (
         (x > _max_text_x) ||                 // Clip right
-        (y > _max_text_y) ||                 // Clip bottom
+        (curY > _max_text_y) ||              // Clip bottom
         ((x + block_w - 1) < _min_text_x) || // Clip left
         ((y + block_h - 1) < _min_text_y)    // Clip top
     )
@@ -2010,7 +2028,6 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
       {
         curW -= textsize_x;
       }
-      curY = y - (baseline * textsize_y);
       curH = block_h;
       while ((curY + curH - 1) > _max_text_y)
       {
@@ -2075,12 +2092,17 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 #if defined(U8G2_FONT_SUPPORT)
       if (u8g2Font)
   {
+    _u8g2_target_y = y - ((_u8g2_char_height + _u8g2_char_y) * textsize_y);
+    if (_u8g2_target_y > _max_text_y)
+    {
+      return;
+    }
+
     if ((_u8g2_decode_ptr) && (_u8g2_char_width > 0))
     {
       uint8_t a, b;
 
       _u8g2_target_x = x + (_u8g2_char_x * textsize_x);
-      _u8g2_target_y = y - ((_u8g2_char_height + _u8g2_char_y) * textsize_y);
       // log_d("_u8g2_target_x: %d, _u8g2_target_y: %d", _u8g2_target_x, _u8g2_target_y);
 
       /* reset local x/y position */

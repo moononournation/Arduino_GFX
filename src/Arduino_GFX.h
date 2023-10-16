@@ -467,8 +467,8 @@ protected:
 
   int8_t _u8g2_dx;
   int8_t _u8g2_dy;
-  uint16_t _u8g2_target_x;
-  uint16_t _u8g2_target_y;
+  int16_t _u8g2_target_x;
+  int16_t _u8g2_target_y;
 
   const uint8_t *_u8g2_decode_ptr;
   uint8_t _u8g2_decode_bit_pos;
