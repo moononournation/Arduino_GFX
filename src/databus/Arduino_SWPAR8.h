@@ -98,7 +98,7 @@ private:
   ARDUINOGFX_PORT_t _dcPinMask;
   ARDUINOGFX_PORT_t _csPinMask;
   ARDUINOGFX_PORT_t _wrPinMask;
-  ARDUINOGFX_PORT_t _rdPinMask;
+
   ARDUINOGFX_PORT_t _d0PinMask;
   ARDUINOGFX_PORT_t _d1PinMask;
   ARDUINOGFX_PORT_t _d2PinMask;

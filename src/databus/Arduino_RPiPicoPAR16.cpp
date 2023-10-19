@@ -29,11 +29,6 @@ bool Arduino_RPiPicoPAR16::begin(int32_t speed, int8_t dataMode)
   {
     pinMode(_rd, OUTPUT);
     digitalWrite(_rd, HIGH);
-    _rdPinMask = digitalPinToBitMask(_rd);
-  }
-  else
-  {
-    _rdPinMask = 0;
   }
 
   pinMode(0, OUTPUT);

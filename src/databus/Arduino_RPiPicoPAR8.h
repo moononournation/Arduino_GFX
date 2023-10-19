@@ -41,7 +41,6 @@ private:
   uint32_t _dcPinMask;  ///< Bitmask
   uint32_t _csPinMask;  ///< Bitmask
   uint32_t _wrPinMask;  ///< Bitmask
-  uint32_t _rdPinMask;  ///< Bitmask
   uint32_t _dataClrMask;
 };
 
