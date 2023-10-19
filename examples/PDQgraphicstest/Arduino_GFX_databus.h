@@ -1,7 +1,7 @@
 // General software SPI
 // Arduino_DataBus *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 
-// hardware SPI
+// hardware SPI (default DataBus, comment below block if you are not using hardware SPI)
 #if defined(ARDUINO_ARCH_NRF52840)
 // Arduino_DataBus *bus = new Arduino_mbedSPI(TFT_DC, TFT_CS);
 Arduino_DataBus *bus = new Arduino_NRFXSPI(TFT_DC, TFT_CS, 13 /* SCK */, 11 /* MOSI */, 12 /* MISO */);
@@ -21,16 +21,19 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 #endif
 
 // General Software parallel 8-bit
-// Arduino_DataBus *bus = new Arduino_SWPAR8(TFT_DC, TFT_CS, 25 /* WR */, 32 /* RD */, 23 /* D0 */, 19 /* D1 */, 18 /* D2 */, 26 /* D3 */, 21 /* D4 */, 4 /* D5 */, 0 /* D6 */, 2 /* D7 */);
+// Arduino_DataBus *bus = new Arduino_SWPAR8(A2 /* DC */, A3 /* CS */, A1 /* WR */, A0 /* RD */, 8 /* D0 */, 9 /* D1 */, 2 /* D2 */, 3 /* D3 */, 4 /* D4 */, 5 /* D5 */, 6 /* D6 */, 7 /* D7 */);
 
 // General Software parallel 16-bit
 // Arduino_DataBus *bus = new Arduino_SWPAR16(32 /* DC */, GFX_NOT_DEFINED /* CS */, 21 /* WR */, GFX_NOT_DEFINED /* RD */, 19 /* D0 */, 23 /* D1 */, 18 /* D2 */, 5 /* D3 */, 17 /* D4 */, 16 /* D5 */, 25 /* D6 */, 26 /* D7 */, 27 /* D8 */, 14 /* D9 */, 12 /* D10 */, 13 /* D11 */, 15 /* D12 */, 2 /* D13 */, 0 /* D14 */, 4 /* D15 */);
 
-// AVR parallel 8-bit
+// Arduino UNO / UNO R4 MINIMA / UNO R4 WIFI parallel 8-bit
+// Arduino_DataBus *bus = new Arduino_UNOPAR8();
+
+// AVR PORT parallel 8-bit
 // Arduino Pro Micro port 2(PB): 17, 15, 16, 14, 8, 9, 10, 11
 // Arduino_DataBus *bus = new Arduino_AVRPAR8(4 /* DC */, 5 /* CS */, 18 /* WR */, 19 /* RD */, 2 /* PORT */);
 
-// AVR parallel 16-bit
+// AVR PORT parallel 16-bit
 // Arduino MEGA 2560
 // port 3(PC): 37, 36, 35, 34, 33, 32, 31, 30
 // port 1(PA): 22, 23, 24, 25, 26, 27, 28, 29

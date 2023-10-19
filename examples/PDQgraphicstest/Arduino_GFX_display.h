@@ -50,7 +50,7 @@
 // ILI9225 LCD 176x220
 // Arduino_GFX *gfx = new Arduino_ILI9225(bus, TFT_RST);
 
-// ILI9341 LCD 240x320
+// ILI9341 LCD 240x320 (default Display, comment below line if you are not using ILI9341)
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* IPS */);
 
 // ILI9342 LCD 320x240
