@@ -34,15 +34,7 @@ bool Arduino_AVRPAR8::begin(int32_t, int8_t)
   {
     pinMode(_rd, OUTPUT);
     digitalWrite(_rd, HIGH); // Disable RD
-    _rdPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_rd));
-    _rdPinMaskSet = digitalPinToBitMask(_rd);
   }
-  else
-  {
-    _rdPort = _dcPort;
-    _rdPinMaskSet = 0;
-  }
-  _rdPinMaskClr = ~_rdPinMaskSet;
 
   *(portModeRegister(_port)) = 0xFF;
   _dataPort = portOutputRegister(_port);

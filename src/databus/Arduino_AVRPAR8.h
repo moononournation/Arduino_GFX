@@ -47,10 +47,6 @@ private:
   ARDUINOGFX_PORT_t _wrPinMaskSet;   ///< Bitmask for data/command SET (OR)
   ARDUINOGFX_PORT_t _wrPinMaskClr;   ///< Bitmask for data/command CLEAR (AND)
 
-  PORTreg_t _rdPort;                 ///< PORT register for data/command
-  ARDUINOGFX_PORT_t _rdPinMaskSet;   ///< Bitmask for data/command SET (OR)
-  ARDUINOGFX_PORT_t _rdPinMaskClr;   ///< Bitmask for data/command CLEAR (AND)
-
   PORTreg_t _dataPort;                 ///< PORT register for data/command
 };
 

@@ -38,15 +38,7 @@ bool Arduino_RTLPAR8::begin(int32_t, int8_t)
   {
     pinMode(_rd, OUTPUT);
     digitalWrite(_rd, HIGH);
-    _rdPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_rd));
-    _rdPinMaskSet = digitalPinToBitMask(_rd);
   }
-  else
-  {
-    _rdPort = _dcPort;
-    _rdPinMaskSet = 0;
-  }
-  _rdPinMaskClr = ~_rdPinMaskSet;
 
   // TODO: check pin in same port
   pinMode(_d0, OUTPUT);

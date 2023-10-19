@@ -713,12 +713,7 @@ bool Arduino_SWPAR16::begin(int32_t, int8_t)
   _wrPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_wr));
   _wrPinMaskSet = digitalPinToBitMask(_wr);
   _wrPinMaskClr = ~_wrPinMaskSet;
-  if (_rd != GFX_NOT_DEFINED)
-  {
-    _rdPort = (PORTreg_t)portOutputRegister(digitalPinToPort(_rd));
-    _rdPinMaskSet = digitalPinToBitMask(_rd);
-    _rdPinMaskClr = ~_rdPinMaskSet;
-  }
+
   _d0Port = (PORTreg_t)portOutputRegister(digitalPinToPort(_d0));
   _d0PinMaskSet = digitalPinToBitMask(_d0);
   _d0PinMaskClr = ~_d0PinMaskSet;
@@ -1243,46 +1238,6 @@ INLINE void Arduino_SWPAR16::WR_LOW(void)
 #else  // !USE_FAST_PINIO
   digitalWrite(_wr, LOW);
 #endif // end !USE_FAST_PINIO
-}
-
-INLINE void Arduino_SWPAR16::RD_HIGH(void)
-{
-  if (_rd != GFX_NOT_DEFINED)
-  {
-#if defined(USE_FAST_PINIO)
-#if defined(HAS_PORT_SET_CLR)
-#if defined(KINETISK)
-    *_rdPortSet = 1;
-#else  // !KINETISK
-    *_rdPortSet = _rdPinMask;
-#endif // end !KINETISK
-#else  // !HAS_PORT_SET_CLR
-    *_rdPort |= _rdPinMaskSet;
-#endif // end !HAS_PORT_SET_CLR
-#else  // !USE_FAST_PINIO
-    digitalWrite(_rd, HIGH);
-#endif // end !USE_FAST_PINIO
-  }
-}
-
-INLINE void Arduino_SWPAR16::RD_LOW(void)
-{
-  if (_rd != GFX_NOT_DEFINED)
-  {
-#if defined(USE_FAST_PINIO)
-#if defined(HAS_PORT_SET_CLR)
-#if defined(KINETISK)
-    *_rdPortClr = 1;
-#else  // !KINETISK
-    *_rdPortClr = _rdPinMask;
-#endif // end !KINETISK
-#else  // !HAS_PORT_SET_CLR
-    *_rdPort &= _rdPinMaskClr;
-#endif // end !HAS_PORT_SET_CLR
-#else  // !USE_FAST_PINIO
-    digitalWrite(_rd, LOW);
-#endif // end !USE_FAST_PINIO
-  }
 }
 
 INLINE void Arduino_SWPAR16::D0_HIGH(void)

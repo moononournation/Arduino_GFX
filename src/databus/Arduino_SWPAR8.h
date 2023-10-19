@@ -39,8 +39,7 @@ private:
   INLINE void CS_LOW(void);
   INLINE void WR_HIGH(void);
   INLINE void WR_LOW(void);
-  INLINE void RD_HIGH(void);
-  INLINE void RD_LOW(void);
+
   INLINE void D0_HIGH(void);
   INLINE void D0_LOW(void);
   INLINE void D1_HIGH(void);
@@ -113,7 +112,7 @@ private:
   PORTreg_t _dcPort;
   PORTreg_t _csPort;
   PORTreg_t _wrPort;
-  PORTreg_t _rdPort;
+
   PORTreg_t _d0Port;
   PORTreg_t _d1Port;
   PORTreg_t _d2Port;
