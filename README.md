@@ -34,7 +34,7 @@ gfx->println("Hello World!");
 
 ## U8g2 Font Support
 
-[U8g2](https://github.com/olikraus/u8g2.git) proivided various font type and stored in compressed format. So U8g2 font gives more UI design possibilities and still can fit in the MCU limited storage space. Using U8g2 font in Arduino_GFX simply include U8g2lib.h before Arduino_GFX_Library.h:
+[U8g2](https://github.com/olikraus/u8g2.git) provided various font type and stored in compressed format. So U8g2 font gives more UI design possibilities and still can fit in the MCU limited storage space. Using U8g2 font in Arduino_GFX simply include U8g2lib.h before Arduino_GFX_Library.h:
 
 ```C
 #include <U8g2lib.h>
