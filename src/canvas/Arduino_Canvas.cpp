@@ -189,7 +189,6 @@ void Arduino_Canvas::writeFastHLineCore(int16_t x, int16_t y,
         } // Clip right
 
         uint16_t *fb = _framebuffer + ((int32_t)y * WIDTH) + x;
-        int16_t writeSize = w * 2;
         while (w--)
         {
           *(fb++) = color;
