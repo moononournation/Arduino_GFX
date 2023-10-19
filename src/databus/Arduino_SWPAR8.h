@@ -76,8 +76,6 @@ private:
   PORTreg_t _csPortClr;
   PORTreg_t _wrPortSet;
   PORTreg_t _wrPortClr;
-  PORTreg_t _rdPortSet;
-  PORTreg_t _rdPortClr;
   PORTreg_t _d0PortSet;
   PORTreg_t _d0PortClr;
   PORTreg_t _d1PortSet;
