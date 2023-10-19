@@ -3020,11 +3020,10 @@ bool Arduino_GFX::enableRoundMode()
     _roundMinX = (int16_t *)malloc(HEIGHT * sizeof(int16_t));
     _roundMaxX = (int16_t *)malloc(HEIGHT * sizeof(int16_t));
 
-    int32_t xt, yt, s, i;
+    int32_t xt, yt, s;
     int16_t r = (WIDTH >> 1);
     int32_t r2 = r * r;
 
-    i = -1;
     xt = 0;
     yt = r;
     s = (r2 << 1) + r2 * (1 - (r << 1));
@@ -3042,7 +3041,6 @@ bool Arduino_GFX::enableRoundMode()
       _roundMaxX[r - yt] = r + xt;
       // writePixelPreclipped(r + xt - 1, r + yt - 1, BLUE);
       _roundMaxX[r + yt - 1] = r + xt;
-      i = xt;
       s -= (--yt) * r2 << 2;
     } while (r2 * xt <= r2 * yt);
 
