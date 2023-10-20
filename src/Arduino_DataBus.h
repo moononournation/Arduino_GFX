@@ -12,7 +12,10 @@
 #define GFX_STR_HELPER(x) #x
 #define GFX_STR(x) GFX_STR_HELPER(x)
 
-#if defined(__AVR__)
+#if defined(ARDUINO_AVR_MEGA2560)
+#define USE_FAST_PINIO    ///< Use direct PORT register access
+typedef uint8_t ARDUINOGFX_PORT_t;
+#elif defined(__AVR__)
 #define LITTLE_FOOT_PRINT // reduce program size for limited flash MCU
 #define USE_FAST_PINIO    ///< Use direct PORT register access
 typedef uint8_t ARDUINOGFX_PORT_t;
@@ -24,6 +27,10 @@ typedef uint32_t ARDUINOGFX_PORT_t;
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
 typedef uint32_t ARDUINOGFX_PORT_t;
+#elif defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI)
+#define USE_FAST_PINIO   ///< Use direct PORT register access
+#define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
+typedef uint16_t ARDUINOGFX_PORT_t;
 #elif defined(TARGET_RP2040)
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
@@ -130,11 +137,11 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
     (var) = ((uint32_t)a[0] << 8 | a[1] | a[2] << 24 | a[3] << 16); \
   }
 
-#if defined(ESP32)
+#if !defined(LITTLE_FOOT_PRINT)
 #define INLINE __attribute__((always_inline)) inline
 #else
 #define INLINE inline
-#endif
+#endif // !defined(LITTLE_FOOT_PRINT)
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
 #include <esp_lcd_panel_io.h>

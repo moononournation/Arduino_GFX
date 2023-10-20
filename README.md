@@ -129,7 +129,6 @@ bdfconv -v -f 1 -b 1 -m "0-4294967295" Cubic_11_1.013_R.bdf -o u8g2_font_cubic11
 ./bdfconv -v -f 1 -b 1 -m "0-4294967295" quan.bdf -o u8g2_font_quan7_h_cjk.h -n u8g2_font_quan7_h_cjk
 ```
 
-
 #### [unifont_jp-14.0.02](http://unifoundry.com/pub/unifont/unifont-14.0.02/font-builds/unifont_jp-14.0.02.bdf.gz)
 
 ##### u8g2_font_unifont_h_utf8
@@ -243,9 +242,13 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 * Ameba RTL8722DM Board (AMB 21)
 * Ameba RTL8722DM MINI Board (AMB 23)
+* Arduino Mega 2560 [[demo video](https://youtu.be/Hn2cTNrkOSM)]
 * Arduino Nano
 * Arduino Nano BLE 33
 * Arduino Pro Micro
+* Arduino UNO
+* Arduino UNO R4 Minima [[demo video](https://youtu.be/M1TuEU5uPb0)]
+* Arduino UNO R4 WiFi [[demo video](https://youtu.be/GB90AFSLIFo)]
 * ESP8266 Series
 * ESP32 Series
 * ESP32-C3 Series
@@ -256,10 +259,6 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * rtlduino BW16 (by Ai-Thinker)
 * Sony Spresense
 * WeAct BlackPill V2.0 (BlackPill F411CE)
-
-## Tobe Support Dev Board (Sponsors can make it happen)
-
-* Arduino ATMega2560
 
 ## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
 
@@ -305,34 +304,35 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 ## Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
 
-* GC9A01 round display 240x240 [[demo video](https://youtu.be/kJrAFm20-zg)]
+* GC9A01 240x240 round display [[demo video](https://youtu.be/kJrAFm20-zg)]
 * GC9106 80x160 [[demo video](https://youtu.be/RToGeeb1jxQ)]
 * GC9107 128x128 [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM)]
-* GC9503V (RGB) 480x480 [[demo video](https://youtube.com/shorts/hk7ZMBRCmjI)]
+* GC9503V 480x480 (RGB) [[demo video](https://youtube.com/shorts/hk7ZMBRCmjI)]
 * HX8347C 240x320 [[demo video](https://youtu.be/25ymuV51YQM)]
 * HX8347D 240x320 [[demo video](https://youtu.be/sv6LGkLRZjI)]
 * HX8352C 240x400 [[demo video](https://youtu.be/m2xWYbS3t7s)]
 * HX8357A 320x480 [[demo video](https://youtu.be/wJkLO_xCTXA)] (currently only portrait works, i.e. rotation 0 and 2)
-* HX8357B (9-bit SPI) 320x480 [[demo video](https://youtu.be/pB6_LOCiUqg)]
+* HX8357B 320x480 (9-bit SPI) [[demo video](https://youtu.be/pB6_LOCiUqg)]
 * HX8369A 480x800 [[demo video](https://youtu.be/sXpU8bhtXKQ)] [[LVGL demo video](https://youtu.be/q575lTuVDcU)]
-* ILI6122 (RGB) 480x800
-* ILI6485 (RGB) 480x272 [[demo video](https://youtu.be/60rl7QoU4Sc)]
+* ILI6122 480x800 (RGB)
+* ILI6485 480x272 (RGB) [[demo video](https://youtu.be/60rl7QoU4Sc)]
 * ILI9225 176x220 [[demo video](https://youtu.be/jm2UrCG27F4)]
 * ILI9341 240x320 [[demo video](https://youtu.be/NtlEEL7MkQY)]
-* ILI9341 (8-bit Parallel) 240x320 [[demo video](https://youtu.be/xuVx0dzQ7nM)]
+* ILI9341 240x320 (8-bit/16-bit Parallel) [[demo video](https://youtu.be/xuVx0dzQ7nM)]
 * ILI9342 320x240 [[demo video](https://youtu.be/UoPpIjVSO5Q)]
 * ILI9481 320x480 (18 bit color) [[demo video](https://youtu.be/YxjuuCFhlqM)]
+* ILI9486 320x480 (8-bit/16-bit Parallel) [[demo video](https://youtu.be/GB90AFSLIFo)]
 * ILI9486 320x480 (18 bit color) [[demo video](https://youtu.be/pZ6izDqmVds)]
 * ILI9488 320x480 (3 bit color with canvas) [[demo video](https://youtu.be/r7be0WbIBYk)]
 * ILI9488 320x480 (18 bit color) [[demo video](https://youtu.be/NkE-LhtLHBQ)]
 * ILI9806 (8-bit/16-bit Parallel) 480x854 [[demo video](https://youtu.be/mYv-wdtWr8s)] [[LVGL demo video](https://youtu.be/PqjV8lovg_c)][[2](https://youtu.be/j31KZoQUKis)]
-* JBT6K71 (8-bit Parallel) 240x320 [[demo video](https://youtu.be/qid3F4Gb0mM)]
+* JBT6K71 240x320 (8-bit Parallel) [[demo video](https://youtu.be/qid3F4Gb0mM)]
 * NT35310 320x480 [[demo video](https://youtu.be/bvIz5CoYPNk)]
-* NT35510 (8-bit/16-bit Parallel) 480x800 [[demo video](https://youtu.be/C_1ASzUN3bg)]
-* NT39125 (8-bit/16-bit Parallel) 240x376 [[demo video](https://youtu.be/JGMrM18JAFA)]
+* NT35510 480x800 (8-bit/16-bit Parallel) [[demo video](https://youtu.be/C_1ASzUN3bg)]
+* NT39125 240x376 (8-bit/16-bit Parallel) [[demo video](https://youtu.be/JGMrM18JAFA)]
 * NV3041A 480x272 [[demo video](https://youtu.be/pd1DTW9QHkg)]
-* OTM8009A (8-bit/16-bit Parallel) 480x800
-* R61529 (8-bit/16-bit Parallel) 320x480 [[demo video](https://youtu.be/s93gxjbIAT8)]
+* OTM8009A 480x800 (8-bit/16-bit Parallel)
+* R61529 320x480 (8-bit/16-bit Parallel) [[demo video](https://youtu.be/s93gxjbIAT8)]
 * Raspberry Pi DPI Display (RPi_DPI_RGBPanel) Any Resolution [[demo video](https://youtube.com/shorts/IqQEq-VLVwI)]
 * SEPS525 160x128 [[demo video](https://youtu.be/tlmvFBHYv-k)]
 * SSD1283A 130x130 [[demo video](https://youtu.be/OrIchaRikiQ)]
@@ -343,11 +343,11 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * ST7735 128x160 (various tabs) [[demo video](https://youtu.be/eRBSSD_N9II)]
 * ST7735 128x128 (various tabs) [[demo video](https://youtu.be/6rueSV2Ee6c)]
 * ST7735 80x160 [[demo video](https://youtu.be/qESHDuYo_Mk)]
-* ST7701 (RGB) 480x480 [[demo video](https://youtube.com/shorts/JV8Rzxop5EQ)] [[2.1" round display demo video](https://youtube.com/shorts/WLWio1CjBoo?feature=share)] [[2.8" round display demo video](https://youtube.com/shorts/Ih_QlttWTVk?feature=share)]
+* ST7701 480x480 (RGB) [[demo video](https://youtube.com/shorts/JV8Rzxop5EQ)] [[2.1" round display demo video](https://youtube.com/shorts/WLWio1CjBoo?feature=share)] [[2.8" round display demo video](https://youtube.com/shorts/Ih_QlttWTVk?feature=share)]
 * ST7789 135x240 [[demo video](https://youtu.be/Zk81_T8c20E)]
 * ST7789 240x240 [[demo video](https://youtu.be/Z27zYg5uAsk)]
 * ST7789 240x240 [[demo video](https://youtu.be/9AqsXMB8Qbk)]
-* ST7789 round corner display 240x280 [[demo video](https://youtu.be/KzDC02wg8z0)]
+* ST7789 240x280 round corner display [[demo video](https://youtu.be/KzDC02wg8z0)]
 * ST7789 240x320 [[demo video](https://youtu.be/ZEvc1LkuVuQ)]
 * ST7796 320x480 [[demo video](https://youtu.be/hUL-RuG4MAQ)]
 

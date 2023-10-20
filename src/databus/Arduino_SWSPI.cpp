@@ -68,6 +68,30 @@ bool Arduino_SWSPI::begin(int32_t, int8_t)
     _misoPinMask = 1UL << pin;
     _misoPort = &reg->IN;
   }
+#elif defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI)
+  if (_dc != GFX_NOT_DEFINED)
+  {
+    _dcPinMask = digitalPinToBitMask(_dc);
+    _dcPortSet = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_dc)))->POSR);
+    _dcPortClr = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_dc)))->PORR);
+  }
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    _csPinMask = digitalPinToBitMask(_cs);
+    _csPortSet = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_cs)))->POSR);
+    _csPortClr = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_cs)))->PORR);
+  }
+  _sckPinMask = digitalPinToBitMask(_sck);
+  _sckPortSet = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_sck)))->POSR);
+  _sckPortClr = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_sck)))->PORR);
+  _mosiPinMask = digitalPinToBitMask(_mosi);
+  _mosiPortSet = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_mosi)))->POSR);
+  _mosiPortClr = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_mosi)))->PORR);
+  if (_miso != GFX_NOT_DEFINED)
+  {
+    _misoPinMask = digitalPinToBitMask(_miso);
+    _misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
+  }
 #elif defined(TARGET_RP2040)
   if (_dc != GFX_NOT_DEFINED)
   {
