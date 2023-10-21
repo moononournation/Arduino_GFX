@@ -264,7 +264,7 @@ void loop()
 
       // plot chart
       gfx->startWrite();
-      gfx->drawEllipseHelper(offset, graph_baseline + 1, signal_width, height, 0b0011, color);
+      gfx->writeEllipseHelper(offset, graph_baseline + 1, signal_width, height, 0b0011, color);
       gfx->endWrite();
 
       if (i == peak_id_list[idx])

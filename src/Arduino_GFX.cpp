@@ -404,7 +404,9 @@ void Arduino_GFX::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
 void Arduino_GFX::drawCircle(int16_t x, int16_t y,
                              int16_t r, uint16_t color)
 {
-  drawEllipseHelper(x, y, r, r, 0xf, color);
+  startWrite();
+  writeEllipseHelper(x, y, r, r, 0xf, color);
+  endWrite();
 }
 
 /**************************************************************************/
@@ -418,7 +420,7 @@ void Arduino_GFX::drawCircle(int16_t x, int16_t y,
   @param  color       16-bit 5-6-5 Color to draw with
 */
 /**************************************************************************/
-void Arduino_GFX::drawEllipseHelper(int32_t x, int32_t y,
+void Arduino_GFX::writeEllipseHelper(int32_t x, int32_t y,
                                     int32_t rx, int32_t ry,
                                     uint8_t cornername, uint16_t color)
 {
@@ -436,8 +438,6 @@ void Arduino_GFX::drawEllipseHelper(int32_t x, int32_t y,
     writeFastVLine(x, y - ry, (rx << 2) + 1, color);
     return;
   }
-
-  startWrite();
 
   int32_t xt, yt, s, i;
   int32_t rx2 = rx * rx;
@@ -498,8 +498,6 @@ void Arduino_GFX::drawEllipseHelper(int32_t x, int32_t y,
     i = yt;
     s -= (--xt) * ry2 << 2;
   } while (rx2 * yt <= ry2 * xt);
-
-  endWrite();
 }
 
 /**************************************************************************/
@@ -514,7 +512,9 @@ void Arduino_GFX::drawEllipseHelper(int32_t x, int32_t y,
 void Arduino_GFX::fillCircle(int16_t x, int16_t y,
                              int16_t r, uint16_t color)
 {
-  fillEllipseHelper(x, y, r, r, 3, 0, color);
+  startWrite();
+  writeFillEllipseHelper(x, y, r, r, 3, 0, color);
+  endWrite();
 }
 
 /**************************************************************************/
@@ -529,9 +529,9 @@ void Arduino_GFX::fillCircle(int16_t x, int16_t y,
   @param  color   16-bit 5-6-5 Color to fill with
 */
 /**************************************************************************/
-void Arduino_GFX::fillEllipseHelper(int32_t x, int32_t y,
-                                    int32_t rx, int32_t ry,
-                                    uint8_t corners, int16_t delta, uint16_t color)
+void Arduino_GFX::writeFillEllipseHelper(int32_t x, int32_t y,
+                                         int32_t rx, int32_t ry,
+                                         uint8_t corners, int16_t delta, uint16_t color)
 {
   if (rx < 0 || ry < 0 || ((rx == 0) && (ry == 0)))
   {
@@ -547,8 +547,6 @@ void Arduino_GFX::fillEllipseHelper(int32_t x, int32_t y,
     writeFastVLine(x, y - ry, (rx << 2) + 1, color);
     return;
   }
-
-  startWrite();
 
   int32_t xt, yt, i;
   int32_t rx2 = (int32_t)rx * rx;
@@ -597,8 +595,6 @@ void Arduino_GFX::fillEllipseHelper(int32_t x, int32_t y,
     }
     s -= (--yt) * rx2 << 2;
   } while (ry2 * xt <= rx2 * yt);
-
-  endWrite();
 }
 
 /**************************************************************************/
@@ -615,7 +611,9 @@ void Arduino_GFX::fillEllipseHelper(int32_t x, int32_t y,
 /**************************************************************************/
 void Arduino_GFX::drawEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color)
 {
-  drawEllipseHelper(x, y, rx, ry, 0xf, color);
+  startWrite();
+  writeEllipseHelper(x, y, rx, ry, 0xf, color);
+  endWrite();
 }
 
 /**************************************************************************/
@@ -632,7 +630,9 @@ void Arduino_GFX::drawEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint
 /**************************************************************************/
 void Arduino_GFX::fillEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color)
 {
-  fillEllipseHelper(x, y, rx, ry, 3, 0, color);
+  startWrite();
+  writeFillEllipseHelper(x, y, rx, ry, 3, 0, color);
+  endWrite();
 }
 
 /**************************************************************************/
@@ -877,10 +877,10 @@ void Arduino_GFX::drawRoundRect(int16_t x, int16_t y, int16_t w,
   writeFastVLine(x, y + r, h - 2 * r, color);         // Left
   writeFastVLine(x + w - 1, y + r, h - 2 * r, color); // Right
   // draw four corners
-  drawEllipseHelper(x + r, y + r, r, r, 1, color);
-  drawEllipseHelper(x + w - r - 1, y + r, r, r, 2, color);
-  drawEllipseHelper(x + w - r - 1, y + h - r - 1, r, r, 4, color);
-  drawEllipseHelper(x + r, y + h - r - 1, r, r, 8, color);
+  writeEllipseHelper(x + r, y + r, r, r, 1, color);
+  writeEllipseHelper(x + w - r - 1, y + r, r, r, 2, color);
+  writeEllipseHelper(x + w - r - 1, y + h - r - 1, r, r, 4, color);
+  writeEllipseHelper(x + r, y + h - r - 1, r, r, 8, color);
   endWrite();
 }
 
@@ -905,8 +905,8 @@ void Arduino_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w,
   startWrite();
   writeFillRect(x, y + r, w, h - (r << 1), color);
   // draw four corners
-  fillEllipseHelper(x + r, y + r, r, r, 1, w - 2 * r - 1, color);
-  fillEllipseHelper(x + r, y + h - r - 1, r, r, 2, w - 2 * r - 1, color);
+  writeFillEllipseHelper(x + r, y + r, r, r, 1, w - 2 * r - 1, color);
+  writeFillEllipseHelper(x + r, y + h - r - 1, r, r, 2, w - 2 * r - 1, color);
   endWrite();
 }
 
