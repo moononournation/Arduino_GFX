@@ -193,10 +193,12 @@ Arduino_GFX *gfx = new Arduino_ILI9342(bus, GFX_NOT_DEFINED /* RST */, 0 /* rota
 
 #elif defined(ESP32_S3_EYE)
 #define GFX_DEV_DEVICE ESP32_S3_EYE
-#define GFX_EXTRA_PRE_INIT()                   \
-    {                                          \
-        pinMode(48 /* BACKLIGHT */, OUTPUT);   \
-        digitalWrite(48 /* BACKLIGHT */, LOW); \
+#define GFX_EXTRA_PRE_INIT()                         \
+    {                                                \
+        pinMode(3 /* camera indicator */, OUTPUT);   \
+        digitalWrite(3 /* camera indicator */, LOW); \
+        pinMode(48 /* BACKLIGHT */, OUTPUT);         \
+        digitalWrite(48 /* BACKLIGHT */, LOW);       \
     }
 Arduino_DataBus *bus = new Arduino_ESP32SPI(43 /* DC */, 44 /* CS */, 21 /* SCK */, 47 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
