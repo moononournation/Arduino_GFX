@@ -34,6 +34,7 @@
 // #define ZX3D50CE02S // or called "WT32-SC01 PLUS"
 // #define ZX3D95CE01S_AR
 // #define ZX3D95CE01S_TR
+// #define ZX7D00CE01S // or called "QM Smart Panlee 7.0 inch serial screen"
 
 #if defined(DLC35010R)
 #define GFX_DEV_DEVICE DLC35010R
@@ -514,6 +515,19 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
     bus, 41 /* RST */, gc9503v_type1_init_operations, sizeof(gc9503v_type1_init_operations));
+
+#elif defined(ZX7D00CE01S)
+#define GFX_DEV_DEVICE ZX7D00CE01S
+#define GFX_BL 45
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    39 /* DE */, 38 /* VSYNC */, 5 /* HSYNC */, 9 /* PCLK */,
+    10 /* R0 */, 11 /* R1 */, 12 /* R2 */, 13 /* R3 */, 14 /* R4 */,
+    21 /* G0 */, 0 /* G1 */, 46 /* G2 */, 3 /* G3 */, 8 /* G4 */, 18 /* G5 */,
+    17 /* B0 */, 16 /* B1 */, 15 /* B2 */, 7 /* B3 */, 6 /* B4 */,
+    0 /* hsync_polarity */, 0 /* hsync_front_porch */, 210 /* hsync_pulse_width */, 30 /* hsync_back_porch */,
+    0 /* vsync_polarity */, 0 /* vsync_front_porch */, 22 /* vsync_pulse_width */, 13 /* vsync_back_porch */);
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+    800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 
 /* Wio Terminal */
 #elif defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)

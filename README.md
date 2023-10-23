@@ -301,6 +301,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [wireless-tag ZX3D50CE02S](https://github.com/wireless-tag-com/ZX3D50CE02S)
 * [wireless-tag ZX3D95CE01S-AR](https://github.com/wireless-tag-com/ZX3D95CE01S-AR-4848)
 * [wireless-tag ZX3D95CE01S-TR](https://github.com/wireless-tag-com/ZX3D95CE01S-TR-4848) [[demo video](https://www.youtube.com/shorts/5u6_C-krK2Q)]
+* [QM Smart Panlee 7.0 inch serial screen ZX7D00CE01S](http://en.smartpanle.com/product-item-19.html) [[demo video](https://youtu.be/r-zAMUzpkGE)]
 
 ## Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
 
