@@ -606,7 +606,36 @@ void Arduino_TFT::draw16bitRGBBitmap(
       ((y + h - 1) > _max_y)    // Clip bottom
   )
   {
-    Arduino_GFX::draw16bitRGBBitmap(x, y, bitmap, w, h);
+    int16_t out_width = w;
+    if ((y + h - 1) > _max_y)
+    {
+      h -= (y + h - 1) - _max_y;
+    }
+    if (y < 0)
+    {
+      bitmap -= y * w;
+      h += y;
+      y = 0;
+    }
+    if ((x + w - 1) > _max_x)
+    {
+      out_width -= (x + w - 1) - _max_x;
+    }
+    if (x < 0)
+    {
+      bitmap -= x;
+      out_width += x;
+      x = 0;
+    }
+
+    startWrite();
+    writeAddrWindow(x, y, out_width, h);
+    for (int16_t j = 0; j < h; j++)
+    {
+      _bus->writePixels(bitmap, out_width);
+      bitmap += w;
+    }
+    endWrite();
   }
   else
   {
@@ -637,7 +666,37 @@ void Arduino_TFT::draw16bitBeRGBBitmap(
       ((y + h - 1) > _max_y)    // Clip bottom
   )
   {
-    Arduino_GFX::draw16bitBeRGBBitmap(x, y, bitmap, w, h);
+    int16_t out_width = w;
+    if ((y + h - 1) > _max_y)
+    {
+      h -= (y + h - 1) - _max_y;
+    }
+    if (y < 0)
+    {
+      bitmap -= y * w;
+      h += y;
+      y = 0;
+    }
+    if ((x + w - 1) > _max_x)
+    {
+      out_width -= (x + w - 1) - _max_x;
+    }
+    if (x < 0)
+    {
+      bitmap -= x;
+      out_width += x;
+      x = 0;
+    }
+
+    startWrite();
+    writeAddrWindow(x, y, out_width, h);
+    out_width <<= 1;
+    for (int16_t j = 0; j < h; j++)
+    {
+      _bus->writeBytes((uint8_t *)bitmap, out_width);
+      bitmap += w;
+    }
+    endWrite();
   }
   else
   {
