@@ -437,7 +437,7 @@ void Arduino_RGB_Display::draw16bitBeRGBBitmap(int16_t x, int16_t y,
     }
     else
     {
-      int16_t xskip = 0;
+      int16_t x_skip = 0;
       if ((y + h - 1) > _max_y)
       {
         h -= (y + h - 1) - _max_y;
@@ -450,13 +450,13 @@ void Arduino_RGB_Display::draw16bitBeRGBBitmap(int16_t x, int16_t y,
       }
       if ((x + w - 1) > _max_x)
       {
-        xskip = (x + w - 1) - _max_x;
-        w -= xskip;
+        x_skip = (x + w - 1) - _max_x;
+        w -= x_skip;
       }
       if (x < 0)
       {
         bitmap -= x;
-        xskip -= x;
+        x_skip -= x;
         w += x;
         x = 0;
       }
@@ -472,7 +472,7 @@ void Arduino_RGB_Display::draw16bitBeRGBBitmap(int16_t x, int16_t y,
           color = *bitmap++;
           MSB_16_SET(row[i], color);
         }
-        bitmap += xskip;
+        bitmap += x_skip;
         row += _width;
       }
       if (_auto_flush)

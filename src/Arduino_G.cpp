@@ -31,7 +31,7 @@ bool gfx_draw_bitmap_to_framebuffer(
   }
   else
   {
-    int16_t xskip = 0;
+    int16_t x_skip = 0;
     if ((y + bitmap_h - 1) > max_Y)
     {
       bitmap_h -= (y + bitmap_h - 1) - max_Y;
@@ -44,13 +44,13 @@ bool gfx_draw_bitmap_to_framebuffer(
     }
     if ((x + bitmap_w - 1) > max_X)
     {
-      xskip = (x + bitmap_w - 1) - max_X;
-      bitmap_w -= xskip;
+      x_skip = (x + bitmap_w - 1) - max_X;
+      bitmap_w -= x_skip;
     }
     if (x < 0)
     {
       from_bitmap -= x;
-      xskip -= x;
+      x_skip -= x;
       bitmap_w += x;
       x = 0;
     }
@@ -58,12 +58,12 @@ bool gfx_draw_bitmap_to_framebuffer(
     uint16_t *row = framebuffer;
     row += y * framebuffer_w; // shift framebuffer to y offset
     row += x;                 // shift framebuffer to x offset
-    if (((framebuffer_w & 1) == 0) && ((xskip & 1) == 0) && ((bitmap_w & 1) == 0))
+    if (((framebuffer_w & 1) == 0) && ((x_skip & 1) == 0) && ((bitmap_w & 1) == 0))
     {
       uint32_t *row2 = (uint32_t *)row;
       uint32_t *from_bitmap2 = (uint32_t *)from_bitmap;
       int16_t framebuffer_w2 = framebuffer_w >> 1;
-      int16_t xskip2 = xskip >> 1;
+      int16_t xskip2 = x_skip >> 1;
       int16_t w2 = bitmap_w >> 1;
 
       int16_t j = bitmap_h;
@@ -86,7 +86,7 @@ bool gfx_draw_bitmap_to_framebuffer(
         {
           row[i] = *from_bitmap++;
         }
-        from_bitmap += xskip;
+        from_bitmap += x_skip;
         row += framebuffer_w;
       }
     }
@@ -111,7 +111,7 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_1(
   }
   else
   {
-    int16_t xskip = 0;
+    int16_t x_skip = 0;
     if ((y + bitmap_h - 1) > max_Y)
     {
       bitmap_h -= (y + bitmap_h - 1) - max_Y;
@@ -124,13 +124,13 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_1(
     }
     if ((x + bitmap_w - 1) > max_X)
     {
-      xskip = (x + bitmap_w - 1) - max_X;
-      bitmap_w -= xskip;
+      x_skip = (x + bitmap_w - 1) - max_X;
+      bitmap_w -= x_skip;
     }
     if (x < 0)
     {
       from_bitmap -= x;
-      xskip -= x;
+      x_skip -= x;
       bitmap_w += x;
       x = 0;
     }
@@ -149,7 +149,7 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_1(
         *p = *from_bitmap++;
         p += framebuffer_h;
       }
-      from_bitmap += xskip;
+      from_bitmap += x_skip;
     }
     return true;
   }
@@ -172,7 +172,7 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_2(
   }
   else
   {
-    int16_t xskip = 0;
+    int16_t x_skip = 0;
     if ((y + bitmap_h - 1) > max_Y)
     {
       bitmap_h -= (y + bitmap_h - 1) - max_Y;
@@ -185,13 +185,13 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_2(
     }
     if ((x + bitmap_w - 1) > max_X)
     {
-      xskip = (x + bitmap_w - 1) - max_X;
-      bitmap_w -= xskip;
+      x_skip = (x + bitmap_w - 1) - max_X;
+      bitmap_w -= x_skip;
     }
     if (x < 0)
     {
       from_bitmap -= x;
-      xskip -= x;
+      x_skip -= x;
       bitmap_w += x;
       x = 0;
     }
@@ -208,7 +208,7 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_2(
       {
         row[i] = *from_bitmap++;
       }
-      from_bitmap += xskip;
+      from_bitmap += x_skip;
       row -= framebuffer_w;
     }
     return true;
@@ -232,7 +232,7 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_3(
   }
   else
   {
-    int16_t xskip = 0;
+    int16_t x_skip = 0;
     if ((y + bitmap_h - 1) > max_Y)
     {
       bitmap_h -= (y + bitmap_h - 1) - max_Y;
@@ -245,13 +245,13 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_3(
     }
     if ((x + bitmap_w - 1) > max_X)
     {
-      xskip = (x + bitmap_w - 1) - max_X;
-      bitmap_w -= xskip;
+      x_skip = (x + bitmap_w - 1) - max_X;
+      bitmap_w -= x_skip;
     }
     if (x < 0)
     {
       from_bitmap -= x;
-      xskip -= x;
+      x_skip -= x;
       bitmap_w += x;
       x = 0;
     }
@@ -270,7 +270,7 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_3(
         *p = *from_bitmap++;
         p -= framebuffer_h;
       }
-      from_bitmap += xskip;
+      from_bitmap += x_skip;
     }
     return true;
   }
