@@ -599,12 +599,7 @@ void Arduino_TFT::draw16bitRGBBitmap(
   {
     return;
   }
-  else if (
-      (x < 0) ||                // Clip left
-      (y < 0) ||                // Clip top
-      ((x + w - 1) > _max_x) || // Clip right
-      ((y + h - 1) > _max_y)    // Clip bottom
-  )
+  else
   {
     int16_t out_width = w;
     if ((y + h - 1) > _max_y)
@@ -630,18 +625,18 @@ void Arduino_TFT::draw16bitRGBBitmap(
 
     startWrite();
     writeAddrWindow(x, y, out_width, h);
-    for (int16_t j = 0; j < h; j++)
+    if (out_width < w)
     {
-      _bus->writePixels(bitmap, out_width);
-      bitmap += w;
+      for (int16_t j = 0; j < h; j++)
+      {
+        _bus->writePixels(bitmap, out_width);
+        bitmap += w;
+      }
     }
-    endWrite();
-  }
-  else
-  {
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    _bus->writePixels(bitmap, (uint32_t)w * h);
+    else
+    {
+      _bus->writePixels(bitmap, (uint32_t)w * h);
+    }
     endWrite();
   }
 }
@@ -659,12 +654,7 @@ void Arduino_TFT::draw16bitBeRGBBitmap(
   {
     return;
   }
-  else if (
-      (x < 0) ||                // Clip left
-      (y < 0) ||                // Clip top
-      ((x + w - 1) > _max_x) || // Clip right
-      ((y + h - 1) > _max_y)    // Clip bottom
-  )
+  else
   {
     int16_t out_width = w;
     if ((y + h - 1) > _max_y)
@@ -690,19 +680,19 @@ void Arduino_TFT::draw16bitBeRGBBitmap(
 
     startWrite();
     writeAddrWindow(x, y, out_width, h);
-    out_width <<= 1;
-    for (int16_t j = 0; j < h; j++)
+    if (out_width < w)
     {
-      _bus->writeBytes((uint8_t *)bitmap, out_width);
-      bitmap += w;
+      out_width <<= 1;
+      for (int16_t j = 0; j < h; j++)
+      {
+        _bus->writeBytes((uint8_t *)bitmap, out_width);
+        bitmap += w;
+      }
     }
-    endWrite();
-  }
-  else
-  {
-    startWrite();
-    writeAddrWindow(x, y, w, h);
-    _bus->writeBytes((uint8_t *)bitmap, (uint32_t)w * h * 2);
+    else
+    {
+      _bus->writeBytes((uint8_t *)bitmap, (uint32_t)w * h * 2);
+    }
     endWrite();
   }
 }
