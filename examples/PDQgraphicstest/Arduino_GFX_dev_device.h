@@ -29,6 +29,9 @@
 // #define MAKERFABS_ESP32_S3_TFT_4_0
 // #define MAKERFABS_ESP32_S3_TFT_4_3_v1_3
 // #define WT32_SC01
+// #define XIAO_SAMD21_ROUND_DISPLAY
+// #define XIAO_ESP32C3_ROUND_DISPLAY
+// #define XIAO_ESP32S3_ROUND_DISPLAY
 // #define WZ8048C050 // or called "Elecrow Wizee-ESP32"
 // #define ZX2D10GE10R_V4848
 // #define ZX3D50CE02S // or called "WT32-SC01 PLUS"
@@ -456,6 +459,21 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     1 /* pclk_active_neg */, 16000000 /* prefer_speed */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
+
+#elif defined(XIAO_SAMD21_ROUND_DISPLAY)
+#define GFX_DEV_DEVICE XIAO_SAMD21_ROUND_DISPLAY
+Arduino_DataBus *bus = new Arduino_HWSPI(3 /* DC */, 1 /* CS */);
+Arduino_GFX *gfx = new Arduino_GC9A01(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(XIAO_ESP32C3_ROUND_DISPLAY)
+#define GFX_DEV_DEVICE XIAO_ESP32C3_ROUND_DISPLAY
+Arduino_DataBus *bus = new Arduino_ESP32SPI(5 /* DC */, 3 /* CS */, 8 /* SCK */, 10 /* MOSI */, 9 /* MISO */);
+Arduino_GFX *gfx = new Arduino_GC9A01(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(XIAO_ESP32S3_ROUND_DISPLAY)
+#define GFX_DEV_DEVICE XIAO_ESP32S3_ROUND_DISPLAY
+Arduino_DataBus *bus = new Arduino_ESP32SPI(4 /* DC */, 2 /* CS */, 7 /* SCK */, 9 /* MOSI */, 8 /* MISO */);
+Arduino_GFX *gfx = new Arduino_GC9A01(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(ZX2D10GE10R_V4848)
 #define GFX_DEV_DEVICE ZX2D10GE10R_V4848

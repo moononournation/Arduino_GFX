@@ -259,6 +259,9 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * rtlduino BW16 (by Ai-Thinker)
 * Sony Spresense
 * WeAct BlackPill V2.0 (BlackPill F411CE)
+* [Seeed Studio XIAO SAMD21](https://www.seeedstudio.com/Seeeduino-XIAO-3Pcs-p-4546.html)
+* [Seeed Studio XIAO ESP32C3](https://www.seeedstudio.com/Seeed-XIAO-ESP32C3-p-5431.html)
+* [Seeed Studio XIAO ESP32S3](https://www.seeedstudio.com/XIAO-ESP32S3-p-5627.html)
 
 ## Currently Supported Dev Device [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Dev-Device-Declaration)]
 
