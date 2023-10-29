@@ -85,7 +85,7 @@ void Arduino_GC9A01::tftInit()
   {
     pinMode(_rst, OUTPUT);
     digitalWrite(_rst, HIGH);
-    delay(100);
+    delay(GC9A01_RST_DELAY);
     digitalWrite(_rst, LOW);
     delay(GC9A01_RST_DELAY);
     digitalWrite(_rst, HIGH);
