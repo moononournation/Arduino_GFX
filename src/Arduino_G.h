@@ -3,8 +3,6 @@
 #ifndef _ARDUINO_G_H_
 #define _ARDUINO_G_H_
 
-#include <Arduino.h>
-
 #include "Arduino_DataBus.h"
 
 /// A generic graphics superclass that can handle all sorts of drawing. At a minimum you can subclass and provide drawPixel(). At a maximum you can do a ton of overriding to optimize. Used for any/all Adafruit displays!

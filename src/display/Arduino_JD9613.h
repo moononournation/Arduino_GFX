@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Arduino.h>
-#include <Print.h>
 #include "./Arduino_GFX.h"
 #include "../Arduino_TFT.h"
 

@@ -5,8 +5,6 @@
 #ifndef _ARDUINO_ILI9486_18BIT_H_
 #define _ARDUINO_ILI9486_18BIT_H_
 
-#include <Arduino.h>
-#include <Print.h>
 #include "Arduino_ILI9486.h"
 #include "../Arduino_TFT_18bit.h"
 

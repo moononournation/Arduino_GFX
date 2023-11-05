@@ -1,8 +1,6 @@
 #ifndef _ARDUINO_NV3041A_H_
 #define _ARDUINO_NV3041A_H_
 
-#include <Arduino.h>
-#include <Print.h>
 #include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
 

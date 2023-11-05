@@ -8,8 +8,6 @@
 #ifndef _ARDUINO_NT35310_H_
 #define _ARDUINO_NT35310_H_
 
-#include <Arduino.h>
-#include <Print.h>
 #include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
 

@@ -5,10 +5,9 @@
 #ifndef _ARDUINO_GFX_H_
 #define _ARDUINO_GFX_H_
 
-#include <Arduino.h>
-#include <Print.h>
 #include "Arduino_G.h"
 #include "Arduino_DataBus.h"
+#include <Print.h>
 
 #if !defined(ATTINY_CORE)
 #include "gfxfont.h"

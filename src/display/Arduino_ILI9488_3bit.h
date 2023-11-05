@@ -4,8 +4,6 @@
 #ifndef _ARDUINO_ILI9488_3BIT_H_
 #define _ARDUINO_ILI9488_3BIT_H_
 
-#include <Arduino.h>
-#include <Print.h>
 #include "Arduino_ILI9488.h"
 
 class Arduino_ILI9488_3bit : public Arduino_G

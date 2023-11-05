@@ -5,8 +5,6 @@
 #ifndef _ARDUINO_ILI9488_18BIT_H_
 #define _ARDUINO_ILI9488_18BIT_H_
 
-#include <Arduino.h>
-#include <Print.h>
 #include "Arduino_ILI9488.h"
 #include "../Arduino_TFT_18bit.h"
 

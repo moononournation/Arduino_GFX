@@ -5,8 +5,6 @@
 #ifndef _ARDUINO_ST7796_H_
 #define _ARDUINO_ST7796_H_
 
-#include <Arduino.h>
-#include <Print.h>
 #include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
 
