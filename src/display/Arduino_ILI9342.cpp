@@ -106,7 +106,7 @@ void Arduino_ILI9342::tftInit()
     delay(ILI9342_RST_DELAY);
   }
 
-  _bus->batchOperation(ILI9342_init_operations, sizeof(ILI9342_init_operations));
+  _bus->batchOperation(ili9342_init_operations, sizeof(ili9342_init_operations));
 
   invertDisplay(false);
 }

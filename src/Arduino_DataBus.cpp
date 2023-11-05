@@ -106,6 +106,10 @@ void Arduino_DataBus::batchOperation(const uint8_t *operations, size_t len)
     case WRITE_BYTES:
       l = operations[++i];
       break;
+    case WRITE_C8_BYTES:
+      writeCommand(operations[++i]);
+      l = operations[++i];
+      break;
     case END_WRITE:
       endWrite();
       break;
