@@ -388,8 +388,9 @@ void Arduino_ESP32QSPI::batchOperation(const uint8_t *operations, size_t len)
       break;
     case WRITE_BYTES:
       l = operations[++i];
-      writeBytes((uint8_t *)&(operations[i + 1]), l);
+      memcpy(_buffer, operations + i + 1, l);
       i += l;
+      writeBytes(_buffer, l);
       break;
     case WRITE_C8_D8:
       l = operations[++i];
