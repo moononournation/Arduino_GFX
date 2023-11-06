@@ -117,7 +117,7 @@ void Arduino_DataBus::batchOperation(const uint8_t *operations, size_t len)
       delay(operations[++i]);
       break;
     default:
-      printf("Unknown operation id at %d: %d", i, operations[i]);
+      printf("Unknown operation id at %d: %d\n", i, operations[i]);
       break;
     }
     while (l--)
