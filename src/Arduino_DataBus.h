@@ -284,13 +284,14 @@ public:
   void sendData(uint8_t d);
   void sendData16(uint16_t d);
 
-  void batchOperation(const uint8_t *operations, size_t len);
-
 #if !defined(LITTLE_FOOT_PRINT)
+  virtual void batchOperation(const uint8_t *operations, size_t len);
   virtual void writeBytes(uint8_t *data, uint32_t len) = 0;
   virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat);
   virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
   virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
+#else
+  void batchOperation(const uint8_t *operations, size_t len);
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 protected:
