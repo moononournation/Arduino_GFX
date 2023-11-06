@@ -32,6 +32,7 @@ public:
   void writeRepeat(uint16_t p, uint32_t len) override;
   void writePixels(uint16_t *data, uint32_t len) override;
 
+  void batchOperation(const uint8_t *operations, size_t len) override;
   void writeBytes(uint8_t *data, uint32_t len) override;
 
   void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len) override;

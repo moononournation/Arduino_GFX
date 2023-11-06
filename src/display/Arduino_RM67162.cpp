@@ -99,13 +99,7 @@ void Arduino_RM67162::tftInit()
     delay(RM67162_RST_DELAY);
   }
 
-  _bus->sendCommand(RM67162_SLPOUT); // Sleep Out
-  delay(RM67162_SLPOUT_DELAY);
-  _bus->beginWrite();
-  _bus->writeC8D8(RM67162_PIXFMT, 0x55);     // Interface Pixel Format 16bit/pixel
-  _bus->writeCommand(RM67162_DISPON);        // Display on
-  _bus->writeC8D8(RM67162_BRIGHTNESS, 0xD0); // Write Display Brightness   MAX_VAL=0XFF
-  _bus->endWrite();
+  _bus->batchOperation(rm67162_init_operations, sizeof(rm67162_init_operations));
 
   invertDisplay(false);
 }

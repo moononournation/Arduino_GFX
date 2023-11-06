@@ -360,6 +360,77 @@ void Arduino_ESP32QSPI::writePixels(uint16_t *data, uint32_t len)
   CS_HIGH();
 }
 
+void Arduino_ESP32QSPI::batchOperation(const uint8_t *operations, size_t len)
+{
+  for (size_t i = 0; i < len; ++i)
+  {
+    uint8_t l = 0;
+    switch (operations[i])
+    {
+    case BEGIN_WRITE:
+      beginWrite();
+      break;
+    case WRITE_COMMAND_8:
+      writeCommand(operations[++i]);
+      break;
+    case WRITE_COMMAND_16:
+      _data16.msb = operations[++i];
+      _data16.lsb = operations[++i];
+      writeCommand16(_data16.value);
+      break;
+    case WRITE_DATA_8:
+      write(operations[++i]);
+      break;
+    case WRITE_DATA_16:
+      _data16.msb = operations[++i];
+      _data16.lsb = operations[++i];
+      write16(_data16.value);
+      break;
+    case WRITE_BYTES:
+      l = operations[++i];
+      writeBytes((uint8_t *)&(operations[i + 1]), l);
+      i += l;
+      break;
+    case WRITE_C8_D8:
+      l = operations[++i];
+      writeC8D8(l, operations[++i]);
+      break;
+    case WRITE_C8_D16:
+      l = operations[++i];
+      _data16.msb = operations[++i];
+      _data16.lsb = operations[++i];
+      writeC8D16(l, _data16.value);
+      break;
+    case WRITE_C8_BYTES:
+    {
+      uint32_t c = operations[++i];
+      l = operations[++i];
+      memcpy(_buffer, operations + i + 1, l);
+      i += l;
+      _spi_tran_ext.base.flags = SPI_TRANS_MULTILINE_CMD | SPI_TRANS_MULTILINE_ADDR;
+      _spi_tran_ext.base.cmd = 0x02;
+      _spi_tran_ext.base.addr = c << 8;
+      _spi_tran_ext.base.tx_buffer = _buffer;
+      _spi_tran_ext.base.length = ((uint32_t)l) << 3;
+      POLL_START();
+      POLL_END();
+    }
+    break;
+    case WRITE_C16_D16:
+      break;
+    case END_WRITE:
+      endWrite();
+      break;
+    case DELAY:
+      delay(operations[++i]);
+      break;
+    default:
+      printf("Unknown operation id at %d: %d\n", i, operations[i]);
+      break;
+    }
+  }
+}
+
 /**
  * @brief writeBytes
  *
