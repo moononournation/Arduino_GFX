@@ -120,5 +120,8 @@ void setup()
 void loop()
 {
   lv_timer_handler(); /* let the GUI do its work */
+#ifdef CANVAS
+  gfx->flush();
+#endif
   delay(5);
 }

@@ -258,6 +258,26 @@ void Arduino_ESP32QSPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 }
 
 /**
+ * @brief writeC8Bytes
+ *
+ * @param c
+ * @param data
+ * @param len
+ */
+void Arduino_ESP32QSPI::writeC8Bytes(uint8_t c, uint8_t *data, uint32_t len)
+{
+  CS_LOW();
+  _spi_tran_ext.base.flags = SPI_TRANS_MULTILINE_CMD | SPI_TRANS_MULTILINE_ADDR;
+  _spi_tran_ext.base.cmd = 0x02;
+  _spi_tran_ext.base.addr = ((uint32_t)c) << 8;
+  _spi_tran_ext.base.tx_buffer = data;
+  _spi_tran_ext.base.length = len << 3;
+  POLL_START();
+  POLL_END();
+  CS_HIGH();
+}
+
+/**
  * @brief writeRepeat
  *
  * @param p
@@ -404,17 +424,11 @@ void Arduino_ESP32QSPI::batchOperation(const uint8_t *operations, size_t len)
       break;
     case WRITE_C8_BYTES:
     {
-      uint32_t c = operations[++i];
+      uint8_t c = operations[++i];
       l = operations[++i];
       memcpy(_buffer, operations + i + 1, l);
       i += l;
-      _spi_tran_ext.base.flags = SPI_TRANS_MULTILINE_CMD | SPI_TRANS_MULTILINE_ADDR;
-      _spi_tran_ext.base.cmd = 0x02;
-      _spi_tran_ext.base.addr = c << 8;
-      _spi_tran_ext.base.tx_buffer = _buffer;
-      _spi_tran_ext.base.length = ((uint32_t)l) << 3;
-      POLL_START();
-      POLL_END();
+      writeC8Bytes(c, _buffer, l);
     }
     break;
     case WRITE_C16_D16:

@@ -1,6 +1,8 @@
 /***************************************
  * Start of Canvas (framebuffer)
  **************************************/
+// #define CANVAS
+
 // 16-bit color Canvas (240x320 resolution only works for ESP32 with PSRAM)
 // Arduino_G *output_display = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 // Arduino_GFX *gfx = new Arduino_Canvas(240 /* width */, 320 /* height */, output_display);
@@ -149,3 +151,8 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 // Arduino_GFX *gfx = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */);
 // 4" IPS LCD 320x480
 // Arduino_GFX *gfx = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
+
+// WEA2012 LCD
+// #define CANVAS
+// Arduino_GFX *output_display = new Arduino_WEA2012(bus, TFT_RST);
+// Arduino_GFX *gfx = new Arduino_Canvas(356 /* width */, 400 /* height */, output_display);

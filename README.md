@@ -354,6 +354,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * ST7789 240x280 round corner display [[demo video](https://youtu.be/KzDC02wg8z0)]
 * ST7789 240x320 [[demo video](https://youtu.be/ZEvc1LkuVuQ)]
 * ST7796 320x480 [[demo video](https://youtu.be/hUL-RuG4MAQ)]
+* WEA2012 356x400
 
 ## Tobe Support Display (Sponsors can make it happen)
 
@@ -401,5 +402,6 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * <https://github.com/lcdwiki/LCDWIKI_SPI.git>
 * <https://github.com/Xinyuan-LilyGO/T-RGB.git>
 * <https://github.com/lovyan03/LovyanGFX.git>
+* <https://github.com/modi12jin/Arduino-ESP32-WEA2012.git>
 * <https://github.com/nopnop2002/esp-idf-parallel-tft.git>
 * <https://github.com/olikraus/u8g2.git>

@@ -83,6 +83,7 @@
 #include "display/Arduino_ST7735.h"
 #include "display/Arduino_ST7789.h"
 #include "display/Arduino_ST7796.h"
+#include "display/Arduino_WEA2012.h"
 
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #define DISPLAY_DEV_KIT
