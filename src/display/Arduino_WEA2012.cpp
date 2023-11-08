@@ -12,6 +12,8 @@ Arduino_WEA2012::Arduino_WEA2012(Arduino_DataBus *bus, int8_t rst)
 
 bool Arduino_WEA2012::begin(int32_t speed)
 {
+  _override_datamode = SPI_MODE3; // always use SPI_MODE3
+
   return Arduino_TFT::begin(speed);
 }
 
