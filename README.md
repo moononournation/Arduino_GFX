@@ -354,7 +354,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * ST7789 240x280 round corner display [[demo video](https://youtu.be/KzDC02wg8z0)]
 * ST7789 240x320 [[demo video](https://youtu.be/ZEvc1LkuVuQ)]
 * ST7796 320x480 [[demo video](https://youtu.be/hUL-RuG4MAQ)]
-* WEA2012 356x400
+* WEA2012 356x400 [[demo video](https://youtube.com/shorts/neDyijFrfQY)] [[LVGL demo video](https://youtube.com/shorts/z9Z_u0xg_as)]
 
 ## Tobe Support Display (Sponsors can make it happen)
 
