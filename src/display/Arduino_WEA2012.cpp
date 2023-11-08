@@ -23,6 +23,7 @@ bool Arduino_WEA2012::begin(int32_t speed)
 /**************************************************************************/
 void Arduino_WEA2012::setRotation(uint8_t r)
 {
+  Arduino_TFT::setRotation(r);
   // not implemented
 }
 
