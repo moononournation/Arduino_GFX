@@ -35,6 +35,7 @@
 #include "databus/Arduino_SWPAR8.h"
 #include "databus/Arduino_SWPAR16.h"
 #include "databus/Arduino_SWSPI.h"
+#include "databus/Arduino_Wire.h"
 #include "databus/Arduino_XL9535SWSPI.h"
 #include "databus/Arduino_XCA9554SWSPI.h"
 
@@ -77,6 +78,7 @@
 #include "display/Arduino_RM67162.h"
 #include "display/Arduino_RGB_Display.h"
 #include "display/Arduino_SEPS525.h"
+#include "display/Arduino_SH1106.h"
 #include "display/Arduino_SSD1283A.h"
 #include "display/Arduino_SSD1331.h"
 #include "display/Arduino_SSD1351.h"

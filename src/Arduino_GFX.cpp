@@ -2028,7 +2028,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
       return;
     }
 
-    // NOTE: Different from Adafruit_GFX design, Adruino_GFX also cater background.
+    // NOTE: Different from Adafruit_GFX design, Arduino_GFX also cater background.
     // Since it may introduce many ugly output, it should limited using on mono font only.
     startWrite();
     if (bg != color) // have background color
