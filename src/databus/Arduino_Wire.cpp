@@ -6,8 +6,15 @@ Arduino_Wire::
     Arduino_Wire(uint8_t i2c_addr, TwoWire *wire)
     : _i2c_addr(i2c_addr), _wire(wire) {}
 
-bool Arduino_Wire::begin(int32_t, int8_t)
+bool Arduino_Wire::begin(int32_t speed, int8_t)
 {
+
+  if (speed != GFX_NOT_DEFINED)
+  {
+    _speed = speed;
+    _wire->setClock(_speed);
+  }
+
   _wire->begin();
 
   // find device
@@ -28,6 +35,10 @@ bool Arduino_Wire::begin(int32_t, int8_t)
 void Arduino_Wire::beginWrite()
 {
   // Serial.println("Wire::beginWrite()");
+  if (_speed != GFX_NOT_DEFINED)
+  {
+    _wire->setClock(_speed);
+  }
   _wire->beginTransmission(_i2c_addr);
 }
 
