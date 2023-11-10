@@ -13,7 +13,7 @@
 #define GFX_STR(x) GFX_STR_HELPER(x)
 
 #if defined(ARDUINO_AVR_MEGA2560)
-#define USE_FAST_PINIO    ///< Use direct PORT register access
+#define USE_FAST_PINIO ///< Use direct PORT register access
 typedef uint8_t ARDUINOGFX_PORT_t;
 #elif defined(__AVR__)
 #define LITTLE_FOOT_PRINT // reduce program size for limited flash MCU
@@ -111,6 +111,10 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #define SPI_DEFAULT_FREQ (F_CPU / 4)
 #else
 #define SPI_DEFAULT_FREQ 24000000 ///< Default SPI data clock frequency
+#endif
+
+#ifndef TWI_BUFFER_LENGTH
+#define TWI_BUFFER_LENGTH 32
 #endif
 
 #ifndef UNUSED
