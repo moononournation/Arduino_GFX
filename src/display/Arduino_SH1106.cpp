@@ -104,7 +104,7 @@ void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap,
 {
   // Serial.printf("SH1106::drawBitmap %d/%d w:%d h:%d\n", xStart, yStart, w, h);
   unsigned long now = millis();
-  uint16_t bufferLength = TWI_BUFFER_LENGTH;  
+  uint16_t bufferLength = TWI_BUFFER_LENGTH;
 
   // transfer the whole bitmap
   for (uint8_t p = 0; p < _pages; p++)
@@ -120,18 +120,7 @@ void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap,
     _bus->write(SH110X_SETHIGHCOLUMN + 0);
     _bus->endWrite();
 
-    // uint8_t seq[] = {
-    //     BEGIN_WRITE,
-    //     WRITE_BYTES, 4,
-    //     0x00,                    // sequence of commands
-    //     SH110X_SETPAGEADDR + p,  // set page
-    //     SH110X_SETLOWCOLUMN + 2, // set column
-    //     SH110X_SETHIGHCOLUMN + 0,
-    //     END_WRITE};
-    // _bus->batchOperation(seq, sizeof(seq));
-
     // send out page data
-
     for (int x = 0; x < w; x++)
     {
 
