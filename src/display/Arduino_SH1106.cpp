@@ -103,7 +103,6 @@ bool Arduino_SH1106::begin(int32_t speed)
 void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
   // Serial.printf("SH1106::drawBitmap %d/%d w:%d h:%d\n", xStart, yStart, w, h);
-  unsigned long now = millis();
   uint16_t bufferLength = TWI_BUFFER_LENGTH;
 
   // transfer the whole bitmap
@@ -145,8 +144,6 @@ void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap,
       _bus->endWrite();
     }
   }
-
-  Serial.printf("SH1106::drawBitmap %d ms\n", millis() - now);
 } // drawBitmap()
 
 void Arduino_SH1106::drawIndexedBitmap(int16_t, int16_t, uint8_t *, uint16_t *, int16_t, int16_t, int16_t)
