@@ -35,6 +35,7 @@ protected:
   TwoWire *_wire;
   uint8_t _i2c_addr;
 
+  int32_t _speed;
 private:
 };
 

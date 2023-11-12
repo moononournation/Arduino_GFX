@@ -4,7 +4,6 @@
 #define _Arduino_SH1106_H_
 
 #include <Arduino.h>
-#include <Print.h>
 #include <Arduino_GFX.h>
 
 class Arduino_SH1106 : public Arduino_G
