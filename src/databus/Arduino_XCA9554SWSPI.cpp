@@ -13,7 +13,7 @@ bool Arduino_XCA9554SWSPI::begin(int32_t, int8_t)
   _wire->beginTransmission(_i2c_addr);
   if (!_wire->endTransmission())
   {
-    Serial.println("Found xCA9554");
+    // println("Found xCA9554");
     is_found = true;
 
     uint8_t d = 0;
@@ -41,7 +41,7 @@ bool Arduino_XCA9554SWSPI::begin(int32_t, int8_t)
   }
   else
   {
-    Serial.println("xCA9554 not found");
+    // println("xCA9554 not found");
     is_found = false;
   }
 
@@ -146,7 +146,7 @@ void Arduino_XCA9554SWSPI::writeRegister(uint8_t reg, uint8_t *data, size_t len)
 {
 
 #ifdef XCA9554_DEBUG
-  Serial.printf("Writing to $%02X: ", reg);
+  // printf("Writing to $%02X: ", reg);
 #endif
   _wire->beginTransmission(_i2c_addr);
   _wire->write(reg);
@@ -154,11 +154,11 @@ void Arduino_XCA9554SWSPI::writeRegister(uint8_t reg, uint8_t *data, size_t len)
   {
     _wire->write(data[i]);
 #ifdef XCA9554_DEBUG
-    Serial.printf("0x%02X, ", data[i]);
+    // printf("0x%02X, ", data[i]);
 #endif
   }
 #ifdef XCA9554_DEBUG
-  Serial.println();
+  // println();
 #endif
   _wire->endTransmission();
 }
@@ -168,7 +168,7 @@ uint8_t Arduino_XCA9554SWSPI::readRegister(uint8_t reg, uint8_t *data, size_t le
   _wire->beginTransmission(_i2c_addr);
   _wire->write(reg);
 #ifdef XCA9554_DEBUG
-  Serial.printf("Read from $%02X: ", reg);
+  // printf("Read from $%02X: ", reg);
 #endif
   _wire->endTransmission();
   _wire->requestFrom(_i2c_addr, len);
@@ -176,11 +176,11 @@ uint8_t Arduino_XCA9554SWSPI::readRegister(uint8_t reg, uint8_t *data, size_t le
   while (index < len) {
     data[index++] = _wire->read();
 #ifdef XCA9554_DEBUG
-    Serial.printf("0x%02X, ", data[index-1]);
+    // printf("0x%02X, ", data[index-1]);
 #endif
   }
 #ifdef XCA9554_DEBUG
-  Serial.println();
+  // println();
 #endif
   return 0;
 }
@@ -198,7 +198,7 @@ void Arduino_XCA9554SWSPI::pinMode(uint8_t pin, uint8_t mode)
     }
     this->writeRegister(XCA9554_CONFIG_PORT_REG, &port, 1);
   } else {
-    Serial.println("xCA9554 not found");
+    // println("xCA9554 not found");
   }
 }
 
@@ -217,7 +217,7 @@ void Arduino_XCA9554SWSPI::digitalWrite(uint8_t pin, uint8_t val)
   }
   else
   {
-    Serial.println("xCA9554 not found");
+    // println("xCA9554 not found");
   }
 }
 
@@ -227,12 +227,12 @@ int Arduino_XCA9554SWSPI::digitalRead(uint8_t pin)
   {
     uint8_t port = 0;
     this->readRegister(XCA9554_INPUT_PORT_REG, &port, 1);
-    //Serial.printf("Read 0x%02X\n", port);
+    // printf("Read 0x%02X\n", port);
     return(port & (1UL << pin)) ? HIGH : LOW;
   }
   else
   {
-    Serial.println("xCA9554 not found");
+    // println("xCA9554 not found");
   }
   return 0;
 }

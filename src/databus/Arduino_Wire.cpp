@@ -21,7 +21,7 @@ bool Arduino_Wire::begin(int32_t speed, int8_t)
   _wire->beginTransmission(_i2c_addr);
   if (_wire->endTransmission())
   {
-    // Serial.println("Wire::Device not found.");
+    // println("Wire::Device not found.");
     is_found = false;
   }
   else
@@ -34,7 +34,7 @@ bool Arduino_Wire::begin(int32_t speed, int8_t)
 
 void Arduino_Wire::beginWrite()
 {
-  // Serial.println("Wire::beginWrite()");
+  // println("Wire::beginWrite()");
   if (_speed != GFX_NOT_DEFINED)
   {
     _wire->setClock(_speed);
@@ -44,61 +44,61 @@ void Arduino_Wire::beginWrite()
 
 void Arduino_Wire::endWrite()
 {
-  // Serial.println("\nWire::endWrite()");
+  // println("\nWire::endWrite()");
   _wire->endTransmission();
 }
 
 void Arduino_Wire::write(uint8_t d)
 {
-  // Serial.printf("(0x%02x) ", d);
+  // printf("(0x%02x) ", d);
   _wire->write(d);
 }
 
 void Arduino_Wire::writeCommand(uint8_t c)
 {
-  // Serial.println("Wire::writeCommand()");
+  // println("Wire::writeCommand()");
   // not implemented.
 }
 
 void Arduino_Wire::writeCommand16(uint16_t)
 {
-  // Serial.println("Wire::writeCommand16()");
+  // println("Wire::writeCommand16()");
   // not implemented.
 }
 
 void Arduino_Wire::write16(uint16_t)
 {
-  // Serial.println("Wire::write16()");
+  // println("Wire::write16()");
   // not implemented
 }
 
 void Arduino_Wire::writeRepeat(uint16_t, uint32_t)
 {
-  // Serial.println("Wire::writeRepeat()");
+  // println("Wire::writeRepeat()");
   // not implemented
 }
 
 void Arduino_Wire::writePixels(uint16_t *, uint32_t)
 {
-  // Serial.println("Wire::writePixels()");
+  // println("Wire::writePixels()");
   // not implemented
 }
 
 #if !defined(LITTLE_FOOT_PRINT)
 void Arduino_Wire::writeBytes(uint8_t *data, uint32_t len)
 {
-  // Serial.println("Wire::writeBytes()");
+  // println("Wire::writeBytes()");
   // not implemented
 }
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 void Arduino_Wire::writeRegister(uint8_t reg, uint8_t *data, size_t len)
 {
-  // Serial.println("Wire::writeRegister()");
+  // println("Wire::writeRegister()");
 }
 
 uint8_t Arduino_Wire::readRegister(uint8_t reg, uint8_t *data, size_t len)
 {
-  // Serial.println("Wire::readRegister()");
+  // println("Wire::readRegister()");
   return 0;
 }

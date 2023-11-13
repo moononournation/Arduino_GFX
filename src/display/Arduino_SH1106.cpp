@@ -40,19 +40,19 @@ Arduino_SH1106::Arduino_SH1106(Arduino_DataBus *bus, int8_t rst, int16_t w, int1
 
 bool Arduino_SH1106::begin(int32_t speed)
 {
-  // Serial.println("SH1106::begin()");
+  // println("SH1106::begin()");
 
   if (!_bus)
   {
-    Serial.println("SH1106::bus not given");
+    // println("SH1106::bus not given");
   }
   else if (!_bus->begin(speed))
   {
-    Serial.println("SH1106::bus not started");
+    // println("SH1106::bus not started");
     return false;
   }
 
-  // Serial.println("SH1106::Initialize Display");
+  // println("SH1106::Initialize Display");
 
   if (_rst != GFX_NOT_DEFINED)
   {
@@ -102,8 +102,7 @@ bool Arduino_SH1106::begin(int32_t speed)
 
 void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
-  // Serial.printf("SH1106::drawBitmap %d/%d w:%d h:%d\n", xStart, yStart, w, h);
-  unsigned long now = millis();
+  // printf("SH1106::drawBitmap %d/%d w:%d h:%d\n", xStart, yStart, w, h);
   uint16_t bufferLength = TWI_BUFFER_LENGTH;
 
   // transfer the whole bitmap
@@ -123,7 +122,6 @@ void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap,
     // send out page data
     for (int x = 0; x < w; x++)
     {
-
       if (!bytesOut)
       {
         _bus->beginWrite();
@@ -145,28 +143,26 @@ void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap,
       _bus->endWrite();
     }
   }
-
-  Serial.printf("SH1106::drawBitmap %d ms\n", millis() - now);
 } // drawBitmap()
 
 void Arduino_SH1106::drawIndexedBitmap(int16_t, int16_t, uint8_t *, uint16_t *, int16_t, int16_t, int16_t)
 {
-  Serial.println("SH1106::Not Implemented drawIndexedBitmap()");
+  // println("SH1106::Not Implemented drawIndexedBitmap()");
 }
 
 void Arduino_SH1106::draw3bitRGBBitmap(int16_t, int16_t, uint8_t *bitmap, int16_t w, int16_t h)
 {
-  Serial.println("SH1106::Not Implemented draw3bitRGBBitmap()");
+  // println("SH1106::Not Implemented draw3bitRGBBitmap()");
 }
 
 void Arduino_SH1106::draw16bitRGBBitmap(int16_t, int16_t, uint16_t *, int16_t, int16_t)
 {
-  Serial.println("SH1106::Not Implemented draw16bitRGBBitmap()");
+  // println("SH1106::Not Implemented draw16bitRGBBitmap()");
 }
 
 void Arduino_SH1106::draw24bitRGBBitmap(int16_t, int16_t, uint8_t *, int16_t, int16_t)
 {
-  Serial.println("SH1106::Not Implemented draw24bitRGBBitmap()");
+  // println("SH1106::Not Implemented draw24bitRGBBitmap()");
 }
 
 void Arduino_SH1106::invertDisplay(bool i)

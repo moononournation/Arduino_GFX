@@ -1,5 +1,3 @@
-#if !defined(LITTLE_FOOT_PRINT)
-
 #include "Arduino_G.h"
 
 /**************************************************************************/
@@ -275,5 +273,3 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_3(
     return true;
   }
 }
-
-#endif // !defined(LITTLE_FOOT_PRINT)
