@@ -32,7 +32,7 @@
 #define SH110X_SETSTARTLINE 0x40
 
 Arduino_SH1106::Arduino_SH1106(Arduino_DataBus *bus, int8_t rst, int16_t w, int16_t h)
-    : Arduino_G(w, h), _width(w), _height(h), _bus(bus), _rst(rst)
+    : Arduino_G(w, h), _bus(bus), _rst(rst)
 {
   _rotation = 0;
   _pages = (h + 7) / 8;

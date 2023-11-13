@@ -24,10 +24,8 @@ public:
 
 protected:
   Arduino_DataBus *_bus;
-  int8_t _width;  //
-  int8_t _height; //
-  int8_t _pages;  //
   int8_t _rst;
+  int8_t _pages;
   uint8_t _rotation;
 
 private:

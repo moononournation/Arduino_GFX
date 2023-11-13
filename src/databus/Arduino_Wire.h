@@ -32,8 +32,8 @@ protected:
   uint8_t output_buf = 0;
   bool is_found;
 
-  TwoWire *_wire;
   uint8_t _i2c_addr;
+  TwoWire *_wire;
 
   int32_t _speed;
 private:
