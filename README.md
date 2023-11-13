@@ -284,6 +284,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * [LILYGO T-Display](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
 * [LILYGO T-Display-S3](https://www.lilygo.cc/products/t-display-s3) [[demo video](https://youtu.be/kpRC64QNQAo)]
 * [LILYGO T-Display-S3 AMOLED](https://www.lilygo.cc/products/t-display-s3-amoled) [[demo video](https://youtu.be/NvOGJAMlh1M)]
+* [LILYGO T-Display-s3-Pro](https://www.lilygo.cc/products/t-display-s3-pro) [[demo video](https://youtube.com/shorts/PE-GKTzbdP8)]
 * [LILYGO T-QT](https://www.lilygo.cc/products/t-qt-v1-1) [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM)]
 * [LILYGO T-RGB](https://www.lilygo.cc/products/t-rgb) [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
 * [LILYGO T-Track](https://www.lilygo.cc/products/t-track) [[demo video](https://youtu.be/6wmUhp-5eMg)][[LVGL demo video](https://youtu.be/wQjMu5JZSkg)]
