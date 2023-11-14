@@ -100,13 +100,13 @@ bool Arduino_SH1106::begin(int32_t speed)
   return true;
 }
 
-void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
+void Arduino_SH1106::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t, uint16_t)
 {
   // printf("SH1106::drawBitmap %d/%d w:%d h:%d\n", xStart, yStart, w, h);
   uint16_t bufferLength = TWI_BUFFER_LENGTH;
 
   // transfer the whole bitmap
-  for (uint8_t p = 0; p < _pages; p++)
+  for (uint8_t p = y / 8; p < h / 8; p++)
   {
     uint8_t *pptr = bitmap + (p * w); // page start pointer
     uint16_t bytesOut = 0;
@@ -120,7 +120,7 @@ void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap,
     _bus->endWrite();
 
     // send out page data
-    for (int x = 0; x < w; x++)
+    for (int i = x; i < w; i++)
     {
       if (!bytesOut)
       {
@@ -150,7 +150,7 @@ void Arduino_SH1106::drawIndexedBitmap(int16_t, int16_t, uint8_t *, uint16_t *, 
   // println("SH1106::Not Implemented drawIndexedBitmap()");
 }
 
-void Arduino_SH1106::draw3bitRGBBitmap(int16_t, int16_t, uint8_t *bitmap, int16_t w, int16_t h)
+void Arduino_SH1106::draw3bitRGBBitmap(int16_t, int16_t, uint8_t *, int16_t, int16_t)
 {
   // println("SH1106::Not Implemented draw3bitRGBBitmap()");
 }
@@ -165,7 +165,7 @@ void Arduino_SH1106::draw24bitRGBBitmap(int16_t, int16_t, uint8_t *, int16_t, in
   // println("SH1106::Not Implemented draw24bitRGBBitmap()");
 }
 
-void Arduino_SH1106::invertDisplay(bool i)
+void Arduino_SH1106::invertDisplay(bool)
 {
   // _bus->sendCommand(i ? ILI9488_INVON : ILI9488_INVOFF);
 }
