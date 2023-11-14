@@ -61,7 +61,7 @@ void Arduino_ST7796::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t 
   {
     _currentY = y;
     _currentH = h;
-    x += _yStart;
+    y += _yStart;
     _bus->writeC8D16D16(ST7796_RASET, y, y + h - 1);
   }
 
