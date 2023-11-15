@@ -79,9 +79,9 @@ private:
 
   union
   {
-    uint8_t _buffer[LCD_MAX_PIXELS_AT_ONCE * 2] = {0};
-    uint16_t _buffer16[LCD_MAX_PIXELS_AT_ONCE];
-    uint32_t _buffer32[LCD_MAX_PIXELS_AT_ONCE / 2];
+    uint8_t* _buffer;
+    uint16_t* _buffer16;
+    uint32_t* _buffer32;
   };
 };
 
