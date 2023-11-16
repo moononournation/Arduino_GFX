@@ -57,11 +57,12 @@ private:
   spi_device_handle_t _handle;
   spi_transaction_ext_t _spi_tran_ext;
   spi_transaction_t *_spi_tran;
+
   union
   {
-    uint8_t _buffer[ESP32QSPI_MAX_PIXELS_AT_ONCE * 2] = {0};
-    uint16_t _buffer16[ESP32QSPI_MAX_PIXELS_AT_ONCE];
-    uint32_t _buffer32[ESP32QSPI_MAX_PIXELS_AT_ONCE / 2];
+    uint8_t* _buffer;
+    uint16_t* _buffer16;
+    uint32_t* _buffer32;
   };
 };
 

@@ -165,6 +165,12 @@ bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
 
   memset(&_spi_tran, 0, sizeof(_spi_tran));
 
+  _buffer = (uint8_t *)heap_caps_aligned_alloc(16, ESP32SPIDMA_MAX_PIXELS_AT_ONCE * 2, MALLOC_CAP_DMA);
+  if (!_buffer)
+  {
+    return false;
+  }
+
   return true;
 }
 

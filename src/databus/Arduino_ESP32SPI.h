@@ -73,12 +73,14 @@ private:
 
   spi_t *_spi;
   uint8_t _bitOrder = SPI_MSBFIRST;
+
   union
   {
-    uint8_t _buffer[ESP32SPI_MAX_PIXELS_AT_ONCE * 2] = {0};
-    uint16_t _buffer16[ESP32SPI_MAX_PIXELS_AT_ONCE];
-    uint32_t _buffer32[ESP32SPI_MAX_PIXELS_AT_ONCE / 2];
+    uint8_t* _buffer;
+    uint16_t* _buffer16;
+    uint32_t* _buffer32;
   };
+
   uint16_t _data_buf_bit_idx = 0;
 };
 

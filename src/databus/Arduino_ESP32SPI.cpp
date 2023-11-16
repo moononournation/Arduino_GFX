@@ -315,6 +315,12 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     spiTransaction(_spi, _div, _dataMode, _bitOrder);
   }
 
+  _buffer = (uint8_t *)heap_caps_aligned_alloc(16, ESP32SPI_MAX_PIXELS_AT_ONCE * 2, MALLOC_CAP_DMA);
+  if (!_buffer)
+  {
+    return false;
+  }
+
   return true;
 }
 

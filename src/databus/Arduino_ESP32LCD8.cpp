@@ -155,7 +155,13 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
 
   _dma_chan = _i80_bus->dma_chan;
   _dmadesc = (dma_descriptor_t *)heap_caps_malloc(sizeof(dma_descriptor_t), MALLOC_CAP_DMA);
+
   _buffer = (uint8_t *)heap_caps_aligned_alloc(16, LCD_MAX_PIXELS_AT_ONCE * 2, MALLOC_CAP_DMA);
+  if (!_buffer)
+  {
+    return false;
+  }
+
   return true;
 }
 
