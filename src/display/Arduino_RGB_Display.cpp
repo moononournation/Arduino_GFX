@@ -398,15 +398,15 @@ void Arduino_RGB_Display::draw16bitRGBBitmap(int16_t x, int16_t y,
       {
       case 1:
         cachePos = (uint32_t)(_framebuffer + (x * WIDTH));
-        cache_size = HEIGHT * w * 2;
+        cache_size = WIDTH * w * 2;
         break;
       case 2:
         cachePos = (uint32_t)(_framebuffer + ((MAX_Y - y) * WIDTH));
-        cache_size = HEIGHT * h * 2;
+        cache_size = WIDTH * h * 2;
         break;
       case 3:
         cachePos = (uint32_t)(_framebuffer + ((MAX_Y - x) * WIDTH));
-        cache_size = HEIGHT * w * 2;
+        cache_size = WIDTH * w * 2;
         break;
       default: // case 0:
         cachePos = (uint32_t)(_framebuffer + (y * WIDTH) + x);
