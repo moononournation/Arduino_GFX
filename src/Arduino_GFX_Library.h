@@ -81,6 +81,7 @@
 #include "display/Arduino_SEPS525.h"
 #include "display/Arduino_SH1106.h"
 #include "display/Arduino_SSD1283A.h"
+#include "display/Arduino_SSD1306.h"
 #include "display/Arduino_SSD1331.h"
 #include "display/Arduino_SSD1351.h"
 #include "display/Arduino_ST7735.h"
