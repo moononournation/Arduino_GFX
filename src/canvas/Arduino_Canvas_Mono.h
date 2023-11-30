@@ -22,8 +22,8 @@ protected:
   uint8_t *_framebuffer = nullptr;
   Arduino_G *_output = nullptr;
   int16_t _output_x, _output_y;
-  int16_t _canvas_width, _canvas_height;  // width and height of canvas buffer
   bool _verticalByte;
+  int16_t _canvas_width, _canvas_height;  // width and height of canvas buffer
 
 private:
 };
