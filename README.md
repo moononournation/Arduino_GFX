@@ -406,3 +406,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * <https://github.com/modi12jin/Arduino-ESP32-WEA2012.git>
 * <https://github.com/nopnop2002/esp-idf-parallel-tft.git>
 * <https://github.com/olikraus/u8g2.git>
+
+## Sponsor vs Support
+
+As you may already aware there are seldom sponsors in this project. Convert it in terms of man power, it is much lower than a manhour each month. So don't expect too much on the support. Expecially the feature not realted to my planned maker projects ;>
