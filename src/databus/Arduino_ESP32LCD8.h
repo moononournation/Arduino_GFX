@@ -2,6 +2,8 @@
 
 #include "Arduino_DataBus.h"
 
+#if (ESP_ARDUINO_VERSION_MAJOR < 3)
+
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
 
 #define LCD_MAX_PIXELS_AT_ONCE 2046
@@ -77,3 +79,5 @@ private:
 };
 
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+
+#endif // #if (ESP_ARDUINO_VERSION_MAJOR < 3)

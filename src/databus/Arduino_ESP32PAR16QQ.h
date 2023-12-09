@@ -57,8 +57,8 @@ private:
   PORTreg_t _wrPortClr; ///< PORT register CLEAR
   uint32_t _wrPinMask;  ///< Bitmask
 
-  PORTreg_t _dataPortSet; ///< PORT register SET
-  PORTreg_t _dataPortClr; ///< PORT register CLEAR
+  PORTreg_t _dataPortSet;
+  PORTreg_t _dataPortClr;
   uint32_t _dataClrMask;
   // Lookup table for ESP32 parallel bus interface uses 2kbyte RAM,
   uint32_t _xset_mask_lo[256];
