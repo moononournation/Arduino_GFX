@@ -5,9 +5,17 @@
 #if defined(ESP32)
 #include "soc/spi_struct.h"
 #if CONFIG_IDF_TARGET_ESP32S3
+#if (ESP_ARDUINO_VERSION_MAJOR < 3)
 #include "driver/periph_ctrl.h"
+#else
+#include "esp_private/periph_ctrl.h"
+#endif
 #elif CONFIG_IDF_TARGET_ESP32C3
+#if (ESP_ARDUINO_VERSION_MAJOR < 3)
 #include "driver/periph_ctrl.h"
+#else
+#include "esp_private/periph_ctrl.h"
+#endif
 #include "esp32c3/rom/gpio.h"
 #include "soc/periph_defs.h"
 #else
