@@ -19,14 +19,14 @@ bool Arduino_ESP32PAR16::begin(int32_t, int8_t)
   if (_dc >= 32)
   {
     _dcPinMask = digitalPinToBitMask(_dc);
-    _dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    _dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+    _dcPortSet = (PORTreg_t)GPIO_OUT1_W1TS_REG;
+    _dcPortClr = (PORTreg_t)GPIO_OUT1_W1TC_REG;
   }
   else
   {
     _dcPinMask = digitalPinToBitMask(_dc);
-    _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    _dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
+    _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
 
   if (_cs != GFX_NOT_DEFINED)
@@ -37,14 +37,14 @@ bool Arduino_ESP32PAR16::begin(int32_t, int8_t)
   if (_cs >= 32)
   {
     _csPinMask = digitalPinToBitMask(_cs);
-    _csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    _csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+    _csPortSet = (PORTreg_t)GPIO_OUT1_W1TS_REG;
+    _csPortClr = (PORTreg_t)GPIO_OUT1_W1TC_REG;
   }
   else if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
-    _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    _csPortClr = (PORTreg_t)&GPIO.out_w1tc;
+    _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
 
   pinMode(_wr, OUTPUT);
@@ -52,14 +52,14 @@ bool Arduino_ESP32PAR16::begin(int32_t, int8_t)
   if (_wr >= 32)
   {
     _wrPinMask = digitalPinToBitMask(_wr);
-    _wrPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    _wrPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+    _wrPortSet = (PORTreg_t)GPIO_OUT1_W1TS_REG;
+    _wrPortClr = (PORTreg_t)GPIO_OUT1_W1TC_REG;
   }
   else
   {
     _wrPinMask = digitalPinToBitMask(_wr);
-    _wrPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    _wrPortClr = (PORTreg_t)&GPIO.out_w1tc;
+    _wrPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _wrPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
 
   if (_rd != GFX_NOT_DEFINED)
@@ -84,6 +84,11 @@ bool Arduino_ESP32PAR16::begin(int32_t, int8_t)
   pinMode(_d13, OUTPUT);
   pinMode(_d14, OUTPUT);
   pinMode(_d15, OUTPUT);
+
+  _data1PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _data1PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _data2PortSet = (PORTreg_t)GPIO_OUT1_W1TS_REG;
+  _data2PortClr = (PORTreg_t)GPIO_OUT1_W1TC_REG;
 
   // INIT 16-bit mask
   _data1ClrMask = 0;
@@ -403,8 +408,8 @@ bool Arduino_ESP32PAR16::begin(int32_t, int8_t)
       }
     }
   }
-  GPIO.out_w1tc = _data1ClrMask;
-  GPIO.out1_w1tc.val = _data2ClrMask;
+  *_data1PortClr = _data1ClrMask;
+  *_data2PortClr = _data2ClrMask;
 
   return true;
 }
@@ -453,10 +458,10 @@ void Arduino_ESP32PAR16::writeRepeat(uint16_t p, uint32_t len)
   _data16.value = p;
   uint32_t d1 = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
   uint32_t d2 = _xset_mask2_hi[_data16.msb] | _xset_mask2_lo[_data16.lsb];
-  GPIO.out_w1tc = _data1ClrMask;
-  GPIO.out1_w1tc.val = _data2ClrMask;
-  GPIO.out_w1ts = d1;
-  GPIO.out1_w1ts.val = d2;
+  *_data1PortClr = _data1ClrMask;
+  *_data2PortClr = _data2ClrMask;
+  *_data1PortSet = d1;
+  *_data2PortSet = d2;
   while (len--)
   {
     *_wrPortClr = _wrPinMask;
@@ -551,10 +556,10 @@ void Arduino_ESP32PAR16::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, 
   while (len--)
   {
     _data16.value = idx[*data++];
-    GPIO.out_w1tc = _data1ClrMask;
-    GPIO.out1_w1tc.val = _data2ClrMask;
-    GPIO.out_w1ts = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
-    GPIO.out1_w1ts.val = _xset_mask2_hi[_data16.msb] | _xset_mask2_lo[_data16.lsb];
+    *_data1PortClr = _data1ClrMask;
+    *_data2PortClr = _data2ClrMask;
+    *_data1PortSet = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
+    *_data2PortSet = _xset_mask2_hi[_data16.msb] | _xset_mask2_lo[_data16.lsb];
     *_wrPortClr = _wrPinMask;
     *_wrPortSet = _wrPinMask;
     *_wrPortClr = _wrPinMask;
@@ -564,10 +569,10 @@ void Arduino_ESP32PAR16::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, 
 
 INLINE void Arduino_ESP32PAR16::WRITE(uint8_t d)
 {
-  GPIO.out_w1tc = _data1ClrMask;
-  GPIO.out1_w1tc.val = _data2ClrMask;
-  GPIO.out_w1ts = _xset_mask1_lo[d];
-  GPIO.out1_w1ts.val = _xset_mask2_lo[d];
+  *_data1PortClr = _data1ClrMask;
+  *_data2PortClr = _data2ClrMask;
+  *_data1PortSet = _xset_mask1_lo[d];
+  *_data2PortSet = _xset_mask2_lo[d];
   *_wrPortClr = _wrPinMask;
   *_wrPortSet = _wrPinMask;
 }
@@ -577,10 +582,10 @@ INLINE void Arduino_ESP32PAR16::WRITE16(uint16_t d)
   _data16.value = d;
   uint32_t d1 = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
   uint32_t d2 = _xset_mask2_hi[_data16.msb] | _xset_mask2_lo[_data16.lsb];
-  GPIO.out_w1tc = _data1ClrMask;
-  GPIO.out1_w1tc.val = _data2ClrMask;
-  GPIO.out_w1ts = d1;
-  GPIO.out1_w1ts.val = d2;
+  *_data1PortClr = _data1ClrMask;
+  *_data2PortClr = _data2ClrMask;
+  *_data1PortSet = d1;
+  *_data2PortSet = d2;
   *_wrPortClr = _wrPinMask;
   *_wrPortSet = _wrPinMask;
 }

@@ -4,6 +4,8 @@
  */
 #include "Arduino_DataBus.h"
 
+#if (ESP_ARDUINO_VERSION_MAJOR < 3)
+
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
 
 #ifndef _ARDUINO_ESP32LCD16_H_
@@ -88,3 +90,5 @@ private:
 #endif // _ARDUINO_ESP32LCD16_H_
 
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+
+#endif // #if (ESP_ARDUINO_VERSION_MAJOR < 3)
