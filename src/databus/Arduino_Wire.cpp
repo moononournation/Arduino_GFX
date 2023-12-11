@@ -1,10 +1,31 @@
 // Databus Adapter for the Arduino Wire bus (I2C bus)
 
+// The Wire protocol implementation allows specifying prefix data and command bytes instead of using a separate D/C signal.
+// when sending
+
 #include "Arduino_Wire.h"
 
 Arduino_Wire::
     Arduino_Wire(uint8_t i2c_addr, TwoWire *wire)
     : _i2c_addr(i2c_addr), _wire(wire) {}
+
+void Arduino_Wire::setOption(option_key key, uint16_t value)
+{
+  if (key == TWI_COMMAND_PREFIX)
+  {
+    _use_prefix = true;
+    _command_prefix = (uint8_t)value;
+  }
+  else if (key == TWI_DATA_PREFIX)
+  {
+    _use_prefix = true;
+    _data_prefix = (uint8_t)value;
+  }
+  else
+  {
+    Arduino_DataBus::setOption(key, value);
+  }
+}
 
 bool Arduino_Wire::begin(int32_t speed, int8_t)
 {
@@ -56,8 +77,11 @@ void Arduino_Wire::write(uint8_t d)
 
 void Arduino_Wire::writeCommand(uint8_t c)
 {
-  // println("Wire::writeCommand()");
-  // not implemented.
+  if (_use_prefix)
+  {
+    _wire->write(_command_prefix);
+  }
+  _wire->write(c);
 }
 
 void Arduino_Wire::writeCommand16(uint16_t)
@@ -82,6 +106,37 @@ void Arduino_Wire::writePixels(uint16_t *, uint32_t)
 {
   // println("Wire::writePixels()");
   // not implemented
+}
+
+// write data to the bus using the data prefix
+// when len exceeds the TWI_BUFFER_LENGTH then a new transfer protocol is started.
+void Arduino_Wire::writePixels(uint8_t *data, uint32_t len)
+{
+  uint16_t bytesOut = 0;
+
+  if (_use_prefix)
+  {
+    _wire->write(_data_prefix);
+    bytesOut++;
+  }
+
+  while (len--)
+  {
+    if (bytesOut >= TWI_BUFFER_LENGTH)
+    {
+      // finish this packet and start a new one.
+      _wire->endTransmission();
+      _wire->beginTransmission(_i2c_addr);
+      bytesOut = 0;
+      if (_use_prefix)
+      {
+        _wire->write(_data_prefix);
+        bytesOut++;
+      }
+    }
+    _wire->write(*data++);
+    bytesOut++;
+  }
 }
 
 #if !defined(LITTLE_FOOT_PRINT)

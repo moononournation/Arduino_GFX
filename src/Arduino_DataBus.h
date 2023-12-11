@@ -114,7 +114,11 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #endif
 
 #ifndef TWI_BUFFER_LENGTH
+#if defined(I2C_BUFFER_LENGTH)
+#define TWI_BUFFER_LENGTH I2C_BUFFER_LENGTH
+#else
 #define TWI_BUFFER_LENGTH 32
+#endif
 #endif
 
 #ifndef UNUSED
@@ -122,7 +126,7 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #endif
 #define ATTR_UNUSED __attribute__((unused))
 
-#define MSB_16(val) (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8)
+#define MSB_16(val) (((val) & 0xFF00) >> 8) | (((val) & 0xFF) << 8)
 #define MSB_16_SET(var, val) \
   {                          \
     (var) = MSB_16(val);     \
@@ -264,9 +268,17 @@ union
 class Arduino_DataBus
 {
 public:
+  enum option_key : uint16_t
+  {
+    TWI_COMMAND_PREFIX,
+    TWI_DATA_PREFIX
+  };
+
   Arduino_DataBus();
 
   void unused() { UNUSED(_data16); } // avoid compiler warning
+
+  virtual void setOption(option_key option_key, uint16_t option_value){};
 
   virtual bool begin(int32_t speed = SPI_DEFAULT_FREQ, int8_t dataMode = GFX_NOT_DEFINED) = 0;
   virtual void beginWrite() = 0;
@@ -281,6 +293,7 @@ public:
   virtual void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2);
   virtual void writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2);
   virtual void writeRepeat(uint16_t p, uint32_t len) = 0;
+  virtual void writePixels(uint8_t *data, uint32_t len){};
   virtual void writePixels(uint16_t *data, uint32_t len) = 0;
 
   void sendCommand(uint8_t c);

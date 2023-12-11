@@ -4,6 +4,9 @@
 #include "Arduino_SH1106.h"
 
 // See datasheet for explaining these definitions
+#define SH110X_COMMAND 0x00
+#define SH110X_DATA 0x40
+
 #define SH110X_MEMORYMODE 0x20
 #define SH110X_COLUMNADDR 0x21
 #define SH110X_PAGEADDR 0x22
@@ -52,6 +55,10 @@ bool Arduino_SH1106::begin(int32_t speed)
     return false;
   }
 
+  // set options in case of TWI / Wire bus in use
+  _bus->setOption(Arduino_DataBus::TWI_COMMAND_PREFIX, SH110X_COMMAND);
+  _bus->setOption(Arduino_DataBus::TWI_DATA_PREFIX, SH110X_DATA);
+
   // println("SH1106::Initialize Display");
 
   if (_rst != GFX_NOT_DEFINED)
@@ -83,7 +90,7 @@ bool Arduino_SH1106::begin(int32_t speed)
       SH110X_SETVCOMDETECT, 0x40,      // 0xDB, 0x40,
       0x33,                            // Set VPP to 9V
       SH110X_NORMALDISPLAY,
-      SH110X_MEMORYMODE, 0x10, // 0x20, 0x00
+      SH110X_MEMORYMODE, 0x10, // 0x20, 0x10
       SH110X_DISPLAYALLON_RESUME,
       END_WRITE,
 
@@ -100,49 +107,40 @@ bool Arduino_SH1106::begin(int32_t speed)
   return true;
 }
 
-void Arduino_SH1106::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t, uint16_t)
+void Arduino_SH1106::setBrightness(uint8_t brightness)
 {
-  // printf("SH1106::drawBitmap %d/%d w:%d h:%d\n", xStart, yStart, w, h);
-  uint16_t bufferLength = TWI_BUFFER_LENGTH;
+  _bus->beginWrite();
+  _bus->write(SH110X_COMMAND);
+  _bus->write(SH110X_SETCONTRAST);
+  _bus->write(brightness);
+  _bus->endWrite();
+}; // setBrightness
+
+void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap, int16_t w, int16_t h, uint16_t, uint16_t)
+{
+  printf("SH1106::drawBitmap %d/%d w:%d h:%d\n", xStart, yStart, w, h);
+  unsigned long startTime = millis();
 
   // transfer the whole bitmap
-  for (uint8_t p = y / 8; p < h / 8; p++)
+  for (uint8_t p = (yStart / 8); p < (h / 8); p++)
   {
     uint8_t *pptr = bitmap + (p * w); // page start pointer
     uint16_t bytesOut = 0;
 
     // start page sequence
     _bus->beginWrite();
-    _bus->write(0x00);
+    _bus->write(SH110X_COMMAND);
     _bus->write(SH110X_SETPAGEADDR + p);
     _bus->write(SH110X_SETLOWCOLUMN + 2); // set column
     _bus->write(SH110X_SETHIGHCOLUMN + 0);
     _bus->endWrite();
 
-    // send out page data
-    for (int i = x; i < w; i++)
-    {
-      if (!bytesOut)
-      {
-        _bus->beginWrite();
-        _bus->write(SH110X_SETSTARTLINE + 0);
-        bytesOut = 1;
-      }
-
-      _bus->write(*pptr++);
-      bytesOut++;
-
-      if (bytesOut == bufferLength)
-      {
-        _bus->endWrite();
-        bytesOut = 0;
-      }
-    }
-    if (bytesOut)
-    {
-      _bus->endWrite();
-    }
+    _bus->beginWrite();
+    _bus->writePixels(pptr, w);
+    _bus->endWrite();
   }
+
+  printf("draw %d ms\n", (millis() - startTime));
 } // drawBitmap()
 
 void Arduino_SH1106::drawIndexedBitmap(int16_t, int16_t, uint8_t *, uint16_t *, int16_t, int16_t, int16_t)
@@ -172,22 +170,10 @@ void Arduino_SH1106::invertDisplay(bool)
 
 void Arduino_SH1106::displayOn(void)
 {
-  uint8_t seq[] = {
-      BEGIN_WRITE,
-      WRITE_BYTES, 2,
-      0x00, // sequence of commands
-      SH110X_DISPLAYON,
-      END_WRITE};
-  _bus->batchOperation(seq, sizeof(seq));
+  _bus->sendCommand(SH110X_DISPLAYON);
 }
 
 void Arduino_SH1106::displayOff(void)
 {
-  uint8_t seq[] = {
-      BEGIN_WRITE,
-      WRITE_BYTES, 2,
-      0x00, // sequence of commands
-      SH110X_DISPLAYOFF,
-      END_WRITE};
-  _bus->batchOperation(seq, sizeof(seq));
+  _bus->sendCommand(SH110X_DISPLAYOFF);
 }

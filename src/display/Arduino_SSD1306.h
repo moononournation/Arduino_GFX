@@ -24,14 +24,12 @@ public:
   void setBrightness(uint8_t brightness);
 
 protected:
+  void _commandList(uint8_t *commands, uint8_t len);
+
   Arduino_DataBus *_bus;
   int8_t _rst;
-  int8_t _pages;
-  uint8_t _rotation;
 
   uint8_t _contrast = 0x8F;
-  uint8_t _colStart;
-  uint8_t _colEnd;
 
 private:
 };
