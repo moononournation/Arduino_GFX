@@ -14,14 +14,14 @@ bool Arduino_ESP32S2PAR16Q::begin(int32_t speed, int8_t dataMode)
   if (_dc >= 32)
   {
     _dcPinMask = digitalPinToBitMask(_dc);
-    _dcPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    _dcPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+    _dcPortSet = (PORTreg_t)GPIO_OUT1_W1TS_REG;
+    _dcPortClr = (PORTreg_t)GPIO_OUT1_W1TC_REG;
   }
   else
   {
     _dcPinMask = digitalPinToBitMask(_dc);
-    _dcPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    _dcPortClr = (PORTreg_t)&GPIO.out_w1tc;
+    _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
 
   if (_cs != GFX_NOT_DEFINED)
@@ -32,14 +32,14 @@ bool Arduino_ESP32S2PAR16Q::begin(int32_t speed, int8_t dataMode)
   if (_cs >= 32)
   {
     _csPinMask = digitalPinToBitMask(_cs);
-    _csPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    _csPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+    _csPortSet = (PORTreg_t)GPIO_OUT1_W1TS_REG;
+    _csPortClr = (PORTreg_t)GPIO_OUT1_W1TC_REG;
   }
   else if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
-    _csPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    _csPortClr = (PORTreg_t)&GPIO.out_w1tc;
+    _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
 
   pinMode(_wr, OUTPUT);
@@ -47,14 +47,14 @@ bool Arduino_ESP32S2PAR16Q::begin(int32_t speed, int8_t dataMode)
   if (_wr >= 32)
   {
     _wrPinMask = digitalPinToBitMask(_wr);
-    _wrPortSet = (PORTreg_t)&GPIO.out1_w1ts.val;
-    _wrPortClr = (PORTreg_t)&GPIO.out1_w1tc.val;
+    _wrPortSet = (PORTreg_t)GPIO_OUT1_W1TS_REG;
+    _wrPortClr = (PORTreg_t)GPIO_OUT1_W1TC_REG;
   }
   else
   {
     _wrPinMask = digitalPinToBitMask(_wr);
-    _wrPortSet = (PORTreg_t)&GPIO.out_w1ts;
-    _wrPortClr = (PORTreg_t)&GPIO.out_w1tc;
+    _wrPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _wrPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
 
   if (_rd != GFX_NOT_DEFINED)
@@ -82,8 +82,8 @@ bool Arduino_ESP32S2PAR16Q::begin(int32_t speed, int8_t dataMode)
 
   // INIT 16-bit mask
   _dataClrMask = (1 << _wr) | 0xFFFF;
-  _dataPortSet = (PORTreg_t)&GPIO.out_w1ts;
-  _dataPortClr = (PORTreg_t)&GPIO.out_w1tc;
+  _dataPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _dataPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   *_dataPortClr = _dataClrMask;
 
   return true;

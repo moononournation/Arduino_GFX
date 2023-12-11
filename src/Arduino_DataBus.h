@@ -147,6 +147,7 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #define INLINE inline
 #endif // !defined(LITTLE_FOOT_PRINT)
 
+#if (ESP_ARDUINO_VERSION_MAJOR < 3)
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
 #include <esp_lcd_panel_io.h>
 #include <esp_lcd_panel_io_interface.h>
@@ -234,6 +235,7 @@ struct lcd_panel_io_i80_t
   lcd_i80_trans_descriptor_t trans_pool[]; // Transaction pool
 };
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+#endif // #if (ESP_ARDUINO_VERSION_MAJOR < 3)
 
 typedef enum
 {
