@@ -39,7 +39,6 @@
 #define SSD1306_ACTIVATE_SCROLL 0x2F
 #define SSD1306_SET_VERTICAL_SCROLL_AREA 0xA3
 
-
 void Arduino_SSD1306::_commandList(uint8_t *commands, uint8_t len)
 {
   while (len--)
@@ -136,10 +135,11 @@ bool Arduino_SSD1306::begin(int32_t speed)
   return true;
 }
 
-void Arduino_SSD1306::setBrightness(uint8_t brightness){
-    // _sendCommand(SSD1306_SETCONTRAST);
-    // ??? _sendCommand((brightness < 50) ? 0 : _contrast); ???
-    // _sendCommand((brightness < 50) ? 0 : 0x8f);
+void Arduino_SSD1306::setBrightness(uint8_t brightness)
+{
+  _bus->beginWrite();
+  _bus->writeC8D8(SSD1306_SETCONTRAST, brightness);
+  _bus->endWrite();
 }; // setBrightness
 
 void Arduino_SSD1306::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)

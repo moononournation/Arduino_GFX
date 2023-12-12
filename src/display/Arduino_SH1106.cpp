@@ -74,8 +74,7 @@ bool Arduino_SH1106::begin(int32_t speed)
 
   static const uint8_t init_sequence[] = {
       BEGIN_WRITE,
-      WRITE_BYTES, 26,
-      0x00, // sequence of commands, Co = 0, D/C = 0
+      WRITE_C8_BYTES, 25, 
       SH110X_DISPLAYOFF,
       SH110X_SETDISPLAYCLOCKDIV, 0x80, // 0xD5, 0x80,
       SH110X_SETMULTIPLEX, 0x3F,       // 0xA8, 0x3F,
@@ -97,9 +96,7 @@ bool Arduino_SH1106::begin(int32_t speed)
       DELAY, 100,
 
       BEGIN_WRITE,
-      WRITE_BYTES, 2,
-      0x00, // Co = 0, D/C = 0
-      SH110X_DISPLAYON,
+      WRITE_COMMAND_8, SH110X_DISPLAYON,
       END_WRITE};
 
   _bus->batchOperation(init_sequence, sizeof(init_sequence));
@@ -110,9 +107,7 @@ bool Arduino_SH1106::begin(int32_t speed)
 void Arduino_SH1106::setBrightness(uint8_t brightness)
 {
   _bus->beginWrite();
-  _bus->write(SH110X_COMMAND);
-  _bus->write(SH110X_SETCONTRAST);
-  _bus->write(brightness);
+  _bus->writeC8D8(SH110X_SETCONTRAST, brightness);
   _bus->endWrite();
 }; // setBrightness
 
@@ -129,8 +124,7 @@ void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap,
 
     // start page sequence
     _bus->beginWrite();
-    _bus->write(SH110X_COMMAND);
-    _bus->write(SH110X_SETPAGEADDR + p);
+    _bus->writeCommand(SH110X_SETPAGEADDR + p);
     _bus->write(SH110X_SETLOWCOLUMN + 2); // set column
     _bus->write(SH110X_SETHIGHCOLUMN + 0);
     _bus->endWrite();
