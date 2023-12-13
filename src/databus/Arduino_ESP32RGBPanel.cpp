@@ -12,7 +12,7 @@ Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
     uint16_t hsync_polarity, uint16_t hsync_front_porch, uint16_t hsync_pulse_width, uint16_t hsync_back_porch,
     uint16_t vsync_polarity, uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch,
     uint16_t pclk_active_neg, int32_t prefer_speed, bool useBigEndian,
-    uint16_t de_idle_high, uint16_t pclk_idle_high)
+    uint16_t de_idle_high, uint16_t pclk_idle_high, uint16_t overscan_left)
     : _de(de), _vsync(vsync), _hsync(hsync), _pclk(pclk),
       _r0(r0), _r1(r1), _r2(r2), _r3(r3), _r4(r4),
       _g0(g0), _g1(g1), _g2(g2), _g3(g3), _g4(g4), _g5(g5),
@@ -20,8 +20,9 @@ Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
       _hsync_polarity(hsync_polarity), _hsync_front_porch(hsync_front_porch), _hsync_pulse_width(hsync_pulse_width), _hsync_back_porch(hsync_back_porch),
       _vsync_polarity(vsync_polarity), _vsync_front_porch(vsync_front_porch), _vsync_pulse_width(vsync_pulse_width), _vsync_back_porch(vsync_back_porch),
       _pclk_active_neg(pclk_active_neg), _prefer_speed(prefer_speed), _useBigEndian(useBigEndian),
-      _de_idle_high(de_idle_high), _pclk_idle_high(pclk_idle_high)
+      _de_idle_high(de_idle_high), _pclk_idle_high(pclk_idle_high), _overscan_left(overscan_left)
 {
+  first_pixel_offset = _overscan_left;
 }
 
 bool Arduino_ESP32RGBPanel::begin(int32_t speed)
@@ -47,9 +48,8 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
   esp_lcd_rgb_panel_config_t *_panel_config = (esp_lcd_rgb_panel_config_t *)heap_caps_calloc(1, sizeof(esp_lcd_rgb_panel_config_t), MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL);
 
   _panel_config->clk_src = LCD_CLK_SRC_PLL160M;
-
   _panel_config->timings.pclk_hz = (_prefer_speed == GFX_NOT_DEFINED) ? _speed : _prefer_speed;
-  _panel_config->timings.h_res = w;
+  _panel_config->timings.h_res = (w + _overscan_left + 15) / 16 * 16;
   _panel_config->timings.v_res = h;
   // The following parameters should refer to LCD spec
   _panel_config->timings.hsync_pulse_width = _hsync_pulse_width;
@@ -123,6 +123,8 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
 
   uint16_t color = random(0xffff);
   ESP_ERROR_CHECK(_panel_handle->draw_bitmap(_panel_handle, 0, 0, 1, 1, &color));
+
+  row_stride = _panel_config->timings.h_res;
 
   _rgb_panel = __containerof(_panel_handle, esp_rgb_panel_t, base);
 
