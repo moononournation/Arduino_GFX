@@ -1967,7 +1967,7 @@ static const uint8_t TL028WVC01_init_operations[] = {
 //    1 /* hync_polarity */, 20 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 20 /* hsync_back_porch */,
 //    1 /* vsync_polarity */, 20 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch, */,
 //    0 /* pclk_active_neg */, GFX_NOT_DEFINED /* prefer_speed */, false /* useBigEndian */, 0 /* de_idle_high */,
-//    0 /* pclk_idle_high */, 120 /* overscan_left */ );
+//    0 /* pclk_idle_high */, 120 /* col_offset */ );
 static const uint8_t HD371001C40_init_operations[] = {
     BEGIN_WRITE,
     WRITE_COMMAND_8, 0xFF,
@@ -2066,7 +2066,7 @@ static const uint8_t HD371001C40_init_operations[] = {
 //    1 /* hync_polarity */, 10 /* hsync_front_porch */, 10 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
 //    1 /* vsync_polarity */, 15 /* vsync_front_porch */, 2 /* vsync_pulse_width */, 17 /* vsync_back_porch */,
 //    1 /* pclk_active_neg */, GFX_NOT_DEFINED /* prefer_speed */, false /* useBigEndian */, 0 /* de_idle_high */,
-//    0 /* pclk_idle_high */, 80 /* overscan_left */ );
+//    0 /* pclk_idle_high */, 80 /* col_offset */ );
 static const uint8_t HD458002C40_init_operations[] = {
     BEGIN_WRITE,
     WRITE_COMMAND_8, 0xFF,

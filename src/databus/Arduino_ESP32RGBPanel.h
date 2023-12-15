@@ -66,7 +66,7 @@ public:
       uint16_t hsync_polarity, uint16_t hsync_front_porch, uint16_t hsync_pulse_width, uint16_t hsync_back_porch,
       uint16_t vsync_polarity, uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch,
       uint16_t pclk_active_neg = 0, int32_t prefer_speed = GFX_NOT_DEFINED, bool useBigEndian = false,
-      uint16_t de_idle_high = 0, uint16_t pclk_idle_high = 0, uint16_t overscan_left = 0);
+      uint16_t de_idle_high = 0, uint16_t pclk_idle_high = 0, uint16_t col_offset = 0);
 
   bool begin(int32_t speed = GFX_NOT_DEFINED);
 
@@ -93,7 +93,7 @@ private:
   bool _useBigEndian;
   uint16_t _de_idle_high;
   uint16_t _pclk_idle_high;
-  uint16_t _overscan_left;
+  uint16_t _col_offset;
 
   esp_lcd_panel_handle_t _panel_handle = NULL;
   esp_rgb_panel_t *_rgb_panel;
