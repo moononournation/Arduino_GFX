@@ -188,7 +188,7 @@ void Arduino_SSD1306::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap
   _commandList(draw_startup_sequence, sizeof(draw_startup_sequence));
 
   _bus->beginWrite();
-  _bus->writePixels(bitmap, w * ((h + 7) / 8));
+  _bus->writeBytes(bitmap, w * ((h + 7) / 8));
   _bus->endWrite();
 #endif
 } // drawBitmap()

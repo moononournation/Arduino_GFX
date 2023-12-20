@@ -108,9 +108,11 @@ void Arduino_Wire::writePixels(uint16_t *, uint32_t)
   // not implemented
 }
 
+
+#if !defined(LITTLE_FOOT_PRINT)
 // write data to the bus using the data prefix
 // when len exceeds the TWI_BUFFER_LENGTH then a new transfer protocol is started.
-void Arduino_Wire::writePixels(uint8_t *data, uint32_t len)
+void Arduino_Wire::writeBytes(uint8_t *data, uint32_t len)
 {
   uint16_t bytesOut = 0;
 
@@ -139,12 +141,6 @@ void Arduino_Wire::writePixels(uint8_t *data, uint32_t len)
   }
 }
 
-#if !defined(LITTLE_FOOT_PRINT)
-void Arduino_Wire::writeBytes(uint8_t *data, uint32_t len)
-{
-  // println("Wire::writeBytes()");
-  // not implemented
-}
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 void Arduino_Wire::writeRegister(uint8_t reg, uint8_t *data, size_t len)

@@ -130,7 +130,7 @@ void Arduino_SH1106::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap,
     _bus->endWrite();
 
     _bus->beginWrite();
-    _bus->writePixels(pptr, w);
+    _bus->writeBytes(pptr, w);
     _bus->endWrite();
   }
 
