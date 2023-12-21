@@ -60,6 +60,7 @@
 #include "display/Arduino_ILI9225.h"
 #include "display/Arduino_ILI9331.h"
 #include "display/Arduino_ILI9341.h"
+#include "display/Arduino_ILI9341_2.h"
 #include "display/Arduino_ILI9342.h"
 #include "display/Arduino_ILI9481_18bit.h"
 #include "display/Arduino_ILI9486.h"
