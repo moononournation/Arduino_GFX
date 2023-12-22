@@ -25,11 +25,8 @@ public:
   void write(uint8_t) override;
   void write16(uint16_t) override;
   void writeRepeat(uint16_t p, uint32_t len) override;
-  void writePixels(uint16_t *data, uint32_t len) override;
-
-#if !defined(LITTLE_FOOT_PRINT)
   void writeBytes(uint8_t *data, uint32_t len) override;
-#endif // !defined(LITTLE_FOOT_PRINT)
+  void writePixels(uint16_t *data, uint32_t len) override;
 
   void pinMode(uint8_t pin, uint8_t mode);
   void digitalWrite(uint8_t pin, uint8_t val);

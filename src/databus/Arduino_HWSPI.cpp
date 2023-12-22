@@ -318,6 +318,18 @@ void Arduino_HWSPI::writeRepeat(uint16_t p, uint32_t len)
 #endif // other arch
 }
 
+void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
+{
+#if defined(LITTLE_FOOT_PRINT)
+  while (len--)
+  {
+    WRITE(*data++);
+  }
+#else  // !defined(LITTLE_FOOT_PRINT)
+  WRITEBUF(data, len);
+#endif // !defined(LITTLE_FOOT_PRINT)
+}
+
 void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 {
 #if defined(LITTLE_FOOT_PRINT)
@@ -358,11 +370,6 @@ void Arduino_HWSPI::writePixels(uint16_t *data, uint32_t len)
 }
 
 #if !defined(LITTLE_FOOT_PRINT)
-void Arduino_HWSPI::writeBytes(uint8_t *data, uint32_t len)
-{
-  WRITEBUF(data, len);
-}
-
 void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {
 #if defined(ESP8266) || defined(ESP32)

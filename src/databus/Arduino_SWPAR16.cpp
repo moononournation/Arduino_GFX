@@ -848,6 +848,21 @@ void Arduino_SWPAR16::writeRepeat(uint16_t p, uint32_t len)
 #endif
 }
 
+void Arduino_SWPAR16::writeBytes(uint8_t *data, uint32_t len)
+{
+  while (len > 1)
+  {
+    _data16.msb = *data++;
+    _data16.lsb = *data++;
+    WRITE16(_data16.value);
+    len -= 2;
+  }
+  if (len)
+  {
+    WRITE(*data);
+  }
+}
+
 void Arduino_SWPAR16::writePixels(uint16_t *data, uint32_t len)
 {
   while (len--)
@@ -906,21 +921,6 @@ void Arduino_SWPAR16::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
   _data16.value = d2;
   WRITE(_data16.msb);
   WRITE(_data16.lsb);
-}
-
-void Arduino_SWPAR16::writeBytes(uint8_t *data, uint32_t len)
-{
-  while (len > 1)
-  {
-    _data16.msb = *data++;
-    _data16.lsb = *data++;
-    WRITE16(_data16.value);
-    len -= 2;
-  }
-  if (len)
-  {
-    WRITE(*data);
-  }
 }
 
 void Arduino_SWPAR16::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)

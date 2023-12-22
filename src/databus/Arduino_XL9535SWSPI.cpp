@@ -107,17 +107,15 @@ void Arduino_XL9535SWSPI::writeRepeat(uint16_t, uint32_t)
   // not implemented
 }
 
-void Arduino_XL9535SWSPI::writePixels(uint16_t *, uint32_t)
-{
-  // not implemented
-}
-
-#if !defined(LITTLE_FOOT_PRINT)
 void Arduino_XL9535SWSPI::writeBytes(uint8_t *data, uint32_t len)
 {
   // not implemented
 }
-#endif // !defined(LITTLE_FOOT_PRINT)
+
+void Arduino_XL9535SWSPI::writePixels(uint16_t *, uint32_t)
+{
+  // not implemented
+}
 
 void Arduino_XL9535SWSPI::writeRegister(uint8_t reg, uint8_t *data, size_t len)
 {
