@@ -66,11 +66,17 @@ public:
       uint16_t hsync_polarity, uint16_t hsync_front_porch, uint16_t hsync_pulse_width, uint16_t hsync_back_porch,
       uint16_t vsync_polarity, uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch,
       uint16_t pclk_active_neg = 0, int32_t prefer_speed = GFX_NOT_DEFINED, bool useBigEndian = false,
-      uint16_t de_idle_high = 0, uint16_t pclk_idle_high = 0);
+      uint16_t de_idle_high = 0, uint16_t pclk_idle_high = 0, uint8_t col_offset1 = 0, uint8_t row_offset1 = 0,
+      uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
   bool begin(int32_t speed = GFX_NOT_DEFINED);
 
   uint16_t *getFrameBuffer(int16_t w, int16_t h);
+  uint16_t width;
+  uint8_t col_offset1;
+  uint8_t row_offset1;
+  uint8_t col_offset2;
+  uint8_t row_offset2;
 
 protected:
 private:
