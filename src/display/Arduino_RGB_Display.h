@@ -2152,7 +2152,8 @@ class Arduino_RGB_Display : public Arduino_GFX
 public:
   Arduino_RGB_Display(
       int16_t w, int16_t h, Arduino_ESP32RGBPanel *rgbpanel, uint8_t r = 0, bool auto_flush = true,
-      Arduino_DataBus *bus = NULL, int8_t rst = GFX_NOT_DEFINED, const uint8_t *init_operations = NULL, size_t init_operations_len = GFX_NOT_DEFINED);
+      Arduino_DataBus *bus = NULL, int8_t rst = GFX_NOT_DEFINED, const uint8_t *init_operations = NULL, size_t init_operations_len = GFX_NOT_DEFINED,
+      uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
   bool begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
@@ -2178,6 +2179,10 @@ protected:
   const uint8_t *_init_operations;
   size_t _init_operations_len;
   int16_t MAX_X, MAX_Y;
+  uint8_t COL_OFFSET1, ROW_OFFSET1;
+  uint8_t COL_OFFSET2, ROW_OFFSET2;
+  uint8_t _xStart, _yStart;
+  uint16_t _fb_width, _fb_height, _fb_max_x, _fb_max_y;
 
 private:
 };
