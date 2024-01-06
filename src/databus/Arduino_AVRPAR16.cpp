@@ -175,6 +175,21 @@ void Arduino_AVRPAR16::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
   *_wrPort = wrMaskBase | _wrPinMaskSet;
 }
 
+void Arduino_AVRPAR16::writeBytes(uint8_t *data, uint32_t len)
+{
+  while (len > 1)
+  {
+    _data16.msb = *data++;
+    _data16.lsb = *data++;
+    WRITE16(_data16.value);
+    len -= 2;
+  }
+  if (len)
+  {
+    WRITE16(*data);
+  }
+}
+
 INLINE void Arduino_AVRPAR16::WRITE16(uint16_t d)
 {
   uint8_t wrMaskBase = *_wrPort & _wrPinMaskClr;

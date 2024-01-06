@@ -168,6 +168,14 @@ void Arduino_AVRPAR8::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
   WRITE(_data16.lsb);
 }
 
+void Arduino_AVRPAR8::writeBytes(uint8_t *data, uint32_t len)
+{
+  while (len--)
+  {
+    WRITE(*data++);
+  }
+}
+
 INLINE void Arduino_AVRPAR8::WRITE(uint8_t d)
 {
   uint8_t wrMaskBase = *_wrPort & _wrPinMaskClr;
