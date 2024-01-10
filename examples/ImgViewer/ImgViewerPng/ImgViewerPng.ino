@@ -184,7 +184,7 @@ void setup()
   gfx->fillScreen(BLACK);
   for (int16_t x = 0; x < w; x += 5)
   {
-    gfx->drawFastVLine(x, 0, h, PINK);
+    gfx->drawFastVLine(x, 0, h, PALERED);
   }
 
 #ifdef GFX_BL

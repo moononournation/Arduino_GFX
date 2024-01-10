@@ -107,7 +107,7 @@ void Arduino_XL9535SWSPI::writeRepeat(uint16_t, uint32_t)
   // not implemented
 }
 
-void Arduino_XL9535SWSPI::writeBytes(uint8_t *data, uint32_t len)
+void Arduino_XL9535SWSPI::writeBytes(uint8_t *, uint32_t)
 {
   // not implemented
 }

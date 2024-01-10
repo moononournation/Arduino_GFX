@@ -102,13 +102,14 @@ bool Arduino_SSD1306::begin(int32_t speed)
   return true;
 }
 
-void Arduino_SSD1306::setBrightness(uint8_t brightness){
-    // _sendCommand(SSD1306_SETCONTRAST);
-    // ??? _sendCommand((brightness < 50) ? 0 : _contrast); ???
-    // _sendCommand((brightness < 50) ? 0 : 0x8f);
-}; // setBrightness
+void Arduino_SSD1306::setBrightness(uint8_t /* brightness */)
+{
+  // _sendCommand(SSD1306_SETCONTRAST);
+  // ??? _sendCommand((brightness < 50) ? 0 : _contrast); ???
+  // _sendCommand((brightness < 50) ? 0 : 0x8f);
+}
 
-void Arduino_SSD1306::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
+void Arduino_SSD1306::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap, int16_t w, int16_t h, uint16_t /* color */, uint16_t /* bg */)
 {
   printf("SSD1306::drawBitmap %d/%d w:%d h:%d\n", xStart, yStart, w, h);
   uint16_t bufferLength = TWI_BUFFER_LENGTH;
@@ -152,7 +153,7 @@ void Arduino_SSD1306::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap
     _bus->write(SSD1306_COLUMNADDR);
     _bus->write(_colStart);
     _bus->write(_colEnd);
-     // set column
+    // set column
     _bus->endWrite();
 
     // send out page data
@@ -187,7 +188,7 @@ void Arduino_SSD1306::drawIndexedBitmap(int16_t, int16_t, uint8_t *, uint16_t *,
   // println("SSD1306::Not Implemented drawIndexedBitmap()");
 }
 
-void Arduino_SSD1306::draw3bitRGBBitmap(int16_t, int16_t, uint8_t *bitmap, int16_t w, int16_t h)
+void Arduino_SSD1306::draw3bitRGBBitmap(int16_t, int16_t, uint8_t *, int16_t, int16_t)
 {
   // println("SSD1306::Not Implemented draw3bitRGBBitmap()");
 }
@@ -202,9 +203,9 @@ void Arduino_SSD1306::draw24bitRGBBitmap(int16_t, int16_t, uint8_t *, int16_t, i
   // println("SSD1306::Not Implemented draw24bitRGBBitmap()");
 }
 
-void Arduino_SSD1306::invertDisplay(bool i)
+void Arduino_SSD1306::invertDisplay(bool)
 {
-  // _bus->sendCommand(i ? ILI9488_INVON : ILI9488_INVOFF);
+  // println("SSD1306::Not Implemented invertDisplay()");
 }
 
 void Arduino_SSD1306::displayOn(void)

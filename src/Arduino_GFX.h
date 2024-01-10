@@ -50,7 +50,7 @@
 #define RGB565_WHITE RGB565(255, 255, 255)
 #define RGB565_ORANGE RGB565(255, 165, 0)
 #define RGB565_GREENYELLOW RGB565(173, 255, 41)
-#define RGB565_PINK RGB565(255, 130, 198)
+#define RGB565_PALERED RGB565(255, 130, 198)
 
 // Color definitions
 #ifndef DISABLE_COLOR_DEFINES
@@ -72,7 +72,7 @@
 #define WHITE RGB565_WHITE
 #define ORANGE RGB565_ORANGE
 #define GREENYELLOW RGB565_GREENYELLOW
-#define PINK RGB565_PINK
+#define PALERED RGB565_PALERED
 #endif
 
 // Many (but maybe not all) non-AVR board installs define macros

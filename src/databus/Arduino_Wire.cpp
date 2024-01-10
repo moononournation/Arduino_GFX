@@ -54,7 +54,7 @@ void Arduino_Wire::write(uint8_t d)
   _wire->write(d);
 }
 
-void Arduino_Wire::writeCommand(uint8_t c)
+void Arduino_Wire::writeCommand(uint8_t)
 {
   // println("Wire::writeCommand()");
   // not implemented.
@@ -85,19 +85,19 @@ void Arduino_Wire::writePixels(uint16_t *, uint32_t)
 }
 
 #if !defined(LITTLE_FOOT_PRINT)
-void Arduino_Wire::writeBytes(uint8_t *data, uint32_t len)
+void Arduino_Wire::writeBytes(uint8_t *, uint32_t)
 {
   // println("Wire::writeBytes()");
   // not implemented
 }
 #endif // !defined(LITTLE_FOOT_PRINT)
 
-void Arduino_Wire::writeRegister(uint8_t reg, uint8_t *data, size_t len)
+void Arduino_Wire::writeRegister(uint8_t, uint8_t *, size_t)
 {
   // println("Wire::writeRegister()");
 }
 
-uint8_t Arduino_Wire::readRegister(uint8_t reg, uint8_t *data, size_t len)
+uint8_t Arduino_Wire::readRegister(uint8_t, uint8_t *, size_t)
 {
   // println("Wire::readRegister()");
   return 0;
