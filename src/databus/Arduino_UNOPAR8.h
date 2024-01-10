@@ -31,17 +31,8 @@ public:
   void write(uint8_t) override;
   void write16(uint16_t) override;
   void writeRepeat(uint16_t p, uint32_t len) override;
-  void writePixels(uint16_t *data, uint32_t len) override;
-
-#if !defined(LITTLE_FOOT_PRINT)
-  void writeC8D8(uint8_t c, uint8_t d) override;
-  void writeC8D16(uint8_t c, uint16_t d) override;
-  void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2) override;
   void writeBytes(uint8_t *data, uint32_t len) override;
-
-  void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len) override;
-  void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len) override;
-#endif // !defined(LITTLE_FOOT_PRINT)
+  void writePixels(uint16_t *data, uint32_t len) override;
 
 private:
   INLINE void WRITE(uint8_t d);
