@@ -113,10 +113,6 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #define SPI_DEFAULT_FREQ 24000000 ///< Default SPI data clock frequency
 #endif
 
-#ifndef TWI_BUFFER_LENGTH
-#define TWI_BUFFER_LENGTH 32
-#endif
-
 #ifndef UNUSED
 #define UNUSED(x) (void)(x)
 #endif

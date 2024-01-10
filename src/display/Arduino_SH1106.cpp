@@ -1,6 +1,6 @@
 // Arduino GFX display driver for SH1106
 
-#include "Arduino_DataBus.h"
+#include "Arduino_Wire.h"
 #include "Arduino_SH1106.h"
 
 // See datasheet for explaining these definitions

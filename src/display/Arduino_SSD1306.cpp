@@ -1,6 +1,6 @@
 // Arduino GFX display driver for SSD1306
 
-#include "Arduino_DataBus.h"
+#include "Arduino_Wire.h"
 #include "Arduino_SSD1306.h"
 
 // SSD1306 commands, See Datasheet

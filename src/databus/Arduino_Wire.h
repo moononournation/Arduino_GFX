@@ -6,6 +6,10 @@
 #include "Arduino_DataBus.h"
 #include <Wire.h>
 
+#ifndef TWI_BUFFER_LENGTH
+#define TWI_BUFFER_LENGTH 32
+#endif
+
 class Arduino_Wire : public Arduino_DataBus
 {
 public:
