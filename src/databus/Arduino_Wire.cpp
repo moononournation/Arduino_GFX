@@ -3,11 +3,12 @@
 #include "Arduino_Wire.h"
 
 Arduino_Wire::
-    Arduino_Wire(uint8_t i2c_addr, TwoWire *wire)
-    : _i2c_addr(i2c_addr), _wire(wire) {}
+    Arduino_Wire(uint8_t i2c_addr, int8_t commandPrefix, int8_t dataPrefix, TwoWire *wire)
+    : _i2c_addr(i2c_addr), _command_prefix(commandPrefix), _data_prefix(dataPrefix), _wire(wire) {}
 
 bool Arduino_Wire::begin(int32_t speed, int8_t)
 {
+  // printf("Wire::begin _command_prefix=0x%02x _data_prefix=0x%02x.\n", _command_prefix, _data_prefix);
 
   if (speed != GFX_NOT_DEFINED)
   {
@@ -21,7 +22,7 @@ bool Arduino_Wire::begin(int32_t speed, int8_t)
   _wire->beginTransmission(_i2c_addr);
   if (_wire->endTransmission())
   {
-    // println("Wire::Device not found.");
+    // printf("Wire::Device not found.\n");
     is_found = false;
   }
   else
@@ -34,7 +35,7 @@ bool Arduino_Wire::begin(int32_t speed, int8_t)
 
 void Arduino_Wire::beginWrite()
 {
-  // println("Wire::beginWrite()");
+  // printf("Wire::beginWrite()\n");
   if (_speed != GFX_NOT_DEFINED)
   {
     _wire->setClock(_speed);
@@ -44,61 +45,80 @@ void Arduino_Wire::beginWrite()
 
 void Arduino_Wire::endWrite()
 {
-  // println("\nWire::endWrite()");
+  // printf("Wire::endWrite()\n");
   _wire->endTransmission();
 }
 
 void Arduino_Wire::write(uint8_t d)
 {
-  // printf("(0x%02x) ", d);
+  // printf("Wire::write(0x%02x)\n", d);
   _wire->write(d);
 }
 
-void Arduino_Wire::writeCommand(uint8_t)
+void Arduino_Wire::writeCommand(uint8_t c)
 {
-  // println("Wire::writeCommand()");
-  // not implemented.
+  // printf("Wire::writeCommand(0x%02x 0x%02x)\n", _command_prefix, c);
+  _wire->write(_command_prefix);
+  _wire->write(c);
 }
 
 void Arduino_Wire::writeCommand16(uint16_t)
 {
-  // println("Wire::writeCommand16()");
+  // printf("Wire::writeCommand16()\n");
   // not implemented.
 }
 
 void Arduino_Wire::write16(uint16_t)
 {
-  // println("Wire::write16()");
+  // printf("Wire::write16()\n");
   // not implemented
 }
 
 void Arduino_Wire::writeRepeat(uint16_t, uint32_t)
 {
-  // println("Wire::writeRepeat()");
+  // printf("Wire::writeRepeat()\n");
   // not implemented
 }
 
 void Arduino_Wire::writePixels(uint16_t *, uint32_t)
 {
-  // println("Wire::writePixels()");
+  // printf("Wire::writePixels()\n");
   // not implemented
 }
 
-#if !defined(LITTLE_FOOT_PRINT)
-void Arduino_Wire::writeBytes(uint8_t *, uint32_t)
+// write data to the bus using the data prefix
+// when len exceeds the TWI_BUFFER_LENGTH then a new transfer protocol is started.
+void Arduino_Wire::writeBytes(uint8_t *data, uint32_t len)
 {
-  // println("Wire::writeBytes()");
-  // not implemented
+  // printf("Wire::writeBytes(...)\n");
+  uint16_t bytesOut = 0;
+
+  _wire->write(_data_prefix);
+  bytesOut++;
+
+  while (len--)
+  {
+    if (bytesOut >= TWI_BUFFER_LENGTH)
+    {
+      // finish this packet and start a new one.
+      _wire->endTransmission();
+      _wire->beginTransmission(_i2c_addr);
+      bytesOut = 0;
+      _wire->write(_data_prefix);
+      bytesOut++;
+    }
+    _wire->write(*data++);
+    bytesOut++;
+  }
 }
-#endif // !defined(LITTLE_FOOT_PRINT)
 
 void Arduino_Wire::writeRegister(uint8_t, uint8_t *, size_t)
 {
-  // println("Wire::writeRegister()");
+  // printf("Wire::writeRegister()\n");
 }
 
 uint8_t Arduino_Wire::readRegister(uint8_t, uint8_t *, size_t)
 {
-  // println("Wire::readRegister()");
+  // printf("Wire::readRegister()\n");
   return 0;
 }

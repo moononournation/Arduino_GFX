@@ -13,7 +13,7 @@
 class Arduino_Wire : public Arduino_DataBus
 {
 public:
-  Arduino_Wire(uint8_t i2c_addr, TwoWire *wire = &Wire);
+  Arduino_Wire(uint8_t i2c_addr, int8_t commandPrefix, int8_t dataPrefix, TwoWire *wire = &Wire);
 
   bool begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = GFX_NOT_DEFINED) override;
   void beginWrite() override;
@@ -35,6 +35,9 @@ protected:
 
   uint8_t _i2c_addr;
   TwoWire *_wire;
+
+  uint8_t _command_prefix;
+  uint8_t _data_prefix;
 
   int32_t _speed;
 private:
