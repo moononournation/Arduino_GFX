@@ -7,9 +7,12 @@
 #include <Wire.h>
 
 #ifndef TWI_BUFFER_LENGTH
+#if defined(I2C_BUFFER_LENGTH)
+#define TWI_BUFFER_LENGTH I2C_BUFFER_LENGTH
+#else
 #define TWI_BUFFER_LENGTH 32
 #endif
-
+#endif
 class Arduino_Wire : public Arduino_DataBus
 {
 public:
