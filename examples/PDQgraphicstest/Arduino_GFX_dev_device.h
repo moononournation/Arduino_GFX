@@ -5,6 +5,7 @@
 // #define ESP32_2432S028
 // #define ESP32_3248S035
 // #define ESP32_4827A043
+// #define ESP32_4827A043_QSPI // gfx->begin(32000000)
 // #define ESP32_4827S043
 // #define ESP32_8048S043
 // #define ESP32_8048S070
@@ -98,6 +99,15 @@ Arduino_DataBus *bus = new Arduino_ESP32LCD16(
     5 /* D0 */, 6 /* D1 */, 7 /* D2 */, 15 /* D3 */, 16 /* D4 */, 4 /* D5 */, 8 /* D6 */, 3 /* D7 */,
     46 /* D8 */, 9 /* D9 */, 1 /* D10 */, 42 /* D11 */, 39 /* D12 */, 41 /* D13 */, 40 /* D14 */, 14 /* D15 */);
 Arduino_GFX *gfx = new Arduino_NV3041A(bus, 17 /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(ESP32_4827A043_QSPI) // gfx->begin(32000000)
+#define GFX_DEV_DEVICE ESP32_4827A043_QSPI
+#define GFX_BL 1
+Arduino_DataBus *bus = new Arduino_ESP32QSPI(
+    45 /* cs */, 47 /* sck */, 21 /* d0 */, 48 /* d1 */, 40 /* d2 */, 39 /* d3 */);
+Arduino_GFX *g = new Arduino_NV3041A(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
+Arduino_GFX *gfx = new Arduino_Canvas(480 /* width */, 272 /* height */, g);
+#define CANVAS
 
 #elif defined(ESP32_4827S043)
 #define GFX_DEV_DEVICE ESP32_4827S043
