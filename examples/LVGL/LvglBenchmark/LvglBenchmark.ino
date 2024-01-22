@@ -162,7 +162,7 @@ void setup()
 #ifdef DIRECT_MODE
   bufSize = screenWidth * screenHeight;
 #else
-  bufHeight = screenWidth * 40;
+  bufSize = screenWidth * 40;
 #endif
 
 #ifdef ESP32
