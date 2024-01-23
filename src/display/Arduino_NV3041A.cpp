@@ -11,6 +11,10 @@ Arduino_NV3041A::Arduino_NV3041A(
 
 bool Arduino_NV3041A::begin(int32_t speed)
 {
+  if (speed == GFX_NOT_DEFINED)
+  {
+    speed = 32000000UL; // NV3041A Maximum supported speed
+  }
   return Arduino_TFT::begin(speed);
 }
 
