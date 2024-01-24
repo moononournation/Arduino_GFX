@@ -37,10 +37,9 @@ protected:
   bool is_found;
 
   uint8_t _i2c_addr;
-  TwoWire *_wire;
-
   uint8_t _command_prefix;
   uint8_t _data_prefix;
+  TwoWire *_wire;
 
   int32_t _speed;
 private:
