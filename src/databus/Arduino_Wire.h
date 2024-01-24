@@ -7,13 +7,16 @@
 #include <Wire.h>
 
 #ifndef TWI_BUFFER_LENGTH
+#if defined(I2C_BUFFER_LENGTH)
+#define TWI_BUFFER_LENGTH I2C_BUFFER_LENGTH
+#else
 #define TWI_BUFFER_LENGTH 32
 #endif
-
+#endif
 class Arduino_Wire : public Arduino_DataBus
 {
 public:
-  Arduino_Wire(uint8_t i2c_addr, TwoWire *wire = &Wire);
+  Arduino_Wire(uint8_t i2c_addr, int8_t commandPrefix, int8_t dataPrefix, TwoWire *wire = &Wire);
 
   bool begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = GFX_NOT_DEFINED) override;
   void beginWrite() override;
@@ -35,6 +38,9 @@ protected:
 
   uint8_t _i2c_addr;
   TwoWire *_wire;
+
+  uint8_t _command_prefix;
+  uint8_t _data_prefix;
 
   int32_t _speed;
 private:

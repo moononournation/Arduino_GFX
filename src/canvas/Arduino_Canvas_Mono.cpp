@@ -33,7 +33,18 @@ bool Arduino_Canvas_Mono::begin(int32_t speed)
 
   if (!_framebuffer)
   {
-    size_t s = (_width + 7) / 8 * _height;
+    size_t s;
+
+    // allocate memory by full bytes.
+    if (_verticalByte)
+    {
+      s = _canvas_width * (_canvas_height + 7) / 8;
+    }
+    else
+    {
+      s = (_canvas_width + 7) / 8 * _canvas_height;
+    }
+
 #if defined(ESP32)
     if (psramFound())
     {
