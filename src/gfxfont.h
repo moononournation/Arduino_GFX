@@ -23,8 +23,8 @@ typedef struct
 {
 	uint8_t *bitmap;	///< Glyph bitmaps, concatenated
 	GFXglyph *glyph;	///< Glyph array
-	uint8_t first;		///< ASCII extents (first char)
-	uint8_t last;			///< ASCII extents (last char)
+	uint16_t first;		///< ASCII extents (first char)
+	uint16_t last;		///< ASCII extents (last char)
 	uint8_t yAdvance; ///< Newline distance (y axis)
 } GFXfont;
 
