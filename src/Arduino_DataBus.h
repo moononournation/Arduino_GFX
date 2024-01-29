@@ -242,6 +242,7 @@ typedef enum
   WRITE_C8_D16,
   WRITE_C8_BYTES,
   WRITE_C16_D16,
+  WRITE_COMMANDS,
   END_WRITE,
   DELAY,
 } spi_operation_type_t;
@@ -277,6 +278,7 @@ public:
   virtual void writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2);
   virtual void writeRepeat(uint16_t p, uint32_t len) = 0;
   virtual void writeBytes(uint8_t *data, uint32_t len) = 0;
+  virtual void writeCommandBytes(uint8_t *data, uint32_t len) {};
   virtual void writePixels(uint16_t *data, uint32_t len) = 0;
 
   void sendCommand(uint8_t c);
