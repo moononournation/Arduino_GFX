@@ -112,6 +112,29 @@ void Arduino_Wire::writeBytes(uint8_t *data, uint32_t len)
   }
 }
 
+void Arduino_Wire::writeCommandBytes(uint8_t *data, uint32_t len)
+{
+  // printf("Wire::writeCommandBytes(...)\n");
+  uint16_t bytesOut;
+
+  _wire->write(_command_prefix);
+  bytesOut = 1;
+
+  while (len--)
+  {
+    if (bytesOut >= TWI_BUFFER_LENGTH)
+    {
+      // finish this packet and start a new one.
+      _wire->endTransmission();
+      _wire->beginTransmission(_i2c_addr);
+      _wire->write(_command_prefix);
+      bytesOut = 1;
+    }
+    _wire->write(*data++);
+    bytesOut++;
+  }
+}
+
 void Arduino_Wire::writeRegister(uint8_t, uint8_t *, size_t)
 {
   // printf("Wire::writeRegister()\n");
