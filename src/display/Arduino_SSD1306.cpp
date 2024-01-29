@@ -70,23 +70,6 @@ bool Arduino_SSD1306::begin(int32_t speed)
 
   static const uint8_t init_sequence[] = {
       BEGIN_WRITE,
-      // WRITE_COMMAND_8, SSD1306_DISPLAYOFF,                      // 0xAE
-      // WRITE_COMMAND_16, SSD1306_SETCONTRAST, _contrast,              // 0x81 nn
-      // WRITE_COMMAND_8, SSD1306_NORMALDISPLAY,                   // 0xA6
-      // WRITE_COMMAND_8, SSD1306_DEACTIVATE_SCROLL,               // 0x2E
-      // WRITE_COMMAND_16, SSD1306_MEMORYMODE, 0x00,                    // 0x20 00 Horizontal addressing mode
-      // WRITE_COMMAND_8, SSD1306_SEGREMAPINV,                     // 0xA1
-      // WRITE_COMMAND_16, SSD1306_SETMULTIPLEX, (uint8_t)(HEIGHT - 1), // 0xA8 nn
-      // WRITE_COMMAND_8, SSD1306_COMSCANDEC,                      // 0xC8
-      // WRITE_COMMAND_16, SSD1306_SETDISPLAYOFFSET, 0x00,              // 0xD3 00   no offset
-      // WRITE_COMMAND_16, SSD1306_SETCOMPINS, comPins,                 // 0xDA nn
-      // WRITE_COMMAND_16, SSD1306_SETDISPLAYCLOCKDIV, 0x80,            // 0xD5 0x80
-      // WRITE_COMMAND_16, SSD1306_SETPRECHARGE, 0x22,                  // 0xd9 0x22
-      // WRITE_COMMAND_16, SSD1306_SETVCOMDETECT, 0x40,                 // 0xDB 0x40
-      // WRITE_COMMAND_16, SSD1306_CHARGEPUMP, 0x14,                    // 0x8D 0x14
-      // WRITE_COMMAND_8, SSD1306_SETSTARTLINE | 0x0,              // 0x40       line #0
-      // WRITE_COMMAND_8, SSD1306_DISPLAYALLON_RESUME,             // 0xA4
-
       WRITE_COMMANDS, 25,
       SSD1306_DISPLAYOFF,                          // 0xAE
       SSD1306_SETCONTRAST, _contrast,              // 0x81 nn
@@ -126,7 +109,7 @@ void Arduino_SSD1306::setBrightness(uint8_t /* brightness */)
 
 void Arduino_SSD1306::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap, int16_t w, int16_t h, uint16_t /* color */, uint16_t /* bg */)
 {
-  printf("SSD1306::drawBitmap %d/%d w:%d h:%d\n", xStart, yStart, w, h);
+  // printf("SSD1306::drawBitmap %d/%d w:%d h:%d\n", xStart, yStart, w, h);
   uint16_t count = w * ((h + 7) / 8);
 
 #if 0
@@ -151,9 +134,6 @@ void Arduino_SSD1306::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap
   Serial.println();
 #endif
 
-#if 1
-  // I2C version
-
   // start page sequence
   _bus->beginWrite();
   uint8_t page_sequence[] = {
@@ -165,28 +145,6 @@ void Arduino_SSD1306::drawBitmap(int16_t xStart, int16_t yStart, uint8_t *bitmap
   _bus->beginWrite();
   _bus->writeBytes(bitmap, count);
   _bus->endWrite();
-
-#endif
-
-#if 0
-  // SPI version
-
-  _bus->beginWrite();
-
-  digitalWrite(D1, LOW);
-  _bus->write(SSD1306_PAGEADDR);
-  _bus->write(0x00);
-  _bus->write(0xFF);
-  _bus->write(SSD1306_COLUMNADDR);
-  _bus->write(_colStart);
-  _bus->write(_colEnd);
-  digitalWrite(D1, HIGH);
-  _bus->endWrite();
-
-  _bus->beginWrite();
-  _bus->writeBytes(bitmap, count);
-  _bus->endWrite();
-#endif
 
 } // drawBitmap()
 
