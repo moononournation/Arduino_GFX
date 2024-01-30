@@ -5,7 +5,7 @@
 // #define ESP32_2432S028
 // #define ESP32_3248S035
 // #define ESP32_4827A043
-// #define ESP32_4827A043_QSPI // gfx->begin(32000000)
+// #define ESP32_4827A043_QSPI
 // #define ESP32_4827S043
 // #define ESP32_8048S043
 // #define ESP32_8048S070
@@ -100,7 +100,7 @@ Arduino_DataBus *bus = new Arduino_ESP32LCD16(
     46 /* D8 */, 9 /* D9 */, 1 /* D10 */, 42 /* D11 */, 39 /* D12 */, 41 /* D13 */, 40 /* D14 */, 14 /* D15 */);
 Arduino_GFX *gfx = new Arduino_NV3041A(bus, 17 /* RST */, 0 /* rotation */, true /* IPS */);
 
-#elif defined(ESP32_4827A043_QSPI) // gfx->begin(32000000)
+#elif defined(ESP32_4827A043_QSPI)
 #define GFX_DEV_DEVICE ESP32_4827A043_QSPI
 #define GFX_BL 1
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
