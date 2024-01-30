@@ -128,7 +128,6 @@ void Arduino_SH1106::setBrightness(uint8_t brightness)
 void Arduino_SH1106::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t, uint16_t)
 {
   // printf("SH1106::drawBitmap %d/%d w:%d h:%d\n", x, y, w, h);
-  uint16_t bufferLength = TWI_BUFFER_LENGTH;
 
   // transfer the whole bitmap
   for (uint8_t p = (y / 8); p < (h / 8); p++)
