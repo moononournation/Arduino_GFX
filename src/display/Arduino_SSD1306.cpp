@@ -11,7 +11,7 @@ Arduino_SSD1306::Arduino_SSD1306(Arduino_DataBus *bus, int8_t rst, int16_t w, in
 
 bool Arduino_SSD1306::begin(int32_t speed)
 {
-  Serial.println("SSD1306::begin()");
+  // println("SSD1306::begin()");
 
   if (!_bus)
   {
