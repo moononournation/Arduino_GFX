@@ -5,7 +5,7 @@
  * Dependent libraries:
  * LVGL: https://github.com/lvgl/lvgl.git
  * Adafruit_NeoPixel: https://github.com/adafruit/Adafruit_NeoPixel.git
- * 
+ *
  * Font:
  * https://github.com/Warren2060/Chill-Bitmap.git
  *
@@ -99,16 +99,16 @@ void setup()
     lv_indev_drv_register(&indev_drv);
 
     /* Set black background */
-    lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT );
+    lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     /* Create label */
     lv_obj_t *label = lv_label_create(lv_scr_act());
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
     lv_obj_set_width(label, NEOPIXEL_WIDTH);
-    lv_obj_set_style_text_color(label, lv_color_hex(0xFF0000), LV_PART_MAIN | LV_STATE_DEFAULT );
+    lv_obj_set_style_text_color(label, lv_color_hex(0xFF0000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_label_set_text(label, "LVGL Hello NeoPixel! 《陈亮手痕定律》 点阵屏测试");
     /* Set font */
     LV_FONT_DECLARE(ui_font_Chill7);
-    lv_obj_set_style_text_font(label, &ui_font_Chill7, LV_PART_MAIN| LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(label, &ui_font_Chill7, LV_PART_MAIN | LV_STATE_DEFAULT);
     /* Set scrolling */
     lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
     lv_obj_set_style_anim_speed(label, 10, LV_STATE_DEFAULT);
@@ -120,8 +120,5 @@ void setup()
 void loop()
 {
   lv_timer_handler(); /* let the GUI do its work */
-#ifdef CANVAS
-  gfx->flush();
-#endif
   delay(5);
 }

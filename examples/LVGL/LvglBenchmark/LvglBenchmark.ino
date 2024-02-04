@@ -86,7 +86,6 @@ static uint32_t bufSize;
 static lv_disp_draw_buf_t draw_buf;
 static lv_color_t *disp_draw_buf;
 static lv_disp_drv_t disp_drv;
-static unsigned long last_ms;
 
 /* Display flushing */
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
@@ -167,6 +166,11 @@ void setup()
 
 #ifdef ESP32
   disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * bufSize, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+  if (!disp_draw_buf)
+  {
+    // remove MALLOC_CAP_INTERNAL flag try again
+    disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * bufSize, MALLOC_CAP_8BIT);
+  }
 #else
   disp_draw_buf = (lv_color_t *)malloc(sizeof(lv_color_t) * bufSize);
 #endif
@@ -201,7 +205,6 @@ void setup()
 
     Serial.println("Setup done");
   }
-  last_ms = millis();
 }
 
 void loop()
