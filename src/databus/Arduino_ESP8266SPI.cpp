@@ -79,6 +79,18 @@ void Arduino_ESP8266SPI::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
+void Arduino_ESP8266SPI::writeCommandBytes(uint8_t *data, uint32_t len)
+{
+  DC_LOW();
+
+  while (len--)
+  {
+    WRITE(*data++);
+  }
+
+  DC_HIGH();
+}
+
 void Arduino_ESP8266SPI::write(uint8_t d)
 {
   WRITE(d);
@@ -201,16 +213,6 @@ void Arduino_ESP8266SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
 void Arduino_ESP8266SPI::writeBytes(uint8_t *data, uint32_t len)
 {
   SPI.writeBytes(data, len);
-}
-
-void Arduino_ESP8266SPI::writeCommandBytes(uint8_t *data, uint32_t len)
-{
-  DC_LOW();
-  for (int n = 0; n < len; n++)
-  {
-    WRITE(data[n]);
-  }
-  DC_HIGH();
 }
 
 void Arduino_ESP8266SPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)

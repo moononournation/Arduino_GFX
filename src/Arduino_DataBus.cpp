@@ -97,6 +97,12 @@ void Arduino_DataBus::batchOperation(const uint8_t *operations, size_t len)
       _data16.lsb = operations[++i];
       writeCommand16(_data16.value);
       break;
+    case WRITE_COMMAND_BYTES:
+      l = operations[++i];
+      writeCommandBytes((uint8_t *)(operations + i + 1), l);
+      i += l;
+      l = 0;
+      break;
     case WRITE_DATA_8:
       l = 1;
       break;
@@ -110,14 +116,6 @@ void Arduino_DataBus::batchOperation(const uint8_t *operations, size_t len)
       writeCommand(operations[++i]);
       l = operations[++i];
       break;
-
-    case WRITE_COMMANDS:
-      l = operations[++i];
-      writeCommandBytes((uint8_t *)(operations + i + 1), l);
-      i += l;
-      l = 0;
-      break;
-
     case END_WRITE:
       endWrite();
       break;

@@ -258,6 +258,18 @@ void Arduino_HWSPI::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
+void Arduino_HWSPI::writeCommandBytes(uint8_t *data, uint32_t len)
+{
+  DC_LOW();
+
+  while (len--)
+  {
+    WRITE(*data++);
+  }
+
+  DC_HIGH();
+}
+
 void Arduino_HWSPI::write(uint8_t d)
 {
   WRITE(d);

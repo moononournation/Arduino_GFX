@@ -163,6 +163,18 @@ void Arduino_ESP32QSPI::writeCommand16(uint16_t c)
   CS_HIGH();
 }
 
+void Arduino_ESP32QSPI::writeCommandBytes(uint8_t *data, uint32_t len)
+{
+  DC_LOW();
+
+  while (len--)
+  {
+    WRITE(*data++);
+  }
+
+  DC_HIGH();
+}
+
 /**
  * @brief write
  *

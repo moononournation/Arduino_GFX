@@ -112,6 +112,18 @@ void Arduino_ESP32S2PAR8::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
+void Arduino_ESP32S2PAR8::writeCommandBytes(uint8_t *data, uint32_t len)
+{
+  DC_LOW();
+
+  while (len--)
+  {
+    WRITE(*data++);
+  }
+
+  DC_HIGH();
+}
+
 void Arduino_ESP32S2PAR8::write(uint8_t d)
 {
   WRITE(d);

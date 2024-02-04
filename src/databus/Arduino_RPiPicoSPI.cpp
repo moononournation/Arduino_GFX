@@ -75,6 +75,18 @@ void Arduino_RPiPicoSPI::writeCommand16(uint16_t c)
   DC_HIGH();
 }
 
+void Arduino_RPiPicoSPI::writeCommandBytes(uint8_t *data, uint32_t len)
+{
+  DC_LOW();
+
+  while (len--)
+  {
+    WRITE(*data++);
+  }
+
+  DC_HIGH();
+}
+
 void Arduino_RPiPicoSPI::write(uint8_t d)
 {
   WRITE(d);

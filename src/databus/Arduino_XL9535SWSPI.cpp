@@ -73,6 +73,10 @@ void Arduino_XL9535SWSPI::writeCommand16(uint16_t)
 {
 }
 
+void Arduino_XL9535SWSPI::writeCommandBytes(uint8_t *data, uint32_t len)
+{
+}
+
 void Arduino_XL9535SWSPI::write(uint8_t d)
 {
   // D/C bit, data

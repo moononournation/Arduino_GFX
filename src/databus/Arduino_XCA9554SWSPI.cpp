@@ -95,6 +95,10 @@ void Arduino_XCA9554SWSPI::writeCommand16(uint16_t)
 {
 }
 
+void Arduino_XCA9554SWSPI::writeCommandBytes(uint8_t *data, uint32_t len)
+{
+}
+
 void Arduino_XCA9554SWSPI::write(uint8_t d)
 {
   bool last_databit = 1;

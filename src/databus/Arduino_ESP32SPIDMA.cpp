@@ -279,6 +279,32 @@ void Arduino_ESP32SPIDMA::writeCommand16(uint16_t c)
 }
 
 /**
+ * @brief
+ *
+ * @param data
+ * @param len
+ */
+void Arduino_ESP32SPIDMA::writeCommandBytes(uint8_t *data, uint32_t len)
+{
+  if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
+  {
+    while (len--)
+    {
+      WRITE9BIT(*data++);
+    }
+  }
+  else
+  {
+    DC_LOW();
+    while (len--)
+    {
+      WRITE(*data++);
+    }
+    DC_HIGH();
+  }
+}
+
+/**
  * @brief write
  *
  * @param d

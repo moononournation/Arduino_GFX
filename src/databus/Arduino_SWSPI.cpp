@@ -321,6 +321,26 @@ void Arduino_SWSPI::writeCommand16(uint16_t c)
   }
 }
 
+void Arduino_SWSPI::writeCommandBytes(uint8_t *data, uint32_t len)
+{
+  if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
+  {
+    while (len--)
+    {
+      WRITE9BITCOMMAND(*data++);
+    }
+  }
+  else
+  {
+    DC_LOW();
+    while (len--)
+    {
+      WRITE(*data++);
+    }
+    DC_HIGH();
+  }
+}
+
 void Arduino_SWSPI::write(uint8_t d)
 {
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
