@@ -69,22 +69,42 @@ bool Arduino_SH1106::begin(int32_t speed)
 
   static const uint8_t init_sequence[] = {
       BEGIN_WRITE,
-      WRITE_COMMAND_8, SH110X_DISPLAYOFF,
-      WRITE_COMMAND_16, SH110X_SETDISPLAYCLOCKDIV, 0x80, // 0xD5, 0x80,
-      WRITE_COMMAND_16, SH110X_SETMULTIPLEX, 0x3F,       // 0xA8, 0x3F,
-      WRITE_COMMAND_16, SH110X_SETDISPLAYOFFSET, 0x00,   // 0xD3, 0x00,
-      WRITE_COMMAND_8, SH110X_SETSTARTLINE,              // 0x40
-      WRITE_COMMAND_16, SH110X_DCDC, 0x8B,               // 0xAD, DC/DC on
-      WRITE_COMMAND_8, SH110X_SEGREMAP + 1,              // 0xA1
-      WRITE_COMMAND_8, SH110X_COMSCANDEC,                // 0xC8
-      WRITE_COMMAND_16, SH110X_SETCOMPINS, 0x12,         // 0xDA, 0x12,
-      WRITE_COMMAND_16, SH110X_SETCONTRAST, 0x80,        // 0x81, 0x80
-      WRITE_COMMAND_16, SH110X_SETPRECHARGE, 0x1F,       // 0xD9, 0x1F,
-      WRITE_COMMAND_16, SH110X_SETVCOMDETECT, 0x40,      // 0xDB, 0x40,
-      WRITE_COMMAND_8, 0x33,                             // Set VPP to 9V
-      WRITE_COMMAND_8, SH110X_NORMALDISPLAY,             // 0xA6
-      WRITE_COMMAND_16, SH110X_MEMORYMODE, 0x10,         // 0x20, 0x10
-      WRITE_COMMAND_8, SH110X_DISPLAYALLON_RESUME,       // 0xA4
+
+      // WRITE_COMMAND_8, SH110X_DISPLAYOFF,
+      // WRITE_COMMAND_16, SH110X_SETDISPLAYCLOCKDIV, 0x80, // 0xD5, 0x80,
+      // WRITE_COMMAND_16, SH110X_SETMULTIPLEX, 0x3F,       // 0xA8, 0x3F,
+      // WRITE_COMMAND_16, SH110X_SETDISPLAYOFFSET, 0x00,   // 0xD3, 0x00,
+      // WRITE_COMMAND_8, SH110X_SETSTARTLINE,              // 0x40
+      // WRITE_COMMAND_16, SH110X_DCDC, 0x8B,               // 0xAD, DC/DC on
+      // WRITE_COMMAND_8, SH110X_SEGREMAP + 1,              // 0xA1
+      // WRITE_COMMAND_8, SH110X_COMSCANDEC,                // 0xC8
+      // WRITE_COMMAND_16, SH110X_SETCOMPINS, 0x12,         // 0xDA, 0x12,
+      // WRITE_COMMAND_16, SH110X_SETCONTRAST, 0x80,        // 0x81, 0x80
+      // WRITE_COMMAND_16, SH110X_SETPRECHARGE, 0x1F,       // 0xD9, 0x1F,
+      // WRITE_COMMAND_16, SH110X_SETVCOMDETECT, 0x40,      // 0xDB, 0x40,
+      // WRITE_COMMAND_8, 0x33,                             // Set VPP to 9V
+      // WRITE_COMMAND_8, SH110X_NORMALDISPLAY,             // 0xA6
+      // WRITE_COMMAND_16, SH110X_MEMORYMODE, 0x10,         // 0x20, 0x10
+      // WRITE_COMMAND_8, SH110X_DISPLAYALLON_RESUME,       // 0xA4
+
+      WRITE_COMMANDS, 25,
+      SH110X_DISPLAYOFF,
+      SH110X_SETDISPLAYCLOCKDIV, 0x80, // 0xD5, 0x80,
+      SH110X_SETMULTIPLEX, 0x3F,       // 0xA8, 0x3F,
+      SH110X_SETDISPLAYOFFSET, 0x00,   // 0xD3, 0x00,
+      SH110X_SETSTARTLINE,             // 0x40
+      SH110X_DCDC, 0x8B,               // 0xAD, DC/DC on
+      SH110X_SEGREMAP + 1,             // 0xA1
+      SH110X_COMSCANDEC,               // 0xC8
+      SH110X_SETCOMPINS, 0x12,         // 0xDA, 0x12,
+      SH110X_SETCONTRAST, 0x80,        // 0x81, 0x80
+      SH110X_SETPRECHARGE, 0x1F,       // 0xD9, 0x1F,
+      SH110X_SETVCOMDETECT, 0x40,      // 0xDB, 0x40,
+      0x33,                            // Set VPP to 9V
+      SH110X_NORMALDISPLAY,            // 0xA6
+      SH110X_MEMORYMODE, 0x10,         // 0x20, 0x10
+      SH110X_DISPLAYALLON_RESUME,      // 0xA4
+
       END_WRITE,
 
       DELAY, 100,
@@ -116,9 +136,15 @@ void Arduino_SH1106::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w
 
     // start page sequence
     _bus->beginWrite();
-    _bus->writeCommand(SH110X_SETPAGEADDR + p);
-    _bus->write(SH110X_SETLOWCOLUMN + 2); // set column
-    _bus->write(SH110X_SETHIGHCOLUMN + 0);
+    // _bus->writeCommand(SH110X_SETPAGEADDR + p);
+    // _bus->write(); // set column
+    // _bus->write(SH110X_SETHIGHCOLUMN + 0);
+
+    uint8_t page_sequence[] = {
+        SH110X_SETPAGEADDR + p,
+        SH110X_SETLOWCOLUMN + 2,
+        SH110X_SETHIGHCOLUMN + 0};
+    _bus->writeCommandBytes(page_sequence, sizeof(page_sequence));
     _bus->endWrite();
 
     _bus->beginWrite();
