@@ -48,9 +48,10 @@
 #include "display/Arduino_ILI9488_3bit.h"
 #endif // !defined(LITTLE_FOOT_PRINT)
 
+#include "display/Arduino_AXS15231B.h"
+#include "display/Arduino_GC9A01.h"
 #include "display/Arduino_GC9106.h"
 #include "display/Arduino_GC9107.h"
-#include "display/Arduino_GC9A01.h"
 #include "display/Arduino_HX8347C.h"
 #include "display/Arduino_HX8347D.h"
 #include "display/Arduino_HX8352C.h"
