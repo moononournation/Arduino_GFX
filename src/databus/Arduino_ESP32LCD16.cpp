@@ -176,12 +176,15 @@ void Arduino_ESP32LCD16::writeCommand16(uint16_t c)
 
 void Arduino_ESP32LCD16::writeCommandBytes(uint8_t *data, uint32_t len)
 {
-  DC_LOW();
+  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE | LCD_CAM_LCD_CD_CMD_SET;
+
   while (len--)
   {
-    WRITECOMMAND16(*data++);
+    LCD_CAM.lcd_cmd_val.val = *data++;
+    WAIT_LCD_NOT_BUSY;
+    LCD_CAM.lcd_user.val = LCD_CAM_LCD_2BYTE_EN | LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
   }
-  DC_HIGH();
+  LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
 }
 
 void Arduino_ESP32LCD16::write(uint8_t d)

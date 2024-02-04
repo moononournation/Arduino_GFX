@@ -441,7 +441,7 @@ void Arduino_ESP32SPI::writeCommandBytes(uint8_t *data, uint32_t len)
 
     while (len--)
     {
-      WRITE(*data++);
+      WRITE8BIT(*data++);
     }
 
     DC_HIGH();

@@ -70,7 +70,7 @@ bool Arduino_SSD1306::begin(int32_t speed)
 
   static const uint8_t init_sequence[] = {
       BEGIN_WRITE,
-      WRITE_COMMANDS, 25,
+      WRITE_COMMAND_BYTES, 25,
       SSD1306_DISPLAYOFF,                          // 0xAE
       SSD1306_SETCONTRAST, _contrast,              // 0x81 nn
       SSD1306_NORMALDISPLAY,                       // 0xA6

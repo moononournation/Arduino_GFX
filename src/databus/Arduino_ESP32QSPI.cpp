@@ -165,14 +165,24 @@ void Arduino_ESP32QSPI::writeCommand16(uint16_t c)
 
 void Arduino_ESP32QSPI::writeCommandBytes(uint8_t *data, uint32_t len)
 {
-  DC_LOW();
-
-  while (len--)
+  CS_LOW();
+  uint32_t l;
+  bool first_send = true;
+  while (len)
   {
-    WRITE(*data++);
-  }
+    l = (len >= (ESP32QSPI_MAX_PIXELS_AT_ONCE << 1)) ? (ESP32QSPI_MAX_PIXELS_AT_ONCE << 1) : len;
 
-  DC_HIGH();
+    _spi_tran_ext.base.flags = SPI_TRANS_MULTILINE_CMD | SPI_TRANS_MULTILINE_ADDR;
+    _spi_tran_ext.base.tx_buffer = data;
+    _spi_tran_ext.base.length = l << 3;
+
+    POLL_START();
+    POLL_END();
+
+    len -= l;
+    data += l;
+  }
+  CS_HIGH();
 }
 
 /**
