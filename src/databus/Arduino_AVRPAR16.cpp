@@ -81,7 +81,7 @@ void Arduino_AVRPAR16::writeCommandBytes(uint8_t *data, uint32_t len)
 
   while (len--)
   {
-    WRITE(*data++);
+    WRITE16(*data++);
   }
 
   DC_HIGH();
