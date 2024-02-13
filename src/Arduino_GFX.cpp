@@ -30,8 +30,9 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : Arduino_G(w, h)
 {
   _width = WIDTH;
   _height = HEIGHT;
-  _max_x = _width - 1;  ///< x zero base bound
-  _max_y = _height - 1; ///< y zero base bound
+  _min_text_x = _min_text_y = 0;
+  _max_x = _max_text_x = _width - 1;  ///< x zero base bound
+  _max_y = _max_text_y = _height - 1; ///< y zero base bound
   _rotation = 0;
   cursor_y = cursor_x = 0;
   textsize_x = textsize_y = 1;
