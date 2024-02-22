@@ -7,7 +7,6 @@
 Arduino_Canvas_3bit::Arduino_Canvas_3bit(int16_t w, int16_t h, Arduino_G *output, int16_t output_x, int16_t output_y)
     : Arduino_GFX(w, h), _output(output), _output_x(output_x), _output_y(output_y)
 {
-  setRotation(0);
 }
 
 Arduino_Canvas_3bit::~Arduino_Canvas_3bit()

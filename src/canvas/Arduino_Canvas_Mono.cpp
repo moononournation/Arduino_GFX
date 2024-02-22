@@ -8,7 +8,6 @@ Arduino_Canvas_Mono::Arduino_Canvas_Mono(int16_t w, int16_t h, Arduino_G *output
     : Arduino_GFX(w, h), _output(output), _output_x(output_x), _output_y(output_y), _verticalByte(verticalByte),
       _canvas_width(w), _canvas_height(h)
 {
-  setRotation(0);
 }
 
 Arduino_Canvas_Mono::~Arduino_Canvas_Mono()

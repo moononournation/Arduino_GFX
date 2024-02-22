@@ -32,11 +32,18 @@ Arduino_GFX::Arduino_GFX(int16_t w, int16_t h) : Arduino_G(w, h)
   _height = HEIGHT;
   _max_x = _width - 1;  ///< x zero base bound
   _max_y = _height - 1; ///< y zero base bound
-  _rotation = 0;
-  cursor_y = cursor_x = 0;
-  textsize_x = textsize_y = 1;
+  _min_text_x = 0;
+  _min_text_y = 0;
+  _max_text_x = _max_x;
+  _max_text_y = _max_y;
+  cursor_x = 0;
+  cursor_y = 0;
+  textcolor = 0xFFFF;
+  textbgcolor = 0xFFFF;
+  textsize_x = 1;
+  textsize_y = 1;
   text_pixel_margin = 0;
-  textcolor = textbgcolor = 0xFFFF;
+  _rotation = 0;
   wrap = true;
 #if !defined(ATTINY_CORE)
   gfxFont = NULL;
@@ -421,8 +428,8 @@ void Arduino_GFX::drawCircle(int16_t x, int16_t y,
 */
 /**************************************************************************/
 void Arduino_GFX::writeEllipseHelper(int32_t x, int32_t y,
-                                    int32_t rx, int32_t ry,
-                                    uint8_t cornername, uint16_t color)
+                                     int32_t rx, int32_t ry,
+                                     uint8_t cornername, uint16_t color)
 {
   if (rx < 0 || ry < 0 || ((rx == 0) && (ry == 0)))
   {
