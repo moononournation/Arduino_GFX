@@ -223,7 +223,7 @@ void Arduino_TFT_18bit::drawGrayscaleBitmap(
     {
       for (int16_t i = 0; i < w; i++)
       {
-        v = (uint8_t)pgm_read_byte(&bitmap[j * w + i]);
+        v = pgm_read_byte(&bitmap[j * w + i]);
         _bus->write(v);
         _bus->write(v);
         _bus->write(v);

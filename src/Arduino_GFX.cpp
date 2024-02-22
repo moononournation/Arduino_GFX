@@ -1275,7 +1275,7 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
   {
     for (int16_t i = 0; i < w; i++)
     {
-      v = (uint8_t)pgm_read_byte(&bitmap[j * w + i]);
+      v = pgm_read_byte(&bitmap[j * w + i]);
       writePixel(x + i, y, color565(v, v, v));
     }
   }
@@ -1343,7 +1343,7 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
       }
       if (byte & 0x80)
       {
-        v = (uint8_t)pgm_read_byte(&bitmap[j * w + i]);
+        v = pgm_read_byte(&bitmap[j * w + i]);
         writePixel(x + i, y, color565(v, v, v));
       }
     }
@@ -2002,7 +2002,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
     // newlines, returns, non-printable characters, etc.  Calling
     // drawChar() directly with 'bad' characters of font may cause mayhem!
 
-    c -= (uint8_t)pgm_read_byte(&gfxFont->first);
+    c -= pgm_read_byte(&gfxFont->first);
     GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c);
     uint8_t *bitmap = pgm_read_bitmap_ptr(gfxFont);
 
@@ -2012,8 +2012,8 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
             xAdvance = pgm_read_byte(&glyph->xAdvance),
             yAdvance = pgm_read_byte(&gfxFont->yAdvance),
             baseline = yAdvance * 2 / 3; // TODO: baseline is an arbitrary currently, may be define in font file
-    int8_t xo = pgm_read_byte(&glyph->xOffset),
-           yo = pgm_read_byte(&glyph->yOffset);
+    int8_t xo = pgm_read_sbyte(&glyph->xOffset),
+           yo = pgm_read_sbyte(&glyph->yOffset);
     uint8_t xx, yy, bits = 0, bit = 0;
     int16_t xo16 = xo, yo16 = yo;
 
@@ -2261,22 +2261,22 @@ size_t Arduino_GFX::write(uint8_t c)
     if (c == '\n') // Newline
     {
       cursor_x = _min_text_x; // Reset x to zero, advance y by one line
-      cursor_y += (int16_t)textsize_y * (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
+      cursor_y += (int16_t)textsize_y * pgm_read_byte(&gfxFont->yAdvance);
     }
     else if (c != '\r') // Not a carriage return; is normal char
     {
-      uint8_t first = pgm_read_byte(&gfxFont->first),
-              last = pgm_read_byte(&gfxFont->last);
+      uint16_t first = pgm_read_word(&gfxFont->first),
+              last = pgm_read_word(&gfxFont->last);
       if ((c >= first) && (c <= last)) // Char present in this font?
       {
         GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c - first);
         uint8_t gw = pgm_read_byte(&glyph->width),
                 xa = pgm_read_byte(&glyph->xAdvance);
-        int16_t xo = pgm_read_byte(&glyph->xOffset);
+        int8_t xo = pgm_read_sbyte(&glyph->xOffset);
         if (wrap && ((cursor_x + ((xo + gw) * textsize_x) - 1) > _max_text_x))
         {
           cursor_x = _min_text_x; // Reset x to zero, advance y by one line
-          cursor_y += (int16_t)textsize_y * (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
+          cursor_y += (int16_t)textsize_y * pgm_read_byte(&gfxFont->yAdvance);
         }
         drawChar(cursor_x, cursor_y, c, textcolor, textbgcolor);
         cursor_x += (int16_t)textsize_x * xa;
@@ -2642,8 +2642,8 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
         uint8_t gw = pgm_read_byte(&glyph->width),
                 gh = pgm_read_byte(&glyph->height),
                 xa = pgm_read_byte(&glyph->xAdvance);
-        int8_t xo = pgm_read_byte(&glyph->xOffset),
-               yo = pgm_read_byte(&glyph->yOffset);
+        int8_t xo = pgm_read_sbyte(&glyph->xOffset),
+               yo = pgm_read_sbyte(&glyph->yOffset);
         if (wrap && ((*x + ((xo + gw) * textsize_x) - 1) > _max_text_x))
         {
           *x = _min_text_x; // Reset x to zero, advance y by one line

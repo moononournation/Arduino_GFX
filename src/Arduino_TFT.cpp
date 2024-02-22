@@ -384,7 +384,7 @@ void Arduino_TFT::drawGrayscaleBitmap(
     writeAddrWindow(x, y, w, h);
     for (uint32_t i = 0; i < len; i++)
     {
-      v = (uint8_t)pgm_read_byte(&bitmap[i]);
+      v = pgm_read_byte(&bitmap[i]);
       _bus->write16(color565(v, v, v));
     }
     endWrite();
@@ -792,8 +792,8 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color
             xAdvance = pgm_read_byte(&glyph->xAdvance),
             yAdvance = pgm_read_byte(&gfxFont->yAdvance),
             baseline = yAdvance * 2 / 3; // TODO: baseline is an arbitrary currently, may be define in font file
-    int8_t xo = pgm_read_byte(&glyph->xOffset),
-           yo = pgm_read_byte(&glyph->yOffset);
+    int8_t xo = pgm_read_sbyte(&glyph->xOffset),
+           yo = pgm_read_sbyte(&glyph->yOffset);
     // urgly workaround for the character not fit in the box
     if ((bg != color)             // have background color
         && ((xo + w) > xAdvance)) // if character draw outside the box
