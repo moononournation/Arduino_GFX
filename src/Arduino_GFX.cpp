@@ -2509,8 +2509,6 @@ void Arduino_GFX::setRotation(uint8_t r)
   case 1:
     _width = HEIGHT;
     _height = WIDTH;
-    _max_x = _width - 1;  ///< x zero base bound
-    _max_y = _height - 1; ///< y zero base bound
     break;
   case 6:
   case 4:
@@ -2518,10 +2516,11 @@ void Arduino_GFX::setRotation(uint8_t r)
   default: // case 0:
     _width = WIDTH;
     _height = HEIGHT;
-    _max_x = _width - 1;  ///< x zero base bound
-    _max_y = _height - 1; ///< y zero base bound
     break;
   }
+
+  _max_x = _width - 1;  ///< x zero base bound
+  _max_y = _height - 1; ///< y zero base bound
 
   // reset textBound after setRotation()
   setTextBound(0, 0, _width, _height);
