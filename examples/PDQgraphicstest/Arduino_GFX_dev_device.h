@@ -18,6 +18,7 @@
 // #define ESP32_S3_RGB
 // #define ESP32_S3_RPI_DPI
 // #define ESP32S3_2_1_TP
+// #define GS_T3E // Golden Security GS-T3E
 // #define JC3248W535
 // #define LILYGO_T_DECK
 // #define LILYGO_T_DISPLAY
@@ -325,6 +326,24 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
     bus, GFX_NOT_DEFINED /* RST */, st7701_type5_init_operations, sizeof(st7701_type5_init_operations));
+
+/* Golden Security GS-T3E */
+#elif defined(GS_T3E)
+#define GFX_DEV_DEVICE GS_T3E
+#define GFX_BL 42
+Arduino_DataBus *bus = new Arduino_SWSPI(
+    GFX_NOT_DEFINED /* DC */, 4 /* CS */,
+    15 /* SCK */, 48 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    40 /* DE */, 39 /* VSYNC */, 38 /* HSYNC */, 41 /* PCLK */,
+    8 /* R0 */, 18 /* R1 */, 17 /* R2 */, 16 /* R3 */, 0 /* R4 */,
+    13 /* G0 */, 12 /* G1 */, 11 /* G2 */, 10 /* G3 */, 9 /* G4 */, 3 /* G5 */,
+    15 /* B0 */, 48 /* B1 */, 47 /* B2 */, 21 /* B3 */, 14 /* B4 */,
+    1 /* hsync_polarity */, 10 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
+    1 /* vsync_polarity */, 10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+    480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
+    bus, 4 /* RST */, st7701_type1_init_operations, sizeof(st7701_type1_init_operations));
 
 #elif defined(JC3248W535)
 #define GFX_DEV_DEVICE JC3248W535
