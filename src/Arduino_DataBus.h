@@ -7,6 +7,8 @@
 
 #include <Arduino.h>
 
+#include "YCbCr2RGB.h"
+
 #define GFX_SKIP_OUTPUT_BEGIN -2
 #define GFX_NOT_DEFINED -1
 #define GFX_STR_HELPER(x) #x
@@ -115,7 +117,7 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
 #endif
 #define ATTR_UNUSED __attribute__((unused))
 
-#define MSB_16(val) (((val)&0xFF00) >> 8) | (((val)&0xFF) << 8)
+#define MSB_16(val) (((val) & 0xFF00) >> 8) | (((val) & 0xFF) << 8)
 #define MSB_16_SET(var, val) \
   {                          \
     (var) = MSB_16(val);     \
@@ -291,6 +293,7 @@ public:
   virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat);
   virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);
   virtual void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len);
+  virtual void writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t *crData, uint16_t w, uint16_t h);
 #else
   void batchOperation(const uint8_t *operations, size_t len);
 #endif // !defined(LITTLE_FOOT_PRINT)

@@ -265,6 +265,14 @@ void Arduino_TFT::writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_inde
   _bus->writeIndexedPixelsDouble(bitmap, color_index, len);
 }
 
+void Arduino_TFT::drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, uint8_t *cbData, uint8_t *crData, int16_t w, int16_t h)
+{
+  startWrite();
+  writeAddrWindow(0, 0, w, h);
+  _bus->writeYCbCrPixels(yData, cbData, crData, w, h);
+  endWrite();
+}
+
 void Arduino_TFT::drawBitmap(
     int16_t x, int16_t y,
     const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg)

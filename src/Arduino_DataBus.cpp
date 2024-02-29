@@ -162,4 +162,36 @@ void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uin
     write(_data16.lsb);
   }
 }
+
+void Arduino_DataBus::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t *crData, uint16_t w, uint16_t h)
+{
+  w >>= 1;
+  for (int i = 0; i < h;)
+  {
+    for (int j = 0; j < w; ++j)
+    {
+      uint8_t cb = *cbData++;
+      uint8_t cr = *crData++;
+      int16_t r = CR2R16[cr];
+      int16_t g = -CB2G16[cb] - CR2G16[cr];
+      int16_t b = CB2B16[cb];
+      int16_t y = Y2I16[*yData++];
+      _data16.value = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+      write(_data16.lsb);
+      write(_data16.msb);
+      y = Y2I16[*yData++];
+      _data16.value = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+      write(_data16.lsb);
+      write(_data16.msb);
+    }
+
+    if (++i & 1)
+    {
+      // rollback CbCr data
+      cbData -= w;
+      crData -= w;
+    }
+  }
+}
+
 #endif // !defined(LITTLE_FOOT_PRINT)

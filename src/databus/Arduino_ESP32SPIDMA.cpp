@@ -170,6 +170,11 @@ bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
   {
     return false;
   }
+  _2nd_buffer = (uint8_t *)heap_caps_aligned_alloc(16, ESP32SPIDMA_MAX_PIXELS_AT_ONCE * 2, MALLOC_CAP_DMA);
+  if (!_2nd_buffer)
+  {
+    return false;
+  }
 
   return true;
 }
@@ -802,6 +807,74 @@ void Arduino_ESP32SPIDMA::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx,
 
       len -= l;
     }
+  }
+}
+
+void Arduino_ESP32SPIDMA::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t *crData, uint16_t w, uint16_t h)
+{
+  if (w > (ESP32SPIDMA_MAX_PIXELS_AT_ONCE / 2))
+  {
+    Arduino_DataBus::writeYCbCrPixels(yData, cbData, crData, w, h);
+  }
+  else
+  {
+    int cols = w >> 1;
+    int rows = h >> 1;
+    uint8_t *yData2 = yData + w;
+    uint16_t *dest = _buffer16;
+    uint16_t *dest2 = dest + w;
+
+    uint16_t out_bits = w << 5;
+    bool poll_started = false;
+    for (int row = 0; row < rows; ++row)
+    {
+      for (int col = 0; col < cols; ++col)
+      {
+        uint8_t cb = *cbData++;
+        uint8_t cr = *crData++;
+        int16_t r = CR2R16[cr];
+        int16_t g = -CB2G16[cb] - CR2G16[cr];
+        int16_t b = CB2B16[cb];
+        int16_t y;
+
+        y = Y2I16[*yData++];
+        *dest++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        y = Y2I16[*yData++];
+        *dest++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        y = Y2I16[*yData2++];
+        *dest2++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        y = Y2I16[*yData2++];
+        *dest2++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+      }
+      yData += w;
+      yData2 += w;
+
+      if (poll_started)
+      {
+        POLL_END();
+      }
+      else
+      {
+        poll_started = true;
+      }
+      if (row & 1)
+      {
+        _spi_tran.tx_buffer = _2nd_buffer32;
+        dest = _buffer16;
+      }
+      else
+      {
+        _spi_tran.tx_buffer = _buffer32;
+        dest = _2nd_buffer16;
+      }
+      _spi_tran.length = out_bits;
+      _spi_tran.flags = 0;
+
+      POLL_START();
+      dest2 = dest + w;
+    }
+
+    POLL_END();
   }
 }
 

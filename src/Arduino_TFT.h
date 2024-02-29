@@ -39,6 +39,8 @@ public:
   virtual void writeIndexedPixels(uint8_t *bitmap, uint16_t *color_index, uint32_t len);
   virtual void writeIndexedPixelsDouble(uint8_t *bitmap, uint16_t *color_index, uint32_t len);
 
+  virtual void drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, uint8_t *cbData, uint8_t *crData, int16_t w, int16_t h);
+
   void writeBytes(uint8_t *data, uint32_t size);
   void pushColor(uint16_t color);
 
