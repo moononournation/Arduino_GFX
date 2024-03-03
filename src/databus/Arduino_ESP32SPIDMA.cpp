@@ -838,13 +838,13 @@ void Arduino_ESP32SPIDMA::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint
         int16_t y;
 
         y = Y2I16[*yData++];
-        *dest++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        *dest++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
         y = Y2I16[*yData++];
-        *dest++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        *dest++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
         y = Y2I16[*yData2++];
-        *dest2++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        *dest2++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
         y = Y2I16[*yData2++];
-        *dest2++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        *dest2++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
       }
       yData += w;
       yData2 += w;
