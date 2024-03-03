@@ -32,6 +32,32 @@ gfx->setTextColor(RED);
 gfx->println("Hello World!");
 ```
 
+## Get Started
+
+If you are new on this library, I always recommend try Library Example PDQgraphicstest first. You can find it at Arduino IDE -> File menu -> Examples -> GFX Library for Arduino -> PDQgraphicstest.
+
+After open the example, you can see many tabs. The first is PDQgraphicstest, the main program. Start from the second tab, it is related header files, Arduino_GFX_databus.h, ... etc.
+
+### Using supported Dev Device
+
+If you are using below listed support dev device, simply select the Arduino_GFX_dev_device.h and uncomment the define of your dev device. E.g. if you are using LilyGo T-Deck:
+
+```C
+...
+// #define JC3248W535
+#define LILYGO_T_DECK
+// #define LILYGO_T_DISPLAY
+...
+```
+
+### Custom device and display
+
+If you are not using supported dev device:
+
+- Default DataBus is using Arduino SPI. Other DataBus can modify in Arduino_GFX_databus.h.
+
+- Default Display is using ILI9341 LCD. Other Display can modify in Arduino_GFX_display.h.
+
 ## More Details
 
 <details>
