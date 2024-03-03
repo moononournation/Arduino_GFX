@@ -11,8 +11,12 @@
 #ifndef _ARDUINO_ESP32LCD16_H_
 #define _ARDUINO_ESP32LCD16_H_
 
+#ifndef LCD_MAX_PIXELS_AT_ONCE
 #define LCD_MAX_PIXELS_AT_ONCE 2046
+#endif
+#ifndef USE_DMA_THRESHOLD
 #define USE_DMA_THRESHOLD 6
+#endif
 
 class Arduino_ESP32LCD16 : public Arduino_DataBus
 {

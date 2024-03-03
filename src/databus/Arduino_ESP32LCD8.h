@@ -6,8 +6,12 @@
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
 
+#ifndef LCD_MAX_PIXELS_AT_ONCE
 #define LCD_MAX_PIXELS_AT_ONCE 2046
+#endif
+#ifndef USE_DMA_THRESHOLD
 #define USE_DMA_THRESHOLD 6
+#endif
 
 class Arduino_ESP32LCD8 : public Arduino_DataBus
 {

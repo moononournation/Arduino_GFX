@@ -5,8 +5,12 @@
 #if defined(ESP32)
 #include <driver/spi_master.h>
 
+#ifndef ESP32SPIDMA_MAX_PIXELS_AT_ONCE
 #define ESP32SPIDMA_MAX_PIXELS_AT_ONCE 1024
-#define DMA_CHANNEL SPI_DMA_CH_AUTO
+#endif
+#ifndef ESP32SPIDMA_DMA_CHANNEL
+#define ESP32SPIDMA_DMA_CHANNEL SPI_DMA_CH_AUTO
+#endif
 
 class Arduino_ESP32SPIDMA : public Arduino_DataBus
 {

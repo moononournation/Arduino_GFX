@@ -23,8 +23,8 @@ Arduino_ESP32QSPI::Arduino_ESP32QSPI(
 bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
 {
   // set SPI parameters
-  _speed = (speed == GFX_NOT_DEFINED) ? QSPI_FREQUENCY : speed;
-  _dataMode = (dataMode == GFX_NOT_DEFINED) ? QSPI_SPI_MODE : dataMode;
+  _speed = (speed == GFX_NOT_DEFINED) ? ESP32QSPI_FREQUENCY : speed;
+  _dataMode = (dataMode == GFX_NOT_DEFINED) ? ESP32QSPI_SPI_MODE : dataMode;
 
   pinMode(_cs, OUTPUT);
   digitalWrite(_cs, HIGH); // disable chip select
@@ -57,7 +57,7 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .max_transfer_sz = (ESP32QSPI_MAX_PIXELS_AT_ONCE * 16) + 8,
       .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
       .intr_flags = 0};
-  esp_err_t ret = spi_bus_initialize(QSPI_SPI_HOST, &buscfg, QSPI_DMA_CHANNEL);
+  esp_err_t ret = spi_bus_initialize(ESP32QSPI_SPI_HOST, &buscfg, ESP32QSPI_DMA_CHANNEL);
   if (ret != ESP_OK)
   {
     ESP_ERROR_CHECK(ret);
@@ -79,7 +79,7 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .queue_size = 1,
       .pre_cb = nullptr,
       .post_cb = nullptr};
-  ret = spi_bus_add_device(QSPI_SPI_HOST, &devcfg, &_handle);
+  ret = spi_bus_add_device(ESP32QSPI_SPI_HOST, &devcfg, &_handle);
   if (ret != ESP_OK)
   {
     ESP_ERROR_CHECK(ret);

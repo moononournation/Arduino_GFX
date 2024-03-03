@@ -8,7 +8,9 @@
 
 #include "Arduino_DataBus.h"
 
+#ifndef RPIPICOSPI_MAX_PIXELS_AT_ONCE
 #define RPIPICOSPI_MAX_PIXELS_AT_ONCE 32
+#endif
 
 class Arduino_RPiPicoSPI : public Arduino_DataBus
 {

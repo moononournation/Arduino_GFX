@@ -16,7 +16,9 @@
 
 #include "Arduino_DataBus.h"
 
+#ifndef MBEDSPI_MAX_PIXELS_AT_ONCE
 #define MBEDSPI_MAX_PIXELS_AT_ONCE 32
+#endif
 
 class Arduino_mbedSPI : public Arduino_DataBus
 {

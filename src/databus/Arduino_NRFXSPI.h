@@ -11,7 +11,9 @@
 
 #include "Arduino_DataBus.h"
 
+#ifndef NRFXSPI_MAX_PIXELS_AT_ONCE
 #define NRFXSPI_MAX_PIXELS_AT_ONCE 32
+#endif
 
 class Arduino_NRFXSPI : public Arduino_DataBus
 {

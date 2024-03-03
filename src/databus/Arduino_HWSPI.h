@@ -9,7 +9,9 @@
 #include "Arduino_DataBus.h"
 
 #if !defined(LITTLE_FOOT_PRINT)
+#ifndef SPI_MAX_PIXELS_AT_ONCE
 #define SPI_MAX_PIXELS_AT_ONCE 32
+#endif
 #endif
 
 // HARDWARE CONFIG ---------------------------------------------------------

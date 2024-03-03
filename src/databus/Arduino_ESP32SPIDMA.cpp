@@ -122,9 +122,9 @@ bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
       .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
       .intr_flags = 0};
 #if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S3
-  esp_err_t ret = spi_bus_initialize((spi_host_device_t)_spi_num, &buscfg, DMA_CHANNEL);
+  esp_err_t ret = spi_bus_initialize((spi_host_device_t)_spi_num, &buscfg, ESP32SPIDMA_DMA_CHANNEL);
 #else
-  esp_err_t ret = spi_bus_initialize((spi_host_device_t)(_spi_num - 1), &buscfg, DMA_CHANNEL);
+  esp_err_t ret = spi_bus_initialize((spi_host_device_t)(_spi_num - 1), &buscfg, ESP32SPIDMA_DMA_CHANNEL);
 #endif
   if (ret != ESP_OK)
   {
