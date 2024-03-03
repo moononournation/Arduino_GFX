@@ -121,7 +121,7 @@ otf2bdf Cubic_11_1.013_R.ttf -p 9 -o Cubic_11_1.013_R.bdf
 bdfconv -v -f 1 -b 1 -m "0-4294967295" Cubic_11_1.013_R.bdf -o u8g2_font_cubic11_h_cjk.h -n u8g2_font_cubic11_h_cjk
 ```
 
-#### [QuanPixel](https://diaowinner.itch.io/galmuri-extended):
+#### [QuanPixel](https://diaowinner.itch.io/galmuri-extended)
 
 ##### u8g2_font_quan7_h_cjk
 
@@ -246,11 +246,6 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * 8-bit parallel interface (SWPAR8, AVRPAR8, ESP32PAR8, ESP32S2PAR8, RPiPicoPAR8, RTLPAR8, STM32PAR8)
 * 16-bit parallel interface (ESP32LCD16, ESP32PAR16, ESP32S2PAR16, RPiPicoPAR16)
 * RGB565+SPI interface (ESP32RGBPanel)
-
-### Tobe Support data bus (Sponsors can make it happen)
-
-* Arduino ATMega2560 dual 8-bit Port form 16-bit parallel interface
-* FastLED
 
 </details>
 
@@ -391,7 +386,6 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 ### Tobe Support Display (Sponsors can make it happen)
 
-* FastLED Martix supported by co-operate with Canvas
 * Mono display supported by co-operate with Canvas
 * Multi-color e-ink display supported by co-operate with Canvas
 
@@ -401,12 +395,12 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 <summary>Canvas (framebuffer)</summary>
 
-[[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Canvas-Class)]
+### Canvas Class [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Canvas-Class)]
 
-* Canvas (16-bit pixel)
-* Canvas_Indexed (half memory space)
-* Canvas_3bit (1/4 memory space framebuffer)
-* Canvas_Mono (1/16 memory space framebuffer)
+* Arduino_Canvas (16-bit pixel)
+* Arduino_Canvas_3bit (1/4 memory space of 16-bit pixel)
+* Arduino_Canvas_Indexed (half memory space of 16-bit pixel)
+* Arduino_Canvas_Mono (1/16 memory space of 16-bit pixel)
 
 </details>
 
@@ -414,7 +408,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 <summary>LVGL Support</summary>
 
-3 LVGL demo provide in examples folder:
+### 3 LVGL demo in Library Examples
 
 * LvglBenchmark [[demo video](https://youtu.be/75Qx-UEgabY)]
 * LvglHelloWorld
@@ -428,10 +422,9 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 ### Sponsors can make it happen
 
-* Canvas to FastLED
 * Print color Emoji Characters
 * Load bitmap font files from flash / SD
-* Fill Gradient #128
+* Fill Gradient (Discussion #128)
 
 </details>
 
