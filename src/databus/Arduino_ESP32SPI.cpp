@@ -890,53 +890,6 @@ void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, ui
   }
 }
 
-void Arduino_ESP32SPI::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t *crData, uint16_t w, uint16_t h)
-{
-  if (
-      (_dc == GFX_NOT_DEFINED) // 9-bit SPI
-      || (w > (ESP32SPI_MAX_PIXELS_AT_ONCE / 2)))
-  {
-    Arduino_DataBus::writeYCbCrPixels(yData, cbData, crData, w, h);
-  }
-  else
-  {
-    int cols = w >> 1;
-    int rows = h >> 1;
-    uint8_t *yData2 = yData + w;
-    uint16_t *dest = _buffer16;
-    uint16_t *dest2 = dest + w;
-
-    uint16_t out_bits = w << 5;
-    for (int row = 0; row < rows; ++row)
-    {
-      for (int col = 0; col < cols; ++col)
-      {
-        uint8_t cb = *cbData++;
-        uint8_t cr = *crData++;
-        int16_t r = CR2R16[cr];
-        int16_t g = -CB2G16[cb] - CR2G16[cr];
-        int16_t b = CB2B16[cb];
-        int16_t y;
-
-        y = Y2I16[*yData++];
-        *dest++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
-        y = Y2I16[*yData++];
-        *dest++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
-        y = Y2I16[*yData2++];
-        *dest2++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
-        y = Y2I16[*yData2++];
-        *dest2++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
-      }
-      POLL(out_bits);
-
-      yData += w;
-      yData2 += w;
-      dest = _buffer16;
-      dest2 = dest + w;
-    }
-  }
-}
-
 /**
  * @brief flush_data_buf
  *
