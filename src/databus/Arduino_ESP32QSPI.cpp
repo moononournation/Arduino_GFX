@@ -167,7 +167,6 @@ void Arduino_ESP32QSPI::writeCommandBytes(uint8_t *data, uint32_t len)
 {
   CS_LOW();
   uint32_t l;
-  bool first_send = true;
   while (len)
   {
     l = (len >= (ESP32QSPI_MAX_PIXELS_AT_ONCE << 1)) ? (ESP32QSPI_MAX_PIXELS_AT_ONCE << 1) : len;

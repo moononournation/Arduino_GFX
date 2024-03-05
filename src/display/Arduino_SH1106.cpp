@@ -141,7 +141,7 @@ void Arduino_SH1106::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w
     // _bus->write(SH110X_SETHIGHCOLUMN + 0);
 
     uint8_t page_sequence[] = {
-        SH110X_SETPAGEADDR + p,
+        (uint8_t)(SH110X_SETPAGEADDR + p),
         SH110X_SETLOWCOLUMN + 2,
         SH110X_SETHIGHCOLUMN + 0};
     _bus->writeCommandBytes(page_sequence, sizeof(page_sequence));
