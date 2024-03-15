@@ -919,6 +919,61 @@ void Arduino_GFX::fillRoundRect(int16_t x, int16_t y, int16_t w,
 
 /**************************************************************************/
 /*!
+  @brief  Draw a rotated rectangle with fill color
+  @param  x       Top left corner x coordinate
+  @param  y       Top left corner y coordinate
+  @param  w       Width in pixels
+  @param  h       Height in pixels
+  @param  r       Rotation in degrees
+  @param  color   16-bit 5-6-5 Color to draw/fill with
+  @param  ox      x-axis pivot offset in pixels
+  @param  oy      y-axis pivot offset in pixels
+
+*/
+/**************************************************************************/
+void Arduino_GFX::fillRotatedRect(int16_t x, int16_t y, int16_t w, int16_t h,
+                                  int16_t r, uint16_t color, int16_t ox, int16_t oy)
+{
+
+  float angle = r * PI / 180.0;
+  int16_t centerX = x + (w / 2) + ox;
+  int16_t centerY = y + (h / 2) + oy;
+
+  float cosAngle = cos(angle);
+  float sinAngle = sin(angle);
+
+  int16_t x1 = centerX + (x - centerX) * cosAngle - (y - centerY) * sinAngle;
+  int16_t y1 = centerY + (x - centerX) * sinAngle + (y - centerY) * cosAngle;
+  int16_t x2 = centerX + ((x + w) - centerX) * cosAngle - (y - centerY) * sinAngle;
+  int16_t y2 = centerY + ((x + w) - centerX) * sinAngle + (y - centerY) * cosAngle;
+  int16_t x3 = centerX + ((x + w) - centerX) * cosAngle - ((y + h) - centerY) * sinAngle;
+  int16_t y3 = centerY + ((x + w) - centerX) * sinAngle + ((y + h) - centerY) * cosAngle;
+  int16_t x4 = centerX + (x - centerX) * cosAngle - ((y + h) - centerY) * sinAngle;
+  int16_t y4 = centerY + (x - centerX) * sinAngle + ((y + h) - centerY) * cosAngle;
+
+  fillTriangle(x1, y1, x2, y2, x3, y3, color);
+  fillTriangle(x1, y1, x3, y3, x4, y4, color);
+}
+
+/**************************************************************************/
+/*!
+  @brief  Draw a rotated rectangle with fill color
+  @param  x       Top left corner x coordinate
+  @param  y       Top left corner y coordinate
+  @param  w       Width in pixels
+  @param  h       Height in pixels
+  @param  r       Rotation in degrees
+  @param  color   16-bit 5-6-5 Color to draw/fill with
+*/
+/**************************************************************************/
+void Arduino_GFX::fillRotatedRect(int16_t x, int16_t y, int16_t w,
+                                  int16_t h, int16_t r, uint16_t color)
+{
+  fillRotatedRect(x, y, w, h, r, color, 0, 0);
+}
+
+/**************************************************************************/
+/*!
   @brief  Draw a triangle with no fill color
   @param  x0      Vertex #0 x coordinate
   @param  y0      Vertex #0 y coordinate
@@ -2266,7 +2321,7 @@ size_t Arduino_GFX::write(uint8_t c)
     else if (c != '\r') // Not a carriage return; is normal char
     {
       uint16_t first = pgm_read_word(&gfxFont->first),
-              last = pgm_read_word(&gfxFont->last);
+               last = pgm_read_word(&gfxFont->last);
       if ((c >= first) && (c <= last)) // Char present in this font?
       {
         GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c - first);
