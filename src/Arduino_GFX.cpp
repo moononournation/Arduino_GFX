@@ -2321,7 +2321,7 @@ size_t Arduino_GFX::write(uint8_t c)
     else if (c != '\r') // Not a carriage return; is normal char
     {
       uint16_t first = pgm_read_word(&gfxFont->first),
-               last = pgm_read_word(&gfxFont->last);
+              last = pgm_read_word(&gfxFont->last);
       if ((c >= first) && (c <= last)) // Char present in this font?
       {
         GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c - first);
