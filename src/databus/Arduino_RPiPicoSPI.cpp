@@ -3,7 +3,7 @@
 #include "Arduino_DataBus.h"
 #include "Arduino_RPiPicoSPI.h"
 
-Arduino_RPiPicoSPI::Arduino_RPiPicoSPI(int8_t dc /* = GFX_NOT_DEFINED */, int8_t cs /* = GFX_NOT_DEFINED */, int8_t sck /* = PIN_SPI0_SCK */, int8_t mosi /* = PIN_SPI0_MOSI */, int8_t miso /* = PIN_SPI0_MISO */, spi_inst_t *spi /* = spi0 */)
+Arduino_RPiPicoSPI::Arduino_RPiPicoSPI(int8_t dc /* = GFX_NOT_DEFINED */, int8_t cs /* = GFX_NOT_DEFINED */, int8_t sck /* = 18 */, int8_t mosi /* = 19 */, int8_t miso /* = 16 */, spi_inst_t *spi /* = spi0 */)
     : _dc(dc), _cs(cs), _sck(sck), _mosi(mosi), _miso(miso), _spi(spi)
 {
 }
