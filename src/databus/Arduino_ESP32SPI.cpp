@@ -336,8 +336,6 @@ void Arduino_ESP32SPI::beginWrite()
   if (_is_shared_interface)
   {
     spiTransaction(_spi, _div, _dataMode, _bitOrder);
-    write(0); // send a dummy data
-    flush_data_buf();
   }
 
   if (_dc != GFX_NOT_DEFINED)

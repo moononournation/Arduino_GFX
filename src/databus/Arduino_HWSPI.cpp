@@ -218,7 +218,6 @@ void Arduino_HWSPI::beginWrite()
   if (_is_shared_interface)
   {
     SPI_BEGIN_TRANSACTION();
-    write(0); // send a dummy data
   }
 
   DC_HIGH();
