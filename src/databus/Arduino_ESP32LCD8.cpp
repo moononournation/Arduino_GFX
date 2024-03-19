@@ -4,9 +4,8 @@
  */
 #include "Arduino_ESP32LCD8.h"
 
-#if (ESP_ARDUINO_VERSION_MAJOR < 3)
-
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+#if (ESP_ARDUINO_VERSION_MAJOR < 3)
 
 #define WAIT_LCD_NOT_BUSY while (LCD_CAM.lcd_user.val & LCD_CAM_LCD_START)
 
@@ -784,6 +783,5 @@ INLINE void Arduino_ESP32LCD8::CS_LOW(void)
   }
 }
 
+#endif // #if defined(ESP_ARDUINO_VERSION_MAJOR) && (ESP_ARDUINO_VERSION_MAJOR < 3)
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-
-#endif // #if (ESP_ARDUINO_VERSION_MAJOR < 3)

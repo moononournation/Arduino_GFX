@@ -1,8 +1,7 @@
 #include "Arduino_ESP32RGBPanel.h"
 
-#if (ESP_ARDUINO_VERSION_MAJOR < 3)
-
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+#if (ESP_ARDUINO_VERSION_MAJOR < 3)
 
 Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
     int8_t de, int8_t vsync, int8_t hsync, int8_t pclk,
@@ -130,6 +129,5 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
 
   return (uint16_t *)_rgb_panel->fb;
 }
-#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-
 #endif // #if (ESP_ARDUINO_VERSION_MAJOR < 3)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
