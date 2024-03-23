@@ -143,6 +143,11 @@ bool Arduino_ESP32LCD16::begin(int32_t speed, int8_t dataMode)
   {
     return false;
   }
+  _2nd_buffer = (uint8_t *)heap_caps_aligned_alloc(16, LCD_MAX_PIXELS_AT_ONCE * 2, MALLOC_CAP_DMA);
+  if (!_2nd_buffer)
+  {
+    return false;
+  }
 
   return true;
 }
@@ -461,6 +466,89 @@ void Arduino_ESP32LCD16::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, 
   {
     p = idx[*data++] * 0x10001;
     WRITE32(p);
+  }
+}
+
+void Arduino_ESP32LCD16::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t *crData, uint16_t w, uint16_t h)
+{
+  if (w > (LCD_MAX_PIXELS_AT_ONCE / 2))
+  {
+    Arduino_DataBus::writeYCbCrPixels(yData, cbData, crData, w, h);
+  }
+  else
+  {
+    int cols = w >> 1;
+    int rows = h >> 1;
+    uint8_t *yData2 = yData + w;
+    uint16_t *dest = _buffer16;
+    uint16_t *dest2 = dest + w;
+
+    uint16_t l = (w * 4) - 4;
+    uint32_t out_dmadesc = ((l + 3) & (~3)) | l << 12 | 0xC0000000;
+    bool poll_started = false;
+    for (int row = 0; row < rows; ++row)
+    {
+      for (int col = 0; col < cols; ++col)
+      {
+        uint8_t cb = *cbData++;
+        uint8_t cr = *crData++;
+        int16_t r = CR2R16[cr];
+        int16_t g = -CB2G16[cb] - CR2G16[cr];
+        int16_t b = CB2B16[cb];
+        int16_t y;
+
+        y = Y2I16[*yData++];
+        *dest++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        y = Y2I16[*yData++];
+        *dest++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        y = Y2I16[*yData2++];
+        *dest2++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        y = Y2I16[*yData2++];
+        *dest2++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+      }
+      yData += w;
+      yData2 += w;
+
+      if (poll_started)
+      {
+        WAIT_LCD_NOT_BUSY;
+      }
+      else
+      {
+        poll_started = true;
+      }
+
+      *(uint32_t *)_dmadesc = out_dmadesc;
+      if (row & 1)
+      {
+        _dmadesc->buffer = _2nd_buffer32 + 1;
+        _dmadesc->next = nullptr;
+        gdma_start(_dma_chan, (intptr_t)(_dmadesc));
+        LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
+        LCD_CAM.lcd_cmd_val.val = *_2nd_buffer32;
+        dest = _buffer16;
+      }
+      else
+      {
+        _dmadesc->buffer = _buffer32 + 1;
+        _dmadesc->next = nullptr;
+        gdma_start(_dma_chan, (intptr_t)(_dmadesc));
+        LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
+        LCD_CAM.lcd_cmd_val.val = *_buffer32;
+        dest = _2nd_buffer16;
+      }
+
+      uint32_t wait = _fast_wait;
+      while (wait--)
+      {
+        __asm__ __volatile__("nop");
+      }
+      LCD_CAM.lcd_user.val = LCD_CAM_LCD_ALWAYS_OUT_EN | LCD_CAM_LCD_2BYTE_EN | LCD_CAM_LCD_CMD_2_CYCLE_EN | LCD_CAM_LCD_DOUT | LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
+
+      dest2 = dest + w;
+    }
+
+    WAIT_LCD_NOT_BUSY;
   }
 }
 
