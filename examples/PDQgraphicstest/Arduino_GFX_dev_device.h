@@ -93,7 +93,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 0 /* rota
 Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */, VSPI /* spi_num */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */);
 
-#elif defined(ESP32_4827A043)
+#elif defined(ESP32_4827A043) /* gfx->begin(8000000) */
 #define GFX_DEV_DEVICE ESP32_4827A043
 #define GFX_BL 2
 Arduino_DataBus *bus = new Arduino_ESP32LCD16(
@@ -107,9 +107,7 @@ Arduino_GFX *gfx = new Arduino_NV3041A(bus, 17 /* RST */, 0 /* rotation */, true
 #define GFX_BL 1
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
     45 /* cs */, 47 /* sck */, 21 /* d0 */, 48 /* d1 */, 40 /* d2 */, 39 /* d3 */);
-Arduino_GFX *g = new Arduino_NV3041A(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
-Arduino_GFX *gfx = new Arduino_Canvas(480 /* width */, 272 /* height */, g);
-#define CANVAS
+Arduino_GFX *gfx = new Arduino_NV3041A(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(ESP32_4827S043)
 #define GFX_DEV_DEVICE ESP32_4827S043
