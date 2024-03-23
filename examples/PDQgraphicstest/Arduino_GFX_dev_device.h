@@ -4,7 +4,7 @@
 // #define ESP32_2424012
 // #define ESP32_2432S028
 // #define ESP32_3248S035
-// #define ESP32_4827A043
+// #define ESP32_4827A043 /* requires manual set bus speed to 8 mHz: gfx->begin(8000000) */
 // #define ESP32_4827A043_QSPI
 // #define ESP32_4827S043
 // #define ESP32_8048S043
@@ -93,7 +93,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 0 /* rota
 Arduino_DataBus *bus = new Arduino_ESP32SPI(2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */, VSPI /* spi_num */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */);
 
-#elif defined(ESP32_4827A043) /* gfx->begin(8000000) */
+#elif defined(ESP32_4827A043)
 #define GFX_DEV_DEVICE ESP32_4827A043
 #define GFX_BL 2
 Arduino_DataBus *bus = new Arduino_ESP32LCD16(
