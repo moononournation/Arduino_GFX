@@ -214,6 +214,8 @@ public:
   void fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
   void drawRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color);
   void fillRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color);
+  void fillRotatedRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t rotation, uint16_t color);
+  void fillRotatedRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t rotation, uint16_t color, int16_t offset_pivot_x, int16_t offset_pivot_y);
   void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color);
   void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
   void drawXBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color);
