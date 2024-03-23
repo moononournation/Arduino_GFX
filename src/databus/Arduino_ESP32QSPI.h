@@ -39,6 +39,7 @@ public:
   void writeC8D8(uint8_t c, uint8_t d) override;
   void writeC8D16(uint8_t c, uint16_t d) override;
   void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2) override;
+  void writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2) override;
 
   void writeC8Bytes(uint8_t c, uint8_t *data, uint32_t len);
 
@@ -50,6 +51,7 @@ public:
 
   void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len) override;
   void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len) override;
+  void writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t *crData, uint16_t w, uint16_t h) override;
 
 protected:
 private:
@@ -74,6 +76,12 @@ private:
     uint8_t* _buffer;
     uint16_t* _buffer16;
     uint32_t* _buffer32;
+  };
+  union
+  {
+    uint8_t *_2nd_buffer;
+    uint16_t *_2nd_buffer16;
+    uint32_t *_2nd_buffer32;
   };
 };
 

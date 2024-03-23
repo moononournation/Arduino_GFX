@@ -99,6 +99,11 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
   {
     return false;
   }
+  _2nd_buffer = (uint8_t *)heap_caps_aligned_alloc(16, ESP32QSPI_MAX_PIXELS_AT_ONCE * 2, MALLOC_CAP_DMA);
+  if (!_2nd_buffer)
+  {
+    return false;
+  }
 
   return true;
 }
@@ -269,6 +274,29 @@ void Arduino_ESP32QSPI::writeC8D16(uint8_t c, uint16_t d)
  * @param d2
  */
 void Arduino_ESP32QSPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
+{
+  CS_LOW();
+  _spi_tran_ext.base.flags = SPI_TRANS_USE_TXDATA | SPI_TRANS_MULTILINE_CMD | SPI_TRANS_MULTILINE_ADDR;
+  _spi_tran_ext.base.cmd = 0x02;
+  _spi_tran_ext.base.addr = ((uint32_t)c) << 8;
+  _spi_tran_ext.base.tx_data[0] = d1 >> 8;
+  _spi_tran_ext.base.tx_data[1] = d1;
+  _spi_tran_ext.base.tx_data[2] = d2 >> 8;
+  _spi_tran_ext.base.tx_data[3] = d2;
+  _spi_tran_ext.base.length = 32;
+  POLL_START();
+  POLL_END();
+  CS_HIGH();
+}
+
+/**
+ * @brief writeC8D16D16Split
+ *
+ * @param c
+ * @param d1
+ * @param d2
+ */
+void Arduino_ESP32QSPI::writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2)
 {
   CS_LOW();
   _spi_tran_ext.base.flags = SPI_TRANS_USE_TXDATA | SPI_TRANS_MULTILINE_CMD | SPI_TRANS_MULTILINE_ADDR;
@@ -612,6 +640,81 @@ void Arduino_ESP32QSPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, u
   CS_HIGH();
 }
 
+void Arduino_ESP32QSPI::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t *crData, uint16_t w, uint16_t h)
+{
+  if (w > (ESP32QSPI_MAX_PIXELS_AT_ONCE / 2))
+  {
+    Arduino_DataBus::writeYCbCrPixels(yData, cbData, crData, w, h);
+  }
+  else
+  {
+    bool first_send = true;
+
+    int cols = w >> 1;
+    int rows = h >> 1;
+    uint8_t *yData2 = yData + w;
+    uint16_t *dest = _buffer16;
+    uint16_t *dest2 = dest + w;
+
+    uint16_t out_bits = w << 5;
+
+    CS_LOW();
+    for (int row = 0; row < rows; ++row)
+    {
+      for (int col = 0; col < cols; ++col)
+      {
+        uint8_t cb = *cbData++;
+        uint8_t cr = *crData++;
+        int16_t r = CR2R16[cr];
+        int16_t g = -CB2G16[cb] - CR2G16[cr];
+        int16_t b = CB2B16[cb];
+        int16_t y;
+
+        y = Y2I16[*yData++];
+        *dest++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
+        y = Y2I16[*yData++];
+        *dest++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
+        y = Y2I16[*yData2++];
+        *dest2++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
+        y = Y2I16[*yData2++];
+        *dest2++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
+      }
+      yData += w;
+      yData2 += w;
+
+      if (first_send)
+      {
+        _spi_tran_ext.base.flags = SPI_TRANS_MODE_QIO;
+        _spi_tran_ext.base.cmd = 0x32;
+        _spi_tran_ext.base.addr = 0x003C00;
+        first_send = false;
+      }
+      else
+      {
+        POLL_END();
+        _spi_tran_ext.base.flags = SPI_TRANS_MODE_QIO | SPI_TRANS_VARIABLE_CMD |
+                                   SPI_TRANS_VARIABLE_ADDR | SPI_TRANS_VARIABLE_DUMMY;
+      }
+
+      if (row & 1)
+      {
+        _spi_tran_ext.base.tx_buffer = _2nd_buffer32;
+        dest = _buffer16;
+      }
+      else
+      {
+        _spi_tran_ext.base.tx_buffer = _buffer32;
+        dest = _2nd_buffer16;
+      }
+      _spi_tran_ext.base.length = out_bits;
+
+      POLL_START();
+      dest2 = dest + w;
+    }
+    POLL_END();
+    CS_HIGH();
+  }
+}
 /******** low level bit twiddling **********/
 
 /**
