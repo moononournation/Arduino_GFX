@@ -1,30 +1,16 @@
-/*******************************************************************************
- * LVGL Widgets
- * This is a widgets demo for LVGL - Light and Versatile Graphics Library
- * import from: https://github.com/lvgl/lv_demos.git
- *
- * Dependent libraries:
- * LVGL: https://github.com/lvgl/lvgl.git
- *
- * LVGL Configuration file:
- * Copy your_arduino_path/libraries/lvgl/lv_conf_template.h
- * to your_arduino_path/libraries/lv_conf.h
- *
- * In lv_conf.h around line 15, enable config file:
- * #if 1 // Set it to "1" to enable content
- *
- * Then find and set:
- * #define LV_COLOR_DEPTH     16
- * #define LV_TICK_CUSTOM     1
- *
- * For SPI/parallel 8 display set color swap can be faster, parallel 16/RGB screen don't swap!
- * #define LV_COLOR_16_SWAP   1 // for SPI and parallel 8
- * #define LV_COLOR_16_SWAP   0 // for parallel 16 and RGB
- *
- * Enable LVGL Demo Widgets
- * #define LV_USE_DEMO_WIDGETS 1
- ******************************************************************************/
-#include "lv_demo_widgets.h"
+/*Using LVGL with Arduino requires some extra steps:
+ *Be sure to read the docs here: https://docs.lvgl.io/master/get-started/platforms/arduino.html  */
+
+#include <lvgl.h>
+
+/*To use the built-in examples and demos of LVGL uncomment the includes below respectively.
+ *You also need to copy `lvgl/examples` to `lvgl/src/examples`. Similarly for the demos `lvgl/demos` to `lvgl/src/demos`.
+ Note that the `lv_examples` library is for LVGL v7 and you shouldn't install it for this version (since LVGL v8)
+ as the examples and demos are now part of the main LVGL library. */
+
+// #include <examples/lv_examples.h>
+// #include <demos/lv_demos.h>
+
 // #define DIRECT_MODE // Uncomment to enable full frame buffer
 
 /*******************************************************************************
@@ -72,16 +58,24 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false 
  ******************************************************************************/
 #include "touch.h"
 
-/* Change to your screen resolution */
-static uint32_t screenWidth;
-static uint32_t screenHeight;
-static uint32_t bufSize;
-static lv_disp_draw_buf_t draw_buf;
-static lv_color_t *disp_draw_buf;
-static lv_disp_drv_t disp_drv;
+uint32_t screenWidth;
+uint32_t screenHeight;
+uint32_t bufSize;
+lv_disp_draw_buf_t draw_buf;
+lv_color_t *disp_draw_buf;
+lv_disp_drv_t disp_drv;
+
+#if LV_USE_LOG != 0
+/* Serial debugging */
+void my_print(const char *buf)
+{
+  Serial.printf(buf);
+  Serial.flush();
+}
+#endif
 
 /* Display flushing */
-void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
+void my_disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p)
 {
 #ifndef DIRECT_MODE
   uint32_t w = (area->x2 - area->x1 + 1);
@@ -94,10 +88,11 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
 #endif
 #endif // #ifndef DIRECT_MODE
 
-  lv_disp_flush_ready(disp);
+  lv_disp_flush_ready(disp_drv);
 }
 
-void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
+/*Read the touchpad*/
+void my_touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data)
 {
   if (touch_has_signal())
   {
@@ -125,7 +120,13 @@ void setup()
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
   // while(!Serial);
-  Serial.println("Arduino_GFX LVGL Widgets example");
+  Serial.println("Arduino_GFX LVGL_Arduino example v8");
+
+  String LVGL_Arduino = "Hello Arduino! ";
+  LVGL_Arduino += String('V') + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
+
+  Serial.println(LVGL_Arduino);
+  Serial.println("I am LVGL_Arduino");
 
 #ifdef GFX_EXTRA_PRE_INIT
   GFX_EXTRA_PRE_INIT();
@@ -148,6 +149,10 @@ void setup()
 
   lv_init();
 
+#if LV_USE_LOG != 0
+  lv_log_register_print_cb(my_print); /* register print function for debugging */
+#endif
+
   screenWidth = gfx->width();
   screenHeight = gfx->height();
 
@@ -158,15 +163,20 @@ void setup()
 #endif
 
 #ifdef ESP32
-  disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * bufSize, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+#if defined(DIRECT_MODE) && defined(RGB_PANEL)
+  disp_draw_buf = (lv_color_t *)gfx->getFramebuffer();
+#else  // !DIRECT_MODE
+  disp_draw_buf = (lv_color_t *)heap_caps_malloc(bufSize * 2, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
   if (!disp_draw_buf)
   {
     // remove MALLOC_CAP_INTERNAL flag try again
-    disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * bufSize, MALLOC_CAP_8BIT);
+    disp_draw_buf = (lv_color_t *)heap_caps_malloc(bufSize * 2, MALLOC_CAP_8BIT);
   }
-#else
-  disp_draw_buf = (lv_color_t *)malloc(sizeof(lv_color_t) * bufSize);
-#endif
+#endif // !DIRECT_MODE
+#else  // !ESP32
+  Serial.println("LVGL draw_buf allocate MALLOC_CAP_INTERNAL failed! malloc again...");
+  disp_draw_buf = (lv_color_t *)malloc(bufSize * 2);
+#endif // !ESP32
   if (!disp_draw_buf)
   {
     Serial.println("LVGL disp_draw_buf allocate failed!");
@@ -194,10 +204,25 @@ void setup()
     indev_drv.read_cb = my_touchpad_read;
     lv_indev_drv_register(&indev_drv);
 
-    lv_demo_widgets();
+    /* Option 1: Create simple label */
+    lv_obj_t *label = lv_label_create(lv_scr_act());
+    lv_label_set_text(label, "Hello Arduino! (V" GFX_STR(LVGL_VERSION_MAJOR) "." GFX_STR(LVGL_VERSION_MINOR) "." GFX_STR(LVGL_VERSION_PATCH) ")");
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
-    Serial.println("Setup done");
+    /* Option 2: Try an example. See all the examples
+     * online: https://docs.lvgl.io/master/examples.html
+     * source codes: https://github.com/lvgl/lvgl/tree/e7f88efa5853128bf871dde335c0ca8da9eb7731/examples */
+    // lv_example_btn_1();
+
+    /* Option 3: Or try out a demo. Don't forget to enable the demos in lv_conf.h. E.g. LV_USE_DEMOS_WIDGETS*/
+    // lv_demo_widgets();
+    // lv_demo_benchmark();
+    // lv_demo_keypad_encoder();
+    // lv_demo_music();
+    // lv_demo_stress();
   }
+
+  Serial.println("Setup done");
 }
 
 void loop()
@@ -205,16 +230,12 @@ void loop()
   lv_timer_handler(); /* let the GUI do its work */
 
 #ifdef DIRECT_MODE
-#if (LV_COLOR_16_SWAP != 0)
-  gfx->draw16bitBeRGBBitmap(0, 0, (uint16_t *)disp_draw_buf, screenWidth, screenHeight);
+#ifdef RGB_PANEL
+  gfx->flush();
 #else
-  gfx->draw16bitRGBBitmap(0, 0, (uint16_t *)disp_draw_buf, screenWidth, screenHeight);
+  gfx->draw16bitRGBBitmap(0, 0, (uint16_t *)draw_buf, screenWidth, screenHeight);
 #endif
 #endif // #ifdef DIRECT_MODE
-
-#ifdef CANVAS
-  gfx->flush();
-#endif
 
   delay(5);
 }
