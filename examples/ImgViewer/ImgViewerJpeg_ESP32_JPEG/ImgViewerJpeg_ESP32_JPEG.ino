@@ -27,7 +27,7 @@
  *     - Seeed_Arduino_SFUD: https://github.com/Seeed-Studio/Seeed_Arduino_SFUD.git
  ******************************************************************************/
 #define ROOT "/root"
-#define JPEG_FILENAME ROOT"/octocat.jpg"
+#define JPEG_FILENAME ROOT"/img_test_320_240.jpg"
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
