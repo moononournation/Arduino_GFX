@@ -4,7 +4,7 @@
  * Image Source: https://github.blog/2014-11-24-from-sticker-to-sculpture-the-making-of-the-octocat-figurine/
  *
  * Dependent libraries:
- * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
+ * ESP32_JPEG: https://github.com/esp-arduino-libs/ESP32_JPEG.git
  *
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
