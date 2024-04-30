@@ -7,6 +7,7 @@
 // #define ESP32_4827A043 /* requires manual set bus speed to 8 mHz: gfx->begin(8000000) */
 // #define ESP32_4827A043_QSPI
 // #define ESP32_4827S043
+// #define ESP32_4848S040_86BOX_GUITION
 // #define ESP32_8048S043
 // #define ESP32_8048S070
 // #define ESP32_LCDKIT_SPI
@@ -42,7 +43,6 @@
 // #define ZX3D95CE01S_AR
 // #define ZX3D95CE01S_TR
 // #define ZX7D00CE01S // or called "QM Smart Panlee 7.0 inch serial screen"
-// #define ESP32_4848S040_86BOX_GUITION
 
 #if defined(DLC35010R)
 #define GFX_DEV_DEVICE DLC35010R
@@ -149,6 +149,24 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 //     1 /* pclk_active_neg */, 9000000 /* prefer_speed */);
 // Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 //     1024 /* width */, 600 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
+
+/* 4.0" 86BOX from GUITION ESP32-4848S040 display */
+#elif defined(ESP32_4848S040_86BOX_GUITION)
+#define GFX_DEV_DEVICE ESP32_4848S040_86BOX_GUITION
+#define GFX_BL 38
+Arduino_DataBus *bus = new Arduino_SWSPI(
+	GFX_NOT_DEFINED /* DC */, 39 /* CS */,
+	48 /* SCK */, 47 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+	18 /* DE */, 17 /* VSYNC */, 16 /* HSYNC */, 21 /* PCLK */,
+	11 /* R0 */, 12 /* R1 */, 13 /* R2 */, 14 /* R3 */, 0 /* R4 */,
+	8 /* G0 */, 20 /* G1 */, 3 /* G2 */, 46 /* G3 */, 9 /* G4 */, 10 /* G5 */,
+	4 /* B0 */, 5 /* B1 */, 6 /* B2 */, 7 /* B3 */, 15 /* B4 */,
+	1 /* hsync_polarity */, 10 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
+	1 /* vsync_polarity */, 10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+	480 /* width */, 480 /* height */, rgbpanel, 1 /* rotation */, true /* auto_flush */,
+	bus, GFX_NOT_DEFINED /* RST */, st7701_type9_init_operations, sizeof(st7701_type9_init_operations));
 
 #elif defined(ESP32_8048S043)
 #define GFX_DEV_DEVICE ESP32_8048S043
@@ -640,23 +658,5 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotat
 #define GFX_BL 25
 Arduino_DataBus *bus = new Arduino_RPiPicoSPI(8 /* DC */, 9 /* CS */, 10 /* SCK */, 11 /* MOSI */, 12 /* MISO */, spi1 /* spi */);
 Arduino_GFX *gfx = new Arduino_GC9A01(bus, 12 /* RST */, 0 /* rotation */, true /* IPS */);
-
-/* 4.0" 86BOX from GUITION ESP32-4848S040 display */
-#elif defined(ESP32_4848S040_86BOX_GUITION)
-#define GFX_DEV_DEVICE ESP32_4848S040_86BOX_GUITION
-#define GFX_BL 38
-Arduino_DataBus *bus = new Arduino_SWSPI(
-	GFX_NOT_DEFINED /* DC */, 39 /* CS */,
-	48 /* SCK */, 47 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
-Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
-	18 /* DE */, 17 /* VSYNC */, 16 /* HSYNC */, 21 /* PCLK */,
-	11 /* R0 */, 12 /* R1 */, 13 /* R2 */, 14 /* R3 */, 0 /* R4 */,
-	8 /* G0 */, 20 /* G1 */, 3 /* G2 */, 46 /* G3 */, 9 /* G4 */, 10 /* G5 */,
-	4 /* B0 */, 5 /* B1 */, 6 /* B2 */, 7 /* B3 */, 15 /* B4 */,
-	1 /* hsync_polarity */, 10 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
-	1 /* vsync_polarity */, 10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
-Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
-	480 /* width */, 480 /* height */, rgbpanel, 1 /* rotation */, true /* auto_flush */,
-	bus, GFX_NOT_DEFINED /* RST */, st7701_type9_init_operations, sizeof(st7701_type9_init_operations));
 
 #endif
