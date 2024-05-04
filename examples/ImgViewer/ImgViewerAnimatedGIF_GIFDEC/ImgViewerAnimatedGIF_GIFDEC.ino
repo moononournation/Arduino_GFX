@@ -200,12 +200,11 @@ void loop()
         int16_t y = (gfx->height() - gif->height) / 2;
 
         Serial.println(F("GIF video start"));
-        int32_t t_fstart, t_delay = 0, t_real_delay, delay_until;
+        int32_t start_ms = millis(), t_delay = 0, delay_until;
         int32_t res = 1;
         int32_t duration = 0, remain = 0;
         while (res > 0)
         {
-          t_fstart = millis();
           t_delay = gif->gce.delay * 10;
           res = gifClass.gd_get_frame(gif, buf);
           if (res < 0)
@@ -217,18 +216,19 @@ void loop()
           {
             gfx->drawIndexedBitmap(x, y, buf, gif->palette->colors, gif->width, gif->height);
 
-            t_real_delay = t_delay - (millis() - t_fstart);
             duration += t_delay;
-            remain += t_real_delay;
-            delay_until = millis() + t_real_delay;
+            delay_until = start_ms + duration;
             while (millis() < delay_until)
             {
               delay(1);
+              remain++;
             }
           }
         }
         Serial.println(F("GIF video end"));
-        Serial.print(F("duration: "));
+        Serial.print(F("Actual duration: "));
+        Serial.print(millis() - start_ms);
+        Serial.print(F(", expected duration: "));
         Serial.print(duration);
         Serial.print(F(", remain: "));
         Serial.print(remain);
