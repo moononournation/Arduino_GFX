@@ -20,6 +20,7 @@
 // #define ESP32_S3_RPI_DPI
 // #define ESP32S3_2_1_TP
 // #define GS_T3E // Golden Security GS-T3E
+// #define IBUBLY
 // #define JC3248W535
 // #define LILYGO_T_DECK
 // #define LILYGO_T_DISPLAY
@@ -361,6 +362,12 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
     bus, 4 /* RST */, st7701_type1_init_operations, sizeof(st7701_type1_init_operations));
+
+#elif defined(IBUBLY)
+#define GFX_DEV_DEVICE IBUBLY
+#define GFX_BL 17 // default backlight pin, you may replace DF_GFX_BL to actual backlight pin
+Arduino_DataBus *bus = new Arduino_ESP32SPI(8 /* DC */, 9 /* CS */, 10 /* SCK */, 11 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, 12 /* RST */, 1 /* rotation */, true /* IPS */, 240 /* width */, 280 /* height */, 0 /* col offset 1 */, 20 /* row offset 1 */, 0 /* col offset 2 */, 20 /* row offset 2 */);
 
 #elif defined(JC3248W535)
 #define GFX_DEV_DEVICE JC3248W535
