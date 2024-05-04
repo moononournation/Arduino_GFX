@@ -4,10 +4,11 @@
  * Image Source: https://support.arduino.cc/hc/en-us/articles/360020652100
  *
  * How to create custom image:
- * 1. Open image ith GIMP
- * 2. Export Image as C-Source
- * 3. Uncheck all option and check "Save as RGB565 (16-bit)"
- * 4. Revise exported file just like "Arduino_UNO_Rev3_Ok.c"
+ * 1. Open image in the GIMP
+ * 2. Resize image to fit for the display and MCU memory
+ * 3. Export Image as C-Source
+ * 4. Uncheck all option and check "Save as RGB565 (16-bit)"
+ * 5. Revise exported file just like "Arduino_UNO_Rev3_Ok.c"
  ******************************************************************************/
 #include "Arduino_UNO_Rev3_Ok.c"
 #define IMG_WIDTH 100

@@ -131,11 +131,14 @@ void setup()
   // if (!FFat.begin())
   if (!LittleFS.begin())
   // if (!SPIFFS.begin())
-  // if (!SD.begin(SS))
+  // SPI.begin(12 /* CLK */, 13 /* D0/MISO */, 11 /* CMD/MOSI */);
+  // if (!SD.begin(10 /* CS */, SPI))
   // pinMode(10 /* CS */, OUTPUT);
   // digitalWrite(10 /* CS */, HIGH);
   // SD_MMC.setPins(12 /* CLK */, 11 /* CMD/MOSI */, 13 /* D0/MISO */);
-  // if (!SD_MMC.begin("/root", true))
+  // if (!SD_MMC.begin("/root", true /* mode1bit */, false /* format_if_mount_failed */, SDMMC_FREQ_DEFAULT))
+  // SD_MMC.setPins(12 /* CLK */, 11 /* CMD/MOSI */, 13 /* D0/MISO */, 14 /* D1 */, 15 /* D2 */, 10 /* D3/CS */);
+  // if (!SD_MMC.begin("/root", false /* mode1bit */, false /* format_if_mount_failed */, SDMMC_FREQ_HIGHSPEED))
 #elif defined(ESP8266)
   if (!LittleFS.begin())
   // if (!SD.begin(SS))
@@ -163,10 +166,12 @@ void loop()
   int h = gfx->height();
 
   unsigned long start = millis();
+
   jpegDraw(JPEG_FILENAME, jpegDrawCallback, true /* useBigEndian */,
            random(w * 2) - w /* x */,
            random(h * 2) - h /* y */,
            w /* widthLimit */, h /* heightLimit */);
+
   Serial.printf("Time used: %lu\n", millis() - start);
 
   delay(1000);

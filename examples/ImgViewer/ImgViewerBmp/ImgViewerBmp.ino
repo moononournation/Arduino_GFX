@@ -3,6 +3,8 @@
  * This is a simple BMP image viewer example
  * Image Source: https://github.blog/2014-11-24-from-sticker-to-sculpture-the-making-of-the-octocat-figurine/
  *
+ * BMP Class original source: https://github.com/Jaycar-Electronics/Arduino-Picture-Frame.git
+ *
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
  * 2. Upload BMP file
@@ -79,6 +81,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 #include <LittleFS.h>
 #include <SPIFFS.h>
 #include <SD.h>
+#include <SD_MMC.h>
 #elif defined(ESP8266)
 #include <LittleFS.h>
 #include <SD.h>
@@ -129,10 +132,17 @@ void setup()
   // if (!FFat.begin())
   if (!LittleFS.begin())
   // if (!SPIFFS.begin())
-  // if (!SD.begin(SS))
+  // SPI.begin(12 /* CLK */, 13 /* D0/MISO */, 11 /* CMD/MOSI */);
+  // if (!SD.begin(10 /* CS */, SPI))
+  // pinMode(10 /* CS */, OUTPUT);
+  // digitalWrite(SD_CS, HIGH);
+  // SD_MMC.setPins(12 /* CLK */, 11 /* CMD/MOSI */, 13 /* D0/MISO */);
+  // if (!SD_MMC.begin("/root", true /* mode1bit */, false /* format_if_mount_failed */, SDMMC_FREQ_DEFAULT))
+  // SD_MMC.setPins(12 /* CLK */, 11 /* CMD/MOSI */, 13 /* D0/MISO */, 14 /* D1 */, 15 /* D2 */, 10 /* D3/CS */);
+  // if (!SD_MMC.begin("/root", false /* mode1bit */, false /* format_if_mount_failed */, SDMMC_FREQ_HIGHSPEED))
 #elif defined(ESP8266)
   if (!LittleFS.begin())
-  // if (!SD.begin())
+  // if (!SD.begin(SS))
 #else
   if (!SD.begin())
 #endif
@@ -144,6 +154,7 @@ void setup()
   {
     unsigned long start = millis();
 
+/* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
     File bmpFile = SD.open(BMP_FILENAME, "r");
 #elif defined(TARGET_RP2040)

@@ -43,6 +43,11 @@ public:
       _read_buf = (uint8_t *)malloc(READ_BUFFER_SIZE);
     }
 
+    if (!_read_buf)
+    {
+      return false;
+    }
+
     return true;
   }
 

@@ -81,6 +81,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 #include <LittleFS.h>
 #include <SPIFFS.h>
 #include <SD.h>
+#include <SD_MMC.h>
 #elif defined(ESP8266)
 #include <LittleFS.h>
 #include <SD.h>
@@ -109,6 +110,7 @@ void *myOpen(const char *filename, int32_t *size)
   pngFile = LittleFS.open(filename, "r");
   // pngFile = SPIFFS.open(filename, "r");
   // pngFile = SD.open(filename, "r");
+  // pngFile = SD_MMC.open(filename, "r");
 #elif defined(ESP8266)
   pngFile = LittleFS.open(filename, "r");
   // pngFile = SD.open(filename, "r");
@@ -202,7 +204,14 @@ void setup()
   // if (!FFat.begin())
   if (!LittleFS.begin())
   // if (!SPIFFS.begin())
-  // if (!SD.begin(SS))
+  // SPI.begin(12 /* CLK */, 13 /* D0/MISO */, 11 /* CMD/MOSI */);
+  // if (!SD.begin(10 /* CS */, SPI))
+  // pinMode(10 /* CS */, OUTPUT);
+  // digitalWrite(SD_CS, HIGH);
+  // SD_MMC.setPins(12 /* CLK */, 11 /* CMD/MOSI */, 13 /* D0/MISO */);
+  // if (!SD_MMC.begin("/root", true /* mode1bit */, false /* format_if_mount_failed */, SDMMC_FREQ_DEFAULT))
+  // SD_MMC.setPins(12 /* CLK */, 11 /* CMD/MOSI */, 13 /* D0/MISO */, 14 /* D1 */, 15 /* D2 */, 10 /* D3/CS */);
+  // if (!SD_MMC.begin("/root", false /* mode1bit */, false /* format_if_mount_failed */, SDMMC_FREQ_HIGHSPEED))
 #elif defined(ESP8266)
   if (!LittleFS.begin())
   // if (!SD.begin(SS))

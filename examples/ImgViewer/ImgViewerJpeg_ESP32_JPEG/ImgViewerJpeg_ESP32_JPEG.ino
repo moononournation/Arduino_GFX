@@ -1,7 +1,7 @@
 /*******************************************************************************
- * JPEG Image Viewer
- * This is a simple JPEG image viewer example
- * Image Source: https://github.blog/2014-11-24-from-sticker-to-sculpture-the-making-of-the-octocat-figurine/
+ * ESP32 SIMD JPEG Image Viewer
+ * This is a simple JPEG image viewer example using ESP32 SIMD
+ * Image Source: https://github.com/esp-arduino-libs/ESP32_JPEG.git
  *
  * Dependent libraries:
  * ESP32_JPEG: https://github.com/esp-arduino-libs/ESP32_JPEG.git
@@ -9,25 +9,14 @@
  * Setup steps:
  * 1. Change your LCD parameters in Arduino_GFX setting
  * 2. Upload JPEG file
- *   FFat (ESP32):
+ *   FFat/LittleFS:
  *     upload FFat (FatFS) data with ESP32 Sketch Data Upload:
- *     ESP32: https://github.com/lorol/arduino-esp32fs-plugin
- *   LittleFS (ESP32 / ESP8266 / Pico):
- *     upload LittleFS data with ESP8266 LittleFS Data Upload:
- *     ESP32: https://github.com/lorol/arduino-esp32fs-plugin
- *     ESP8266: https://github.com/earlephilhower/arduino-esp8266littlefs-plugin
- *     Pico: https://github.com/earlephilhower/arduino-pico-littlefs-plugin.git
- *   SPIFFS (ESP32):
- *     upload SPIFFS data with ESP32 Sketch Data Upload:
  *     ESP32: https://github.com/lorol/arduino-esp32fs-plugin
  *   SD:
  *     Most Arduino system built-in support SD file system.
- *     Wio Terminal require extra dependant Libraries:
- *     - Seeed_Arduino_FS: https://github.com/Seeed-Studio/Seeed_Arduino_FS.git
- *     - Seeed_Arduino_SFUD: https://github.com/Seeed-Studio/Seeed_Arduino_SFUD.git
  ******************************************************************************/
 #define ROOT "/root"
-#define JPEG_FILENAME ROOT"/img_test_320_240.jpg"
+#define JPEG_FILENAME ROOT "/img_test_320_240.jpg"
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
@@ -153,7 +142,7 @@ void setup()
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
   // while(!Serial);
-  Serial.println("Arduino_GFX JPEG Image Viewer example");
+  Serial.println("Arduino_GFX ESP32 SIMD JPEG Image Viewer example");
 
 #ifdef GFX_EXTRA_PRE_INIT
   GFX_EXTRA_PRE_INIT();
@@ -180,6 +169,8 @@ void setup()
   // digitalWrite(SD_CS, HIGH);
   // SD_MMC.setPins(12 /* CLK */, 11 /* CMD/MOSI */, 13 /* D0/MISO */);
   // if (!SD_MMC.begin(ROOT, true /* mode1bit */, false /* format_if_mount_failed */, SDMMC_FREQ_DEFAULT))
+  // SD_MMC.setPins(12 /* CLK */, 11 /* CMD/MOSI */, 13 /* D0/MISO */, 14 /* D1 */, 15 /* D2 */, 10 /* D3/CS */);
+  // if (!SD_MMC.begin(ROOT, false /* mode1bit */, false /* format_if_mount_failed */, SDMMC_FREQ_HIGHSPEED))
   {
     Serial.println(F("ERROR: File System Mount Failed!"));
     gfx->println(F("ERROR: File System Mount Failed!"));

@@ -9,9 +9,6 @@
 #if defined(ESP32)
 
 #define READ_BUFFER_SIZE 1024
-#define MAXOUTPUTSIZE (MAX_BUFFERED_PIXELS / 16 / 16)
-
-#include <FS.h>
 
 #include <ESP32_JPEG_Library.h>
 
@@ -19,10 +16,10 @@ class MjpegClass
 {
 public:
   bool setup(
-      Stream *input, uint8_t *mjpeg_buf,
+      const char *path, uint8_t *mjpeg_buf,
       uint16_t *output_buf, size_t output_buf_size, bool useBigEndian)
   {
-    _input = input;
+    _input = fopen(path, "r");
     _mjpeg_buf = mjpeg_buf;
     _output_buf = (uint8_t *)output_buf;
     _output_buf_size = output_buf_size;
@@ -46,7 +43,7 @@ public:
   {
     if (_inputindex == 0)
     {
-      _buf_read = _input->readBytes(_read_buf, READ_BUFFER_SIZE);
+      _buf_read = fread(_read_buf, 1, READ_BUFFER_SIZE, _input);
       _inputindex += _buf_read;
     }
     _mjpeg_buf_offset = 0;
@@ -70,7 +67,7 @@ public:
       }
       else
       {
-        _buf_read = _input->readBytes(_read_buf, READ_BUFFER_SIZE);
+        _buf_read = fread(_read_buf, 1, READ_BUFFER_SIZE, _input);
       }
     }
     uint8_t *_p = _read_buf + i;
@@ -107,7 +104,7 @@ public:
         {
           // Serial.printf("o: %d\n", o);
           memcpy(_read_buf, _p + i, o);
-          _buf_read = _input->readBytes(_read_buf + o, READ_BUFFER_SIZE - o);
+          _buf_read = fread(_read_buf + o, 1, READ_BUFFER_SIZE - o, _input);
           _p = _read_buf;
           _inputindex += _buf_read;
           _buf_read += o;
@@ -115,7 +112,7 @@ public:
         }
         else
         {
-          _buf_read = _input->readBytes(_read_buf, READ_BUFFER_SIZE);
+          _buf_read = fread(_read_buf, 1, READ_BUFFER_SIZE, _input);
           _p = _read_buf;
           _inputindex += _buf_read;
         }
@@ -182,8 +179,13 @@ public:
     return _h;
   }
 
+  void close()
+  {
+    fclose(_input);
+  }
+
 private:
-  Stream *_input;
+  FILE *_input;
   uint8_t *_mjpeg_buf;
   uint8_t *_output_buf;
   size_t _output_buf_size;
