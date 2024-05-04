@@ -45,6 +45,9 @@ public:
   void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len) override;
   void writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t *crData, uint16_t w, uint16_t h) override;
 
+  bool isDMABusy();
+  void writeBytesDMA(uint8_t *data, uint32_t len);
+
 protected:
   void flush_data_buf();
   INLINE void WRITE8BIT(uint8_t d);
@@ -57,6 +60,8 @@ protected:
   INLINE void POLL_END();
 
 private:
+  void waitForDMA();
+
   int8_t _dc, _cs;
   int8_t _sck, _mosi, _miso;
   uint8_t _spi_num;
@@ -89,6 +94,11 @@ private:
   };
 
   uint16_t _data_buf_bit_idx = 0;
+
+  // writeBytesDMA(...) related
+  bool _dma_busy = false;
+  static constexpr int max_dma_transfer_sz = TFT_WIDTH * TFT_HEIGHT * sizeof(uint16_t);
+  // --
 };
 
 #endif // #if defined(ESP32)

@@ -118,7 +118,8 @@ bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
       .data5_io_num = -1,
       .data6_io_num = -1,
       .data7_io_num = -1,
-      .max_transfer_sz = (ESP32SPIDMA_MAX_PIXELS_AT_ONCE * 16) + 8,
+      // .max_transfer_sz = (ESP32SPIDMA_MAX_PIXELS_AT_ONCE * 16) + 8,
+      .max_transfer_sz = max_dma_transfer_sz,
       .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
       .intr_flags = 0};
 #if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S3
@@ -1006,4 +1007,52 @@ INLINE void Arduino_ESP32SPIDMA::POLL_END()
   spi_device_polling_end(_handle, portMAX_DELAY);
 }
 
+/**
+ * @brief isDMABusy
+ */
+bool Arduino_ESP32SPIDMA::isDMABusy() {
+  if (!_dma_busy) {
+    return false;
+  }
+
+  spi_transaction_t *t = nullptr;
+  _dma_busy = spi_device_get_trans_result(_handle, &t, 0) == ESP_ERR_TIMEOUT;
+
+  return _dma_busy;
+}
+
+/**
+ * @brief waitForDMA
+ */
+void Arduino_ESP32SPIDMA::waitForDMA() {
+  if (!_dma_busy) {
+    return;
+  }
+
+  spi_transaction_t *t = nullptr;
+  assert(spi_device_get_trans_result(_handle, &t, portMAX_DELAY) == ESP_OK);
+
+  _dma_busy = false;
+}
+
+/**
+ * @brief writeBytesDMA
+ *
+ * @param data
+ * @param len
+ */
+void Arduino_ESP32SPIDMA::writeBytesDMA(uint8_t *data, uint32_t len) {
+  static spi_transaction_t t;
+
+  assert(len <= max_dma_transfer_sz);
+
+  waitForDMA();
+
+  t.tx_buffer = data;
+  t.length = len * 8;
+
+  assert(spi_device_queue_trans(_handle, &t, portMAX_DELAY) == ESP_OK);
+
+  _dma_busy = true;
+}
 #endif // #if defined(ESP32)
