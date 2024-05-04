@@ -321,6 +321,50 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     return false;
   }
 
+  // writeBytesDMA(...) related
+  spi_host_device_t host_device = SPI3_HOST;
+  #ifdef CONFIG_IDF_TARGET_ESP32
+  if (_spi_num == HSPI) host_device = SPI2_HOST;
+  #elif CONFIG_IDF_TARGET_ESP32S2
+  // TODO: S2 not tested
+  if (_spi_num == FSPI) host_device = SPI2_HOST;
+  #endif
+
+  spi_bus_config_t bus_cfg = {
+    .mosi_io_num = _mosi,
+    .miso_io_num = _miso,
+    .sclk_io_num = _sck,
+    .quadwp_io_num = -1,
+    .quadhd_io_num = -1,
+    .data4_io_num = -1,
+    .data5_io_num = -1,
+    .data6_io_num = -1,
+    .data7_io_num = -1,
+    .max_transfer_sz = max_dma_transfer_sz,
+    .flags = 0,
+    .intr_flags = 0
+  };
+  ESP_ERROR_CHECK(spi_bus_initialize(host_device, &bus_cfg, SPI_DMA_CH_AUTO));
+
+  spi_device_interface_config_t dev_cfg = {
+    .command_bits = 0,
+    .address_bits = 0,
+    .dummy_bits = 0,
+    .mode = SPI_MODE0,
+    .duty_cycle_pos = 0,
+    .cs_ena_pretrans = 0,
+    .cs_ena_posttrans = 0,
+    .clock_speed_hz = SPI_FREQUENCY,
+    .input_delay_ns = 0,
+    .spics_io_num = -1,
+    .flags = SPI_DEVICE_NO_DUMMY,
+    .queue_size = 1,
+    .pre_cb = 0,
+    .post_cb = 0
+  };
+  ESP_ERROR_CHECK(spi_bus_add_device(host_device, &dev_cfg, &_handle));
+  // --
+
   return true;
 }
 
@@ -1025,6 +1069,55 @@ INLINE void Arduino_ESP32SPI::POLL(uint32_t len)
   _spi->dev->cmd.usr = 1;
   while (_spi->dev->cmd.usr)
     ;
+}
+
+/**
+ * @brief isDMABusy
+ */
+bool Arduino_ESP32SPI::isDMABusy() {
+  if (!_dma_busy) {
+    return false;
+  }
+
+  spi_transaction_t *t = nullptr;
+  _dma_busy = spi_device_get_trans_result(_handle, &t, 0) == ESP_ERR_TIMEOUT;
+
+  return _dma_busy;
+}
+
+/**
+ * @brief waitForDMA
+ */
+void Arduino_ESP32SPI::waitForDMA() {
+  if (!_dma_busy) {
+    return;
+  }
+
+  spi_transaction_t *t = nullptr;
+  assert(spi_device_get_trans_result(_handle, &t, portMAX_DELAY) == ESP_OK);
+
+  _dma_busy = false;
+}
+
+/**
+ * @brief writeBytesDMA
+ *
+ * @param data
+ * @param len
+ */
+void Arduino_ESP32SPI::writeBytesDMA(uint8_t *data, uint32_t len) {
+  static spi_transaction_t t;
+
+  assert(len <= max_dma_transfer_sz);
+
+  waitForDMA();
+
+  t.tx_buffer = data;
+  t.length = len * 8;
+
+  assert(spi_device_queue_trans(_handle, &t, portMAX_DELAY) == ESP_OK);
+
+  _dma_busy = true;
 }
 
 #endif // #if defined(ESP32)

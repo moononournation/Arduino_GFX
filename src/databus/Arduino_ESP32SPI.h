@@ -4,6 +4,7 @@
 
 #if defined(ESP32)
 #include "soc/spi_struct.h"
+#include "driver/spi_master.h"
 #if CONFIG_IDF_TARGET_ESP32S3
 #if (ESP_ARDUINO_VERSION_MAJOR < 3)
 #include "driver/periph_ctrl.h"
@@ -58,6 +59,8 @@ public:
   void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len) override;
   void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len) override;
 
+  bool isDMABusy();
+  void writeBytesDMA(uint8_t *data, uint32_t len);
 protected:
   void flush_data_buf();
   INLINE void WRITE8BIT(uint8_t d);
@@ -69,6 +72,8 @@ protected:
   INLINE void POLL(uint32_t len);
 
 private:
+  void waitForDMA();
+
   int8_t _dc, _cs;
   int8_t _sck, _mosi, _miso;
   uint8_t _spi_num;
@@ -93,6 +98,13 @@ private:
   };
 
   uint16_t _data_buf_bit_idx = 0;
+
+  // writeBytesDMA(...) related
+  spi_device_handle_t _handle;
+  bool _dma_busy = false;
+  static constexpr int max_dma_transfer_sz =
+      TFT_WIDTH * TFT_HEIGHT * sizeof(uint16_t);
+  // --
 };
 
 #endif // #if defined(ESP32)
