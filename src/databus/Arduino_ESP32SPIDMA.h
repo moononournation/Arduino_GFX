@@ -97,6 +97,7 @@ private:
 
   // asyncDMA... related
   bool _dma_busy = false;
+  spi_transaction_t _spi_tran_async{};
   static constexpr int max_dma_transfer_sz = TFT_WIDTH * TFT_HEIGHT * sizeof(uint16_t);
   // --
 };

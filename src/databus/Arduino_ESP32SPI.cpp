@@ -321,7 +321,7 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     return false;
   }
 
-  // writeBytesDMA(...) related
+  // asyncDMA... related
   spi_host_device_t host_device = SPI3_HOST;
   #ifdef CONFIG_IDF_TARGET_ESP32
   if (_spi_num == HSPI) host_device = SPI2_HOST;
@@ -346,7 +346,7 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
   };
   ESP_ERROR_CHECK(spi_bus_initialize(host_device, &bus_cfg, SPI_DMA_CH_AUTO));
 
-  spi_device_interface_config_t dev_cfg = {
+  spi_device_interface_config_t dev_ifc_cfg = {
     .command_bits = 0,
     .address_bits = 0,
     .dummy_bits = 0,
@@ -362,8 +362,7 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     .pre_cb = 0,
     .post_cb = 0
   };
-  ESP_ERROR_CHECK(spi_bus_add_device(host_device, &dev_cfg, &_handle));
-  // --
+  ESP_ERROR_CHECK(spi_bus_add_device(host_device, &dev_ifc_cfg, &_dev_hdl));
 
   return true;
 }
@@ -1083,7 +1082,7 @@ bool Arduino_ESP32SPI::asyncDMAIsBusy()
   }
 
   spi_transaction_t *t = nullptr;
-  _dma_busy = spi_device_get_trans_result(_handle, &t, 0) == ESP_ERR_TIMEOUT;
+  _dma_busy = spi_device_get_trans_result(_dev_hdl, &t, 0) == ESP_ERR_TIMEOUT;
 
   return _dma_busy;
 }
@@ -1095,23 +1094,21 @@ void Arduino_ESP32SPI::asyncDMAWaitForCompletion()
   }
 
   spi_transaction_t *t = nullptr;
-  assert(spi_device_get_trans_result(_handle, &t, portMAX_DELAY) == ESP_OK);
+  assert(spi_device_get_trans_result(_dev_hdl, &t, portMAX_DELAY) == ESP_OK);
 
   _dma_busy = false;
 }
 
 void Arduino_ESP32SPI::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
 {
-  static spi_transaction_t t;
-
   assert(len <= max_dma_transfer_sz);
 
   asyncDMAWaitForCompletion();
 
-  t.tx_buffer = data;
-  t.length = len * 8;
+  _spi_tran_async.tx_buffer = data;
+  _spi_tran_async.length = len * 8; // length in bits
 
-  assert(spi_device_queue_trans(_handle, &t, portMAX_DELAY) == ESP_OK);
+  assert(spi_device_queue_trans(_dev_hdl, &_spi_tran_async, portMAX_DELAY) == ESP_OK);
 
   _dma_busy = true;
 }

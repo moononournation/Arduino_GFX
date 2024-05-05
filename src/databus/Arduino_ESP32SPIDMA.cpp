@@ -1038,16 +1038,14 @@ void Arduino_ESP32SPIDMA::asyncDMAWaitForCompletion()
 
 void Arduino_ESP32SPIDMA::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
 {
-  static spi_transaction_t t;
-
   assert(len <= max_dma_transfer_sz);
 
   asyncDMAWaitForCompletion();
 
-  t.tx_buffer = data;
-  t.length = len * 8;
+  _spi_tran_async.tx_buffer = data;
+  _spi_tran_async.length = len * 8;
 
-  assert(spi_device_queue_trans(_handle, &t, portMAX_DELAY) == ESP_OK);
+  assert(spi_device_queue_trans(_handle, &_spi_tran_async, portMAX_DELAY) == ESP_OK);
 
   _dma_busy = true;
 }
