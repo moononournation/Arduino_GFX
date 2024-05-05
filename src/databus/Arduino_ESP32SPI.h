@@ -59,8 +59,11 @@ public:
   void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len) override;
   void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len) override;
 
-  bool isDMABusy();
-  void writeBytesDMA(uint8_t *data, uint32_t len);
+  bool asyncDMASupported() override;
+  bool asyncDMAIsBusy() override;
+  void asyncDMAWaitForCompletion() override;
+  void asyncDMAWriteBytes(uint8_t *data, uint32_t len) override;
+
 protected:
   void flush_data_buf();
   INLINE void WRITE8BIT(uint8_t d);
@@ -72,8 +75,6 @@ protected:
   INLINE void POLL(uint32_t len);
 
 private:
-  void waitForDMA();
-
   int8_t _dc, _cs;
   int8_t _sck, _mosi, _miso;
   uint8_t _spi_num;
@@ -99,7 +100,7 @@ private:
 
   uint16_t _data_buf_bit_idx = 0;
 
-  // writeBytesDMA(...) related
+  // asyncDMA... related
   spi_device_handle_t _handle;
   bool _dma_busy = false;
   static constexpr int max_dma_transfer_sz =

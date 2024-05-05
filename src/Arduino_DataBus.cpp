@@ -133,6 +133,23 @@ void Arduino_DataBus::batchOperation(const uint8_t *operations, size_t len)
   }
 }
 
+bool Arduino_DataBus::asyncDMASupported()
+{
+  return false;
+}
+
+void Arduino_DataBus::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
+{
+  writeBytes(data, len);
+}
+
+bool Arduino_DataBus::asyncDMAIsBusy()
+{
+  return false;
+}
+
+void Arduino_DataBus::asyncDMAWaitForCompletion() {}
+
 #if !defined(LITTLE_FOOT_PRINT)
 void Arduino_DataBus::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {

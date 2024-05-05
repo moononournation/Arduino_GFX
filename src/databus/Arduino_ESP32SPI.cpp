@@ -1071,10 +1071,13 @@ INLINE void Arduino_ESP32SPI::POLL(uint32_t len)
     ;
 }
 
-/**
- * @brief isDMABusy
- */
-bool Arduino_ESP32SPI::isDMABusy() {
+bool Arduino_ESP32SPI::asyncDMASupported()
+{
+  return true;
+}
+
+bool Arduino_ESP32SPI::asyncDMAIsBusy()
+{
   if (!_dma_busy) {
     return false;
   }
@@ -1085,10 +1088,8 @@ bool Arduino_ESP32SPI::isDMABusy() {
   return _dma_busy;
 }
 
-/**
- * @brief waitForDMA
- */
-void Arduino_ESP32SPI::waitForDMA() {
+void Arduino_ESP32SPI::asyncDMAWaitForCompletion()
+{
   if (!_dma_busy) {
     return;
   }
@@ -1099,18 +1100,13 @@ void Arduino_ESP32SPI::waitForDMA() {
   _dma_busy = false;
 }
 
-/**
- * @brief writeBytesDMA
- *
- * @param data
- * @param len
- */
-void Arduino_ESP32SPI::writeBytesDMA(uint8_t *data, uint32_t len) {
+void Arduino_ESP32SPI::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
+{
   static spi_transaction_t t;
 
   assert(len <= max_dma_transfer_sz);
 
-  waitForDMA();
+  asyncDMAWaitForCompletion();
 
   t.tx_buffer = data;
   t.length = len * 8;
