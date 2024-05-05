@@ -62,8 +62,6 @@ protected:
   INLINE void POLL_END();
 
 private:
-  void waitForDMA();
-
   int8_t _dc, _cs;
   int8_t _sck, _mosi, _miso;
   uint8_t _spi_num;
