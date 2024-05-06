@@ -818,8 +818,8 @@ void Arduino_ESP32QSPI::pre_transaction_cb(spi_transaction_t *trans)
   }
   
   // asyncDMA transaction
-  Arduino_ESP32QSPI *driver = (Arduino_ESP32QSPI *)trans->user;
-  driver->CS_LOW();
+  Arduino_ESP32QSPI *bus = (Arduino_ESP32QSPI *)trans->user;
+  bus->CS_LOW();
 }
 
 void Arduino_ESP32QSPI::post_transaction_cb(spi_transaction_t *trans)
@@ -830,8 +830,8 @@ void Arduino_ESP32QSPI::post_transaction_cb(spi_transaction_t *trans)
   }
   
   // asyncDMA transaction
-  Arduino_ESP32QSPI *driver = (Arduino_ESP32QSPI *)trans->user;
-  driver->CS_HIGH();
+  Arduino_ESP32QSPI *bus = (Arduino_ESP32QSPI *)trans->user;
+  bus->CS_HIGH();
 }
 
 #endif // #if defined(ESP32)
