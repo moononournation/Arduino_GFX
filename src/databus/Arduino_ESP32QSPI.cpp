@@ -829,7 +829,7 @@ void Arduino_ESP32QSPI::post_transaction_cb(spi_transaction_t *trans)
     return;
   }
   
-  // asyncDMA transaction
+  // asyncDMA transaction 
   Arduino_ESP32QSPI *bus = (Arduino_ESP32QSPI *)trans->user;
   bus->CS_HIGH();
 }
