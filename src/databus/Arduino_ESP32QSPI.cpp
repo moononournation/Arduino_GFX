@@ -78,8 +78,8 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .spics_io_num = -1, // avoid use system CS control
       .flags = SPI_DEVICE_HALFDUPLEX,
       .queue_size = 1,
-      .pre_cb = nullptr,
-      .post_cb = nullptr};
+      .pre_cb = pre_transaction_cb,
+      .post_cb = post_transaction_cb};
   ret = spi_bus_add_device(ESP32QSPI_SPI_HOST, &devcfg, &_handle);
   if (ret != ESP_OK)
   {
@@ -105,9 +105,6 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
   {
     return false;
   }
-
-  // asyncDMA... related
-  _spi_tran_async.flags = SPI_TRANS_MODE_QIO;
 
   return true;
 }
@@ -768,7 +765,8 @@ bool Arduino_ESP32QSPI::asyncDMASupported()
 
 bool Arduino_ESP32QSPI::asyncDMAIsBusy()
 {
-  if (!_async_busy) {
+  if (!_async_busy)
+  {
     return false;
   }
 
@@ -780,7 +778,8 @@ bool Arduino_ESP32QSPI::asyncDMAIsBusy()
 
 void Arduino_ESP32QSPI::asyncDMAWaitForCompletion()
 {
-  if (!_async_busy) {
+  if (!_async_busy)
+  {
     return;
   }
 
@@ -796,12 +795,43 @@ void Arduino_ESP32QSPI::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
 
   asyncDMAWaitForCompletion();
 
-  _spi_tran_async.tx_buffer = data;
-  _spi_tran_async.length = len * 8; // length in bits
+  _spi_tran_async.base.cmd = 0x32;
+  _spi_tran_async.base.addr = 0x003C00;
+  _spi_tran_async.base.flags = SPI_TRANS_MODE_QIO;
+  _spi_tran_async.base.tx_buffer = data;
+  _spi_tran_async.base.length = len * 8; // length in bits
+  _spi_tran_async.base.user = this;
 
-  assert(spi_device_queue_trans(_handle, &_spi_tran_async, portMAX_DELAY) == ESP_OK);
+  assert(
+    spi_device_queue_trans(
+      _handle,
+      (spi_transaction_t *)&_spi_tran_async,
+      portMAX_DELAY
+    ) == ESP_OK);
 
   _async_busy = true;
+}
+
+void Arduino_ESP32QSPI::pre_transaction_cb(spi_transaction_t *trans)
+{
+  if (!trans->user)
+  {
+    return;
+  }
+  
+  Arduino_ESP32QSPI *driver = (Arduino_ESP32QSPI *)trans->user;
+  driver->CS_LOW();
+}
+
+void Arduino_ESP32QSPI::post_transaction_cb(spi_transaction_t *trans)
+{
+  if (!trans->user)
+  {
+    return;
+  }
+  
+  Arduino_ESP32QSPI *driver = (Arduino_ESP32QSPI *)trans->user;
+  driver->CS_HIGH();
 }
 
 #endif // #if defined(ESP32)

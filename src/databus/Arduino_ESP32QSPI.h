@@ -90,9 +90,11 @@ private:
   };
 
   // asyncDMA... related
-  spi_transaction_t _spi_tran_async{};
+  spi_transaction_ext_t _spi_tran_async{};
   bool _async_busy = false;
   static constexpr int max_dma_transfer_sz = TFT_WIDTH * TFT_HEIGHT * sizeof(uint16_t);
+  static void post_transaction_cb(spi_transaction_t *trans);
+  static void pre_transaction_cb(spi_transaction_t *trans);
   // --
 };
 
