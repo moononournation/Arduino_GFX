@@ -53,6 +53,11 @@ public:
   void writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len) override;
   void writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t *crData, uint16_t w, uint16_t h) override;
 
+  bool asyncDMASupported() override;
+  bool asyncDMAIsBusy() override;
+  void asyncDMAWaitForCompletion() override;
+  void asyncDMAWriteBytes(uint8_t *data, uint32_t len) override;
+
 protected:
 private:
   INLINE void CS_HIGH(void);
@@ -83,6 +88,12 @@ private:
     uint16_t *_2nd_buffer16;
     uint32_t *_2nd_buffer32;
   };
+
+  // asyncDMA... related
+  spi_transaction_t _spi_tran_async{};
+  bool _async_busy = false;
+  static constexpr int max_dma_transfer_sz = TFT_WIDTH * TFT_HEIGHT * sizeof(uint16_t);
+  // --
 };
 
 #endif // #if defined(ESP32)

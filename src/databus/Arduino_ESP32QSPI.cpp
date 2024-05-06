@@ -54,7 +54,8 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .data5_io_num = -1,
       .data6_io_num = -1,
       .data7_io_num = -1,
-      .max_transfer_sz = (ESP32QSPI_MAX_PIXELS_AT_ONCE * 16) + 8,
+      // .max_transfer_sz = (ESP32QSPI_MAX_PIXELS_AT_ONCE * 16) + 8,
+      .max_transfer_sz = max_dma_transfer_sz,
       .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
       .intr_flags = 0};
   esp_err_t ret = spi_bus_initialize(ESP32QSPI_SPI_HOST, &buscfg, ESP32QSPI_DMA_CHANNEL);
@@ -104,6 +105,9 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
   {
     return false;
   }
+
+  // asyncDMA... related
+  _spi_tran_async.flags = SPI_TRANS_MODE_QIO;
 
   return true;
 }
@@ -755,6 +759,49 @@ INLINE void Arduino_ESP32QSPI::POLL_START()
 INLINE void Arduino_ESP32QSPI::POLL_END()
 {
   spi_device_polling_end(_handle, portMAX_DELAY);
+}
+
+bool Arduino_ESP32QSPI::asyncDMASupported()
+{
+  return true;
+}
+
+bool Arduino_ESP32QSPI::asyncDMAIsBusy()
+{
+  if (!_async_busy) {
+    return false;
+  }
+
+  spi_transaction_t *t = nullptr;
+  _async_busy = spi_device_get_trans_result(_handle, &t, 0) == ESP_ERR_TIMEOUT;
+
+  return _async_busy;
+}
+
+void Arduino_ESP32QSPI::asyncDMAWaitForCompletion()
+{
+  if (!_async_busy) {
+    return;
+  }
+
+  spi_transaction_t *t = nullptr;
+  assert(spi_device_get_trans_result(_handle, &t, portMAX_DELAY) == ESP_OK);
+
+  _async_busy = false;
+}
+
+void Arduino_ESP32QSPI::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
+{
+  assert(len <= max_dma_transfer_sz);
+
+  asyncDMAWaitForCompletion();
+
+  _spi_tran_async.tx_buffer = data;
+  _spi_tran_async.length = len * 8; // length in bits
+
+  assert(spi_device_queue_trans(_handle, &_spi_tran_async, portMAX_DELAY) == ESP_OK);
+
+  _async_busy = true;
 }
 
 #endif // #if defined(ESP32)

@@ -1085,26 +1085,26 @@ bool Arduino_ESP32SPI::asyncDMASupported()
 
 bool Arduino_ESP32SPI::asyncDMAIsBusy()
 {
-  if (!_dma_busy) {
+  if (!_async_busy) {
     return false;
   }
 
   spi_transaction_t *t = nullptr;
-  _dma_busy = spi_device_get_trans_result(_spi_dev_hdl, &t, 0) == ESP_ERR_TIMEOUT;
+  _async_busy = spi_device_get_trans_result(_spi_dev_hdl, &t, 0) == ESP_ERR_TIMEOUT;
 
-  return _dma_busy;
+  return _async_busy;
 }
 
 void Arduino_ESP32SPI::asyncDMAWaitForCompletion()
 {
-  if (!_dma_busy) {
+  if (!_async_busy) {
     return;
   }
 
   spi_transaction_t *t = nullptr;
   assert(spi_device_get_trans_result(_spi_dev_hdl, &t, portMAX_DELAY) == ESP_OK);
 
-  _dma_busy = false;
+  _async_busy = false;
 }
 
 void Arduino_ESP32SPI::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
@@ -1118,7 +1118,7 @@ void Arduino_ESP32SPI::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
 
   assert(spi_device_queue_trans(_spi_dev_hdl, &_spi_tran_async, portMAX_DELAY) == ESP_OK);
 
-  _dma_busy = true;
+  _async_busy = true;
 }
 
 #endif // #if defined(ESP32)
