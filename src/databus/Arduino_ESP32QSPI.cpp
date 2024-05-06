@@ -106,6 +106,12 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
     return false;
   }
 
+  // asyncDMA... related
+  _spi_tran_async.cmd = 0x32;
+  _spi_tran_async.addr = 0x003C00;
+  _spi_tran_async.flags = SPI_TRANS_MODE_QIO;
+  _spi_tran_async.user = this;
+
   return true;
 }
 
@@ -795,19 +801,10 @@ void Arduino_ESP32QSPI::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
 
   asyncDMAWaitForCompletion();
 
-  _spi_tran_async.base.cmd = 0x32;
-  _spi_tran_async.base.addr = 0x003C00;
-  _spi_tran_async.base.flags = SPI_TRANS_MODE_QIO;
-  _spi_tran_async.base.tx_buffer = data;
-  _spi_tran_async.base.length = len * 8; // length in bits
-  _spi_tran_async.base.user = this;
+  _spi_tran_async.tx_buffer = data;
+  _spi_tran_async.length = len * 8; // length in bits
 
-  assert(
-    spi_device_queue_trans(
-      _handle,
-      (spi_transaction_t *)&_spi_tran_async,
-      portMAX_DELAY
-    ) == ESP_OK);
+  assert(spi_device_queue_trans(_handle, &_spi_tran_async, portMAX_DELAY) == ESP_OK);
 
   _async_busy = true;
 }
