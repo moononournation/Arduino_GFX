@@ -96,8 +96,8 @@ private:
   uint16_t _data_buf_bit_idx = 0;
 
   // asyncDMA... related
-  bool _dma_busy = false;
   spi_transaction_t _spi_tran_async{};
+  bool _dma_busy = false;
   static constexpr int max_dma_transfer_sz = TFT_WIDTH * TFT_HEIGHT * sizeof(uint16_t);
   // --
 };
