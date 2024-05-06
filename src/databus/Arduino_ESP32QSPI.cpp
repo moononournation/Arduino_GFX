@@ -111,6 +111,7 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
   _spi_tran_async.addr = 0x003C00;
   _spi_tran_async.flags = SPI_TRANS_MODE_QIO;
   _spi_tran_async.user = this;
+  // --
 
   return true;
 }
@@ -816,6 +817,7 @@ void Arduino_ESP32QSPI::pre_transaction_cb(spi_transaction_t *trans)
     return;
   }
   
+  // asyncDMA transaction
   Arduino_ESP32QSPI *driver = (Arduino_ESP32QSPI *)trans->user;
   driver->CS_LOW();
 }
@@ -827,6 +829,7 @@ void Arduino_ESP32QSPI::post_transaction_cb(spi_transaction_t *trans)
     return;
   }
   
+  // asyncDMA transaction
   Arduino_ESP32QSPI *driver = (Arduino_ESP32QSPI *)trans->user;
   driver->CS_HIGH();
 }
