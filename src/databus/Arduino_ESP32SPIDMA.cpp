@@ -119,7 +119,7 @@ bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
       .data6_io_num = -1,
       .data7_io_num = -1,
       // .max_transfer_sz = (ESP32SPIDMA_MAX_PIXELS_AT_ONCE * 16) + 8,
-      .max_transfer_sz = max_dma_transfer_sz,
+      .max_transfer_sz = ESP32SPIDMA_MAX_TRANSFER_B,
       .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
       .intr_flags = 0};
 #if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S3
@@ -1038,7 +1038,7 @@ void Arduino_ESP32SPIDMA::asyncDMAWaitForCompletion()
 
 void Arduino_ESP32SPIDMA::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
 {
-  assert(len <= max_dma_transfer_sz);
+  assert(len <= ESP32SPIDMA_MAX_TRANSFER_B);
 
   asyncDMAWaitForCompletion();
 

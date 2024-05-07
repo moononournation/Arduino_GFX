@@ -26,6 +26,12 @@
 #ifndef ESP32SPI_MAX_PIXELS_AT_ONCE
 #define ESP32SPI_MAX_PIXELS_AT_ONCE 32
 #endif
+#ifndef ESP32SPI_MAX_TRANSFER_B
+#define ESP32SPI_MAX_TRANSFER_B 65536*2
+#endif
+#ifndef SPI_FREQUENCY
+#define SPI_FREQUENCY 55000000
+#endif
 
 class Arduino_ESP32SPI : public Arduino_DataBus
 {
@@ -104,7 +110,6 @@ private:
   spi_device_handle_t _spi_dev_hdl{};
   spi_transaction_t _spi_tran_async{};
   bool _async_busy = false;
-  static constexpr int max_dma_transfer_sz = TFT_WIDTH * TFT_HEIGHT * sizeof(uint16_t);
   // --
 };
 

@@ -20,6 +20,9 @@
 #ifndef ESP32QSPI_DMA_CHANNEL
 #define ESP32QSPI_DMA_CHANNEL SPI_DMA_CH_AUTO
 #endif
+#ifndef ESP32QSPI_MAX_TRANSFER_B
+#define ESP32QSPI_MAX_TRANSFER_B 65536*2
+#endif
 
 class Arduino_ESP32QSPI : public Arduino_DataBus
 {
@@ -92,7 +95,6 @@ private:
   // asyncDMA... related
   spi_transaction_t _spi_tran_async{};
   bool _async_busy = false;
-  static constexpr int max_dma_transfer_sz = TFT_WIDTH * TFT_HEIGHT * sizeof(uint16_t);
   static void post_transaction_cb(spi_transaction_t *trans);
   static void pre_transaction_cb(spi_transaction_t *trans);
   // --

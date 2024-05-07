@@ -11,6 +11,9 @@
 #ifndef ESP32SPIDMA_DMA_CHANNEL
 #define ESP32SPIDMA_DMA_CHANNEL SPI_DMA_CH_AUTO
 #endif
+#ifndef ESP32SPIDMA_MAX_TRANSFER_B
+#define ESP32SPIDMA_MAX_TRANSFER_B 65536*2
+#endif
 
 class Arduino_ESP32SPIDMA : public Arduino_DataBus
 {
@@ -98,7 +101,6 @@ private:
   // asyncDMA... related
   spi_transaction_t _spi_tran_async{};
   bool _async_busy = false;
-  static constexpr int max_dma_transfer_sz = TFT_WIDTH * TFT_HEIGHT * sizeof(uint16_t);
   // --
 };
 

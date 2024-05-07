@@ -340,7 +340,7 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     .data5_io_num = -1,
     .data6_io_num = -1,
     .data7_io_num = -1,
-    .max_transfer_sz = max_dma_transfer_sz,
+    .max_transfer_sz = ESP32SPI_MAX_TRANSFER_B,
     .flags = 0,
     .intr_flags = 0
   };
@@ -1109,7 +1109,7 @@ void Arduino_ESP32SPI::asyncDMAWaitForCompletion()
 
 void Arduino_ESP32SPI::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
 {
-  assert(len <= max_dma_transfer_sz);
+  assert(len <= ESP32SPI_MAX_TRANSFER_B);
 
   asyncDMAWaitForCompletion();
 
