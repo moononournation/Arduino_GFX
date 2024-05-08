@@ -1109,7 +1109,7 @@ void Arduino_ESP32SPI::asyncDMAWaitForCompletion()
 
 void Arduino_ESP32SPI::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
 {
-  assert(len <= ESP32SPI_MAX_TRANSFER_B);
+  assert(len <= ESP32SPI_MAX_DMA_TRANSFER_B);
 
   asyncDMAWaitForCompletion();
 
