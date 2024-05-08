@@ -42,11 +42,6 @@ void Arduino_NV3041A::setRotation(uint8_t r)
     r = NV3041A_MADCTL_MX | NV3041A_MADCTL_MY | NV3041A_MADCTL_RGB;
     break;
   }
-  // _bus->beginWrite();
-  // _bus->writeCommand(NV3041A_MADCTL);
-  // _bus->write(r);
-  // _bus->endWrite();
-
   _bus->beginWrite();
   _bus->writeC8D8(NV3041A_MADCTL, r);
   _bus->endWrite();
