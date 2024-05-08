@@ -340,7 +340,7 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     .data5_io_num = -1,
     .data6_io_num = -1,
     .data7_io_num = -1,
-    .max_transfer_sz = ESP32SPI_MAX_TRANSFER_B,
+    .max_transfer_sz = ESP32SPI_MAX_DMA_TRANSFER_B,
     .flags = 0,
     .intr_flags = 0
   };
@@ -358,7 +358,7 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     .duty_cycle_pos = 0,
     .cs_ena_pretrans = 0,
     .cs_ena_posttrans = 0,
-    .clock_speed_hz = SPI_FREQUENCY,
+    .clock_speed_hz = ESP32SPI_SPI_FREQUENCY,
     .input_delay_ns = 0,
     .spics_io_num = -1,
     .flags = SPI_DEVICE_NO_DUMMY,
