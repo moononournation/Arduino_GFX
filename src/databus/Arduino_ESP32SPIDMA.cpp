@@ -118,7 +118,6 @@ bool Arduino_ESP32SPIDMA::begin(int32_t speed, int8_t dataMode)
       .data5_io_num = -1,
       .data6_io_num = -1,
       .data7_io_num = -1,
-      // .max_transfer_sz = (ESP32SPIDMA_MAX_PIXELS_AT_ONCE * 16) + 8,
       .max_transfer_sz = ESP32SPIDMA_MAX_DMA_TRANSFER_B,
       .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
       .intr_flags = 0};
