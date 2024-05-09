@@ -1037,8 +1037,6 @@ void Arduino_ESP32SPIDMA::asyncDMAWaitForCompletion()
 
 void Arduino_ESP32SPIDMA::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
 {
-  assert(len <= ESP32SPIDMA_MAX_DMA_TRANSFER_B);
-
   asyncDMAWaitForCompletion();
 
   _spi_tran_async.tx_buffer = data;

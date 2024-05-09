@@ -797,8 +797,6 @@ void Arduino_ESP32QSPI::asyncDMAWaitForCompletion()
 
 void Arduino_ESP32QSPI::asyncDMAWriteBytes(uint8_t *data, uint32_t len)
 {
-  assert(len <= ESP32QSPI_MAX_DMA_TRANSFER_B);
-
   asyncDMAWaitForCompletion();
 
   _spi_tran_async.tx_buffer = data;

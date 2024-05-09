@@ -21,7 +21,7 @@
 #define ESP32QSPI_DMA_CHANNEL SPI_DMA_CH_AUTO
 #endif
 #ifndef ESP32QSPI_MAX_DMA_TRANSFER_B
-#define ESP32QSPI_MAX_DMA_TRANSFER_B 32768
+#define ESP32QSPI_MAX_DMA_TRANSFER_B 0x40000 // greater than SPI_MAX_DMA_LEN is possible
 #endif
 
 class Arduino_ESP32QSPI : public Arduino_DataBus

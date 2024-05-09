@@ -12,7 +12,7 @@
 #define ESP32SPIDMA_DMA_CHANNEL SPI_DMA_CH_AUTO
 #endif
 #ifndef ESP32SPIDMA_MAX_DMA_TRANSFER_B
-#define ESP32SPIDMA_MAX_DMA_TRANSFER_B 65536*2
+#define ESP32SPIDMA_MAX_DMA_TRANSFER_B 0x40000 // greater than SPI_MAX_DMA_LEN is possible
 #endif
 
 class Arduino_ESP32SPIDMA : public Arduino_DataBus
