@@ -9,8 +9,8 @@
 #include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
 
-#define AXS15231B_TFTWIDTH 320
-#define AXS15231B_TFTHEIGHT 480
+#define AXS15231B_TFTWIDTH 360
+#define AXS15231B_TFTHEIGHT 640
 
 #define AXS15231B_RST_DELAY 200    ///< delay ms wait for reset finish
 #define AXS15231B_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish

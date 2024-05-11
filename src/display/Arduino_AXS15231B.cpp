@@ -17,7 +17,7 @@ bool Arduino_AXS15231B::begin(int32_t speed)
 {
   if (speed == GFX_NOT_DEFINED)
   {
-    speed = 40000000UL; // AXS15231B Maximum supported speed
+    speed = 32000000UL; // AXS15231B Maximum supported speed
   }
   return Arduino_TFT::begin(speed);
 }
