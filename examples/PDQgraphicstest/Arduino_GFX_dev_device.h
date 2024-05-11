@@ -31,8 +31,8 @@
 // #define LILYGO_T_RGB
 // #define LILYGO_T_TRACK
 // #define LILYGO_T_WATCH_2021
-// #define MAKERFABS_TFT_TOUCH_3_5
 // #define LILYGO_T4_S3
+// #define MAKERFABS_TFT_TOUCH_3_5
 // #define MAKERFABS_ESP32_S3_TFT_4_0
 // #define MAKERFABS_ESP32_S3_TFT_4_3_v1_3
 // #define WT32_SC01
