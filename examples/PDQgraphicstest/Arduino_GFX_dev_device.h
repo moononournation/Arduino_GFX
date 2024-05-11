@@ -32,6 +32,7 @@
 // #define LILYGO_T_TRACK
 // #define LILYGO_T_WATCH_2021
 // #define MAKERFABS_TFT_TOUCH_3_5
+// #define LILYGO_T4_S3
 // #define MAKERFABS_ESP32_S3_TFT_4_0
 // #define MAKERFABS_ESP32_S3_TFT_4_3_v1_3
 // #define WT32_SC01
@@ -156,18 +157,18 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 #define GFX_DEV_DEVICE ESP32_4848S040_86BOX_GUITION
 #define GFX_BL 38
 Arduino_DataBus *bus = new Arduino_SWSPI(
-	GFX_NOT_DEFINED /* DC */, 39 /* CS */,
-	48 /* SCK */, 47 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+    GFX_NOT_DEFINED /* DC */, 39 /* CS */,
+    48 /* SCK */, 47 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
-	18 /* DE */, 17 /* VSYNC */, 16 /* HSYNC */, 21 /* PCLK */,
-	11 /* R0 */, 12 /* R1 */, 13 /* R2 */, 14 /* R3 */, 0 /* R4 */,
-	8 /* G0 */, 20 /* G1 */, 3 /* G2 */, 46 /* G3 */, 9 /* G4 */, 10 /* G5 */,
-	4 /* B0 */, 5 /* B1 */, 6 /* B2 */, 7 /* B3 */, 15 /* B4 */,
-	1 /* hsync_polarity */, 10 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
-	1 /* vsync_polarity */, 10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
+    18 /* DE */, 17 /* VSYNC */, 16 /* HSYNC */, 21 /* PCLK */,
+    11 /* R0 */, 12 /* R1 */, 13 /* R2 */, 14 /* R3 */, 0 /* R4 */,
+    8 /* G0 */, 20 /* G1 */, 3 /* G2 */, 46 /* G3 */, 9 /* G4 */, 10 /* G5 */,
+    4 /* B0 */, 5 /* B1 */, 6 /* B2 */, 7 /* B3 */, 15 /* B4 */,
+    1 /* hsync_polarity */, 10 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
+    1 /* vsync_polarity */, 10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
-	480 /* width */, 480 /* height */, rgbpanel, 1 /* rotation */, true /* auto_flush */,
-	bus, GFX_NOT_DEFINED /* RST */, st7701_type9_init_operations, sizeof(st7701_type9_init_operations));
+    480 /* width */, 480 /* height */, rgbpanel, 1 /* rotation */, true /* auto_flush */,
+    bus, GFX_NOT_DEFINED /* RST */, st7701_type9_init_operations, sizeof(st7701_type9_init_operations));
 
 #elif defined(ESP32_8048S043)
 #define GFX_DEV_DEVICE ESP32_8048S043
@@ -473,6 +474,19 @@ Arduino_GFX *gfx = new Arduino_Canvas(126 /* width */, 294 /* height */, g, 0, 0
 #define GFX_BL 21
 Arduino_DataBus *bus = new Arduino_ESP32SPI(19 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_GC9A01(bus, 27 /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(LILYGO_T4_S3)
+#define GFX_DEV_DEVICE LILYGO_T4_S3
+#define GFX_EXTRA_PRE_INIT()               \
+    {                                      \
+        pinMode(9 /* POWER */, OUTPUT);    \
+        digitalWrite(9 /* POWER */, HIGH); \
+    }
+Arduino_DataBus *bus = new Arduino_ESP32QSPI(
+    11 /* cs */, 15 /* sck */, 14 /* d0 */, 10 /* d1 */, 16 /* d2 */, 12 /* d3 */);
+Arduino_GFX *g = new Arduino_RM690B0(bus, 13 /* RST */, 0 /* rotation */, true /* IPS */, 450 /* width */, 600 /* height */, 16 /* col offset 1 */, 0 /* row offset 1 */, 16 /* col offset 2 */, 0 /* row offset 2 */);
+Arduino_GFX *gfx = new Arduino_Canvas(450 /* width */, 600 /* height */, g);
+#define CANVAS
 
 #elif defined(MAKERFABS_TFT_TOUCH_3_5)
 #define GFX_DEV_DEVICE MAKERFABS_TFT_TOUCH_3_5
