@@ -484,7 +484,7 @@ Arduino_GFX *gfx = new Arduino_GC9A01(bus, 27 /* RST */, 0 /* rotation */, true 
     }
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
     11 /* cs */, 15 /* sck */, 14 /* d0 */, 10 /* d1 */, 16 /* d2 */, 12 /* d3 */);
-Arduino_GFX *g = new Arduino_RM690B0(bus, 13 /* RST */, 0 /* rotation */, true /* IPS */, 450 /* width */, 600 /* height */, 16 /* col offset 1 */, 0 /* row offset 1 */, 16 /* col offset 2 */, 0 /* row offset 2 */);
+Arduino_GFX *g = new Arduino_RM690B0(bus, 13 /* RST */, 0 /* rotation */, 450 /* width */, 600 /* height */, 16 /* col offset 1 */, 0 /* row offset 1 */, 16 /* col offset 2 */, 0 /* row offset 2 */);
 Arduino_GFX *gfx = new Arduino_Canvas(450 /* width */, 600 /* height */, g);
 #define CANVAS
 
