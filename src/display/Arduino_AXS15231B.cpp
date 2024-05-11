@@ -17,7 +17,7 @@ bool Arduino_AXS15231B::begin(int32_t speed)
 {
   if (speed == GFX_NOT_DEFINED)
   {
-    speed = 40000000UL; // NV3041A Maximum supported speed
+    speed = 40000000UL; // AXS15231B Maximum supported speed
   }
   return Arduino_TFT::begin(speed);
 }
@@ -47,8 +47,7 @@ void Arduino_AXS15231B::setRotation(uint8_t r)
     break;
   }
   _bus->beginWrite();
-  _bus->writeCommand(AXS15231B_MADCTL);
-  _bus->write(r);
+  _bus->writeC8D8(AXS15231B_MADCTL, r);
   _bus->endWrite();
 }
 

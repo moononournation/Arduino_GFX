@@ -63,8 +63,7 @@ void Arduino_NT35310::setRotation(uint8_t r)
     break;
   }
   _bus->beginWrite();
-  _bus->writeCommand(NT35310_SET_ADDRESS_MODE);
-  _bus->write(r);
+  _bus->writeC8D8(NT35310_SET_ADDRESS_MODE, r);
   _bus->endWrite();
 }
 

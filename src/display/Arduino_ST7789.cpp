@@ -50,8 +50,7 @@ void Arduino_ST7789::setRotation(uint8_t r)
     break;
   }
   _bus->beginWrite();
-  _bus->writeCommand(ST7789_MADCTL);
-  _bus->write(r);
+  _bus->writeC8D8(ST7789_MADCTL, r);
   _bus->endWrite();
 }
 

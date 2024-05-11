@@ -43,8 +43,7 @@ void Arduino_NV3041A::setRotation(uint8_t r)
     break;
   }
   _bus->beginWrite();
-  _bus->writeCommand(NV3041A_MADCTL);
-  _bus->write(r);
+  _bus->writeC8D8(NV3041A_MADCTL, r);
   _bus->endWrite();
 }
 

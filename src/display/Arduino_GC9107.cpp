@@ -57,8 +57,7 @@ void Arduino_GC9107::setRotation(uint8_t r)
     break;
   }
   _bus->beginWrite();
-  _bus->writeCommand(GC9107_MADCTL);
-  _bus->write(r);
+  _bus->writeC8D8(GC9107_MADCTL, r);
   _bus->endWrite();
 }
 

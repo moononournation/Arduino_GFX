@@ -181,8 +181,7 @@ void Arduino_ILI9481_18bit::setRotation(uint8_t r)
     break;
   }
   _bus->beginWrite();
-  _bus->writeCommand(ILI9481_MADCTL);
-  _bus->write(r);
+  _bus->writeC8D8(ILI9481_MADCTL, r);
   _bus->endWrite();
 }
 

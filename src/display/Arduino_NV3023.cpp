@@ -57,8 +57,7 @@ void Arduino_NV3023::setRotation(uint8_t r)
     break;
   }
   _bus->beginWrite();
-  _bus->writeCommand(NV3023_MADCTL);
-  _bus->write(r);
+  _bus->writeC8D8(NV3023_MADCTL, r);
   _bus->endWrite();
 }
 

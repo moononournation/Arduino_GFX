@@ -116,8 +116,7 @@ void Arduino_ST7735::setRotation(uint8_t r)
     break;
   }
   _bus->beginWrite();
-  _bus->writeCommand(ST7735_MADCTL);
-  _bus->write(r);
+  _bus->writeC8D8(ST7735_MADCTL, r);
   _bus->endWrite();
 }
 

@@ -119,10 +119,8 @@ void Arduino_SSD1351::setRotation(uint8_t r)
     break;
   }
   _bus->beginWrite();
-  _bus->writeCommand(SSD1351_SETREMAP);
-  _bus->write(r);
-  _bus->writeCommand(SSD1351_STARTLINE);
-  _bus->write(startline);
+  _bus->writeC8D8(SSD1351_SETREMAP, r);
+  _bus->writeC8D8(SSD1351_STARTLINE, startline);
   _bus->endWrite();
 }
 

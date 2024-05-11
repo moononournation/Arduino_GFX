@@ -42,8 +42,7 @@ void Arduino_ST7796::setRotation(uint8_t r)
     break;
   }
   _bus->beginWrite();
-  _bus->writeCommand(ST7796_MADCTL);
-  _bus->write(r);
+  _bus->writeC8D8(ST7796_MADCTL, r);
   _bus->endWrite();
 }
 
