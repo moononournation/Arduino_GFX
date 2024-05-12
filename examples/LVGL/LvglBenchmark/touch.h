@@ -4,6 +4,19 @@
  *
  * Capacitive touchscreen libraries
  * TouchLib: https://github.com/mmMicky/TouchLib.git
+ *
+ * #define CTS328_SLAVE_ADDRESS  (0x1A)
+ * #define L58_SLAVE_ADDRESS     (0X5A)
+ * #define CTS826_SLAVE_ADDRESS  (0X15)
+ * #define CTS820_SLAVE_ADDRESS  (0X15)
+ * #define CTS816S_SLAVE_ADDRESS (0X15)
+ * #define FT3267_SLAVE_ADDRESS  (0x38)
+ * #define FT5x06_ADDR           (0x38)
+ * #define GT911_SLAVE_ADDRESS1  (0X5D)
+ * #define GT911_SLAVE_ADDRESS2  (0X14)
+ * #define ZTW622_SLAVE1_ADDRESS (0x20)
+ * #define ZTW622_SLAVE2_ADDRESS (0x46)
+ *
  ******************************************************************************/
 
 /* uncomment for XPT2046 */
