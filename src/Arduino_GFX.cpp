@@ -2901,7 +2901,7 @@ void Arduino_GFX::getTextBounds(const char *str, int16_t x, int16_t y,
   *y1 = y;
   *w = *h = 0;
 
-  int16_t minx = _width, miny = _height, maxx = -1, maxy = -1;
+  int16_t minx = _max_text_x, miny = _max_text_y, maxx = _min_text_x, maxy = _min_text_y;
 
   while ((c = *str++))
   {
@@ -2962,7 +2962,7 @@ void Arduino_GFX::getTextBounds(const __FlashStringHelper *str,
   *y1 = y;
   *w = *h = 0;
 
-  int16_t minx = _width, miny = _height, maxx = -1, maxy = -1;
+  int16_t minx = _max_text_x, miny = _max_text_y, maxx = _min_text_x, maxy = _min_text_y;
 
   while ((c = pgm_read_byte(s++)))
     charBounds(c, &x, &y, &minx, &miny, &maxx, &maxy);

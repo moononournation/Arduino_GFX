@@ -309,18 +309,10 @@ public:
   */
   void setTextBound(int16_t x, int16_t y, int16_t w, int16_t h)
   {
-    _min_text_x = (x < 0) ? 0 : x;
-    _min_text_y = (y < 0) ? 0 : y;
+    _min_text_x = x;
+    _min_text_y = y;
     _max_text_x = x + w - 1;
-    if (_max_text_x > _max_x)
-    {
-      _max_text_x = _max_x;
-    }
     _max_text_y = y + h - 1;
-    if (_max_text_y > _max_y)
-    {
-      _max_text_y = _max_y;
-    }
   }
 
   /**********************************************************************/
