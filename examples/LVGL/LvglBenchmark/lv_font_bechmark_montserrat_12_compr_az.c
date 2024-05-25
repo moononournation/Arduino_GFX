@@ -1,7 +1,5 @@
 #include "lv_demo_benchmark.h"
 
-#if LV_USE_DEMO_BENCHMARK
-
 /*******************************************************************************
  * Size: 12 px
  * Bpp: 4
@@ -314,5 +312,3 @@ lv_font_t lv_font_benchmark_montserrat_12_compr_az = {
 };
 
 #endif /*#if LV_FONT_BENCHMARK_MONTSERRAT_12_COMPR_AZ*/
-
-#endif

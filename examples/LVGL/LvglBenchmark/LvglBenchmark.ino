@@ -21,8 +21,8 @@
  * #define LV_COLOR_16_SWAP   1 // for SPI and parallel 8
  * #define LV_COLOR_16_SWAP   0 // for parallel 16 and RGB
  *
- * Enable LVGL Demo Benchmark:
- * #define LV_USE_DEMO_BENCHMARK 1
+ * Disable built-in Benchmark:
+ * #define LV_USE_DEMO_BENCHMARK 0
  *
  * Enables support for compressed fonts:
  * #define LV_USE_FONT_COMPRESSED 1

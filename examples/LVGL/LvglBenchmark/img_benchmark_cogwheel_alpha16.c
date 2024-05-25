@@ -1,7 +1,5 @@
 #include "lv_demo_benchmark.h"
 
-#if LV_USE_DEMO_BENCHMARK
-
 #ifndef LV_ATTRIBUTE_MEM_ALIGN
 #define LV_ATTRIBUTE_MEM_ALIGN
 #endif
@@ -121,7 +119,3 @@ const lv_img_dsc_t img_benchmark_cogwheel_alpha16 = {
   .header.cf = LV_IMG_CF_ALPHA_4BIT,
   .data = img_benchmark_cogwheel_alpha16_map,
 };
-
-#endif
-
-
