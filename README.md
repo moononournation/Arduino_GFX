@@ -483,3 +483,5 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 ## Sponsorship vs Support
 
 As you may already aware there are lack of sponsorship in this project. Convert the funding in terms of man power, it is much lower than 1 man hour per month. So don't expect too much on the support. Expecially the features not realted to my planned maker projects ;>
+
+For the same reason, Arduino_GFX only focus on the Arduino IDE support. Any other IDE, e.g. PlatformIO, if you found an issue at that IDE but normal at Arduino IDE, please direct report to that IDE for better support.
