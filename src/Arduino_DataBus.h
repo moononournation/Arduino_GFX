@@ -136,11 +136,13 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
     (var) = ((uint32_t)a[0] << 8 | a[1] | a[2] << 24 | a[3] << 16); \
   }
 
+#ifndef INLINE
 #if !defined(LITTLE_FOOT_PRINT)
 #define INLINE __attribute__((always_inline)) inline
 #else
 #define INLINE inline
 #endif // !defined(LITTLE_FOOT_PRINT)
+#endif  // INLINE
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
 #if (ESP_ARDUINO_VERSION_MAJOR < 3)
