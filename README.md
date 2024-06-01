@@ -269,9 +269,13 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 * 8-bit and 9-bit hardware SPI (ESP32SPI)
 * 8-bit hardware SPI (HWSPI, ESP8266SPI, mbedSPI, NRFXSPI, RPiPicoSPI)
 * 8-bit and 9-bit software SPI (SWSPI)
-* 8-bit parallel interface (SWPAR8, AVRPAR8, ESP32PAR8, ESP32S2PAR8, RPiPicoPAR8, RTLPAR8, STM32PAR8)
+* 8-bit parallel interface (SWPAR8, AVRPAR8, ESP32LCD8, ESP32PAR8, ESP32S2PAR8, RPiPicoPAR8, RTLPAR8, STM32PAR8)
 * 16-bit parallel interface (ESP32LCD16, ESP32PAR16, ESP32S2PAR16, RPiPicoPAR16)
 * RGB565+SPI interface (ESP32RGBPanel)
+
+#### Note
+
+ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and no longer support in v3.0.
 
 </details>
 
