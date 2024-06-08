@@ -36,11 +36,11 @@ public:
   void writePixels(uint16_t *data, uint32_t len) override;
 
 private:
-  INLINE void WRITE(uint8_t d);
-  INLINE void DC_HIGH(void);
-  INLINE void DC_LOW(void);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
+  GFX_INLINE void WRITE(uint8_t d);
+  GFX_INLINE void DC_HIGH(void);
+  GFX_INLINE void DC_LOW(void);
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
 };
 
 #endif // #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_MEGA2560) || defined(ARDUINO_UNOR4_MINIMA) || defined(ARDUINO_UNOR4_WIFI)

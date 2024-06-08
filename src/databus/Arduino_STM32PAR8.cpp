@@ -218,7 +218,7 @@ void Arduino_STM32PAR8::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, u
   }
 }
 
-INLINE void Arduino_STM32PAR8::WRITE(uint8_t d)
+GFX_INLINE void Arduino_STM32PAR8::WRITE(uint8_t d)
 {
   _port->BSRR = 0xFF << 16;
   _port->BSRR = (d)&0xFF;
@@ -228,17 +228,17 @@ INLINE void Arduino_STM32PAR8::WRITE(uint8_t d)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_STM32PAR8::DC_HIGH(void)
+GFX_INLINE void Arduino_STM32PAR8::DC_HIGH(void)
 {
   _dcPORT->BSRR = _dcPinMaskSet;
 }
 
-INLINE void Arduino_STM32PAR8::DC_LOW(void)
+GFX_INLINE void Arduino_STM32PAR8::DC_LOW(void)
 {
   _dcPORT->BSRR = _dcPinMaskSet << 16;
 }
 
-INLINE void Arduino_STM32PAR8::CS_HIGH(void)
+GFX_INLINE void Arduino_STM32PAR8::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -246,7 +246,7 @@ INLINE void Arduino_STM32PAR8::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_STM32PAR8::CS_LOW(void)
+GFX_INLINE void Arduino_STM32PAR8::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {

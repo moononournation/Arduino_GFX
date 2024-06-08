@@ -137,7 +137,7 @@
 #endif
 
 #if !defined(ATTINY_CORE)
-INLINE GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
+GFX_INLINE GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
 {
 #ifdef __AVR__
   return &(((GFXglyph *)pgm_read_pointer(&gfxFont->glyph))[c]);
@@ -149,7 +149,7 @@ INLINE GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
 #endif //__AVR__
 }
 
-INLINE uint8_t *pgm_read_bitmap_ptr(const GFXfont *gfxFont)
+GFX_INLINE uint8_t *pgm_read_bitmap_ptr(const GFXfont *gfxFont)
 {
 #ifdef __AVR__
   return (uint8_t *)pgm_read_pointer(&gfxFont->bitmap);

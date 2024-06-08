@@ -143,7 +143,7 @@ void Arduino_GFX::writeSlashLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
   @brief  Start a display-writing routine, overwrite in subclasses.
 */
 /**************************************************************************/
-INLINE void Arduino_GFX::startWrite()
+GFX_INLINE void Arduino_GFX::startWrite()
 {
 }
 
@@ -313,7 +313,7 @@ void Arduino_GFX::writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16
   @brief  End a display-writing routine, overwrite in subclasses if startWrite is defined!
 */
 /**************************************************************************/
-INLINE void Arduino_GFX::endWrite()
+GFX_INLINE void Arduino_GFX::endWrite()
 {
 }
 

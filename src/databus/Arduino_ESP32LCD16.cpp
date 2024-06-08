@@ -552,7 +552,7 @@ void Arduino_ESP32LCD16::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8
   }
 }
 
-INLINE void Arduino_ESP32LCD16::WRITECOMMAND16(uint16_t c)
+GFX_INLINE void Arduino_ESP32LCD16::WRITECOMMAND16(uint16_t c)
 {
   LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE | LCD_CAM_LCD_CD_CMD_SET;
   LCD_CAM.lcd_cmd_val.val = c;
@@ -560,7 +560,7 @@ INLINE void Arduino_ESP32LCD16::WRITECOMMAND16(uint16_t c)
   LCD_CAM.lcd_user.val = LCD_CAM_LCD_2BYTE_EN | LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
 }
 
-INLINE void Arduino_ESP32LCD16::WRITE16(uint16_t d)
+GFX_INLINE void Arduino_ESP32LCD16::WRITE16(uint16_t d)
 {
   LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
   LCD_CAM.lcd_cmd_val.val = d;
@@ -568,7 +568,7 @@ INLINE void Arduino_ESP32LCD16::WRITE16(uint16_t d)
   LCD_CAM.lcd_user.val = LCD_CAM_LCD_2BYTE_EN | LCD_CAM_LCD_CMD | LCD_CAM_LCD_UPDATE_REG | LCD_CAM_LCD_START;
 }
 
-INLINE void Arduino_ESP32LCD16::WRITE32(uint32_t d)
+GFX_INLINE void Arduino_ESP32LCD16::WRITE32(uint32_t d)
 {
   LCD_CAM.lcd_misc.val = LCD_CAM_LCD_CD_IDLE_EDGE;
   LCD_CAM.lcd_cmd_val.val = d;
@@ -578,7 +578,7 @@ INLINE void Arduino_ESP32LCD16::WRITE32(uint32_t d)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_ESP32LCD16::CS_HIGH(void)
+GFX_INLINE void Arduino_ESP32LCD16::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -586,7 +586,7 @@ INLINE void Arduino_ESP32LCD16::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_ESP32LCD16::CS_LOW(void)
+GFX_INLINE void Arduino_ESP32LCD16::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {

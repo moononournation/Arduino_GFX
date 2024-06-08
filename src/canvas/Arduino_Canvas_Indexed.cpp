@@ -526,7 +526,7 @@ uint8_t Arduino_Canvas_Indexed::get_color_index(uint16_t color)
   return _indexed_size++;
 }
 
-INLINE uint16_t Arduino_Canvas_Indexed::get_index_color(uint8_t idx)
+GFX_INLINE uint16_t Arduino_Canvas_Indexed::get_index_color(uint8_t idx)
 {
   return _color_index[idx];
 }

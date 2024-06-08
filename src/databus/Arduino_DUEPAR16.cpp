@@ -175,7 +175,7 @@ void Arduino_DUEPAR16::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, ui
 
 #endif // !defined(LITTLE_FOOT_PRINT)
 
-INLINE void Arduino_DUEPAR16::WRITE16(uint16_t d)
+GFX_INLINE void Arduino_DUEPAR16::WRITE16(uint16_t d)
 {
   writeData16(d, 1);
 }
@@ -223,22 +223,22 @@ void Arduino_DUEPAR16::writeData16(uint16_t d, uint32_t num)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_DUEPAR16::DC_HIGH(void)
+GFX_INLINE void Arduino_DUEPAR16::DC_HIGH(void)
 {
   digitalWrite(_dc, HIGH);
 }
 
-INLINE void Arduino_DUEPAR16::DC_LOW(void)
+GFX_INLINE void Arduino_DUEPAR16::DC_LOW(void)
 {
   digitalWrite(_dc, LOW);
 }
 
-INLINE void Arduino_DUEPAR16::CS_HIGH(void)
+GFX_INLINE void Arduino_DUEPAR16::CS_HIGH(void)
 {
   digitalWrite(_cs, HIGH);
 }
 
-INLINE void Arduino_DUEPAR16::CS_LOW(void)
+GFX_INLINE void Arduino_DUEPAR16::CS_LOW(void)
 {
   digitalWrite(_cs, LOW);
 }

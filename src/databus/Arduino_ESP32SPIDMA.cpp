@@ -898,9 +898,9 @@ void Arduino_ESP32SPIDMA::flush_data_buf()
  * @brief WRITE8BIT
  *
  * @param d
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPIDMA::WRITE8BIT(uint8_t d)
+GFX_INLINE void Arduino_ESP32SPIDMA::WRITE8BIT(uint8_t d)
 {
   uint16_t idx = _data_buf_bit_idx >> 3;
   _buffer[idx] = d;
@@ -915,9 +915,9 @@ INLINE void Arduino_ESP32SPIDMA::WRITE8BIT(uint8_t d)
  * @brief WRITE9BIT
  *
  * @param d
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPIDMA::WRITE9BIT(uint32_t d)
+GFX_INLINE void Arduino_ESP32SPIDMA::WRITE9BIT(uint32_t d)
 {
   uint16_t idx = _data_buf_bit_idx >> 3;
   uint8_t shift = (_data_buf_bit_idx % 8);
@@ -943,9 +943,9 @@ INLINE void Arduino_ESP32SPIDMA::WRITE9BIT(uint32_t d)
 /**
  * @brief DC_HIGH
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPIDMA::DC_HIGH(void)
+GFX_INLINE void Arduino_ESP32SPIDMA::DC_HIGH(void)
 {
   *_dcPortSet = _dcPinMask;
 }
@@ -953,9 +953,9 @@ INLINE void Arduino_ESP32SPIDMA::DC_HIGH(void)
 /**
  * @brief DC_LOW
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPIDMA::DC_LOW(void)
+GFX_INLINE void Arduino_ESP32SPIDMA::DC_LOW(void)
 {
   *_dcPortClr = _dcPinMask;
 }
@@ -963,9 +963,9 @@ INLINE void Arduino_ESP32SPIDMA::DC_LOW(void)
 /**
  * @brief CS_HIGH
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPIDMA::CS_HIGH(void)
+GFX_INLINE void Arduino_ESP32SPIDMA::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -976,9 +976,9 @@ INLINE void Arduino_ESP32SPIDMA::CS_HIGH(void)
 /**
  * @brief CS_LOW
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPIDMA::CS_LOW(void)
+GFX_INLINE void Arduino_ESP32SPIDMA::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -989,9 +989,9 @@ INLINE void Arduino_ESP32SPIDMA::CS_LOW(void)
 /**
  * @brief POLL_START
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPIDMA::POLL_START()
+GFX_INLINE void Arduino_ESP32SPIDMA::POLL_START()
 {
   spi_device_polling_start(_handle, &_spi_tran, portMAX_DELAY);
 }
@@ -999,9 +999,9 @@ INLINE void Arduino_ESP32SPIDMA::POLL_START()
 /**
  * @brief POLL_END
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPIDMA::POLL_END()
+GFX_INLINE void Arduino_ESP32SPIDMA::POLL_END()
 {
   spi_device_polling_end(_handle, portMAX_DELAY);
 }

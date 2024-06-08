@@ -165,7 +165,7 @@ void Arduino_UNOPAR8::writePixels(uint16_t *data, uint32_t len)
   }
 }
 
-INLINE void Arduino_UNOPAR8::WRITE(uint8_t d)
+GFX_INLINE void Arduino_UNOPAR8::WRITE(uint8_t d)
 {
 #if defined(ARDUINO_AVR_UNO)
   PORTB = (PORTB & 0xFC) | (d & 0x03); // LCD D0-1
@@ -203,7 +203,7 @@ INLINE void Arduino_UNOPAR8::WRITE(uint8_t d)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_UNOPAR8::DC_HIGH(void)
+GFX_INLINE void Arduino_UNOPAR8::DC_HIGH(void)
 {
 #if defined(ARDUINO_AVR_UNO)
   PORTC |= _BV(2); // RS_H;
@@ -214,7 +214,7 @@ INLINE void Arduino_UNOPAR8::DC_HIGH(void)
 #endif
 }
 
-INLINE void Arduino_UNOPAR8::DC_LOW(void)
+GFX_INLINE void Arduino_UNOPAR8::DC_LOW(void)
 {
 #if defined(ARDUINO_AVR_UNO)
   PORTC &= ~_BV(2); // RS_L;
@@ -225,7 +225,7 @@ INLINE void Arduino_UNOPAR8::DC_LOW(void)
 #endif
 }
 
-INLINE void Arduino_UNOPAR8::CS_HIGH(void)
+GFX_INLINE void Arduino_UNOPAR8::CS_HIGH(void)
 {
 #if defined(ARDUINO_AVR_UNO)
   PORTC |= _BV(3); // CS_H;
@@ -236,7 +236,7 @@ INLINE void Arduino_UNOPAR8::CS_HIGH(void)
 #endif
 }
 
-INLINE void Arduino_UNOPAR8::CS_LOW(void)
+GFX_INLINE void Arduino_UNOPAR8::CS_LOW(void)
 {
 #if defined(ARDUINO_AVR_UNO)
   PORTC &= ~_BV(3); // CS_L;

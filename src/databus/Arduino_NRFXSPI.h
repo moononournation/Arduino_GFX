@@ -37,13 +37,13 @@ public:
   void writeBytes(uint8_t *data, uint32_t len) override;
 
 private:
-  INLINE void WRITE(uint8_t d);
-  INLINE void WRITE16(uint16_t d);
-  INLINE void WRITEBUF(uint8_t *buf, size_t count);
-  INLINE void DC_HIGH(void);
-  INLINE void DC_LOW(void);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
+  GFX_INLINE void WRITE(uint8_t d);
+  GFX_INLINE void WRITE16(uint16_t d);
+  GFX_INLINE void WRITEBUF(uint8_t *buf, size_t count);
+  GFX_INLINE void DC_HIGH(void);
+  GFX_INLINE void DC_LOW(void);
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
 
   int8_t _dc, _cs;
   int8_t _sck, _mosi, _miso;

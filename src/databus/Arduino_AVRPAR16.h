@@ -29,12 +29,12 @@ public:
 
 protected:
 private:
-  INLINE void WRITE16(uint16_t d);
-  INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
-  INLINE void DC_HIGH(void);
-  INLINE void DC_LOW(void);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
+  GFX_INLINE void WRITE16(uint16_t d);
+  GFX_INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
+  GFX_INLINE void DC_HIGH(void);
+  GFX_INLINE void DC_LOW(void);
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
 
   int8_t _dc, _cs, _wr, _rd;
   uint8_t _portLow;

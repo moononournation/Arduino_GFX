@@ -418,7 +418,7 @@ void Arduino_SWSPI::writeBytes(uint8_t *data, uint32_t len)
 }
 #endif // !defined(LITTLE_FOOT_PRINT)
 
-INLINE void Arduino_SWSPI::WRITE9BITCOMMAND(uint8_t c)
+GFX_INLINE void Arduino_SWSPI::WRITE9BITCOMMAND(uint8_t c)
 {
   // D/C bit, command
   SPI_MOSI_LOW();
@@ -442,7 +442,7 @@ INLINE void Arduino_SWSPI::WRITE9BITCOMMAND(uint8_t c)
   }
 }
 
-INLINE void Arduino_SWSPI::WRITE9BITDATA(uint8_t d)
+GFX_INLINE void Arduino_SWSPI::WRITE9BITDATA(uint8_t d)
 {
   // D/C bit, data
   SPI_MOSI_HIGH();
@@ -466,7 +466,7 @@ INLINE void Arduino_SWSPI::WRITE9BITDATA(uint8_t d)
   }
 }
 
-INLINE void Arduino_SWSPI::WRITE(uint8_t d)
+GFX_INLINE void Arduino_SWSPI::WRITE(uint8_t d)
 {
   uint8_t bit = 0x80;
   while (bit)
@@ -485,7 +485,7 @@ INLINE void Arduino_SWSPI::WRITE(uint8_t d)
   }
 }
 
-INLINE void Arduino_SWSPI::WRITE16(uint16_t d)
+GFX_INLINE void Arduino_SWSPI::WRITE16(uint16_t d)
 {
   uint16_t bit = 0x8000;
   while (bit)
@@ -504,7 +504,7 @@ INLINE void Arduino_SWSPI::WRITE16(uint16_t d)
   }
 }
 
-INLINE void Arduino_SWSPI::WRITE9BITREPEAT(uint16_t p, uint32_t len)
+GFX_INLINE void Arduino_SWSPI::WRITE9BITREPEAT(uint16_t p, uint32_t len)
 {
   if (p == 0xffff) // no need to set MOSI level while filling white
   {
@@ -527,7 +527,7 @@ INLINE void Arduino_SWSPI::WRITE9BITREPEAT(uint16_t p, uint32_t len)
   }
 }
 
-INLINE void Arduino_SWSPI::WRITEREPEAT(uint16_t p, uint32_t len)
+GFX_INLINE void Arduino_SWSPI::WRITEREPEAT(uint16_t p, uint32_t len)
 {
   if ((p == 0x0000) || (p == 0xffff)) // no need to set MOSI level while filling black or white
   {
@@ -557,7 +557,7 @@ INLINE void Arduino_SWSPI::WRITEREPEAT(uint16_t p, uint32_t len)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_SWSPI::DC_HIGH(void)
+GFX_INLINE void Arduino_SWSPI::DC_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -574,7 +574,7 @@ INLINE void Arduino_SWSPI::DC_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWSPI::DC_LOW(void)
+GFX_INLINE void Arduino_SWSPI::DC_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -591,7 +591,7 @@ INLINE void Arduino_SWSPI::DC_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWSPI::CS_HIGH(void)
+GFX_INLINE void Arduino_SWSPI::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -611,7 +611,7 @@ INLINE void Arduino_SWSPI::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_SWSPI::CS_LOW(void)
+GFX_INLINE void Arduino_SWSPI::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -634,7 +634,7 @@ INLINE void Arduino_SWSPI::CS_LOW(void)
 /*!
     @brief  Set the software (bitbang) SPI MOSI line HIGH.
 */
-INLINE void Arduino_SWSPI::SPI_MOSI_HIGH(void)
+GFX_INLINE void Arduino_SWSPI::SPI_MOSI_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -654,7 +654,7 @@ INLINE void Arduino_SWSPI::SPI_MOSI_HIGH(void)
 /*!
     @brief  Set the software (bitbang) SPI MOSI line LOW.
 */
-INLINE void Arduino_SWSPI::SPI_MOSI_LOW(void)
+GFX_INLINE void Arduino_SWSPI::SPI_MOSI_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -674,7 +674,7 @@ INLINE void Arduino_SWSPI::SPI_MOSI_LOW(void)
 /*!
     @brief  Set the software (bitbang) SPI SCK line HIGH.
 */
-INLINE void Arduino_SWSPI::SPI_SCK_HIGH(void)
+GFX_INLINE void Arduino_SWSPI::SPI_SCK_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -698,7 +698,7 @@ INLINE void Arduino_SWSPI::SPI_SCK_HIGH(void)
 /*!
     @brief  Set the software (bitbang) SPI SCK line LOW.
 */
-INLINE void Arduino_SWSPI::SPI_SCK_LOW(void)
+GFX_INLINE void Arduino_SWSPI::SPI_SCK_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -723,7 +723,7 @@ INLINE void Arduino_SWSPI::SPI_SCK_LOW(void)
     @brief   Read the state of the software (bitbang) SPI MISO line.
     @return  true if HIGH, false if LOW.
 */
-INLINE bool Arduino_SWSPI::SPI_MISO_READ(void)
+GFX_INLINE bool Arduino_SWSPI::SPI_MISO_READ(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(KINETISK)

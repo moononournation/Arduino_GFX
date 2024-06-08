@@ -137,9 +137,9 @@ typedef volatile ARDUINOGFX_PORT_t *PORTreg_t;
   }
 
 #if !defined(LITTLE_FOOT_PRINT)
-#define INLINE __attribute__((always_inline)) inline
+#define GFX_INLINE __attribute__((always_inline)) inline
 #else
-#define INLINE inline
+#define GFX_INLINE inline
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)

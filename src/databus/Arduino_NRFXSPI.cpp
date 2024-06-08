@@ -242,20 +242,20 @@ void Arduino_NRFXSPI::writeBytes(uint8_t *data, uint32_t len)
   WRITEBUF(data, len);
 }
 
-INLINE void Arduino_NRFXSPI::WRITE(uint8_t d)
+GFX_INLINE void Arduino_NRFXSPI::WRITE(uint8_t d)
 {
   const nrfx_spi_xfer_desc_t xfer_desc = NRFX_SPI_SINGLE_XFER(&d, 1, NULL, 0);
   nrfx_spi_xfer(&_nrfxSpi, &xfer_desc, 0);
 }
 
-INLINE void Arduino_NRFXSPI::WRITE16(uint16_t d)
+GFX_INLINE void Arduino_NRFXSPI::WRITE16(uint16_t d)
 {
   MSB_16_SET(d, d);
   const nrfx_spi_xfer_desc_t xfer_desc = NRFX_SPI_SINGLE_XFER(&d, 2, NULL, 0);
   nrfx_spi_xfer(&_nrfxSpi, &xfer_desc, 0);
 }
 
-INLINE void Arduino_NRFXSPI::WRITEBUF(uint8_t *buf, size_t count)
+GFX_INLINE void Arduino_NRFXSPI::WRITEBUF(uint8_t *buf, size_t count)
 {
   const nrfx_spi_xfer_desc_t xfer_desc = NRFX_SPI_SINGLE_XFER(buf, count, NULL, 0);
   nrfx_spi_xfer(&_nrfxSpi, &xfer_desc, 0);
@@ -263,17 +263,17 @@ INLINE void Arduino_NRFXSPI::WRITEBUF(uint8_t *buf, size_t count)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_NRFXSPI::DC_HIGH(void)
+GFX_INLINE void Arduino_NRFXSPI::DC_HIGH(void)
 {
   *_dcPortSet = _dcPinMask;
 }
 
-INLINE void Arduino_NRFXSPI::DC_LOW(void)
+GFX_INLINE void Arduino_NRFXSPI::DC_LOW(void)
 {
   *_dcPortClr = _dcPinMask;
 }
 
-INLINE void Arduino_NRFXSPI::CS_HIGH(void)
+GFX_INLINE void Arduino_NRFXSPI::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -281,7 +281,7 @@ INLINE void Arduino_NRFXSPI::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_NRFXSPI::CS_LOW(void)
+GFX_INLINE void Arduino_NRFXSPI::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {

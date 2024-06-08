@@ -46,15 +46,15 @@ public:
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 private:
-  INLINE void WRITE(uint8_t d);
+  GFX_INLINE void WRITE(uint8_t d);
 #if !defined(LITTLE_FOOT_PRINT)
-  INLINE void WRITE16(uint16_t d);
-  INLINE void WRITEBUF(uint8_t *buf, size_t count);
+  GFX_INLINE void WRITE16(uint16_t d);
+  GFX_INLINE void WRITEBUF(uint8_t *buf, size_t count);
 #endif // !defined(LITTLE_FOOT_PRINT)
-  INLINE void DC_HIGH(void);
-  INLINE void DC_LOW(void);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
+  GFX_INLINE void DC_HIGH(void);
+  GFX_INLINE void DC_LOW(void);
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
 
 
   int8_t _dc, _cs;

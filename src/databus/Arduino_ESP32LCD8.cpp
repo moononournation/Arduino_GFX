@@ -760,9 +760,9 @@ void Arduino_ESP32LCD8::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, u
 /**
  * @brief CS_HIGH
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32LCD8::CS_HIGH(void)
+GFX_INLINE void Arduino_ESP32LCD8::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -773,9 +773,9 @@ INLINE void Arduino_ESP32LCD8::CS_HIGH(void)
 /**
  * @brief CS_LOW
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32LCD8::CS_LOW(void)
+GFX_INLINE void Arduino_ESP32LCD8::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {

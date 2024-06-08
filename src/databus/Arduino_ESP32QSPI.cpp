@@ -720,9 +720,9 @@ void Arduino_ESP32QSPI::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_
 /**
  * @brief CS_HIGH
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32QSPI::CS_HIGH(void)
+GFX_INLINE void Arduino_ESP32QSPI::CS_HIGH(void)
 {
   *_csPortSet = _csPinMask;
 }
@@ -730,9 +730,9 @@ INLINE void Arduino_ESP32QSPI::CS_HIGH(void)
 /**
  * @brief CS_LOW
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32QSPI::CS_LOW(void)
+GFX_INLINE void Arduino_ESP32QSPI::CS_LOW(void)
 {
   *_csPortClr = _csPinMask;
 }
@@ -740,9 +740,9 @@ INLINE void Arduino_ESP32QSPI::CS_LOW(void)
 /**
  * @brief POLL_START
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32QSPI::POLL_START()
+GFX_INLINE void Arduino_ESP32QSPI::POLL_START()
 {
   spi_device_polling_start(_handle, _spi_tran, portMAX_DELAY);
 }
@@ -750,9 +750,9 @@ INLINE void Arduino_ESP32QSPI::POLL_START()
 /**
  * @brief POLL_END
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32QSPI::POLL_END()
+GFX_INLINE void Arduino_ESP32QSPI::POLL_END()
 {
   spi_device_polling_end(_handle, portMAX_DELAY);
 }

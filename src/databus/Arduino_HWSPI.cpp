@@ -395,7 +395,7 @@ void Arduino_HWSPI::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 }
 #endif // !defined(LITTLE_FOOT_PRINT)
 
-INLINE void Arduino_HWSPI::WRITE(uint8_t d)
+GFX_INLINE void Arduino_HWSPI::WRITE(uint8_t d)
 {
 #if defined(SPI_HAS_TRANSACTION)
   _spi->transfer(d);
@@ -413,7 +413,7 @@ INLINE void Arduino_HWSPI::WRITE(uint8_t d)
 
 #if !defined(LITTLE_FOOT_PRINT)
 
-INLINE void Arduino_HWSPI::WRITE16(uint16_t d)
+GFX_INLINE void Arduino_HWSPI::WRITE16(uint16_t d)
 {
 #if defined(ESP8266) || defined(ESP32)
   _spi->write16(d);
@@ -433,7 +433,7 @@ INLINE void Arduino_HWSPI::WRITE16(uint16_t d)
 #endif
 }
 
-INLINE void Arduino_HWSPI::WRITEBUF(uint8_t *buf, size_t count)
+GFX_INLINE void Arduino_HWSPI::WRITEBUF(uint8_t *buf, size_t count)
 {
 #if defined(ESP8266) || defined(ESP32)
   _spi->writeBytes(buf, count);
@@ -448,7 +448,7 @@ INLINE void Arduino_HWSPI::WRITEBUF(uint8_t *buf, size_t count)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_HWSPI::DC_HIGH(void)
+GFX_INLINE void Arduino_HWSPI::DC_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -465,7 +465,7 @@ INLINE void Arduino_HWSPI::DC_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_HWSPI::DC_LOW(void)
+GFX_INLINE void Arduino_HWSPI::DC_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -482,7 +482,7 @@ INLINE void Arduino_HWSPI::DC_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_HWSPI::CS_HIGH(void)
+GFX_INLINE void Arduino_HWSPI::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -502,7 +502,7 @@ INLINE void Arduino_HWSPI::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_HWSPI::CS_LOW(void)
+GFX_INLINE void Arduino_HWSPI::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {

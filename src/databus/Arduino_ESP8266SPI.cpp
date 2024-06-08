@@ -342,7 +342,7 @@ void Arduino_ESP8266SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, 
   WAIT_SPI_NOT_BUSY;
 }
 
-INLINE void Arduino_ESP8266SPI::WRITE(uint8_t d)
+GFX_INLINE void Arduino_ESP8266SPI::WRITE(uint8_t d)
 {
   SPI1U1 = (7 << SPILMOSI);
   SPI1W0 = d;
@@ -350,7 +350,7 @@ INLINE void Arduino_ESP8266SPI::WRITE(uint8_t d)
   WAIT_SPI_NOT_BUSY;
 }
 
-INLINE void Arduino_ESP8266SPI::WRITE16(uint16_t d)
+GFX_INLINE void Arduino_ESP8266SPI::WRITE16(uint16_t d)
 {
   MSB_16_SET(d, d);
 
@@ -362,17 +362,17 @@ INLINE void Arduino_ESP8266SPI::WRITE16(uint16_t d)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_ESP8266SPI::DC_HIGH(void)
+GFX_INLINE void Arduino_ESP8266SPI::DC_HIGH(void)
 {
   *_dcPort |= _dcPinMaskSet;
 }
 
-INLINE void Arduino_ESP8266SPI::DC_LOW(void)
+GFX_INLINE void Arduino_ESP8266SPI::DC_LOW(void)
 {
   *_dcPort &= _dcPinMaskClr;
 }
 
-INLINE void Arduino_ESP8266SPI::CS_HIGH(void)
+GFX_INLINE void Arduino_ESP8266SPI::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -380,7 +380,7 @@ INLINE void Arduino_ESP8266SPI::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_ESP8266SPI::CS_LOW(void)
+GFX_INLINE void Arduino_ESP8266SPI::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {

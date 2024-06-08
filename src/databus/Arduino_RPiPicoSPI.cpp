@@ -184,35 +184,35 @@ void Arduino_RPiPicoSPI::writeBytes(uint8_t *data, uint32_t len)
   WRITEBUF(data, len);
 }
 
-INLINE void Arduino_RPiPicoSPI::WRITE(uint8_t d)
+GFX_INLINE void Arduino_RPiPicoSPI::WRITE(uint8_t d)
 {
   spi_write_blocking(_spi, (const uint8_t *)&d, 1);
 }
 
-INLINE void Arduino_RPiPicoSPI::WRITE16(uint16_t d)
+GFX_INLINE void Arduino_RPiPicoSPI::WRITE16(uint16_t d)
 {
   MSB_16_SET(d, d);
   spi_write_blocking(_spi, (const uint8_t *)&d, 2);
 }
 
-INLINE void Arduino_RPiPicoSPI::WRITEBUF(uint8_t *buf, size_t count)
+GFX_INLINE void Arduino_RPiPicoSPI::WRITEBUF(uint8_t *buf, size_t count)
 {
   spi_write_blocking(_spi, (const uint8_t *)buf, count);
 }
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_RPiPicoSPI::DC_HIGH(void)
+GFX_INLINE void Arduino_RPiPicoSPI::DC_HIGH(void)
 {
   *_dcPortSet = _dcPinMask;
 }
 
-INLINE void Arduino_RPiPicoSPI::DC_LOW(void)
+GFX_INLINE void Arduino_RPiPicoSPI::DC_LOW(void)
 {
   *_dcPortClr = _dcPinMask;
 }
 
-INLINE void Arduino_RPiPicoSPI::CS_HIGH(void)
+GFX_INLINE void Arduino_RPiPicoSPI::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -220,7 +220,7 @@ INLINE void Arduino_RPiPicoSPI::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_RPiPicoSPI::CS_LOW(void)
+GFX_INLINE void Arduino_RPiPicoSPI::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {

@@ -211,14 +211,14 @@ void Arduino_RPiPicoPAR16::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx
   }
 }
 
-INLINE void Arduino_RPiPicoPAR16::WRITE(uint8_t d)
+GFX_INLINE void Arduino_RPiPicoPAR16::WRITE(uint8_t d)
 {
   sio_hw->gpio_clr = _dataClrMask;
   sio_hw->gpio_set = d;
   sio_hw->gpio_set = _wrPinMask;
 }
 
-INLINE void Arduino_RPiPicoPAR16::WRITE16(uint16_t d)
+GFX_INLINE void Arduino_RPiPicoPAR16::WRITE16(uint16_t d)
 {
   sio_hw->gpio_clr = _dataClrMask;
   sio_hw->gpio_set = d;
@@ -227,17 +227,17 @@ INLINE void Arduino_RPiPicoPAR16::WRITE16(uint16_t d)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_RPiPicoPAR16::DC_HIGH(void)
+GFX_INLINE void Arduino_RPiPicoPAR16::DC_HIGH(void)
 {
   sio_hw->gpio_set = _dcPinMask;
 }
 
-INLINE void Arduino_RPiPicoPAR16::DC_LOW(void)
+GFX_INLINE void Arduino_RPiPicoPAR16::DC_LOW(void)
 {
   sio_hw->gpio_clr = _dcPinMask;
 }
 
-INLINE void Arduino_RPiPicoPAR16::CS_HIGH(void)
+GFX_INLINE void Arduino_RPiPicoPAR16::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -245,7 +245,7 @@ INLINE void Arduino_RPiPicoPAR16::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_RPiPicoPAR16::CS_LOW(void)
+GFX_INLINE void Arduino_RPiPicoPAR16::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {

@@ -35,12 +35,12 @@ public:
 
 protected:
 private:
-  INLINE void WRITE(uint8_t d);
-  INLINE void WRITE16(uint16_t d);
-  INLINE void DC_HIGH(void);
-  INLINE void DC_LOW(void);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
+  GFX_INLINE void WRITE(uint8_t d);
+  GFX_INLINE void WRITE16(uint16_t d);
+  GFX_INLINE void DC_HIGH(void);
+  GFX_INLINE void DC_LOW(void);
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
 
   int8_t _dc, _cs, _wr, _rd;
   int8_t _d0, _d1, _d2, _d3, _d4, _d5, _d6, _d7;

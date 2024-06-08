@@ -47,14 +47,14 @@ public:
 
 protected:
   void flush_data_buf();
-  INLINE void WRITE8BIT(uint8_t d);
-  INLINE void WRITE9BIT(uint32_t d);
-  INLINE void DC_HIGH(void);
-  INLINE void DC_LOW(void);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
-  INLINE void POLL_START();
-  INLINE void POLL_END();
+  GFX_INLINE void WRITE8BIT(uint8_t d);
+  GFX_INLINE void WRITE9BIT(uint32_t d);
+  GFX_INLINE void DC_HIGH(void);
+  GFX_INLINE void DC_LOW(void);
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
+  GFX_INLINE void POLL_START();
+  GFX_INLINE void POLL_END();
 
 private:
   int8_t _dc, _cs;

@@ -43,8 +43,8 @@ public:
 
 protected:
 private:
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
 
   int8_t _dc, _cs, _wr, _rd;
   int8_t _d0, _d1, _d2, _d3, _d4, _d5, _d6, _d7;

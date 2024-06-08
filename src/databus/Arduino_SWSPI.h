@@ -28,21 +28,21 @@ public:
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 private:
-  INLINE void WRITE9BITCOMMAND(uint8_t c);
-  INLINE void WRITE9BITDATA(uint8_t d);
-  INLINE void WRITE(uint8_t d);
-  INLINE void WRITE16(uint16_t d);
-  INLINE void WRITE9BITREPEAT(uint16_t p, uint32_t len);
-  INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
-  INLINE void DC_HIGH(void);
-  INLINE void DC_LOW(void);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
-  INLINE void SPI_MOSI_HIGH(void);
-  INLINE void SPI_MOSI_LOW(void);
-  INLINE void SPI_SCK_HIGH(void);
-  INLINE void SPI_SCK_LOW(void);
-  INLINE bool SPI_MISO_READ(void);
+  GFX_INLINE void WRITE9BITCOMMAND(uint8_t c);
+  GFX_INLINE void WRITE9BITDATA(uint8_t d);
+  GFX_INLINE void WRITE(uint8_t d);
+  GFX_INLINE void WRITE16(uint16_t d);
+  GFX_INLINE void WRITE9BITREPEAT(uint16_t p, uint32_t len);
+  GFX_INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
+  GFX_INLINE void DC_HIGH(void);
+  GFX_INLINE void DC_LOW(void);
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
+  GFX_INLINE void SPI_MOSI_HIGH(void);
+  GFX_INLINE void SPI_MOSI_LOW(void);
+  GFX_INLINE void SPI_SCK_HIGH(void);
+  GFX_INLINE void SPI_SCK_LOW(void);
+  GFX_INLINE bool SPI_MISO_READ(void);
 
   int8_t _dc, _cs;
   int8_t _sck, _mosi, _miso;

@@ -55,10 +55,10 @@ public:
 
 protected:
 private:
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
-  INLINE void POLL_START();
-  INLINE void POLL_END();
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
+  GFX_INLINE void POLL_START();
+  GFX_INLINE void POLL_END();
 
   int8_t _cs, _sck, _mosi, _miso, _quadwp, _quadhd;
   bool _is_shared_interface;

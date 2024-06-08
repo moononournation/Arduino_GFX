@@ -908,9 +908,9 @@ void Arduino_ESP32SPI::flush_data_buf()
  * @brief WRITE8BIT
  *
  * @param d
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPI::WRITE8BIT(uint8_t d)
+GFX_INLINE void Arduino_ESP32SPI::WRITE8BIT(uint8_t d)
 {
   uint16_t idx = _data_buf_bit_idx >> 3;
   _buffer[idx] = d;
@@ -925,9 +925,9 @@ INLINE void Arduino_ESP32SPI::WRITE8BIT(uint8_t d)
  * @brief WRITE9BIT
  *
  * @param d
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPI::WRITE9BIT(uint32_t d)
+GFX_INLINE void Arduino_ESP32SPI::WRITE9BIT(uint32_t d)
 {
   uint16_t idx = _data_buf_bit_idx >> 3;
   uint8_t shift = (_data_buf_bit_idx % 8);
@@ -953,9 +953,9 @@ INLINE void Arduino_ESP32SPI::WRITE9BIT(uint32_t d)
 /**
  * @brief DC_HIGH
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPI::DC_HIGH(void)
+GFX_INLINE void Arduino_ESP32SPI::DC_HIGH(void)
 {
   *_dcPortSet = _dcPinMask;
 }
@@ -963,9 +963,9 @@ INLINE void Arduino_ESP32SPI::DC_HIGH(void)
 /**
  * @brief DC_LOW
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPI::DC_LOW(void)
+GFX_INLINE void Arduino_ESP32SPI::DC_LOW(void)
 {
   *_dcPortClr = _dcPinMask;
 }
@@ -973,9 +973,9 @@ INLINE void Arduino_ESP32SPI::DC_LOW(void)
 /**
  * @brief CS_HIGH
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPI::CS_HIGH(void)
+GFX_INLINE void Arduino_ESP32SPI::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -986,9 +986,9 @@ INLINE void Arduino_ESP32SPI::CS_HIGH(void)
 /**
  * @brief CS_LOW
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPI::CS_LOW(void)
+GFX_INLINE void Arduino_ESP32SPI::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -999,9 +999,9 @@ INLINE void Arduino_ESP32SPI::CS_LOW(void)
 /**
  * @brief POLL
  *
- * @return INLINE
+ * @return GFX_INLINE
  */
-INLINE void Arduino_ESP32SPI::POLL(uint32_t len)
+GFX_INLINE void Arduino_ESP32SPI::POLL(uint32_t len)
 {
 #if (CONFIG_IDF_TARGET_ESP32)
   _spi->dev->mosi_dlen.usr_mosi_dbitlen = len;

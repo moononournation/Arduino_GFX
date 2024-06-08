@@ -38,12 +38,12 @@ protected:
 private:
   void setDataPins(uint8_t mode);
   void writeData16(uint16_t d, uint32_t num = 1);
-  INLINE void WRITE16(uint16_t d);
-  INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
-  INLINE void DC_HIGH(void);
-  INLINE void DC_LOW(void);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
+  GFX_INLINE void WRITE16(uint16_t d);
+  GFX_INLINE void WRITEREPEAT(uint16_t p, uint32_t len);
+  GFX_INLINE void DC_HIGH(void);
+  GFX_INLINE void DC_LOW(void);
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
   int8_t _cs, _dc, _wr, _rd;
 };
 

@@ -736,7 +736,7 @@ void Arduino_SWPAR8::WRITEREPEAT(uint16_t p, uint32_t len)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_SWPAR8::DC_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::DC_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -753,7 +753,7 @@ INLINE void Arduino_SWPAR8::DC_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::DC_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::DC_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -770,7 +770,7 @@ INLINE void Arduino_SWPAR8::DC_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::CS_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -790,7 +790,7 @@ INLINE void Arduino_SWPAR8::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_SWPAR8::CS_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -810,7 +810,7 @@ INLINE void Arduino_SWPAR8::CS_LOW(void)
   }
 }
 
-INLINE void Arduino_SWPAR8::WR_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::WR_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -827,7 +827,7 @@ INLINE void Arduino_SWPAR8::WR_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::WR_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::WR_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -844,7 +844,7 @@ INLINE void Arduino_SWPAR8::WR_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D0_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::D0_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -861,7 +861,7 @@ INLINE void Arduino_SWPAR8::D0_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D0_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::D0_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -878,7 +878,7 @@ INLINE void Arduino_SWPAR8::D0_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D1_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::D1_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -895,7 +895,7 @@ INLINE void Arduino_SWPAR8::D1_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D1_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::D1_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -912,7 +912,7 @@ INLINE void Arduino_SWPAR8::D1_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D2_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::D2_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -929,7 +929,7 @@ INLINE void Arduino_SWPAR8::D2_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D2_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::D2_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -946,7 +946,7 @@ INLINE void Arduino_SWPAR8::D2_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D3_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::D3_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -963,7 +963,7 @@ INLINE void Arduino_SWPAR8::D3_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D3_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::D3_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -980,7 +980,7 @@ INLINE void Arduino_SWPAR8::D3_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D4_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::D4_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -997,7 +997,7 @@ INLINE void Arduino_SWPAR8::D4_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D4_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::D4_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -1014,7 +1014,7 @@ INLINE void Arduino_SWPAR8::D4_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D5_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::D5_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -1031,7 +1031,7 @@ INLINE void Arduino_SWPAR8::D5_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D5_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::D5_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -1048,7 +1048,7 @@ INLINE void Arduino_SWPAR8::D5_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D6_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::D6_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -1065,7 +1065,7 @@ INLINE void Arduino_SWPAR8::D6_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D6_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::D6_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -1082,7 +1082,7 @@ INLINE void Arduino_SWPAR8::D6_LOW(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D7_HIGH(void)
+GFX_INLINE void Arduino_SWPAR8::D7_HIGH(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)
@@ -1099,7 +1099,7 @@ INLINE void Arduino_SWPAR8::D7_HIGH(void)
 #endif // end !USE_FAST_PINIO
 }
 
-INLINE void Arduino_SWPAR8::D7_LOW(void)
+GFX_INLINE void Arduino_SWPAR8::D7_LOW(void)
 {
 #if defined(USE_FAST_PINIO)
 #if defined(HAS_PORT_SET_CLR)

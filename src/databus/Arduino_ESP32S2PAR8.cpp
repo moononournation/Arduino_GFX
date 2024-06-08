@@ -249,7 +249,7 @@ void Arduino_ESP32S2PAR8::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx,
   }
 }
 
-INLINE void Arduino_ESP32S2PAR8::WRITE(uint8_t d)
+GFX_INLINE void Arduino_ESP32S2PAR8::WRITE(uint8_t d)
 {
   *_dataPortClr = _dataClrMask;
   *_dataPortSet = d;
@@ -259,17 +259,17 @@ INLINE void Arduino_ESP32S2PAR8::WRITE(uint8_t d)
 
 /******** low level bit twiddling **********/
 
-INLINE void Arduino_ESP32S2PAR8::DC_HIGH(void)
+GFX_INLINE void Arduino_ESP32S2PAR8::DC_HIGH(void)
 {
   *_dcPortSet = _dcPinMask;
 }
 
-INLINE void Arduino_ESP32S2PAR8::DC_LOW(void)
+GFX_INLINE void Arduino_ESP32S2PAR8::DC_LOW(void)
 {
   *_dcPortClr = _dcPinMask;
 }
 
-INLINE void Arduino_ESP32S2PAR8::CS_HIGH(void)
+GFX_INLINE void Arduino_ESP32S2PAR8::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -277,7 +277,7 @@ INLINE void Arduino_ESP32S2PAR8::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_ESP32S2PAR8::CS_LOW(void)
+GFX_INLINE void Arduino_ESP32S2PAR8::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
