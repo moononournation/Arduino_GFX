@@ -12,6 +12,7 @@
 // #include <demos/lv_demos.h>
 
 // #define DIRECT_MODE // Uncomment to enable full frame buffer
+// #define RGB_PANEL
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
@@ -235,7 +236,7 @@ void loop()
 #ifdef RGB_PANEL
   gfx->flush();
 #else
-  gfx->draw16bitRGBBitmap(0, 0, (uint16_t *)draw_buf, screenWidth, screenHeight);
+  gfx->draw16bitRGBBitmap(0, 0, (uint16_t *)disp_draw_buf, screenWidth, screenHeight);
 #endif
 #endif // #ifdef DIRECT_MODE
 
