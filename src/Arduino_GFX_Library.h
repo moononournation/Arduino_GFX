@@ -38,6 +38,7 @@
 #include "databus/Arduino_Wire.h"
 #include "databus/Arduino_XL9535SWSPI.h"
 #include "databus/Arduino_XCA9554SWSPI.h"
+#include "databus/Arduino_HWSPI_NoDC.h"
 
 #include "Arduino_GFX.h" // Core graphics library
 #if !defined(LITTLE_FOOT_PRINT)

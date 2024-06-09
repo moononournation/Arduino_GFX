@@ -4,13 +4,9 @@ Arduino_GFX is a Arduino graphics library supporting various displays with vario
 
 This library start rewrite from Adafruit_GFX, LovyanGFX, TFT_eSPI, Ucglib, and more...
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/moononournation/Arduino_GFX)
-![GitHub Release Date](https://img.shields.io/github/release-date/moononournation/Arduino_GFX)
-![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/moononournation/Arduino_GFX/latest)
-![GitHub last commit](https://img.shields.io/github/last-commit/moononournation/Arduino_GFX)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/moononournation/Arduino_GFX)![GitHub Release Date](https://img.shields.io/github/release-date/moononournation/Arduino_GFX)![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/moononournation/Arduino_GFX/latest)![GitHub last commit](https://img.shields.io/github/last-commit/moononournation/Arduino_GFX)
 
-![GitHub Sponsors](https://img.shields.io/github/sponsors/moononournation)
-![Twitter Follow](https://img.shields.io/twitter/follow/moononournation)
+![GitHub Sponsors](https://img.shields.io/github/sponsors/moononournation)![Twitter Follow](https://img.shields.io/twitter/follow/moononournation)
 
 ## Ease of use
 
@@ -55,7 +51,6 @@ If you are using below listed support dev device, simply select the Arduino_GFX_
 If you are not using supported dev device:
 
 - Default DataBus is using Arduino SPI. Other DataBus can modify in Arduino_GFX_databus.h.
-
 - Default Display is using ILI9341 LCD. Other Display can modify in Arduino_GFX_display.h.
 
 ## More Details
@@ -225,23 +220,23 @@ Below are some figures compare with other 3 Arduino common display libraries.
 * SPI Frequency: 40MHz
 * Test time: 2021 Jun 16
 
-| Benchmark          |  Adafruit_GFX | *Arduino_GFX* |    Lovyan_GFX |      TFT_eSPI |
-| ------------------ | ------------- | ------------- | ------------- | ------------- |
-| Screen fill        |       195,782 |     *160,094* |       154,341 |       155,938 |
-| Text               |        97,662 |      *18,960* |        22,473 |        21,752 |
-| Pixels             |     1,365,211 |     *903,549* |       867,702 |       775,781 |
-| Lines              |     1,062,311 |     *412,026* |       269,060 |       264,950 |
-| Horiz/Vert Lines   |        17,637 |      *14,197* |        13,692 |        13,833 |
-| Rectangles-filled  |       406,817 |     *332,696* |       320,761 |       323,908 |
-| Rectangles         |        11,641 |       *9,254* |         8,545 |         8,714 |
-| Triangles-filled   |       150,941 |     *118,010* |       105,661 |       109,675 |
-| Triangles          |        58,843 |      *23,570* |        15,884 |        16,277 |
-| Circles-filled     |        76,739 |      *52,170* |        42,787 |        45,827 |
-| Circles            |       118,125 |      *40,955* |        25,959 |        25,269 |
-| Arcs-filled        |      N/A      |      *33,381* |        21,546 |      N/A      |
-| Arcs               |      N/A      |      *66,054* |        47,901 |      N/A      |
-| Rounded rects-fill |       408,534 |     *338,136* |       318,882 |       323,189 |
-| Rounded rects      |        43,185 |      *21,562* |        13,089 |        15,371 |
+| Benchmark          | Adafruit_GFX | *Arduino_GFX* | Lovyan_GFX | TFT_eSPI |
+|--------------------|--------------|-------------|------------|----------|
+| Screen fill        | 195,782      | *160,094*     | 154,341    | 155,938  |
+| Text               | 97,662       | *18,960*      | 22,473     | 21,752   |
+| Pixels             | 1,365,211    | *903,549*     | 867,702    | 775,781  |
+| Lines              | 1,062,311    | *412,026*     | 269,060    | 264,950  |
+| Horiz/Vert Lines   | 17,637       | *14,197*      | 13,692     | 13,833   |
+| Rectangles-filled  | 406,817      | *332,696*     | 320,761    | 323,908  |
+| Rectangles         | 11,641       | *9,254*       | 8,545      | 8,714    |
+| Triangles-filled   | 150,941      | *118,010*     | 105,661    | 109,675  |
+| Triangles          | 58,843       | *23,570*      | 15,884     | 16,277   |
+| Circles-filled     | 76,739       | *52,170*      | 42,787     | 45,827   |
+| Circles            | 118,125      | *40,955*      | 25,959     | 25,269   |
+| Arcs-filled        | N/A          | *33,381*      | 21,546     | N/A      |
+| Arcs               | N/A          | *66,054*      | 47,901     | N/A      |
+| Rounded rects-fill | 408,534      | *338,136*     | 318,882    | 323,189  |
+| Rounded rects      | 43,185       | *21,562*      | 13,089     | 15,371   |
 
 ### Why Run Fast?
 
@@ -332,14 +327,14 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 * ESP32S3-2.1-TP
 * [ESPboy](https://www.espboy.com) [[demo video](https://youtu.be/Cx82XWrc8-0)]
 * [LILYGO T-Deck](https://www.lilygo.cc/products/t-deck) [[demo video](https://youtube.com/shorts/fXKTVqjUoPM)]
-* [LILYGO T-Display](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
+* [LILYGO T-Display](https://www.lilygo.cc/products/lilygo%C2%AE-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
 * [LILYGO T-Display-S3](https://www.lilygo.cc/products/t-display-s3) [[demo video](https://youtu.be/kpRC64QNQAo)]
 * [LILYGO T-Display-S3 AMOLED](https://www.lilygo.cc/products/t-display-s3-amoled) [[demo video](https://youtu.be/NvOGJAMlh1M)]
 * [T-Display S3 Long](https://www.lilygo.cc/products/t-display-s3-long)[[LVGL demo video](https://youtu.be/OuxLFwxvcVc)]
 * [LILYGO T-Display-s3-Pro](https://www.lilygo.cc/products/t-display-s3-pro) [[demo video](https://youtube.com/shorts/PE-GKTzbdP8)]
 * [LILYGO T-QT](https://www.lilygo.cc/products/t-qt-v1-1) [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM)]
 * [LILYGO T-RGB](https://www.lilygo.cc/products/t-rgb) [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
-* [LILYGO T-Track](https://www.lilygo.cc/products/t-track) [[demo video](https://youtu.be/6wmUhp-5eMg)][[LVGL demo video](https://youtu.be/wQjMu5JZSkg)]
+* [LILYGO T-Track](https://www.lilygo.cc/products/t-track) [[demo video](https://youtu.be/6wmUhp-5eMg)\]\[[LVGL demo video](https://youtu.be/wQjMu5JZSkg)]
 * [LILYGO T-Watch](http://www.lilygo.cn/prod_view.aspx?TypeId=50053&Id=1123)
 * [LILYGO T-Watch 2021](https://www.lilygo.cc/products/t-watch-2021)
 * [LILYGO T4 S3](https://www.lilygo.cc/products/t4-s3)[[LVGL demo video](https://youtu.be/h4vXEYrDERM)]
@@ -389,7 +384,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 * ILI9486 320x480 (18 bit color) [[demo video](https://youtu.be/pZ6izDqmVds)]
 * ILI9488 320x480 (3 bit color with canvas) [[demo video](https://youtu.be/r7be0WbIBYk)]
 * ILI9488 320x480 (18 bit color) [[demo video](https://youtu.be/NkE-LhtLHBQ)]
-* ILI9806 (8-bit/16-bit Parallel) 480x854 [[demo video](https://youtu.be/mYv-wdtWr8s)] [[LVGL demo video](https://youtu.be/PqjV8lovg_c)][[2](https://youtu.be/j31KZoQUKis)]
+* ILI9806 (8-bit/16-bit Parallel) 480x854 [[demo video](https://youtu.be/mYv-wdtWr8s)] [[LVGL demo video](https://youtu.be/PqjV8lovg_c)\]\[[2](https://youtu.be/j31KZoQUKis)]
 * JBT6K71 240x320 (8-bit Parallel) [[demo video](https://youtu.be/qid3F4Gb0mM)]
 * NT35310 320x480 [[demo video](https://youtu.be/bvIz5CoYPNk)]
 * NT35510 480x800 (8-bit/16-bit Parallel) [[demo video](https://youtu.be/C_1ASzUN3bg)]

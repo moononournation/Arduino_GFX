@@ -133,6 +133,20 @@ void Arduino_DataBus::batchOperation(const uint8_t *operations, size_t len)
   }
 }
 
+#if defined(INCLUDE_READ_OPERATIONS)
+
+uint8_t Arduino_DataBus::receive(uint8_t commandByte, uint8_t index)
+{
+  return 0;
+}
+
+uint16_t Arduino_DataBus::receive16(uint16_t addr)
+{
+  return 0;
+}
+
+#endif // defined(INCLUDE_READ_OPERATIONS)
+
 #if !defined(LITTLE_FOOT_PRINT)
 void Arduino_DataBus::writePattern(uint8_t *data, uint8_t len, uint32_t repeat)
 {

@@ -29,7 +29,7 @@
 #include "font/u8g2_font_unifont_t_cjk.h"
 #endif
 
-#define RGB565(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
+#define RGB565(r, g, b) ((((r)&0xF8) << 8) | (((g)&0xFC) << 3) | ((b) >> 3))
 #define RGB16TO24(c) ((((uint32_t)c & 0xF800) << 8) | ((c & 0x07E0) << 5) | ((c & 0x1F) << 3))
 
 #define RGB565_BLACK RGB565(0, 0, 0)
@@ -206,9 +206,9 @@ public:
   void writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
   void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
   void fillScreen(uint16_t color);
-  void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
+  virtual void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
   void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-  void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+  virtual void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
   void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
   void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
   void fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
@@ -222,9 +222,9 @@ public:
   void draw16bitRGBBitmapWithMask(int16_t x, int16_t y, const uint16_t bitmap[], const uint8_t mask[], int16_t w, int16_t h);
   void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], const uint8_t mask[], int16_t w, int16_t h);
   void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h);
-  void getTextBounds(const char *string, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
-  void getTextBounds(const __FlashStringHelper *s, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
-  void getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
+  void getTextBounds(const char *string, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h, bool clip = true);
+  void getTextBounds(const __FlashStringHelper *s, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h, bool clip = true);
+  void getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h, bool clip = true);
   void setTextSize(uint8_t s);
   void setTextSize(uint8_t sx, uint8_t sy);
   void setTextSize(uint8_t sx, uint8_t sy, uint8_t pixel_margin);
@@ -309,10 +309,18 @@ public:
   */
   void setTextBound(int16_t x, int16_t y, int16_t w, int16_t h)
   {
-    _min_text_x = x;
-    _min_text_y = y;
+    _min_text_x = (x < 0) ? 0 : x;
+    _min_text_y = (y < 0) ? 0 : y;
     _max_text_x = x + w - 1;
+    if (_max_text_x > _max_x)
+    {
+      _max_text_x = _max_x;
+    }
     _max_text_y = y + h - 1;
+    if (_max_text_y > _max_y)
+    {
+      _max_text_y = _max_y;
+    }
   }
 
   /**********************************************************************/

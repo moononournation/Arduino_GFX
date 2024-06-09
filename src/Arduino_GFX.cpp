@@ -2266,7 +2266,7 @@ size_t Arduino_GFX::write(uint8_t c)
     else if (c != '\r') // Not a carriage return; is normal char
     {
       uint16_t first = pgm_read_word(&gfxFont->first),
-               last = pgm_read_word(&gfxFont->last);
+              last = pgm_read_word(&gfxFont->last);
       if ((c >= first) && (c <= last)) // Char present in this font?
       {
         GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c - first);
@@ -2883,17 +2883,19 @@ void Arduino_GFX::charBounds(char c, int16_t *x, int16_t *y,
 /**************************************************************************/
 /*!
   @brief  Helper to determine size of a string with current font/size. Pass string and a cursor position, returns UL corner and W,H.
-  @param  str The ascii string to measure
-  @param  x   The current cursor X
-  @param  y   The current cursor Y
-  @param  x1  The boundary X coordinate, set by function
-  @param  y1  The boundary Y coordinate, set by function
-  @param  w   The boundary width, set by function
-  @param  h   The boundary height, set by function
+  @param  str  The ascii string to measure
+  @param  x    The current cursor X
+  @param  y    The current cursor Y
+  @param  x1   The boundary X coordinate, set by function
+  @param  y1   The boundary Y coordinate, set by function
+  @param  w    The boundary width, set by function
+  @param  h    The boundary height, set by function
+  @param  clip Whether to limit the result to the screen size (default is true)
 */
 /**************************************************************************/
 void Arduino_GFX::getTextBounds(const char *str, int16_t x, int16_t y,
-                                int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h)
+                                int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h,
+                                bool clip)
 {
   uint8_t c; // Current character
 
@@ -2901,60 +2903,66 @@ void Arduino_GFX::getTextBounds(const char *str, int16_t x, int16_t y,
   *y1 = y;
   *w = *h = 0;
 
-  int16_t minx = _max_text_x, miny = _max_text_y, maxx = _min_text_x, maxy = _min_text_y;
+  int16_t minx = _width, miny = _height, maxx = -1, maxy = -1;
 
   while ((c = *str++))
   {
     charBounds(c, &x, &y, &minx, &miny, &maxx, &maxy);
   }
 
-  if (maxx >= minx)
-  {
-    *x1 = minx;
-    *w = maxx - minx + 1;
-  }
-  if (maxy >= miny)
-  {
-    *y1 = miny;
-    *h = maxy - miny + 1;
+  if (clip) {
+    if (maxx >= minx)
+    {
+      *x1 = minx;
+      *w = maxx - minx + 1;
+    }
+    if (maxy >= miny)
+    {
+      *y1 = miny;
+      *h = maxy - miny + 1;
+    }
   }
 }
 
 /**************************************************************************/
 /*!
   @brief  Helper to determine size of a string with current font/size. Pass string and a cursor position, returns UL corner and W,H.
-  @param  str The ascii string to measure (as an arduino String() class)
-  @param  x   The current cursor X
-  @param  y   The current cursor Y
-  @param  x1  The boundary X coordinate, set by function
-  @param  y1  The boundary Y coordinate, set by function
-  @param  w   The boundary width, set by function
-  @param  h   The boundary height, set by function
+  @param  str  The ascii string to measure (as an arduino String() class)
+  @param  x    The current cursor X
+  @param  y    The current cursor Y
+  @param  x1   The boundary X coordinate, set by function
+  @param  y1   The boundary Y coordinate, set by function
+  @param  w    The boundary width, set by function
+  @param  h    The boundary height, set by function
+  @param  clip Whether to limit the result to the screen size (default is true)
 */
 /**************************************************************************/
 void Arduino_GFX::getTextBounds(const String &str, int16_t x, int16_t y,
-                                int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h)
+                                int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h,
+                                bool clip)
 {
   if (str.length() != 0)
   {
-    getTextBounds(const_cast<char *>(str.c_str()), x, y, x1, y1, w, h);
+    getTextBounds(const_cast<char *>(str.c_str()), x, y, x1, y1, w, h, clip);
   }
 }
 
 /**************************************************************************/
 /*!
   @brief  Helper to determine size of a PROGMEM string with current font/size. Pass string and a cursor position, returns UL corner and W,H.
-  @param  str The flash-memory ascii string to measure
-  @param  x   The current cursor X
-  @param  y   The current cursor Y
-  @param  x1  The boundary X coordinate, set by function
-  @param  y1  The boundary Y coordinate, set by function
-  @param  w   The boundary width, set by function
-  @param  h   The boundary height, set by function
+  @param  str  The flash-memory ascii string to measure
+  @param  x    The current cursor X
+  @param  y    The current cursor Y
+  @param  x1   The boundary X coordinate, set by function
+  @param  y1   The boundary Y coordinate, set by function
+  @param  w    The boundary width, set by function
+  @param  h    The boundary height, set by function
+  @param  clip Whether to limit the result to the screen size (default is true)
 */
 /**************************************************************************/
 void Arduino_GFX::getTextBounds(const __FlashStringHelper *str,
-                                int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h)
+                                int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h,
+                                bool clip)
 {
   uint8_t *s = (uint8_t *)str, c;
 
@@ -2962,20 +2970,22 @@ void Arduino_GFX::getTextBounds(const __FlashStringHelper *str,
   *y1 = y;
   *w = *h = 0;
 
-  int16_t minx = _max_text_x, miny = _max_text_y, maxx = _min_text_x, maxy = _min_text_y;
+  int16_t minx = _width, miny = _height, maxx = -1, maxy = -1;
 
   while ((c = pgm_read_byte(s++)))
     charBounds(c, &x, &y, &minx, &miny, &maxx, &maxy);
 
-  if (maxx >= minx)
-  {
-    *x1 = minx;
-    *w = maxx - minx + 1;
-  }
-  if (maxy >= miny)
-  {
-    *y1 = miny;
-    *h = maxy - miny + 1;
+  if (clip) {
+    if (maxx >= minx)
+    {
+      *x1 = minx;
+      *w = maxx - minx + 1;
+    }
+    if (maxy >= miny)
+    {
+      *y1 = miny;
+      *h = maxy - miny + 1;
+    }
   }
 }
 

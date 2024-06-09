@@ -7,6 +7,8 @@
 
 #include <Arduino.h>
 
+#define INCLUDE_READ_OPERATIONS 1
+
 #include "YCbCr2RGB.h"
 
 #define GFX_SKIP_OUTPUT_BEGIN -2
@@ -297,6 +299,11 @@ public:
 #else
   void batchOperation(const uint8_t *operations, size_t len);
 #endif // !defined(LITTLE_FOOT_PRINT)
+
+#if defined(INCLUDE_READ_OPERATIONS)
+  virtual uint8_t receive(uint8_t commandByte, uint8_t index = 1);
+  virtual uint16_t receive16(uint16_t addr);
+#endif // defined(INCLUDE_READ_OPERATIONS)
 
 protected:
   int32_t _speed;
