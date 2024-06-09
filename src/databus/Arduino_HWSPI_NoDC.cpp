@@ -365,7 +365,7 @@ void Arduino_HWSPI_NoDC::writePattern(uint8_t *data, uint8_t len, uint32_t repea
 
 #endif // !defined(LITTLE_FOOT_PRINT)
 
-#if defined(INCLUDE_READ_OPERATIONS)
+#if defined(ARDUINO_GFX_INC_READ_OPERATIONS)
 
 uint8_t Arduino_HWSPI_NoDC::receive(uint8_t commandByte, uint8_t index)
 {
@@ -392,12 +392,12 @@ uint16_t Arduino_HWSPI_NoDC::receive16(uint16_t addr)
 }
 
 
-#endif // defined(INCLUDE_READ_OPERATIONS)
+#endif // defined(ARDUINO_GFX_INC_READ_OPERATIONS)
 
 
 #if !defined(LITTLE_FOOT_PRINT)
 
-INLINE uint16_t Arduino_HWSPI_NoDC::WRITE16(uint16_t d)
+GFX_INLINE uint16_t Arduino_HWSPI_NoDC::WRITE16(uint16_t d)
 {
 #if defined(ESP8266) || defined(ESP32)
   _spi->write16(d);
@@ -418,7 +418,7 @@ INLINE uint16_t Arduino_HWSPI_NoDC::WRITE16(uint16_t d)
 #endif
 }
 
-INLINE void Arduino_HWSPI_NoDC::WRITEBUF(uint8_t *buf, size_t count)
+GFX_INLINE void Arduino_HWSPI_NoDC::WRITEBUF(uint8_t *buf, size_t count)
 {
   for(size_t i=0;i<count;i++)
   {
@@ -438,7 +438,7 @@ INLINE void Arduino_HWSPI_NoDC::WRITEBUF(uint8_t *buf, size_t count)
 /******** low level bit twiddling **********/
 
 
-INLINE void Arduino_HWSPI_NoDC::CS_HIGH(void)
+GFX_INLINE void Arduino_HWSPI_NoDC::CS_HIGH(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {
@@ -458,7 +458,7 @@ INLINE void Arduino_HWSPI_NoDC::CS_HIGH(void)
   }
 }
 
-INLINE void Arduino_HWSPI_NoDC::CS_LOW(void)
+GFX_INLINE void Arduino_HWSPI_NoDC::CS_LOW(void)
 {
   if (_cs != GFX_NOT_DEFINED)
   {

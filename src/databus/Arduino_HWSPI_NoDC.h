@@ -45,16 +45,16 @@ public:
   void writePattern(uint8_t *data, uint8_t len, uint32_t repeat) override;
 #endif // !defined(LITTLE_FOOT_PRINT)
 
-#if defined(INCLUDE_READ_OPERATIONS)
+#if defined(ARDUINO_GFX_INC_READ_OPERATIONS)
   uint8_t receive(uint8_t commandByte, uint8_t index = 0) override;
   uint16_t receive16(uint16_t addr) override;
-#endif
+#endif // defined(ARDUINO_GFX_INC_READ_OPERATIONS)
 
 private:
-  INLINE uint16_t WRITE16(uint16_t d);
-  INLINE void WRITEBUF(uint8_t *buf, size_t count);
-  INLINE void CS_HIGH(void);
-  INLINE void CS_LOW(void);
+  GFX_INLINE uint16_t WRITE16(uint16_t d);
+  GFX_INLINE void WRITEBUF(uint8_t *buf, size_t count);
+  GFX_INLINE void CS_HIGH(void);
+  GFX_INLINE void CS_LOW(void);
 
 
   int8_t _cs;

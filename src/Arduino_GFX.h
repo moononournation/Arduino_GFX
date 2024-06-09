@@ -29,7 +29,7 @@
 #include "font/u8g2_font_unifont_t_cjk.h"
 #endif
 
-#define RGB565(r, g, b) ((((r)&0xF8) << 8) | (((g)&0xFC) << 3) | ((b) >> 3))
+#define RGB565(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 #define RGB16TO24(c) ((((uint32_t)c & 0xF800) << 8) | ((c & 0x07E0) << 5) | ((c & 0x1F) << 3))
 
 #define RGB565_BLACK RGB565(0, 0, 0)
@@ -199,35 +199,35 @@ public:
   // These MAY be overridden by the subclass to provide device-specific
   // optimized code.  Otherwise 'generic' versions are used.
   // It's good to implement those, even if using transaction API
-  void writePixel(int16_t x, int16_t y, uint16_t color);
-  void drawPixel(int16_t x, int16_t y, uint16_t color);
-  void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-  void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-  void writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-  void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-  void fillScreen(uint16_t color);
+  virtual void writePixel(int16_t x, int16_t y, uint16_t color);
+  virtual void drawPixel(int16_t x, int16_t y, uint16_t color);
+  virtual void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
+  virtual void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+  virtual void writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+  virtual void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+  virtual void fillScreen(uint16_t color);
   virtual void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
-  void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+  virtual void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
   virtual void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
-  void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
-  void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
-  void fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
-  void drawRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color);
-  void fillRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color);
-  void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color);
-  void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
-  void drawXBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color);
-  void drawGrayscaleBitmap(int16_t x, int16_t y, const uint8_t bitmap[], const uint8_t mask[], int16_t w, int16_t h);
-  void drawGrayscaleBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h);
-  void draw16bitRGBBitmapWithMask(int16_t x, int16_t y, const uint16_t bitmap[], const uint8_t mask[], int16_t w, int16_t h);
-  void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], const uint8_t mask[], int16_t w, int16_t h);
-  void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h);
-  void getTextBounds(const char *string, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h, bool clip = true);
-  void getTextBounds(const __FlashStringHelper *s, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h, bool clip = true);
-  void getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h, bool clip = true);
-  void setTextSize(uint8_t s);
-  void setTextSize(uint8_t sx, uint8_t sy);
-  void setTextSize(uint8_t sx, uint8_t sy, uint8_t pixel_margin);
+  virtual void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+  virtual void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
+  virtual void fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
+  virtual void drawRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color);
+  virtual void fillRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color);
+  virtual void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color);
+  virtual void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
+  virtual void drawXBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color);
+  virtual void drawGrayscaleBitmap(int16_t x, int16_t y, const uint8_t bitmap[], const uint8_t mask[], int16_t w, int16_t h);
+  virtual void drawGrayscaleBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h);
+  virtual void draw16bitRGBBitmapWithMask(int16_t x, int16_t y, const uint16_t bitmap[], const uint8_t mask[], int16_t w, int16_t h);
+  virtual void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], const uint8_t mask[], int16_t w, int16_t h);
+  virtual void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h);
+  virtual void getTextBounds(const char *string, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
+  virtual void getTextBounds(const __FlashStringHelper *s, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
+  virtual void getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
+  virtual void setTextSize(uint8_t s);
+  virtual void setTextSize(uint8_t sx, uint8_t sy);
+  virtual void setTextSize(uint8_t sx, uint8_t sy, uint8_t pixel_margin);
 
 #if !defined(ATTINY_CORE)
   void setFont(const GFXfont *f = NULL);
@@ -243,13 +243,13 @@ public:
 #endif // !defined(ATTINY_CORE)
 
   // adopt from LovyanGFX
-  void drawEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color);
-  void writeEllipseHelper(int32_t x, int32_t y, int32_t rx, int32_t ry, uint8_t cornername, uint16_t color);
-  void fillEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color);
-  void writeFillEllipseHelper(int32_t x, int32_t y, int32_t rx, int32_t ry, uint8_t cornername, int16_t delta, uint16_t color);
-  void drawArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color);
-  void fillArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color);
-  void writeFillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t iradius, float start, float end, uint16_t color);
+  virtual void drawEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color);
+  virtual void writeEllipseHelper(int32_t x, int32_t y, int32_t rx, int32_t ry, uint8_t cornername, uint16_t color);
+  virtual void fillEllipse(int16_t x, int16_t y, int16_t rx, int16_t ry, uint16_t color);
+  virtual void writeFillEllipseHelper(int32_t x, int32_t y, int32_t rx, int32_t ry, uint8_t cornername, int16_t delta, uint16_t color);
+  virtual void drawArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color);
+  virtual void fillArc(int16_t x, int16_t y, int16_t r1, int16_t r2, float start, float end, uint16_t color);
+  virtual void writeFillArcHelper(int16_t cx, int16_t cy, int16_t oradius, int16_t iradius, float start, float end, uint16_t color);
 
 // TFT optimization code, too big for ATMEL family
 #if defined(LITTLE_FOOT_PRINT)
@@ -309,18 +309,10 @@ public:
   */
   void setTextBound(int16_t x, int16_t y, int16_t w, int16_t h)
   {
-    _min_text_x = (x < 0) ? 0 : x;
-    _min_text_y = (y < 0) ? 0 : y;
+    _min_text_x = x;
+    _min_text_y = y;
     _max_text_x = x + w - 1;
-    if (_max_text_x > _max_x)
-    {
-      _max_text_x = _max_x;
-    }
     _max_text_y = y + h - 1;
-    if (_max_text_y > _max_y)
-    {
-      _max_text_y = _max_y;
-    }
   }
 
   /**********************************************************************/
