@@ -79,16 +79,15 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false 
  ******************************************************************************/
 #include "touch.h"
 
-/* Change to your screen resolution */
-static uint32_t screenWidth;
-static uint32_t screenHeight;
-static uint32_t bufSize;
-static lv_disp_draw_buf_t draw_buf;
-static lv_color_t *disp_draw_buf;
-static lv_disp_drv_t disp_drv;
+uint32_t screenWidth;
+uint32_t screenHeight;
+uint32_t bufSize;
+lv_disp_draw_buf_t draw_buf;
+lv_color_t *disp_draw_buf;
+lv_disp_drv_t disp_drv;
 
 /* Display flushing */
-void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
+void my_disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p)
 {
 #ifndef DIRECT_MODE
   uint32_t w = (area->x2 - area->x1 + 1);
@@ -101,10 +100,11 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
 #endif
 #endif // #ifndef DIRECT_MODE
 
-  lv_disp_flush_ready(disp);
+  lv_disp_flush_ready(disp_drv);
 }
 
-void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
+/*Read the touchpad*/
+void my_touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data)
 {
   if (touch_has_signal())
   {
@@ -132,7 +132,9 @@ void setup()
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
   // while(!Serial);
-  Serial.println("Arduino_GFX LVGL Benchmark example");
+  Serial.print("Arduino_GFX LVGL Benchmark example ");
+  String LVGL_Arduino = String('V') + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
+  Serial.println(LVGL_Arduino);
 
 #ifdef GFX_EXTRA_PRE_INIT
   GFX_EXTRA_PRE_INIT();
@@ -165,15 +167,20 @@ void setup()
 #endif
 
 #ifdef ESP32
-  disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * bufSize, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+#if defined(DIRECT_MODE) && (defined(CANVAS) || defined(RGB_PANEL))
+  disp_draw_buf = (lv_color_t *)gfx->getFramebuffer();
+#else  // !(defined(DIRECT_MODE) && (defined(CANVAS) || defined(RGB_PANEL)))
+  disp_draw_buf = (lv_color_t *)heap_caps_malloc(bufSize * 2, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
   if (!disp_draw_buf)
   {
     // remove MALLOC_CAP_INTERNAL flag try again
-    disp_draw_buf = (lv_color_t *)heap_caps_malloc(sizeof(lv_color_t) * bufSize, MALLOC_CAP_8BIT);
+    disp_draw_buf = (lv_color_t *)heap_caps_malloc(bufSize * 2, MALLOC_CAP_8BIT);
   }
-#else
-  disp_draw_buf = (lv_color_t *)malloc(sizeof(lv_color_t) * bufSize);
-#endif
+#endif // !(defined(DIRECT_MODE) && (defined(CANVAS) || defined(RGB_PANEL)))
+#else  // !ESP32
+  Serial.println("LVGL disp_draw_buf heap_caps_malloc failed! malloc again...");
+  disp_draw_buf = (lv_color_t *)malloc(bufSize * 2);
+#endif // !ESP32
   if (!disp_draw_buf)
   {
     Serial.println("LVGL disp_draw_buf allocate failed!");
@@ -202,9 +209,9 @@ void setup()
     lv_indev_drv_register(&indev_drv);
 
     lv_demo_benchmark();
-
-    Serial.println("Setup done");
   }
+
+  Serial.println("Setup done");
 }
 
 void loop()
@@ -212,16 +219,20 @@ void loop()
   lv_timer_handler(); /* let the GUI do its work */
 
 #ifdef DIRECT_MODE
+#if defined(CANVAS) || defined(RGB_PANEL)
+  gfx->flush();
+#else // !(defined(CANVAS) || defined(RGB_PANEL))
 #if (LV_COLOR_16_SWAP != 0)
   gfx->draw16bitBeRGBBitmap(0, 0, (uint16_t *)disp_draw_buf, screenWidth, screenHeight);
 #else
   gfx->draw16bitRGBBitmap(0, 0, (uint16_t *)disp_draw_buf, screenWidth, screenHeight);
 #endif
-#endif // #ifdef DIRECT_MODE
-
+#endif // !(defined(CANVAS) || defined(RGB_PANEL))
+#else  // !DIRECT_MODE
 #ifdef CANVAS
   gfx->flush();
 #endif
+#endif // !DIRECT_MODE
 
   delay(5);
 }
