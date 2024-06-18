@@ -238,64 +238,71 @@ void Arduino_Canvas::drawIndexedBitmap(
     int16_t x, int16_t y,
     uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h, int16_t x_skip)
 {
-  if (
-      ((x + w - 1) < 0) || // Outside left
-      ((y + h - 1) < 0) || // Outside top
-      (x > _max_x) ||      // Outside right
-      (y > _max_y)         // Outside bottom
-  )
+  if (_rotation > 0)
   {
-    return;
+    Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, w, h, x_skip);
   }
   else
   {
-    if ((y + h - 1) > _max_y)
+    if (
+        ((x + w - 1) < 0) || // Outside left
+        ((y + h - 1) < 0) || // Outside top
+        (x > _max_x) ||      // Outside right
+        (y > _max_y)         // Outside bottom
+    )
     {
-      h -= (y + h - 1) - _max_y;
+      return;
     }
-    if (y < 0)
+    else
     {
-      bitmap -= y * (w + x_skip);
-      h += y;
-      y = 0;
-    }
-    if ((x + w - 1) > _max_x)
-    {
-      x_skip += (x + w - 1) - _max_x;
-      w -= (x + w - 1) - _max_x;
-    }
-    if (x < 0)
-    {
-      bitmap -= x;
-      x_skip -= x;
-      w += x;
-      x = 0;
-    }
-    uint16_t *row = _framebuffer;
-    row += y * _width;
-    row += x;
-    int16_t i;
-    int16_t wi;
-    while (h--)
-    {
-      i = 0;
-      wi = w;
-      while (wi >= 4)
+      if ((y + h - 1) > _max_y)
       {
-        uint32_t b32 = *((uint32_t *)bitmap);
-        row[i++] = color_index[(b32 & 0xff)];
-        row[i++] = color_index[(b32 & 0xff00) >> 8];
-        row[i++] = color_index[(b32 & 0xff0000) >> 16];
-        row[i++] = color_index[(b32 & 0xff000000) >> 24];
-        wi -= 4;
-        bitmap += 4;
+        h -= (y + h - 1) - _max_y;
       }
-      while (i < w)
+      if (y < 0)
       {
-        row[i++] = color_index[*bitmap++];
+        bitmap -= y * (w + x_skip);
+        h += y;
+        y = 0;
       }
-      bitmap += x_skip;
-      row += _width;
+      if ((x + w - 1) > _max_x)
+      {
+        x_skip += (x + w - 1) - _max_x;
+        w -= (x + w - 1) - _max_x;
+      }
+      if (x < 0)
+      {
+        bitmap -= x;
+        x_skip -= x;
+        w += x;
+        x = 0;
+      }
+      uint16_t *row = _framebuffer;
+      row += y * _width;
+      row += x;
+      int16_t i;
+      int16_t wi;
+      while (h--)
+      {
+        i = 0;
+        wi = w;
+        while (wi >= 4)
+        {
+          uint32_t b32 = *((uint32_t *)bitmap);
+          row[i++] = color_index[(b32 & 0xff)];
+          row[i++] = color_index[(b32 & 0xff00) >> 8];
+          row[i++] = color_index[(b32 & 0xff0000) >> 16];
+          row[i++] = color_index[(b32 & 0xff000000) >> 24];
+          wi -= 4;
+          bitmap += 4;
+        }
+        while (i < w)
+        {
+          row[i++] = color_index[*bitmap++];
+        }
+        bitmap += x_skip;
+        row += _width;
+      }
     }
   }
 }
@@ -304,90 +311,97 @@ void Arduino_Canvas::drawIndexedBitmap(
     int16_t x, int16_t y,
     uint8_t *bitmap, uint16_t *color_index, uint8_t chroma_key, int16_t w, int16_t h, int16_t x_skip)
 {
-  if (
-      ((x + w - 1) < 0) || // Outside left
-      ((y + h - 1) < 0) || // Outside top
-      (x > _max_x) ||      // Outside right
-      (y > _max_y)         // Outside bottom
-  )
+  if (_rotation > 0)
   {
-    return;
+    Arduino_GFX::drawIndexedBitmap(x, y, bitmap, color_index, chroma_key, w, h, x_skip);
   }
   else
   {
-    if ((y + h - 1) > _max_y)
+    if (
+        ((x + w - 1) < 0) || // Outside left
+        ((y + h - 1) < 0) || // Outside top
+        (x > _max_x) ||      // Outside right
+        (y > _max_y)         // Outside bottom
+    )
     {
-      h -= (y + h - 1) - _max_y;
+      return;
     }
-    if (y < 0)
+    else
     {
-      bitmap -= y * (w + x_skip);
-      h += y;
-      y = 0;
-    }
-    if ((x + w - 1) > _max_x)
-    {
-      x_skip += (x + w - 1) - _max_x;
-      w -= (x + w - 1) - _max_x;
-    }
-    if (x < 0)
-    {
-      bitmap -= x;
-      x_skip -= x;
-      w += x;
-      x = 0;
-    }
-    uint16_t *row = _framebuffer;
-    row += y * _width;
-    row += x;
-    int16_t i;
-    int16_t wi;
-    uint8_t color_key;
-    while (h--)
-    {
-      i = 0;
-      wi = w;
-      while (wi >= 4)
+      if ((y + h - 1) > _max_y)
       {
-        uint32_t b32 = *((uint32_t *)bitmap);
-        color_key = (b32 & 0xff);
-        if (color_key != chroma_key)
-        {
-          row[i] = color_index[color_key];
-        }
-        ++i;
-        color_key = (b32 & 0xff00) >> 8;
-        if (color_key != chroma_key)
-        {
-          row[i] = color_index[color_key];
-        }
-        ++i;
-        color_key = (b32 & 0xff0000) >> 16;
-        if (color_key != chroma_key)
-        {
-          row[i] = color_index[color_key];
-        }
-        ++i;
-        color_key = (b32 & 0xff000000) >> 24;
-        if (color_key != chroma_key)
-        {
-          row[i] = color_index[color_key];
-        }
-        ++i;
-        wi -= 4;
-        bitmap += 4;
+        h -= (y + h - 1) - _max_y;
       }
-      while (i < w)
+      if (y < 0)
       {
-        color_key = *bitmap++;
-        if (color_key != chroma_key)
-        {
-          row[i] = color_index[color_key];
-        }
-        ++i;
+        bitmap -= y * (w + x_skip);
+        h += y;
+        y = 0;
       }
-      bitmap += x_skip;
-      row += _width;
+      if ((x + w - 1) > _max_x)
+      {
+        x_skip += (x + w - 1) - _max_x;
+        w -= (x + w - 1) - _max_x;
+      }
+      if (x < 0)
+      {
+        bitmap -= x;
+        x_skip -= x;
+        w += x;
+        x = 0;
+      }
+      uint16_t *row = _framebuffer;
+      row += y * _width;
+      row += x;
+      int16_t i;
+      int16_t wi;
+      uint8_t color_key;
+      while (h--)
+      {
+        i = 0;
+        wi = w;
+        while (wi >= 4)
+        {
+          uint32_t b32 = *((uint32_t *)bitmap);
+          color_key = (b32 & 0xff);
+          if (color_key != chroma_key)
+          {
+            row[i] = color_index[color_key];
+          }
+          ++i;
+          color_key = (b32 & 0xff00) >> 8;
+          if (color_key != chroma_key)
+          {
+            row[i] = color_index[color_key];
+          }
+          ++i;
+          color_key = (b32 & 0xff0000) >> 16;
+          if (color_key != chroma_key)
+          {
+            row[i] = color_index[color_key];
+          }
+          ++i;
+          color_key = (b32 & 0xff000000) >> 24;
+          if (color_key != chroma_key)
+          {
+            row[i] = color_index[color_key];
+          }
+          ++i;
+          wi -= 4;
+          bitmap += 4;
+        }
+        while (i < w)
+        {
+          color_key = *bitmap++;
+          if (color_key != chroma_key)
+          {
+            row[i] = color_index[color_key];
+          }
+          ++i;
+        }
+        bitmap += x_skip;
+        row += _width;
+      }
     }
   }
 }
@@ -415,79 +429,86 @@ void Arduino_Canvas::draw16bitRGBBitmapWithTranColor(
     int16_t x, int16_t y,
     uint16_t *bitmap, uint16_t transparent_color, int16_t w, int16_t h)
 {
-  if (
-      ((x + w - 1) < 0) || // Outside left
-      ((y + h - 1) < 0) || // Outside top
-      (x > _max_x) ||      // Outside right
-      (y > _max_y)         // Outside bottom
-  )
+  if (_rotation > 0)
   {
-    return;
+    Arduino_GFX::draw16bitRGBBitmapWithTranColor(x, y, bitmap, transparent_color, w, h);
   }
   else
   {
-    int16_t x_skip = 0;
-    if ((y + h - 1) > _max_y)
+    if (
+        ((x + w - 1) < 0) || // Outside left
+        ((y + h - 1) < 0) || // Outside top
+        (x > _max_x) ||      // Outside right
+        (y > _max_y)         // Outside bottom
+    )
     {
-      h -= (y + h - 1) - _max_y;
+      return;
     }
-    if (y < 0)
+    else
     {
-      bitmap -= y * w;
-      h += y;
-      y = 0;
-    }
-    if ((x + w - 1) > _max_x)
-    {
-      x_skip = (x + w - 1) - _max_x;
-      w -= x_skip;
-    }
-    if (x < 0)
-    {
-      bitmap -= x;
-      x_skip -= x;
-      w += x;
-      x = 0;
-    }
-    uint16_t *row = _framebuffer;
-    row += y * _width;
-    row += x;
-    int16_t i;
-    int16_t wi;
-    uint16_t p;
-    while (h--)
-    {
-      i = 0;
-      wi = w;
-      while (wi >= 4)
+      int16_t x_skip = 0;
+      if ((y + h - 1) > _max_y)
       {
-        uint32_t b32 = *((uint32_t *)bitmap);
-        p = (b32 & 0xffff);
-        if (p != transparent_color)
-        {
-          row[i] = p;
-        }
-        ++i;
-        p = (b32 & 0xffff0000) >> 16;
-        if (p != transparent_color)
-        {
-          row[i] = p;
-        }
-        ++i;
-        wi -= 2;
-        bitmap += 2;
+        h -= (y + h - 1) - _max_y;
       }
-      while (i < w)
+      if (y < 0)
       {
-        p = *bitmap++;
-        if (p != transparent_color)
-        {
-          row[i] = p;
-        }
-        ++i;
+        bitmap -= y * w;
+        h += y;
+        y = 0;
       }
-      bitmap += x_skip;
-      row += _width;
+      if ((x + w - 1) > _max_x)
+      {
+        x_skip = (x + w - 1) - _max_x;
+        w -= x_skip;
+      }
+      if (x < 0)
+      {
+        bitmap -= x;
+        x_skip -= x;
+        w += x;
+        x = 0;
+      }
+      uint16_t *row = _framebuffer;
+      row += y * _width;
+      row += x;
+      int16_t i;
+      int16_t wi;
+      uint16_t p;
+      while (h--)
+      {
+        i = 0;
+        wi = w;
+        while (wi >= 4)
+        {
+          uint32_t b32 = *((uint32_t *)bitmap);
+          p = (b32 & 0xffff);
+          if (p != transparent_color)
+          {
+            row[i] = p;
+          }
+          ++i;
+          p = (b32 & 0xffff0000) >> 16;
+          if (p != transparent_color)
+          {
+            row[i] = p;
+          }
+          ++i;
+          wi -= 2;
+          bitmap += 2;
+        }
+        while (i < w)
+        {
+          p = *bitmap++;
+          if (p != transparent_color)
+          {
+            row[i] = p;
+          }
+          ++i;
+        }
+        bitmap += x_skip;
+        row += _width;
+      }
     }
   }
 }
@@ -495,53 +516,60 @@ void Arduino_Canvas::draw16bitRGBBitmapWithTranColor(
 void Arduino_Canvas::draw16bitBeRGBBitmap(int16_t x, int16_t y,
                                           uint16_t *bitmap, int16_t w, int16_t h)
 {
-  if (
-      ((x + w - 1) < 0) || // Outside left
-      ((y + h - 1) < 0) || // Outside top
-      (x > _max_x) ||      // Outside right
-      (y > _max_y)         // Outside bottom
-  )
+  if (_rotation > 0)
   {
-    return;
+    Arduino_GFX::draw16bitBeRGBBitmap(x, y, bitmap, w, h);
   }
   else
   {
-    int16_t x_skip = 0;
-    if ((y + h - 1) > _max_y)
+    if (
+        ((x + w - 1) < 0) || // Outside left
+        ((y + h - 1) < 0) || // Outside top
+        (x > _max_x) ||      // Outside right
+        (y > _max_y)         // Outside bottom
+    )
     {
-      h -= (y + h - 1) - _max_y;
+      return;
     }
-    if (y < 0)
+    else
     {
-      bitmap -= y * w;
-      h += y;
-      y = 0;
-    }
-    if ((x + w - 1) > _max_x)
-    {
-      x_skip = (x + w - 1) - _max_x;
-      w -= x_skip;
-    }
-    if (x < 0)
-    {
-      bitmap -= x;
-      x_skip -= x;
-      w += x;
-      x = 0;
-    }
-    uint16_t *row = _framebuffer;
-    row += y * _width;
-    row += x;
-    uint16_t color;
-    for (int j = 0; j < h; j++)
-    {
-      for (int i = 0; i < w; i++)
+      int16_t x_skip = 0;
+      if ((y + h - 1) > _max_y)
       {
-        color = *bitmap++;
-        MSB_16_SET(row[i], color);
+        h -= (y + h - 1) - _max_y;
       }
-      bitmap += x_skip;
-      row += _width;
+      if (y < 0)
+      {
+        bitmap -= y * w;
+        h += y;
+        y = 0;
+      }
+      if ((x + w - 1) > _max_x)
+      {
+        x_skip = (x + w - 1) - _max_x;
+        w -= x_skip;
+      }
+      if (x < 0)
+      {
+        bitmap -= x;
+        x_skip -= x;
+        w += x;
+        x = 0;
+      }
+      uint16_t *row = _framebuffer;
+      row += y * _width;
+      row += x;
+      uint16_t color;
+      for (int j = 0; j < h; j++)
+      {
+        for (int i = 0; i < w; i++)
+        {
+          color = *bitmap++;
+          MSB_16_SET(row[i], color);
+        }
+        bitmap += x_skip;
+        row += _width;
+      }
     }
   }
 }
