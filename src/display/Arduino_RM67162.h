@@ -49,7 +49,7 @@ static const uint8_t rm67162_init_operations[] = {
     BEGIN_WRITE,
     WRITE_C8_D8, RM67162_PIXFMT, 0x55,     // Interface Pixel Format 16bit/pixel
     WRITE_COMMAND_8, RM67162_DISPON,       // Display on
-    WRITE_C8_D8, RM67162_BRIGHTNESS, 0xD0, // Write Display Brightness   MAX_VAL=0XFF
+    WRITE_C8_D8, RM67162_BRIGHTNESS, 0xBF, // Write Display Brightness   MAX_VAL=0XFF
     END_WRITE};
 
 class Arduino_RM67162 : public Arduino_TFT
