@@ -309,7 +309,7 @@ void loop()
   gfx->print(" networks");
 
   // draw 2.4 GHz graph base axle
-  gfx->drawFastHLine(0, graph24_baseline, 320, WHITE);
+  gfx->drawFastHLine(0, graph24_baseline, gfx->width(), WHITE);
   for (idx = 0; idx < 14; idx++)
   {
     channel = channel_legend[idx];

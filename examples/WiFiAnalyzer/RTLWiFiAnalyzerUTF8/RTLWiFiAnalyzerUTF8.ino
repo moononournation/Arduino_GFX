@@ -326,7 +326,7 @@ void loop()
   }
 
   // draw 5 GHz graph base axle
-  gfx->drawFastHLine(0, graph50_baseline, 320, WHITE);
+  gfx->drawFastHLine(0, graph50_baseline, gfx->width(), WHITE);
   for (idx = 14; idx < 71; idx++)
   {
     channel = channel_legend[idx];

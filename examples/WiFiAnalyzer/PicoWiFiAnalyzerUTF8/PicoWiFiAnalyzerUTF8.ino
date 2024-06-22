@@ -320,7 +320,7 @@ void loop()
   }
 
   // draw graph base axle
-  gfx->drawFastHLine(0, graph_baseline, 320, WHITE);
+  gfx->drawFastHLine(0, graph_baseline, gfx->width(), WHITE);
   for (channel = 1; channel <= 14; channel++)
   {
     idx = channel - 1;
