@@ -12,7 +12,8 @@ CB2B16 = ((Cb - 128) * 255 / 224 * 1.772) + 277
 Note:
 - The extra CR2R16 + 223, CR2G16 - 172 and CB2B16 + 277 are designed
   for making the conversion result become zero based integer
-- CLIP* mapping will clip value to 0-255 at the same time shift bit
+- CLIP* mapping will clip value to 0-255
+- CLIP*BE mapping will clip value to 0-255 at the same time shift bit
   to big endian RGB565 format
  */
 
