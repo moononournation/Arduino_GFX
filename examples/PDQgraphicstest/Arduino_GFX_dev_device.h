@@ -1,3 +1,4 @@
+// #define AD35_S3
 // #define DLC35010R // or called "Elecrow ESP Terminal with 3.5inch Parallel RGB Capacitive Touch Display (ILI9488)"
 // #define DRAGON_RADAR
 // #define ESP32_1732S019
@@ -47,7 +48,31 @@
 // #define ZX3D95CE01S_TR
 // #define ZX7D00CE01S // or called "QM Smart Panlee 7.0 inch serial screen"
 
-#if defined(DLC35010R)
+#if defined(AD35_S3)
+#define GFX_DEV_DEVICE AD35_S3
+#include <Wire.h>
+#include <Adafruit_AW9523.h>
+Adafruit_AW9523 aw;
+#define GFX_EXTRA_PRE_INIT()                      \
+    {                                             \
+        Wire.begin(6 /* SDA */, 5 /* SCL */);     \
+        aw.begin(0x59);                           \
+        aw.pinMode(8, OUTPUT);     /* LCD_LEDK */ \
+        aw.pinMode(9, OUTPUT);     /* LCD_LEDK */ \
+        aw.pinMode(10, OUTPUT);    /* LCD_LEDK */ \
+        aw.pinMode(11, OUTPUT);    /* LCD_LEDK */ \
+        aw.pinMode(14, OUTPUT);    /* LCD_RST */  \
+        aw.digitalWrite(8, LOW);   /* LCD_LEDK */ \
+        aw.digitalWrite(9, LOW);   /* LCD_LEDK */ \
+        aw.digitalWrite(10, LOW);  /* LCD_LEDK */ \
+        aw.digitalWrite(11, LOW);  /* LCD_LEDK */ \
+        aw.digitalWrite(14, HIGH); /* LCD_RST */  \
+    }
+Arduino_DataBus *bus = new Arduino_ESP32LCD8(
+    45 /* DC */, GFX_NOT_DEFINED /* CS */, 10 /* WR */, GFX_NOT_DEFINED /* RD */,
+    9 /* D0 */, 4 /* D1 */, 3 /* D2 */, 8 /* D3 */, 18 /* D4 */, 17 /* D5 */, 16 /* D6 */, 15 /* D7 */);
+Arduino_GFX *gfx = new Arduino_ST7796(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
+#elif defined(DLC35010R)
 #define GFX_DEV_DEVICE DLC35010R
 #define GFX_BL 46
 Arduino_DataBus *bus = new Arduino_ESP32PAR16(
