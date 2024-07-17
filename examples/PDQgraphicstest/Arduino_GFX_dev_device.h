@@ -23,6 +23,7 @@
 // #define GS_T3E // Golden Security GS-T3E
 // #define IBUBLY
 // #define JC3248W535
+// #define JC3636W518
 // #define LILYGO_T_DECK
 // #define LILYGO_T_DISPLAY
 // #define LILYGO_T_DISPLAY_S3
@@ -412,6 +413,13 @@ Arduino_DataBus *bus = new Arduino_ESP32QSPI(
 Arduino_GFX *g = new Arduino_AXS15231B(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, false /* IPS */, 320 /* width */, 480 /* height */);
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(320 /* width */, 480 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
+
+#elif defined(JC3636W518)
+#define GFX_DEV_DEVICE JC3636W518
+#define GFX_BL 15
+Arduino_DataBus *bus = new Arduino_ESP32QSPI(
+    10 /* cs */, 9 /* sck */, 11 /* d0 */, 12 /* d1 */, 13 /* d2 */, 14 /* d3 */);
+Arduino_GFX *gfx = new Arduino_ST77916(bus, 47 /* RST */, 0 /* rotation */, true /* IPS */, 360 /* width */, 360 /* height */);
 
 #elif defined(LILYGO_T_DECK)
 #define GFX_DEV_DEVICE LILYGO_T_DECK
