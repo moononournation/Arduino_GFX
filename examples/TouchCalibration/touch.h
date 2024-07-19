@@ -48,13 +48,17 @@ int16_t touch_max_x = 0, touch_max_y = 0;
 int16_t touch_raw_x = 0, touch_raw_y = 0;
 int16_t touch_last_x = 0, touch_last_y = 0;
 
+#if defined(TOUCH_SDA)
+#include <Wire.h>
+#endif
+
 #if defined(TOUCH_XPT2046)
 #include <XPT2046_Touchscreen.h>
 #include <SPI.h>
 XPT2046_Touchscreen ts(TOUCH_XPT2046_CS, TOUCH_XPT2046_INT);
 
 #elif defined(TOUCH_MODULE_ADDR) // TouchLib
-#include <Wire.h>
+
 #include <TouchLib.h>
 TouchLib touch(Wire, TOUCH_SDA, TOUCH_SCL, TOUCH_MODULE_ADDR);
 
@@ -99,21 +103,26 @@ void touch_init(int16_t w, int16_t h, uint8_t r)
     }
   }
 
-#if defined(TOUCH_XPT2046)
-  SPI.begin(TOUCH_XPT2046_SCK, TOUCH_XPT2046_MISO, TOUCH_XPT2046_MOSI, TOUCH_XPT2046_CS);
-  ts.begin();
-  ts.setRotation(TOUCH_XPT2046_ROTATION);
-
-#elif defined(TOUCH_MODULE_ADDR) // TouchLib
   // Reset touchscreen
-#if (TOUCH_RES > 0)
+#if defined(TOUCH_RES) && (TOUCH_RES > 0)
   pinMode(TOUCH_RES, OUTPUT);
   digitalWrite(TOUCH_RES, 0);
   delay(200);
   digitalWrite(TOUCH_RES, 1);
   delay(200);
 #endif
+
+#if defined(TOUCH_SDA)
   Wire.begin(TOUCH_SDA, TOUCH_SCL);
+#endif
+
+#if defined(TOUCH_XPT2046)
+  SPI.begin(TOUCH_XPT2046_SCK, TOUCH_XPT2046_MISO, TOUCH_XPT2046_MOSI, TOUCH_XPT2046_CS);
+  ts.begin();
+  ts.setRotation(TOUCH_XPT2046_ROTATION);
+
+#elif defined(TOUCH_MODULE_ADDR) // TouchLib
+
   touch.init();
 
 #endif // TouchLib

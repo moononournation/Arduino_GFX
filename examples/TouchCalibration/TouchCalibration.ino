@@ -9,7 +9,7 @@
  *
  * Resistive touchscreen libraries
  * XPT2046: https://github.com/PaulStoffregen/XPT2046_Touchscreen.git
- * 
+ *
  * Capacitive touchscreen libraries
  * TouchLib: https://github.com/mmMicky/TouchLib.git
  ******************************************************************************/
@@ -94,6 +94,23 @@ void setup(void)
   w = gfx->width();
   h = gfx->height();
   touch_init(w, h, gfx->getRotation());
+
+// not yet know TOUCH_MODULE_ADDR, scan I2C devices
+#if defined(TOUCH_SDA) && !defined(TOUCH_MODULE_ADDR)
+  for (uint8_t addr = 0x01; addr < 0x7f; addr++)
+  {
+    Wire.beginTransmission(addr);
+    uint8_t error = Wire.endTransmission();
+    if (error == 0)
+    {
+      Serial.printf("I2C device found at 0x%02X\n", addr);
+    }
+    else if (error != 2)
+    {
+      Serial.printf("Error %d at 0x%02X\n", error, addr);
+    }
+  }
+#endif
 
   // Top left
   point_x[0] = w / 8;
