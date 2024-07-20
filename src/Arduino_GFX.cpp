@@ -2012,8 +2012,13 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
             xAdvance = pgm_read_byte(&glyph->xAdvance),
             yAdvance = pgm_read_byte(&gfxFont->yAdvance),
             baseline = yAdvance * 2 / 3; // TODO: baseline is an arbitrary currently, may be define in font file
+#ifdef __AVR__
+    int8_t xo = pgm_read_byte(&glyph->xOffset),
+           yo = pgm_read_byte(&glyph->yOffset);
+#else
     int8_t xo = pgm_read_sbyte(&glyph->xOffset),
            yo = pgm_read_sbyte(&glyph->yOffset);
+#endif
     uint8_t xx, yy, bits = 0, bit = 0;
     int16_t xo16 = xo, yo16 = yo;
 
