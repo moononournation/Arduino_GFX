@@ -4,6 +4,7 @@
 
 #if defined(ESP32)
 #include <driver/spi_master.h>
+#include <esp_memory_utils.h>
 
 #ifndef ESP32SPIDMA_MAX_PIXELS_AT_ONCE
 #define ESP32SPIDMA_MAX_PIXELS_AT_ONCE 1024
