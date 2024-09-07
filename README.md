@@ -335,6 +335,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 * [LILYGO T-Display](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
 * [LILYGO T-Display-S3](https://www.lilygo.cc/products/t-display-s3) [[demo video](https://youtu.be/kpRC64QNQAo)]
 * [LILYGO T-Display-S3 AMOLED](https://www.lilygo.cc/products/t-display-s3-amoled) [[demo video](https://youtu.be/NvOGJAMlh1M)]
+* [LILYGO T-Display-S3 AMOLED](https://www.lilygo.cc/products/t-display-s3-amoled-1-64) [[demo video](https://youtu.be/5O3fQ1xNsrg)][[LVGL demo video](https://youtu.be/6UEaxWfxm9g)]
 * [T-Display S3 Long](https://www.lilygo.cc/products/t-display-s3-long)[[LVGL demo video](https://youtu.be/OuxLFwxvcVc)]
 * [LILYGO T-Display-s3-Pro](https://www.lilygo.cc/products/t-display-s3-pro) [[demo video](https://youtube.com/shorts/PE-GKTzbdP8)]
 * [LILYGO T-QT](https://www.lilygo.cc/products/t-qt-v1-1) [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM)]

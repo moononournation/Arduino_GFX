@@ -28,6 +28,7 @@
 // #define LILYGO_T_DISPLAY
 // #define LILYGO_T_DISPLAY_S3
 // #define LILYGO_T_Display_S3_AMOLED
+// #define LILYGO_T_Display_S3_AMOLED_1_64
 // #define LILYGO_T_Display_S3_LONG
 // #define LILYGO_T_DISPLAY_S3_PRO
 // #define LILYGO_T_QT
@@ -137,7 +138,7 @@ Arduino_GFX *gfx = new Arduino_NV3041A(bus, 17 /* RST */, 0 /* rotation */, true
 #define GFX_DEV_DEVICE ESP32_4827A043_QSPI
 #define GFX_BL 1
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
-    45 /* cs */, 47 /* sck */, 21 /* d0 */, 48 /* d1 */, 40 /* d2 */, 39 /* d3 */);
+    45 /* CS */, 47 /* SCK */, 21 /* D0 */, 48 /* D1 */, 40 /* D2 */, 39 /* D3 */);
 Arduino_GFX *gfx = new Arduino_NV3041A(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(ESP32_4827S043)
@@ -409,7 +410,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 12 /* RST */, 1 /* rotation */, true 
 #define GFX_DEV_DEVICE JC3248W535
 #define GFX_BL 1
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
-    45 /* cs */, 47 /* sck */, 21 /* d0 */, 48 /* d1 */, 40 /* d2 */, 39 /* d3 */);
+    45 /* CS */, 47 /* SCK */, 21 /* D0 */, 48 /* D1 */, 40 /* D2 */, 39 /* D3 */);
 Arduino_GFX *g = new Arduino_AXS15231B(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, false /* IPS */, 320 /* width */, 480 /* height */);
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(320 /* width */, 480 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
@@ -418,7 +419,7 @@ Arduino_Canvas *gfx = new Arduino_Canvas(320 /* width */, 480 /* height */, g, 0
 #define GFX_DEV_DEVICE JC3636W518
 #define GFX_BL 15
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
-    10 /* cs */, 9 /* sck */, 11 /* d0 */, 12 /* d1 */, 13 /* d2 */, 14 /* d3 */);
+    10 /* CS */, 9 /* SCK */, 11 /* D0 */, 12 /* D1 */, 13 /* D2 */, 14 /* D3 */);
 Arduino_GFX *gfx = new Arduino_ST77916(bus, 47 /* RST */, 0 /* rotation */, true /* IPS */, 360 /* width */, 360 /* height */);
 
 #elif defined(LILYGO_T_DECK)
@@ -459,14 +460,28 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 5 /* RST */, 0 /* rotation */, true /
 #elif defined(LILYGO_T_Display_S3_AMOLED)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3_AMOLED
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
-    6 /* cs */, 47 /* sck */, 18 /* d0 */, 7 /* d1 */, 48 /* d2 */, 5 /* d3 */);
+    6 /* CS */, 47 /* SCK */, 18 /* D0 */, 7 /* D1 */, 48 /* D2 */, 5 /* D3 */);
 Arduino_GFX *gfx = new Arduino_RM67162(bus, 17 /* RST */, 0 /* rotation */);
+
+#elif defined(LILYGO_T_Display_S3_AMOLED_1_64)
+#define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3_AMOLED_1_64
+#define GFX_EXTRA_PRE_INIT()              \
+    {                                     \
+        pinMode(16 /* LCD_EN */, OUTPUT);    \
+        digitalWrite(16 /* LCD_EN */, HIGH); \
+    }
+Arduino_DataBus *bus = new Arduino_ESP32QSPI(
+    10 /* CS */, 12 /* SCK */, 11 /* D0 */, 13 /* D1 */, 14 /* D2 */, 15 /* D3 */);
+Arduino_GFX *g = new Arduino_CO5300(bus, 17 /* RST */, 0 /* rotation */, false /* IPS */, 280, 456,
+                                    20 /* col offset 1 */, 0 /* row offset 1 */, 180 /* col_offset2 */, 24 /* row_offset2 */);
+#define CANVAS
+Arduino_Canvas *gfx = new Arduino_Canvas(280 /* width */, 456 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
 
 #elif defined(LILYGO_T_Display_S3_LONG)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3_LONG
 #define GFX_BL 1
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
-    12 /* cs */, 17 /* sck */, 13 /* d0 */, 18 /* d1 */, 21 /* d2 */, 14 /* d3 */);
+    12 /* CS */, 17 /* SCK */, 13 /* D0 */, 18 /* D1 */, 21 /* D2 */, 14 /* D3 */);
 Arduino_GFX *g = new Arduino_AXS15231B(bus, 47 /* RST */, 0 /* rotation */, false /* IPS */, 180 /* width */, 640 /* height */);
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(180 /* width */, 640 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
@@ -536,7 +551,7 @@ Arduino_GFX *gfx = new Arduino_GC9A01(bus, 27 /* RST */, 0 /* rotation */, true 
         digitalWrite(9 /* POWER */, HIGH); \
     }
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
-    11 /* cs */, 15 /* sck */, 14 /* d0 */, 10 /* d1 */, 16 /* d2 */, 12 /* d3 */);
+    11 /* CS */, 15 /* SCK */, 14 /* D0 */, 10 /* D1 */, 16 /* D2 */, 12 /* D3 */);
 Arduino_GFX *g = new Arduino_RM690B0(bus, 13 /* RST */, 0 /* rotation */, 450 /* width */, 600 /* height */, 16 /* col offset 1 */, 0 /* row offset 1 */, 16 /* col offset 2 */, 0 /* row offset 2 */);
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(450 /* width */, 600 /* height */, g);
