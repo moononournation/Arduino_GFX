@@ -1,10 +1,10 @@
+#pragma once
+
 /*
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  * https://github.com/ananevilya/Arduino-ST7789-Library.git
  */
-#ifndef _ARDUINO_ST7789_H_
-#define _ARDUINO_ST7789_H_
 
 #include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
@@ -142,5 +142,3 @@ protected:
 
 private:
 };
-
-#endif
