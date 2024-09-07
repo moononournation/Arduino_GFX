@@ -49,6 +49,7 @@
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 #include "display/Arduino_AXS15231B.h"
+#include "display/Arduino_CO5300.h"
 #include "display/Arduino_GC9A01.h"
 #include "display/Arduino_GC9106.h"
 #include "display/Arduino_GC9107.h"
