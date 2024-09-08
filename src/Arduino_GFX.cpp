@@ -1608,6 +1608,36 @@ void Arduino_GFX::draw16bitBeRGBBitmap(int16_t x, int16_t y,
   endWrite();
 }
 
+#if !defined(LITTLE_FOOT_PRINT)
+/**************************************************************************/
+/*!
+  @brief  Draw a RAM-resident 16-bit Big Endian image (RGB 5/6/5) in rotation 1 at the specified (x,y) position.
+  @param  x       Top left corner x coordinate
+  @param  y       Top left corner y coordinate
+  @param  bitmap  byte array with 16-bit color bitmap
+  @param  w       Width of bitmap in pixels
+  @param  h       Height of bitmap in pixels
+*/
+/**************************************************************************/
+void Arduino_GFX::draw16bitBeRGBBitmapR1(int16_t x, int16_t y,
+                                       uint16_t *bitmap, int16_t w, int16_t h)
+{
+  int32_t offset = 0;
+  uint16_t p;
+  startWrite();
+  for (int16_t j = 0; j < h; j++)
+  {
+    for (int16_t i = 0; i < w; i++)
+    {
+      p = bitmap[offset++];
+      MSB_16_SET(p, p);
+      writePixel(x + w - j - 1, y + i, p);
+    }
+  }
+  endWrite();
+}
+#endif // !defined(LITTLE_FOOT_PRINT)
+
 /**************************************************************************/
 /*!
   @brief  Draw a PROGMEM-resident 16-bit image (RGB 5/6/5) with a 1-bit mask

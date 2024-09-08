@@ -286,6 +286,8 @@ public:
   virtual void draw24bitRGBBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h);
   virtual void draw24bitRGBBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h);
   virtual void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg);
+
+  virtual void draw16bitBeRGBBitmapR1(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h);
 #endif // !defined(LITTLE_FOOT_PRINT)
 
   /**********************************************************************/
