@@ -289,6 +289,7 @@ public:
   void sendData16(uint16_t d);
 
 #if !defined(LITTLE_FOOT_PRINT)
+  virtual void write16bitBeRGBBitmapR1(uint16_t *bitmap, int16_t w, int16_t h);
   virtual void batchOperation(const uint8_t *operations, size_t len);
   virtual void writePattern(uint8_t *data, uint8_t len, uint32_t repeat);
   virtual void writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len);

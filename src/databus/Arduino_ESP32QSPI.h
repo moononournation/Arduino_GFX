@@ -45,6 +45,7 @@ public:
 
   void writeRepeat(uint16_t p, uint32_t len) override;
   void writePixels(uint16_t *data, uint32_t len) override;
+  void write16bitBeRGBBitmapR1(uint16_t *bitmap, int16_t w, int16_t h) override;
 
   void batchOperation(const uint8_t *operations, size_t len) override;
   void writeBytes(uint8_t *data, uint32_t len) override;
