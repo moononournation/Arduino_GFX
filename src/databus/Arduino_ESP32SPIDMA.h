@@ -4,7 +4,9 @@
 
 #if defined(ESP32)
 #include <driver/spi_master.h>
+#if (ESP_ARDUINO_VERSION_MAJOR >= 3)
 #include <esp_memory_utils.h>
+#endif
 
 #ifndef ESP32SPIDMA_MAX_PIXELS_AT_ONCE
 #define ESP32SPIDMA_MAX_PIXELS_AT_ONCE 1024

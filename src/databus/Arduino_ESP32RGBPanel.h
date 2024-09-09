@@ -1,10 +1,9 @@
+#pragma once
+
 #include "Arduino_DataBus.h"
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-#if (ESP_ARDUINO_VERSION_MAJOR < 3)
-
-#ifndef _ARDUINO_ESP32RGBPANEL_H_
-#define _ARDUINO_ESP32RGBPANEL_H_
+#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
 
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_rgb.h"
@@ -96,7 +95,5 @@ private:
   esp_rgb_panel_t *_rgb_panel;
 };
 
-#endif // _ARDUINO_ESP32RGBPANEL_H_
-
-#endif // #if (ESP_ARDUINO_VERSION_MAJOR < 3)
+#endif // #if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)

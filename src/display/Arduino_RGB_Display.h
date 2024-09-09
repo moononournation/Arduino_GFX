@@ -1,10 +1,9 @@
+#pragma once
+
 #include "../Arduino_DataBus.h"
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-#if (ESP_ARDUINO_VERSION_MAJOR < 3)
-
-#ifndef _ARDUINO_RGB_DISPLAY_H_
-#define _ARDUINO_RGB_DISPLAY_H_
+#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
 
 #include "../Arduino_GFX.h"
 #include "../databus/Arduino_ESP32RGBPanel.h"
@@ -2299,7 +2298,5 @@ protected:
 private:
 };
 
-#endif // _ARDUINO_RGB_DISPLAY_H_
-
-#endif // #if (ESP_ARDUINO_VERSION_MAJOR < 3)
+#endif // #if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)

@@ -1,14 +1,9 @@
-/*
- * start rewrite from:
- * https://github.com/lovyan03/LovyanGFX/blob/master/src/lgfx/v0/platforms/LGFX_PARALLEL_ESP32.hpp
- */
+#pragma once
+
 #include "Arduino_DataBus.h"
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-#if (ESP_ARDUINO_VERSION_MAJOR < 3)
-
-#ifndef _ARDUINO_ESP32LCD16_H_
-#define _ARDUINO_ESP32LCD16_H_
+#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
 
 #ifndef LCD_MAX_PIXELS_AT_ONCE
 #define LCD_MAX_PIXELS_AT_ONCE 2046
@@ -99,7 +94,5 @@ private:
   };
 };
 
-#endif // _ARDUINO_ESP32LCD16_H_
-
-#endif // #if (ESP_ARDUINO_VERSION_MAJOR < 3)
+#endif // #if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
