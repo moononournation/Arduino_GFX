@@ -730,7 +730,7 @@ void Arduino_TFT::draw16bitBeRGBBitmapR1(
   else
   {
     startWrite();
-    writeAddrWindow(x, y, w, h);
+    writeAddrWindow(x, y, h, w);
     _bus->write16bitBeRGBBitmapR1(bitmap, w, h);
     endWrite();
   }
