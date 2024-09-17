@@ -1958,11 +1958,11 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
         }
         if (is_foreground)
         {
-          writeFillRectPreclipped(x, y, curW, 1, color);
+          writeFillRect(x, y, curW, 1, color);
         }
         else if (bg != color)
         {
-          writeFillRectPreclipped(x, y, curW, 1, bg);
+          writeFillRect(x, y, curW, 1, bg);
         }
       }
     }
@@ -1982,12 +1982,12 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
         }
         if (is_foreground)
         {
-          writeFillRectPreclipped(x, y, curW - text_pixel_margin,
+          writeFillRect(x, y, curW - text_pixel_margin,
                                   textsize_y - text_pixel_margin, color);
         }
         else if (bg != color)
         {
-          writeFillRectPreclipped(x, y, curW - text_pixel_margin,
+          writeFillRect(x, y, curW - text_pixel_margin,
                                   textsize_y - text_pixel_margin, bg);
         }
       }
@@ -2085,7 +2085,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
       {
         curH -= textsize_y;
       }
-      writeFillRectPreclipped(x, curY, curW, curH, bg);
+      writeFillRect(x, curY, curW, curH, bg);
     }
     if (textsize_x == 1 && textsize_y == 1)
     {
@@ -2130,7 +2130,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
             {
               if (bits & 0x80)
               {
-                writeFillRectPreclipped(curX, curY, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
+                writeFillRect(curX, curY, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
               }
             }
           }
@@ -2247,18 +2247,18 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
               {
                 if (text_pixel_margin > 0)
                 {
-                  writeFillRectPreclipped(curX, y + j * textsize_y, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
-                  writeFillRectPreclipped(curX + textsize_x - text_pixel_margin, y + j * textsize_y, text_pixel_margin, textsize_y, bg);
-                  writeFillRectPreclipped(curX, y + ((j + 1) * textsize_y) - text_pixel_margin, textsize_x - text_pixel_margin, text_pixel_margin, bg);
+                  writeFillRect(curX, y + j * textsize_y, textsize_x - text_pixel_margin, textsize_y - text_pixel_margin, color);
+                  writeFillRect(curX + textsize_x - text_pixel_margin, y + j * textsize_y, text_pixel_margin, textsize_y, bg);
+                  writeFillRect(curX, y + ((j + 1) * textsize_y) - text_pixel_margin, textsize_x - text_pixel_margin, text_pixel_margin, bg);
                 }
                 else
                 {
-                  writeFillRectPreclipped(curX, curY, textsize_x, textsize_y, color);
+                  writeFillRect(curX, curY, textsize_x, textsize_y, color);
                 }
               }
               else if (bg != color)
               {
-                writeFillRectPreclipped(curX, curY, textsize_x, textsize_y, bg);
+                writeFillRect(curX, curY, textsize_x, textsize_y, bg);
               }
             }
           }
@@ -2274,7 +2274,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
           {
             curH -= textsize_y;
           }
-          writeFillRectPreclipped(curX, y, textsize_x, curH, bg);
+          writeFillRect(curX, y, textsize_x, curH, bg);
         }
       }
     }
