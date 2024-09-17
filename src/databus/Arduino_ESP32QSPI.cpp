@@ -550,40 +550,49 @@ void Arduino_ESP32QSPI::writeBytes(uint8_t *data, uint32_t len)
  */
 void Arduino_ESP32QSPI::write16bitBeRGBBitmapR1(uint16_t *bitmap, int16_t w, int16_t h)
 {
-  CS_LOW();
-  uint32_t l = h << 4;
-  bool first_send = true;
-  uint16_t *p;
-
-  for (int16_t i = 0; i < w; i++)
+  if (h > ESP32QSPI_MAX_PIXELS_AT_ONCE)
   {
-    if (first_send)
-    {
-      _spi_tran_ext.base.flags = SPI_TRANS_MODE_QIO;
-      _spi_tran_ext.base.cmd = 0x32;
-      _spi_tran_ext.base.addr = 0x003C00;
-      first_send = false;
-    }
-    else
-    {
-      _spi_tran_ext.base.flags = SPI_TRANS_MODE_QIO | SPI_TRANS_VARIABLE_CMD |
-                                 SPI_TRANS_VARIABLE_ADDR | SPI_TRANS_VARIABLE_DUMMY;
-    }
-
-    p = bitmap + ((h - 1) * w) + i;
-    for (int16_t j = 0; j < h; j++)
-    {
-      _buffer16[j] = *p;
-      p -= w;
-    }
-
-    _spi_tran_ext.base.tx_buffer = _buffer16;
-    _spi_tran_ext.base.length = l;
-
-    POLL_START();
-    POLL_END();
+    log_e("h > ESP32QSPI_MAX_PIXELS_AT_ONCE, h: %d", h);
   }
-  CS_HIGH();
+  else
+  {
+    CS_LOW();
+    uint32_t l = h << 4;
+    bool first_send = true;
+    uint16_t *p;
+    uint16_t *origin_offset = bitmap + ((h - 1) * w);
+
+    for (int16_t i = 0; i < w; i++)
+    {
+      if (first_send)
+      {
+        _spi_tran_ext.base.flags = SPI_TRANS_MODE_QIO;
+        _spi_tran_ext.base.cmd = 0x32;
+        _spi_tran_ext.base.addr = 0x003C00;
+        first_send = false;
+      }
+      else
+      {
+        POLL_END();
+        _spi_tran_ext.base.flags = SPI_TRANS_MODE_QIO | SPI_TRANS_VARIABLE_CMD |
+                                   SPI_TRANS_VARIABLE_ADDR | SPI_TRANS_VARIABLE_DUMMY;
+      }
+
+      p = origin_offset + i;
+      for (int16_t j = 0; j < h; j++)
+      {
+        _buffer16[j] = *p;
+        p -= w;
+      }
+
+      _spi_tran_ext.base.tx_buffer = _buffer16;
+      _spi_tran_ext.base.length = l;
+
+      POLL_START();
+    }
+    POLL_END();
+    CS_HIGH();
+  }
 }
 
 /**
