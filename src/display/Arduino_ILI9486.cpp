@@ -1,7 +1,3 @@
-/*
- * start rewrite from:
- * https://github.com/nopnop2002/esp-idf-parallel-tft
- */
 #include "Arduino_ILI9486.h"
 
 Arduino_ILI9486::Arduino_ILI9486(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
@@ -64,6 +60,7 @@ void Arduino_ILI9486::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
     x += _xStart;
     _bus->writeC8D16D16Split(ILI9486_CASET, x, x + w - 1);
   }
+
   if ((y != _currentY) || (h != _currentH))
   {
     _currentY = y;
@@ -104,6 +101,12 @@ void Arduino_ILI9486::tftInit()
     digitalWrite(_rst, LOW);
     delay(ILI9486_RST_DELAY);
     digitalWrite(_rst, HIGH);
+    delay(ILI9486_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+    _bus->sendCommand(ILI9486_SWRESET);
     delay(ILI9486_RST_DELAY);
   }
 

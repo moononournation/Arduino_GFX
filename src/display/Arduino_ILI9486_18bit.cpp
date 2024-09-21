@@ -1,7 +1,3 @@
-/*
- * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
- */
 #include "Arduino_ILI9486_18bit.h"
 
 Arduino_ILI9486_18bit::Arduino_ILI9486_18bit(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
@@ -12,114 +8,6 @@ Arduino_ILI9486_18bit::Arduino_ILI9486_18bit(Arduino_DataBus *bus, int8_t rst, u
 bool Arduino_ILI9486_18bit::begin(int32_t speed)
 {
   return Arduino_TFT::begin(speed);
-}
-
-// Companion code to the above tables.  Reads and issues
-// a series of LCD commands stored in PROGMEM byte array.
-void Arduino_ILI9486_18bit::tftInit()
-{
-  if (_rst != GFX_NOT_DEFINED)
-  {
-    pinMode(_rst, OUTPUT);
-    digitalWrite(_rst, HIGH);
-    delay(100);
-    digitalWrite(_rst, LOW);
-    delay(ILI9486_RST_DELAY);
-    digitalWrite(_rst, HIGH);
-    delay(ILI9486_RST_DELAY);
-  }
-  else
-  {
-    // Software Rest
-    _bus->sendCommand(ILI9486_SWRESET);
-    delay(ILI9486_RST_DELAY);
-  }
-
-  _bus->sendCommand(ILI9486_SLPOUT); // Exit Sleep
-  delay(ILI9486_SLPIN_DELAY);
-
-  _bus->sendCommand(0x3A);
-  _bus->sendData(0x66); // 18-bit color
-
-  _bus->sendCommand(0xC2);
-  _bus->sendData(0x44);
-
-  _bus->sendCommand(0xC5);
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-  _bus->sendData(0x00);
-
-  _bus->sendCommand(0xE0);
-  _bus->sendData(0x0F);
-  _bus->sendData(0x1F);
-  _bus->sendData(0x1C);
-  _bus->sendData(0x0C);
-  _bus->sendData(0x0F);
-  _bus->sendData(0x08);
-  _bus->sendData(0x48);
-  _bus->sendData(0x98);
-  _bus->sendData(0x37);
-  _bus->sendData(0x0A);
-  _bus->sendData(0x13);
-  _bus->sendData(0x04);
-  _bus->sendData(0x11);
-  _bus->sendData(0x0D);
-  _bus->sendData(0x00);
-
-  _bus->sendCommand(0xE1);
-  _bus->sendData(0x0F);
-  _bus->sendData(0x32);
-  _bus->sendData(0x2E);
-  _bus->sendData(0x0B);
-  _bus->sendData(0x0D);
-  _bus->sendData(0x05);
-  _bus->sendData(0x47);
-  _bus->sendData(0x75);
-  _bus->sendData(0x37);
-  _bus->sendData(0x06);
-  _bus->sendData(0x10);
-  _bus->sendData(0x03);
-  _bus->sendData(0x24);
-  _bus->sendData(0x20);
-  _bus->sendData(0x00);
-
-  _bus->sendCommand(ILI9486_DISPON); // Display on
-  delay(25);
-
-  invertDisplay(false);
-}
-
-void Arduino_ILI9486_18bit::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
-{
-  if ((x != _currentX) || (w != _currentW))
-  {
-    int16_t x_start = x + _xStart, x_end = x + w - 1 + _xStart;
-
-    _bus->writeCommand(ILI9486_CASET); // Column addr set
-    _bus->write(x_start >> 8);
-    _bus->write(x_start & 0xFF); // XSTART
-    _bus->write(x_end >> 8);
-    _bus->write(x_end & 0xFF); // XEND
-
-    _currentX = x;
-    _currentW = w;
-  }
-  if ((y != _currentY) || (h != _currentH))
-  {
-    int16_t y_start = y + _yStart, y_end = y + h - 1 + _yStart;
-
-    _bus->writeCommand(ILI9486_PASET); // Row addr set
-    _bus->write(y_start >> 8);
-    _bus->write(y_start & 0xFF); // YSTART
-    _bus->write(y_end >> 8);
-    _bus->write(y_end & 0xFF); // YEND
-
-    _currentY = y;
-    _currentH = h;
-  }
-
-  _bus->writeCommand(ILI9486_RAMWR); // write to RAM
 }
 
 /**************************************************************************/
@@ -163,9 +51,30 @@ void Arduino_ILI9486_18bit::setRotation(uint8_t r)
   _bus->endWrite();
 }
 
+void Arduino_ILI9486_18bit::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
+{
+  if ((x != _currentX) || (w != _currentW))
+  {
+    _currentX = x;
+    _currentW = w;
+    x += _xStart;
+    _bus->writeC8D16D16Split(ILI9486_CASET, x, x + w - 1);
+  }
+
+  if ((y != _currentY) || (h != _currentH))
+  {
+    _currentY = y;
+    _currentH = h;
+    y += _yStart;
+    _bus->writeC8D16D16Split(ILI9486_PASET, y, y + h - 1);
+  }
+
+  _bus->writeCommand(ILI9486_RAMWR); // write to RAM
+}
+
 void Arduino_ILI9486_18bit::invertDisplay(bool i)
 {
-  _bus->sendCommand(i ? ILI9486_INVON : ILI9486_INVOFF);
+  _bus->sendCommand((_ips ^ i) ? ILI9486_INVON : ILI9486_INVOFF);
 }
 
 void Arduino_ILI9486_18bit::displayOn(void)
@@ -178,4 +87,30 @@ void Arduino_ILI9486_18bit::displayOff(void)
 {
   _bus->sendCommand(ILI9486_SLPIN);
   delay(ILI9486_SLPIN_DELAY);
+}
+
+// Companion code to the above tables.  Reads and issues
+// a series of LCD commands stored in PROGMEM byte array.
+void Arduino_ILI9486_18bit::tftInit()
+{
+  if (_rst != GFX_NOT_DEFINED)
+  {
+    pinMode(_rst, OUTPUT);
+    digitalWrite(_rst, HIGH);
+    delay(100);
+    digitalWrite(_rst, LOW);
+    delay(ILI9486_RST_DELAY);
+    digitalWrite(_rst, HIGH);
+    delay(ILI9486_RST_DELAY);
+  }
+  else
+  {
+    // Software Rest
+    _bus->sendCommand(ILI9486_SWRESET);
+    delay(ILI9486_RST_DELAY);
+  }
+
+  _bus->batchOperation(ili9486_18bit_init_operations, sizeof(ili9486_18bit_init_operations));
+
+  invertDisplay(false);
 }

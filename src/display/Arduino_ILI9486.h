@@ -1,9 +1,4 @@
-/*
- * start rewrite from:
- * https://github.com/nopnop2002/esp-idf-parallel-tft
- */
-#ifndef _ARDUINO_ILI9486_H_
-#define _ARDUINO_ILI9486_H_
+#pragma once
 
 #include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
@@ -60,12 +55,6 @@
 
 static const uint8_t ili9486_init_operations[] = {
     BEGIN_WRITE,
-    WRITE_COMMAND_8, ILI9486_SWRESET,
-    END_WRITE,
-
-    DELAY, ILI9486_RST_DELAY,
-
-    BEGIN_WRITE,
     WRITE_COMMAND_8, ILI9486_SLPOUT,
     END_WRITE,
 
@@ -73,21 +62,27 @@ static const uint8_t ili9486_init_operations[] = {
 
     BEGIN_WRITE,
     WRITE_C8_D8, ILI9486_PIXFMT, 0x55, // 16 bit colour interface
-    // WRITE_C8_D8, 0xC2, 0x44,
-    // WRITE_COMMAND_8, 0xC5,
-    // WRITE_BYTES, 4, 0x00, 0x00, 0x00, 0x00,
-    // WRITE_COMMAND_8, 0xE0,
-    // WRITE_BYTES, 15,
-    // 0x0F, 0x1F, 0x1C, 0x0C, 0x0F,
-    // 0x08, 0x48, 0x98, 0x37, 0x0A,
-    // 0x13, 0x04, 0x11, 0x0D, 0x00,
-    // WRITE_COMMAND_8, 0xE1,
-    // WRITE_BYTES, 15,
-    // 0x0F, 0x32, 0x2E, 0x0B, 0x0D,
-    // 0x05, 0x47, 0x75, 0x37, 0x06,
-    // 0x10, 0x03, 0x24, 0x20, 0x00,
-    // WRITE_C8_D8, 0x36, 0x48,
-    WRITE_COMMAND_8, 0x29, // display on
+
+    WRITE_C8_D8, 0xC2, 0x44,
+
+    WRITE_COMMAND_8, 0xC5,
+    WRITE_BYTES, 4, 0x00, 0x00, 0x00, 0x00,
+
+    WRITE_COMMAND_8, 0xE0,
+    WRITE_BYTES, 15,
+    0x0F, 0x1F, 0x1C, 0x0C,
+    0x0F, 0x08, 0x48, 0x98,
+    0x37, 0x0A, 0x13, 0x04,
+    0x11, 0x0D, 0x00,
+
+    WRITE_COMMAND_8, 0xE1,
+    WRITE_BYTES, 15,
+    0x0F, 0x32, 0x2E, 0x0B,
+    0x0D, 0x05, 0x47, 0x75,
+    0x37, 0x06, 0x10, 0x03,
+    0x24, 0x20, 0x00,
+
+    WRITE_COMMAND_8, ILI9486_DISPON,
     END_WRITE,
     DELAY, ILI9486_SLPOUT_DELAY};
 
@@ -111,5 +106,3 @@ protected:
 
 private:
 };
-
-#endif
