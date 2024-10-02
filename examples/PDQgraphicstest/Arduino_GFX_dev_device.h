@@ -1,4 +1,5 @@
 // #define AD35_S3
+// #define BLOCKCODELAB_ARCADE_LITE
 // #define DLC35010R // or called "Elecrow ESP Terminal with 3.5inch Parallel RGB Capacitive Touch Display (ILI9488)"
 // #define DRAGON_RADAR
 // #define ESP32_1732S019
@@ -74,6 +75,13 @@ Arduino_DataBus *bus = new Arduino_ESP32LCD8(
     45 /* DC */, GFX_NOT_DEFINED /* CS */, 10 /* WR */, GFX_NOT_DEFINED /* RD */,
     9 /* D0 */, 4 /* D1 */, 3 /* D2 */, 8 /* D3 */, 18 /* D4 */, 17 /* D5 */, 16 /* D6 */, 15 /* D7 */);
 Arduino_GFX *gfx = new Arduino_ST7796(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(BLOCKCODELAB_ARCADE_LITE)
+#define GFX_DEV_DEVICE BLOCKCODELAB_ARCADE_LITE
+#define GFX_BL 21
+Arduino_DataBus *bus = new Arduino_ESP32SPI(45 /* DC */, 10 /* CS */, 12 /* SCK */, 11 /* MOSI */, GFX_NOT_DEFINED /* MISO */, HSPI /* spi_num */);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, 46 /* RST */, 3 /* rotation */, false /* IPS */);
+
 #elif defined(DLC35010R)
 #define GFX_DEV_DEVICE DLC35010R
 #define GFX_BL 46
