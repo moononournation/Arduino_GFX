@@ -4,7 +4,7 @@
  */
 #include "Arduino_ESP32SPI.h"
 
-#if defined(ESP32)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3)
 
 struct spi_struct_t
 {
@@ -13,6 +13,10 @@ struct spi_struct_t
   SemaphoreHandle_t lock;
 #endif
   uint8_t num;
+  int8_t sck;
+  int8_t miso;
+  int8_t mosi;
+  int8_t ss;
 };
 
 #if CONFIG_DISABLE_HAL_LOCKS
@@ -21,20 +25,26 @@ struct spi_struct_t
 
 static spi_t _spi_bus_array[] = {
 #if CONFIG_IDF_TARGET_ESP32S2
-    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 1},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 2}
+    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 0, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 1, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 2, -1, -1, -1, -1}
 #elif CONFIG_IDF_TARGET_ESP32S3
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 1}
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 0, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 1, -1, -1, -1, -1}
+#elif CONFIG_IDF_TARGET_ESP32C2
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 0, -1, -1, -1, -1}
+#elif CONFIG_IDF_TARGET_ESP32C3
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 0, -1, -1, -1, -1}
+#elif CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2
+    {(spi_dev_t *)(DR_REG_SPI2_BASE), 0, -1, -1, -1, -1}
 #else
-    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 1},
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 2},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 3}
+    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), 0, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), 1, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), 2, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), 3, -1, -1, -1, -1}
 #endif
 };
-#else // !CONFIG_DISABLE_HAL_LOCKS
+#else
 #define SPI_MUTEX_LOCK() \
   do                     \
   {                      \
@@ -43,30 +53,34 @@ static spi_t _spi_bus_array[] = {
 
 static spi_t _spi_bus_array[] = {
 #if CONFIG_IDF_TARGET_ESP32S2
-    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 1},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 2}
+    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 0, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 1, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 2, -1, -1, -1, -1}
 #elif CONFIG_IDF_TARGET_ESP32S3
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 1}
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 0, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 1, -1, -1, -1, -1}
+#elif CONFIG_IDF_TARGET_ESP32C2
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 0, -1, -1, -1, -1}
 #elif CONFIG_IDF_TARGET_ESP32C3
-    {(volatile spi_dev_t *)(&GPSPI2), NULL, FSPI}
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 0, -1, -1, -1, -1}
+#elif CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2
+    {(spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 0, -1, -1, -1, -1}
 #else
-    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), NULL, 0},
-    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 1},
-    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 2},
-    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 3}
+    {(volatile spi_dev_t *)(DR_REG_SPI0_BASE), NULL, 0, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI1_BASE), NULL, 1, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI2_BASE), NULL, 2, -1, -1, -1, -1},
+    {(volatile spi_dev_t *)(DR_REG_SPI3_BASE), NULL, 3, -1, -1, -1, -1}
 #endif
 };
-#endif // CONFIG_DISABLE_HAL_LOCKS
+#endif
 
 /**
  * @brief Arduino_ESP32SPI
  *
  */
 Arduino_ESP32SPI::Arduino_ESP32SPI(
-    int8_t dc /* = GFX_NOT_DEFINED */, int8_t cs /* = GFX_NOT_DEFINED */, int8_t sck /* = GFX_NOT_DEFINED */, int8_t mosi /* = GFX_NOT_DEFINED */, int8_t miso /* = GFX_NOT_DEFINED */, uint8_t spi_num /* = VSPI for ESP32, HSPI for S2 & S3, FSPI for C3 */, bool is_shared_interface /* = true */)
-    : _dc(dc), _spi_num(spi_num), _is_shared_interface(is_shared_interface)
+    int8_t dc /* = GFX_NOT_DEFINED */, int8_t cs /* = GFX_NOT_DEFINED */, int8_t sck /* = GFX_NOT_DEFINED */, int8_t mosi /* = GFX_NOT_DEFINED */, int8_t miso /* = GFX_NOT_DEFINED */, uint8_t _spi_num /* = VSPI for ESP32, HSPI for S2 & S3, FSPI for C3 */, bool is_shared_interface /* = true */)
+    : _dc(dc), _spi_num(_spi_num), _is_shared_interface(is_shared_interface)
 {
 #if CONFIG_IDF_TARGET_ESP32
   if (
@@ -238,13 +252,13 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
 #elif CONFIG_IDF_TARGET_ESP32S3
   if (_spi_num == FSPI)
   {
-    periph_module_reset(PERIPH_SPI2_MODULE);
-    periph_module_enable(PERIPH_SPI2_MODULE);
+    periph_ll_reset(PERIPH_SPI2_MODULE);
+    periph_ll_enable_clk_clear_rst(PERIPH_SPI2_MODULE);
   }
   else if (_spi_num == HSPI)
   {
-    periph_module_reset(PERIPH_SPI3_MODULE);
-    periph_module_enable(PERIPH_SPI3_MODULE);
+    periph_ll_reset(PERIPH_SPI3_MODULE);
+    periph_ll_enable_clk_clear_rst(PERIPH_SPI3_MODULE);
   }
 #elif CONFIG_IDF_TARGET_ESP32
   if (_spi_num == HSPI)
@@ -262,9 +276,9 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
     DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI01_CLK_EN);
     DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI01_RST);
   }
-#elif CONFIG_IDF_TARGET_ESP32C3
-  periph_module_reset(PERIPH_SPI2_MODULE);
-  periph_module_enable(PERIPH_SPI2_MODULE);
+#elif CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2
+  periph_ll_reset(PERIPH_SPI2_MODULE);
+  periph_ll_enable_clk_clear_rst(PERIPH_SPI2_MODULE);
 #endif
 
   SPI_MUTEX_LOCK();
@@ -1027,4 +1041,4 @@ GFX_INLINE void Arduino_ESP32SPI::POLL(uint32_t len)
     ;
 }
 
-#endif // #if defined(ESP32)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3)

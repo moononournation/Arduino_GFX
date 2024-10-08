@@ -2,24 +2,35 @@
 
 #include "Arduino_DataBus.h"
 
-#if defined(ESP32)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3)
+
 #include "soc/spi_struct.h"
-#if CONFIG_IDF_TARGET_ESP32S3
-#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
-#include "driver/periph_ctrl.h"
-#else
-#include "esp_private/periph_ctrl.h"
-#endif
-#elif CONFIG_IDF_TARGET_ESP32C3
-#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
-#include "driver/periph_ctrl.h"
-#else
-#include "esp_private/periph_ctrl.h"
-#endif
-#include "esp32c3/rom/gpio.h"
-#include "soc/periph_defs.h"
-#else
+#if CONFIG_IDF_TARGET_ESP32  // ESP32/PICO-D4
 #include "soc/dport_reg.h"
+#include "esp32/rom/ets_sys.h"
+#include "esp32/rom/gpio.h"
+#elif CONFIG_IDF_TARGET_ESP32S2
+#include "soc/dport_reg.h"
+#include "esp32s2/rom/ets_sys.h"
+#include "esp32s2/rom/gpio.h"
+#elif CONFIG_IDF_TARGET_ESP32S3
+#include "soc/dport_reg.h"
+#include "esp32s3/rom/ets_sys.h"
+#include "esp32s3/rom/gpio.h"
+#elif CONFIG_IDF_TARGET_ESP32C2
+#include "esp32c2/rom/ets_sys.h"
+#include "esp32c2/rom/gpio.h"
+#elif CONFIG_IDF_TARGET_ESP32C3
+#include "esp32c3/rom/ets_sys.h"
+#include "esp32c3/rom/gpio.h"
+#elif CONFIG_IDF_TARGET_ESP32C6
+#include "esp32c6/rom/ets_sys.h"
+#include "esp32c6/rom/gpio.h"
+#elif CONFIG_IDF_TARGET_ESP32H2
+#include "esp32h2/rom/ets_sys.h"
+#include "esp32h2/rom/gpio.h"
+#else
+#error Target CONFIG_IDF_TARGET is not supported
 #endif
 
 #ifndef ESP32SPI_MAX_PIXELS_AT_ONCE
@@ -95,4 +106,4 @@ private:
   uint16_t _data_buf_bit_idx = 0;
 };
 
-#endif // #if defined(ESP32)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3)

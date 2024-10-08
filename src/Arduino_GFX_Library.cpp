@@ -6,7 +6,7 @@ Arduino_DataBus *create_default_Arduino_DataBus()
   return new Arduino_NRFXSPI(DF_GFX_DC, DF_GFX_CS, DF_GFX_SCK, DF_GFX_MOSI, DF_GFX_MISO);
 #elif defined(TARGET_RP2040)
   return new Arduino_RPiPicoSPI(DF_GFX_DC, DF_GFX_CS, DF_GFX_SCK, DF_GFX_MOSI, DF_GFX_MISO, DF_GFX_SPI);
-#elif defined(ESP32)
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3)
   return new Arduino_ESP32SPI(DF_GFX_DC, DF_GFX_CS, DF_GFX_SCK, DF_GFX_MOSI, DF_GFX_MISO);
 #elif defined(ESP8266)
   return new Arduino_ESP8266SPI(DF_GFX_DC, DF_GFX_CS);
