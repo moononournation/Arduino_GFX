@@ -4,7 +4,21 @@
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3)
 
+#include "esp32-hal.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/semphr.h"
+#include "esp_attr.h"
+#include "soc/spi_reg.h"
 #include "soc/spi_struct.h"
+#include "soc/io_mux_reg.h"
+#include "soc/gpio_sig_map.h"
+#include "soc/rtc.h"
+#include "hal/clk_gate_ll.h"
+#include "esp32-hal-periman.h"
+
+#include "esp_system.h"
+#include "esp_intr_alloc.h"
 #if CONFIG_IDF_TARGET_ESP32  // ESP32/PICO-D4
 #include "soc/dport_reg.h"
 #include "esp32/rom/ets_sys.h"
