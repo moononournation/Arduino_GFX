@@ -115,6 +115,8 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 // ST7735 LCD
 // 0.42" 96x54
 // Arduino_GFX *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 96 /* width */, 54 /* height */, 16 /* col offset 1 */, 106 /* row offset 1 */, 16 /* col offset 2 */, 0 /* row offset 2 */);
+// 0.85" 128x128
+// Arduino_GFX *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 128 /* width */, 128 /* height */, 2 /* col offset 1 */, 1 /* row offset 1 */, 2 /* col offset 2 */, 1 /* row offset 2 */);
 // 1.8" REDTAB 128x160
 // Arduino_GFX *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */);
 // 1.8" BLACKTAB 128x160
