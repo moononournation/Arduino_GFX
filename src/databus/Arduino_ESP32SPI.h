@@ -15,7 +15,6 @@
 #include "soc/gpio_sig_map.h"
 #include "soc/rtc.h"
 #include "hal/clk_gate_ll.h"
-#include "esp32-hal-periman.h"
 
 #include "esp_system.h"
 #include "esp_intr_alloc.h"
