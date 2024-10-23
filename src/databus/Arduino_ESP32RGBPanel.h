@@ -156,12 +156,10 @@ private:
   uint16_t _vsync_back_porch;
   uint16_t _pclk_active_neg;
   int32_t _prefer_speed;
-  bool _useBigEndian;
   uint16_t _de_idle_high;
   uint16_t _pclk_idle_high;
 
   esp_lcd_panel_handle_t _panel_handle = NULL;
-  esp_lcd_rgb_panel_config_t *_rgb_panel;
 };
 
 #endif // #if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)

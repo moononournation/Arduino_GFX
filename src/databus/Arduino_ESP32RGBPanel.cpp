@@ -132,7 +132,6 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
   return (uint16_t *)_rgb_panel->fb;
 }
 
-
 #else
 
 // Implementation for ESP32 board version 3.x
@@ -153,7 +152,7 @@ Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
       _b0(b0), _b1(b1), _b2(b2), _b3(b3), _b4(b4),
       _hsync_polarity(hsync_polarity), _hsync_front_porch(hsync_front_porch), _hsync_pulse_width(hsync_pulse_width), _hsync_back_porch(hsync_back_porch),
       _vsync_polarity(vsync_polarity), _vsync_front_porch(vsync_front_porch), _vsync_pulse_width(vsync_pulse_width), _vsync_back_porch(vsync_back_porch),
-      _pclk_active_neg(pclk_active_neg), _prefer_speed(prefer_speed), _useBigEndian(useBigEndian),
+      _pclk_active_neg(pclk_active_neg), _prefer_speed(prefer_speed),
       _de_idle_high(de_idle_high), _pclk_idle_high(pclk_idle_high)
 {
 }
@@ -193,15 +192,13 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
           .vsync_pulse_width = _vsync_pulse_width,
           .vsync_back_porch = _vsync_back_porch,
           .vsync_front_porch = _vsync_front_porch,
-          // struct {
-          //   uint32_t hsync_idle_low: 1;  /*!< The hsync signal is low in IDLE state */
-          //   uint32_t vsync_idle_low: 1;  /*!< The vsync signal is low in IDLE state */
-          //   uint32_t de_idle_high: 1;    /*!< The de signal is high in IDLE state */
-          //   uint32_t pclk_active_neg: 1; /*!< Whether the display data is clocked out on the falling edge of PCLK */
-          //   uint32_t pclk_idle_high: 1;  /*!< The PCLK stays at high level in IDLE phase */
-          // } flags;                         /*!< LCD RGB timing flags */
-
-      },
+          .flags = {
+              .hsync_idle_low = (_hsync_polarity == 0) ? 1 : 0,
+              .vsync_idle_low = (_vsync_polarity == 0) ? 1 : 0,
+              .de_idle_high = _de_idle_high,
+              .pclk_active_neg = _pclk_active_neg,
+              .pclk_idle_high = _pclk_idle_high,
+          }},
       .data_width = 16, // RGB565 in parallel mode, thus 16 bits in width
       .bits_per_pixel = 16,
       .num_fbs = 1,
@@ -212,7 +209,7 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
       .vsync_gpio_num = _vsync,
       .de_gpio_num = _de,
       .pclk_gpio_num = _pclk,
-      .disp_gpio_num = GPIO_NUM_NC,   // -1
+      .disp_gpio_num = GPIO_NUM_NC, // -1
       .data_gpio_nums = {_b0, _b1, _b2, _b3, _b4, _g0, _g1, _g2, _g3, _g4, _g5, _r0, _r1, _r2, _r3, _r4},
 
       .flags = {
