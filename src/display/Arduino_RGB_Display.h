@@ -3,7 +3,6 @@
 #include "../Arduino_DataBus.h"
 
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
 
 #include "../Arduino_GFX.h"
 #include "../databus/Arduino_ESP32RGBPanel.h"
@@ -2298,5 +2297,4 @@ protected:
 private:
 };
 
-#endif // #if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
