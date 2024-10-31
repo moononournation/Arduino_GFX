@@ -16,6 +16,7 @@
 // #define ESP32_LCDKIT_PAR8A
 // #define ESP32_LCDKIT_PAR8B
 // #define ESP32_LCDKIT_PAR16
+// #define ESP32_S3_3_13_DISPLAY
 // #define ESP32_S3_BOX_3
 // #define ESP32_S3_EYE
 // #define ESP32_S3_RGB
@@ -262,6 +263,24 @@ Arduino_DataBus *bus = new Arduino_ESP32PAR16(
     19 /* D0 */, 21 /* D1 */, 0 /* D2 */, 22 /* D3 */, 23 /* D4 */, 33 /* D5 */, 32 /* D6 */, 27 /* D7 */,
     25 /* D8 */, 26 /* D9 */, 12 /* D10 */, 13 /* D11 */, 14 /* D12 */, 15 /* D13 */, 2 /* D14 */, 4 /* D15 */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */);
+
+#elif defined(ESP32_S3_3_13_DISPLAY)
+#define GFX_DEV_DEVICE ESP32_S3_3_13_DISPLAY
+#define GFX_BL 4
+Arduino_DataBus *bus = new Arduino_SWSPI(
+    GFX_NOT_DEFINED /* DC */, 0 /* CS */,
+    17 /* SCK */, 16 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+#define RGB_PANEL
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    15 /* DE */, 5 /* VSYNC */, 6 /* HSYNC */, 7 /* PCLK */,
+    19 /* R0 */, 8 /* R1 */, 18 /* R2 */, 17 /* R3 */, 16 /* R4 */,
+    11 /* G0 */, 10 /* G1 */, 9 /* G2 */, 46 /* G3 */, 3 /* G4 */, 20 /* G5 */,
+    47 /* B0 */, 21 /* B1 */, 14 /* B2 */, 13 /* B3 */, 12 /* B4 */,
+    1 /* hsync_polarity */, 30 /* hsync_front_porch */, 3 /* hsync_pulse_width */, 30 /* hsync_back_porch */,
+    1 /* vsync_polarity */, 20 /* vsync_front_porch */, 2 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+    376 /* width */, 960 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
+    bus, GFX_NOT_DEFINED /* RST */, gc9503v_type2_init_operations, sizeof(gc9503v_type2_init_operations));
 
 #elif defined(ESP32_S3_BOX_3)
 #define GFX_DEV_DEVICE ARDUINO_ESP32_S3_BOX_3
