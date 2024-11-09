@@ -276,8 +276,9 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     19 /* R0 */, 8 /* R1 */, 18 /* R2 */, 17 /* R3 */, 16 /* R4 */,
     11 /* G0 */, 10 /* G1 */, 9 /* G2 */, 46 /* G3 */, 3 /* G4 */, 20 /* G5 */,
     47 /* B0 */, 21 /* B1 */, 14 /* B2 */, 13 /* B3 */, 12 /* B4 */,
-    1 /* hsync_polarity */, 30 /* hsync_front_porch */, 3 /* hsync_pulse_width */, 30 /* hsync_back_porch */,
-    1 /* vsync_polarity */, 20 /* vsync_front_porch */, 2 /* vsync_pulse_width */, 20 /* vsync_back_porch */);
+    1 /* hsync_polarity */, 30 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 30 /* hsync_back_porch */,
+    1 /* vsync_polarity */, 16 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 16 /* vsync_back_porch */,
+    0 /* pclk_active_neg */, 16000000 /* prefer_speed */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     376 /* width */, 960 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
     bus, GFX_NOT_DEFINED /* RST */, gc9503v_type2_init_operations, sizeof(gc9503v_type2_init_operations));
@@ -368,7 +369,7 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 //     15 /* B0 */, 14 /* B1 */, 13 /* B2 */, 12 /* B3 */, 11 /* B4 */,
 //     1 /* hsync_polarity */, 20 /* hsync_front_porch */, 30 /* hsync_pulse_width */, 38 /* hsync_back_porch */,
 //     1 /* vsync_polarity */, 4 /* vsync_front_porch */, 3 /* vsync_pulse_width */, 15 /* vsync_back_porch */,
-//     10, 16000000);
+//     10 /* pclk_active_neg */, 16000000 /* prefer_speed */);
 // Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 //     640 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
 //     bus, GFX_NOT_DEFINED /* RST */, st7701_type1_init_operations, sizeof(st7701_type1_init_operations));
