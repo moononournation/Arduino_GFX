@@ -1478,6 +1478,7 @@ void Arduino_GFX::draw3bitRGBBitmap(int16_t x, int16_t y,
   {
     for (int16_t i = 0; i < w; i++)
     {
+#ifndef DISABLE_COLOR_DEFINES
       if (offset & 1)
       {
         d = (((c & 0b100) ? RED : 0) |
@@ -1491,6 +1492,21 @@ void Arduino_GFX::draw3bitRGBBitmap(int16_t x, int16_t y,
              ((c & 0b010000) ? GREEN : 0) |
              ((c & 0b001000) ? BLUE : 0));
       }
+#else
+      if (offset & 1)
+      {
+        d = (((c & 0b100) ? RGB565_RED : 0) |
+             ((c & 0b010) ? RGB565_GREEN : 0) |
+             ((c & 0b001) ? RGB565_BLUE : 0));
+      }
+      else
+      {
+        c = bitmap[idx++];
+        d = (((c & 0b100000) ? RGB565_RED : 0) |
+             ((c & 0b010000) ? RGB565_GREEN : 0) |
+             ((c & 0b001000) ? RGB565_BLUE : 0));
+      }
+#endif
       writePixel(x + i, y, d);
       offset++;
     }

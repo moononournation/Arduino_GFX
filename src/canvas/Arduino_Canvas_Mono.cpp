@@ -102,8 +102,13 @@ void Arduino_Canvas_Mono::writePixelPreclipped(int16_t x, int16_t y, uint16_t co
 
 void Arduino_Canvas_Mono::flush()
 {
+#ifndef DISABLE_COLOR_DEFINES
   if (_output)
     _output->drawBitmap(_output_x, _output_y, _framebuffer, _canvas_width, _canvas_height, WHITE, BLACK);
+#else
+  if (_output)
+    _output->drawBitmap(_output_x, _output_y, _framebuffer, _canvas_width, _canvas_height, RGB565_WHITE, RGB565_BLACK);
+#endif
 }
 
 uint8_t *Arduino_Canvas_Mono::getFramebuffer()
