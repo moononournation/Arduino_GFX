@@ -59,7 +59,7 @@ void setup(void)
   {
     Serial.println("gfx->begin() failed!");
   }
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(RGB565_BLACK);
 
 #ifdef GFX_BL
   pinMode(GFX_BL, OUTPUT);
@@ -68,7 +68,7 @@ void setup(void)
 
   gfx->setCursor(10, 10);
   gfx->setFont(&FreeMono8pt7b);
-  gfx->setTextColor(RED);
+  gfx->setTextColor(RGB565_RED);
   gfx->println("Hello World!");
 
   delay(5000); // 5 seconds

@@ -180,13 +180,13 @@ void setup()
   {
     Serial.println("gfx->begin() failed!");
   }
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(RGB565_BLACK);
 
   w = gfx->width(), h = gfx->height();
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(RGB565_BLACK);
   for (int16_t x = 0; x < w; x += 5)
   {
-    gfx->drawFastVLine(x, 0, h, PALERED);
+    gfx->drawFastVLine(x, 0, h, RGB565_PALERED);
   }
 
 #ifdef GFX_BL

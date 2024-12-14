@@ -83,7 +83,7 @@ void setup(void)
   {
     Serial.println("gfx->begin() failed!");
   }
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(RGB565_BLACK);
 
 #ifdef GFX_BL
   pinMode(GFX_BL, OUTPUT);
@@ -126,7 +126,7 @@ void setup(void)
   point_y[3] = point_y[2];
 
   gfx->setCursor(0, 0);
-  gfx->setTextColor(RED);
+  gfx->setTextColor(RGB565_RED);
   gfx->setTextSize(2);
   gfx->println("Touch Calibration");
 }
@@ -142,13 +142,13 @@ void loop()
         point_y[current_point] - 5,
         point_x[current_point] + 5,
         point_y[current_point] + 5,
-        RED);
+        RGB565_RED);
     gfx->drawLine(
         point_x[current_point] + 5,
         point_y[current_point] - 5,
         point_x[current_point] - 5,
         point_y[current_point] + 5,
-        RED);
+        RGB565_RED);
   }
 
   if (touch_touched())
@@ -225,7 +225,7 @@ void loop()
       Serial.printf("int16_t touch_map_y2 = %d;\n", touch_map_y2);
 
       gfx->setCursor(0, point_y[0] + 10);
-      gfx->setTextColor(WHITE);
+      gfx->setTextColor(RGB565_WHITE);
       gfx->setTextSize(1);
       gfx->printf("bool touch_swap_xy = %s;\n", touch_swap_xy ? "true" : "false");
       gfx->printf("int16_t touch_map_x1 = %d;\n", touch_map_x1);
@@ -237,9 +237,9 @@ void loop()
       while (!touch_touched())
         ;
 
-      gfx->fillScreen(BLACK);
+      gfx->fillScreen(RGB565_BLACK);
       gfx->setCursor(0, 0);
-      gfx->setTextColor(RED);
+      gfx->setTextColor(RGB565_RED);
       gfx->setTextSize(2);
       gfx->println("Touch Calibration");
     }

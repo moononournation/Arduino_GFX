@@ -43,12 +43,12 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 0 /* rotation */, false 
  * End of Arduino_GFX setting
  ******************************************************************************/
 
-#define BACKGROUND BLACK
-#define MARK_COLOR WHITE
-#define SUBMARK_COLOR DARKGREY // LIGHTGREY
-#define HOUR_COLOR WHITE
-#define MINUTE_COLOR BLUE // LIGHTGREY
-#define SECOND_COLOR RED
+#define BACKGROUND RGB565_BLACK
+#define MARK_COLOR RGB565_WHITE
+#define SUBMARK_COLOR RGB565_DARKGREY // RGB565_LIGHTGREY
+#define HOUR_COLOR RGB565_WHITE
+#define MINUTE_COLOR RGB565_BLUE // RGB565_LIGHTGREY
+#define SECOND_COLOR RGB565_RED
 
 #define SIXTIETH 0.016666667
 #define TWELFTH 0.08333333

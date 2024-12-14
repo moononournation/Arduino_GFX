@@ -25,11 +25,11 @@ void setup(void)
   {
     Serial.println("gfx->begin() failed!");
   }
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(RGB565_BLACK);
 
   x = 0;
   gfx->setCursor(x, 0);
-  gfx->setTextColor(RED);
+  gfx->setTextColor(RGB565_RED);
   gfx->println("Hello World!");
 
   int16_t x1, y1;
@@ -49,7 +49,7 @@ void loop()
     x = w - 1;
   }
   gfx->setCursor(x, 0);
-  gfx->setTextColor(random(0xffff), BLACK);
+  gfx->setTextColor(random(0xffff), RGB565_BLACK);
   gfx->println("Hello World!");
 
   delay(100); // 0.1 second

@@ -99,7 +99,7 @@ void setup(void)
   {
     Serial.println("gfx->begin() failed!");
   }
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(RGB565_BLACK);
   gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
 
 #ifdef GFX_BL
@@ -130,7 +130,7 @@ void setup(void)
   /* U8g2 font list: https://github.com/olikraus/u8g2/wiki/fntlistall */
   /* U8g2 Unifont list: https://github.com/olikraus/u8g2/wiki/fntgrpunifont */
   gfx->setFont(u8g2_font_unifont_t_chinese4);
-  gfx->setTextColor(WHITE);
+  gfx->setTextColor(RGB565_WHITE);
 }
 
 void loop()
@@ -193,11 +193,11 @@ void loop()
           String title = xml.substring(val_start_idx, val_end_idx);
           Serial.println(title);
 
-          gfx->fillScreen(BLACK);
+          gfx->fillScreen(RGB565_BLACK);
           gfx->setCursor(0, 16);
 
           // gfx->setTextSize(2);
-          gfx->setTextColor(GREEN);
+          gfx->setTextColor(RGB565_GREEN);
           gfx->println(title);
           gfx->println();
 
@@ -210,7 +210,7 @@ void loop()
           Serial.println(description);
 
           // gfx->setTextSize(1);
-          gfx->setTextColor(WHITE);
+          gfx->setTextColor(RGB565_WHITE);
           val_start_idx = 0;
           while (val_start_idx < description.length())
           {

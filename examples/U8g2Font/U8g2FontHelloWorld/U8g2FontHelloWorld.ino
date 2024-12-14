@@ -57,7 +57,7 @@ void setup(void)
   {
     Serial.println("gfx->begin() failed!");
   }
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(RGB565_BLACK);
 
 #ifdef GFX_BL
   pinMode(GFX_BL, OUTPUT);
@@ -67,7 +67,7 @@ void setup(void)
   gfx->setCursor(10, 40);
   /* U8g2 font list: https://github.com/olikraus/u8g2/wiki/fntlistall */
   gfx->setFont(u8g2_font_maniac_tr);
-  gfx->setTextColor(RED);
+  gfx->setTextColor(RGB565_RED);
   gfx->println("Hello World!");
 
   delay(5000); // 5 seconds

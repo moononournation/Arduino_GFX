@@ -158,13 +158,13 @@ void loop(void)
   gfx->setCursor(0, 0);
 
   gfx->setTextSize(tsa);
-  gfx->setTextColor(MAGENTA);
+  gfx->setTextColor(RGB565_MAGENTA);
   gfx->println(F("Arduino GFX PDQ"));
 
   if (h > w)
   {
     gfx->setTextSize(tsb);
-    gfx->setTextColor(GREEN);
+    gfx->setTextColor(RGB565_GREEN);
     gfx->print(F("\nBenchmark "));
     gfx->setTextSize(tsc);
     if (ds == 12)
@@ -193,7 +193,7 @@ void loop(void)
   if ((h > w) || (h > 240))
   {
     gfx->setTextSize(tsc);
-    gfx->setTextColor(GREEN);
+    gfx->setTextColor(RGB565_GREEN);
     gfx->print(F("\nBenchmark Complete!"));
   }
 
@@ -225,7 +225,7 @@ void serialOut(const __FlashStringHelper *item, int32_t v, uint32_t d, bool clea
   delay(d);
   if (clear)
   {
-    gfx->fillScreen(BLACK);
+    gfx->fillScreen(RGB565_BLACK);
   }
 }
 
@@ -236,11 +236,11 @@ void printnice(const __FlashStringHelper *item, long int v)
 #endif
 {
   gfx->setTextSize(tsb);
-  gfx->setTextColor(CYAN);
+  gfx->setTextColor(RGB565_CYAN);
   gfx->print(item);
 
   gfx->setTextSize(tsc);
-  gfx->setTextColor(YELLOW);
+  gfx->setTextColor(RGB565_YELLOW);
   if (v < 0)
   {
     gfx->println(F("      N / A"));
@@ -271,11 +271,11 @@ int32_t testFillScreen()
 {
   uint32_t start = micros_start();
   // Shortened this tedious test!
-  gfx->fillScreen(WHITE);
-  gfx->fillScreen(RED);
-  gfx->fillScreen(GREEN);
-  gfx->fillScreen(BLUE);
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(RGB565_WHITE);
+  gfx->fillScreen(RGB565_RED);
+  gfx->fillScreen(RGB565_GREEN);
+  gfx->fillScreen(RGB565_BLUE);
+  gfx->fillScreen(RGB565_BLACK);
 
   return micros() - start;
 }
@@ -286,83 +286,83 @@ int32_t testText()
   gfx->setCursor(0, 0);
 
   gfx->setTextSize(1);
-  gfx->setTextColor(WHITE, BLACK);
+  gfx->setTextColor(RGB565_WHITE, RGB565_BLACK);
   gfx->println(F("Hello World!"));
 
   gfx->setTextSize(2);
   gfx->setTextColor(gfx->color565(0xff, 0x00, 0x00));
-  gfx->print(F("RED "));
+  gfx->print(F("RGB565_RED "));
   gfx->setTextColor(gfx->color565(0x00, 0xff, 0x00));
-  gfx->print(F("GREEN "));
+  gfx->print(F("RGB565_GREEN "));
   gfx->setTextColor(gfx->color565(0x00, 0x00, 0xff));
-  gfx->println(F("BLUE"));
+  gfx->println(F("RGB565_BLUE"));
 
   gfx->setTextSize(tsa);
-  gfx->setTextColor(YELLOW);
+  gfx->setTextColor(RGB565_YELLOW);
   gfx->println(1234.56);
 
-  gfx->setTextColor(WHITE);
+  gfx->setTextColor(RGB565_WHITE);
   gfx->println((w > 128) ? 0xDEADBEEF : 0xDEADBEE, HEX);
 
-  gfx->setTextColor(CYAN, WHITE);
+  gfx->setTextColor(RGB565_CYAN, RGB565_WHITE);
   gfx->println(F("Groop,"));
 
   gfx->setTextSize(tsc);
-  gfx->setTextColor(MAGENTA, WHITE);
+  gfx->setTextColor(RGB565_MAGENTA, RGB565_WHITE);
   gfx->println(F("I implore thee,"));
 
   gfx->setTextSize(1);
-  gfx->setTextColor(NAVY, WHITE);
+  gfx->setTextColor(RGB565_NAVY, RGB565_WHITE);
   gfx->println(F("my foonting turlingdromes."));
 
-  gfx->setTextColor(DARKGREEN, WHITE);
+  gfx->setTextColor(RGB565_DARKGREEN, RGB565_WHITE);
   gfx->println(F("And hooptiously drangle me"));
 
-  gfx->setTextColor(DARKCYAN, WHITE);
+  gfx->setTextColor(RGB565_DARKCYAN, RGB565_WHITE);
   gfx->println(F("with crinkly bindlewurdles,"));
 
-  gfx->setTextColor(MAROON, WHITE);
+  gfx->setTextColor(RGB565_MAROON, RGB565_WHITE);
   gfx->println(F("Or I will rend thee"));
 
-  gfx->setTextColor(PURPLE, WHITE);
+  gfx->setTextColor(RGB565_PURPLE, RGB565_WHITE);
   gfx->println(F("in the gobberwartsb"));
 
-  gfx->setTextColor(OLIVE, WHITE);
+  gfx->setTextColor(RGB565_OLIVE, RGB565_WHITE);
   gfx->println(F("with my blurglecruncheon,"));
 
-  gfx->setTextColor(DARKGREY, WHITE);
+  gfx->setTextColor(RGB565_DARKGREY, RGB565_WHITE);
   gfx->println(F("see if I don't!"));
 
   gfx->setTextSize(2);
-  gfx->setTextColor(RED);
+  gfx->setTextColor(RGB565_RED);
   gfx->println(F("Size 2"));
 
   gfx->setTextSize(3);
-  gfx->setTextColor(ORANGE);
+  gfx->setTextColor(RGB565_ORANGE);
   gfx->println(F("Size 3"));
 
   gfx->setTextSize(4);
-  gfx->setTextColor(YELLOW);
+  gfx->setTextColor(RGB565_YELLOW);
   gfx->println(F("Size 4"));
 
   gfx->setTextSize(5);
-  gfx->setTextColor(GREENYELLOW);
+  gfx->setTextColor(RGB565_GREENYELLOW);
   gfx->println(F("Size 5"));
 
   gfx->setTextSize(6);
-  gfx->setTextColor(GREEN);
+  gfx->setTextColor(RGB565_GREEN);
   gfx->println(F("Size 6"));
 
   gfx->setTextSize(7);
-  gfx->setTextColor(BLUE);
+  gfx->setTextColor(RGB565_BLUE);
   gfx->println(F("Size 7"));
 
   gfx->setTextSize(8);
-  gfx->setTextColor(PURPLE);
+  gfx->setTextColor(RGB565_PURPLE);
   gfx->println(F("Size 8"));
 
   gfx->setTextSize(9);
-  gfx->setTextColor(PALERED);
+  gfx->setTextColor(RGB565_PALERED);
   gfx->println(F("Size 9"));
 
   return micros() - start;
@@ -397,7 +397,7 @@ int32_t testLines()
   y2 = h - 1;
   for (x2 = 0; x2 < w; x2 += 6)
   {
-    gfx->drawLine(x1, y1, x2, y2, BLUE);
+    gfx->drawLine(x1, y1, x2, y2, RGB565_BLUE);
   }
 #ifdef ESP8266
   yield(); // avoid long run triggered ESP8266 WDT restart
@@ -406,7 +406,7 @@ int32_t testLines()
   x2 = w - 1;
   for (y2 = 0; y2 < h; y2 += 6)
   {
-    gfx->drawLine(x1, y1, x2, y2, BLUE);
+    gfx->drawLine(x1, y1, x2, y2, RGB565_BLUE);
   }
 #ifdef ESP8266
   yield(); // avoid long run triggered ESP8266 WDT restart
@@ -417,7 +417,7 @@ int32_t testLines()
   y2 = h - 1;
   for (x2 = 0; x2 < w; x2 += 6)
   {
-    gfx->drawLine(x1, y1, x2, y2, BLUE);
+    gfx->drawLine(x1, y1, x2, y2, RGB565_BLUE);
   }
 #ifdef ESP8266
   yield(); // avoid long run triggered ESP8266 WDT restart
@@ -426,7 +426,7 @@ int32_t testLines()
   x2 = 0;
   for (y2 = 0; y2 < h; y2 += 6)
   {
-    gfx->drawLine(x1, y1, x2, y2, BLUE);
+    gfx->drawLine(x1, y1, x2, y2, RGB565_BLUE);
   }
 #ifdef ESP8266
   yield(); // avoid long run triggered ESP8266 WDT restart
@@ -437,7 +437,7 @@ int32_t testLines()
   y2 = 0;
   for (x2 = 0; x2 < w; x2 += 6)
   {
-    gfx->drawLine(x1, y1, x2, y2, BLUE);
+    gfx->drawLine(x1, y1, x2, y2, RGB565_BLUE);
   }
 #ifdef ESP8266
   yield(); // avoid long run triggered ESP8266 WDT restart
@@ -446,7 +446,7 @@ int32_t testLines()
   x2 = w - 1;
   for (y2 = 0; y2 < h; y2 += 6)
   {
-    gfx->drawLine(x1, y1, x2, y2, BLUE);
+    gfx->drawLine(x1, y1, x2, y2, RGB565_BLUE);
   }
 #ifdef ESP8266
   yield(); // avoid long run triggered ESP8266 WDT restart
@@ -457,7 +457,7 @@ int32_t testLines()
   y2 = 0;
   for (x2 = 0; x2 < w; x2 += 6)
   {
-    gfx->drawLine(x1, y1, x2, y2, BLUE);
+    gfx->drawLine(x1, y1, x2, y2, RGB565_BLUE);
   }
 #ifdef ESP8266
   yield(); // avoid long run triggered ESP8266 WDT restart
@@ -466,7 +466,7 @@ int32_t testLines()
   x2 = 0;
   for (y2 = 0; y2 < h; y2 += 6)
   {
-    gfx->drawLine(x1, y1, x2, y2, BLUE);
+    gfx->drawLine(x1, y1, x2, y2, RGB565_BLUE);
   }
 #ifdef ESP8266
   yield(); // avoid long run triggered ESP8266 WDT restart
@@ -484,11 +484,11 @@ int32_t testFastLines()
 
   for (y = 0; y < h; y += 5)
   {
-    gfx->drawFastHLine(0, y, w, RED);
+    gfx->drawFastHLine(0, y, w, RGB565_RED);
   }
   for (x = 0; x < w; x += 5)
   {
-    gfx->drawFastVLine(x, 0, h, BLUE);
+    gfx->drawFastVLine(x, 0, h, RGB565_BLUE);
   }
 
   return micros() - start;
@@ -520,7 +520,7 @@ int32_t testRects()
   for (i = 2; i < n; i += 6)
   {
     i2 = i / 2;
-    gfx->drawRect(cx - i2, cy - i2, i, i, GREEN);
+    gfx->drawRect(cx - i2, cy - i2, i, i, RGB565_GREEN);
   }
 
   return micros() - start;
@@ -537,7 +537,7 @@ int32_t testFilledCircles(uint8_t radius)
   {
     for (y = radius; y < h; y += r2)
     {
-      gfx->fillCircle(x, y, radius, MAGENTA);
+      gfx->fillCircle(x, y, radius, RGB565_MAGENTA);
     }
   }
 
@@ -559,7 +559,7 @@ int32_t testCircles(uint8_t radius)
   {
     for (y = 0; y < h1; y += r2)
     {
-      gfx->drawCircle(x, y, radius, WHITE);
+      gfx->drawCircle(x, y, radius, RGB565_WHITE);
     }
   }
 
@@ -573,7 +573,7 @@ int32_t testFillArcs()
 
   for (i = 6; i < cn; i += 6)
   {
-    gfx->fillArc(cx1, cy1, i, i - 3, 0, i * r, RED);
+    gfx->fillArc(cx1, cy1, i, i - 3, 0, i * r, RGB565_RED);
   }
 
   return micros() - start;
@@ -586,7 +586,7 @@ int32_t testArcs()
 
   for (i = 6; i < cn; i += 6)
   {
-    gfx->drawArc(cx1, cy1, i, i - 3, 0, i * r, WHITE);
+    gfx->drawArc(cx1, cy1, i, i - 3, 0, i * r, RGB565_WHITE);
   }
 
   return micros() - start;

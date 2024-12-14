@@ -60,20 +60,20 @@ void setup(void)
   {
     Serial.println("gfx->begin() failed!");
   }
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(RGB565_BLACK);
 
 #ifdef GFX_BL
   pinMode(GFX_BL, OUTPUT);
   digitalWrite(GFX_BL, HIGH);
 #endif
 
-  gfx->setTextColor(GREEN);
+  gfx->setTextColor(RGB565_GREEN);
   for (int x = 0; x < 16; x++)
   {
     gfx->setCursor(10 + x * 8, 2);
     gfx->print(x, 16);
   }
-  gfx->setTextColor(BLUE);
+  gfx->setTextColor(RGB565_BLUE);
   for (int y = 0; y < 16; y++)
   {
     gfx->setCursor(2, 12 + y * 10);
@@ -85,7 +85,7 @@ void setup(void)
   {
     for (int x = 0; x < 16; x++)
     {
-      gfx->drawChar(10 + x * 8, 12 + y * 10, c++, WHITE, BLACK);
+      gfx->drawChar(10 + x * 8, 12 + y * 10, c++, RGB565_WHITE, RGB565_BLACK);
     }
   }
 

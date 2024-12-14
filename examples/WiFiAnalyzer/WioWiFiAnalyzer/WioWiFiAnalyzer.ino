@@ -45,17 +45,17 @@ uint16_t channel_legend[] = {
 
 // Channel color mapping
 uint16_t channel_color[] = {
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, WHITE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE};
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_WHITE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE};
 
 uint8_t scan_count = 0;
 
@@ -127,11 +127,11 @@ void setup()
 
   // init banner
   gfx->setTextSize(text_size);
-  gfx->fillScreen(BLACK);
-  gfx->setTextColor(BLUE);
+  gfx->fillScreen(RGB565_BLACK);
+  gfx->setTextColor(RGB565_BLUE);
   gfx->setCursor(2, 2);
   gfx->print("Wio");
-  gfx->setTextColor(WHITE);
+  gfx->setTextColor(RGB565_WHITE);
   gfx->print(" WiFi Analyzer");
 }
 
@@ -151,12 +151,12 @@ void loop()
   int n = WiFi.scanNetworks(false /* async */, true /* show_hidden */, true /* passive */, 500 /* max_ms_per_chan */);
 
   // clear old graph
-  gfx->fillRect(0, banner_height, w, h - banner_height, BLACK);
+  gfx->fillRect(0, banner_height, w, h - banner_height, RGB565_BLACK);
   gfx->setTextSize(1);
 
   if (n == 0)
   {
-    gfx->setTextColor(WHITE);
+    gfx->setTextColor(RGB565_WHITE);
     gfx->setCursor(0, banner_height);
     gfx->println("No networks found");
   }
@@ -249,13 +249,13 @@ void loop()
   }
 
   // print WiFi found
-  gfx->setTextColor(WHITE);
+  gfx->setTextColor(RGB565_WHITE);
   gfx->setCursor(2, banner_height);
   gfx->print(n);
   gfx->print(" networks");
 
   // draw 2.4 GHz graph base axle
-  gfx->drawFastHLine(0, graph24_baseline, 320, WHITE);
+  gfx->drawFastHLine(0, graph24_baseline, 320, RGB565_WHITE);
   for (idx = 0; idx < 14; idx++)
   {
     channel = channel_legend[idx];
@@ -268,14 +268,14 @@ void loop()
     }
     if (ap_count_list[idx] > 0)
     {
-      gfx->setTextColor(DARKGREY);
+      gfx->setTextColor(RGB565_DARKGREY);
       gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 3 : 6), graph24_baseline + 8 + 2);
       gfx->print(ap_count_list[idx]);
     }
   }
 
   // draw 5 GHz graph base axle
-  gfx->drawFastHLine(0, graph50_baseline, gfx->width(), WHITE);
+  gfx->drawFastHLine(0, graph50_baseline, gfx->width(), RGB565_WHITE);
   for (idx = 14; idx < 71; idx++)
   {
     channel = channel_legend[idx];
@@ -288,7 +288,7 @@ void loop()
     }
     if (ap_count_list[idx] > 0)
     {
-      gfx->setTextColor(DARKGREY);
+      gfx->setTextColor(RGB565_DARKGREY);
       gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 3 : 6), graph50_baseline + 8 + 2);
       gfx->print(ap_count_list[idx]);
     }

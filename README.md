@@ -26,9 +26,9 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, 17 /* RST */);
 
 ```C
 gfx->begin();
-gfx->fillScreen(BLACK);
+gfx->fillScreen(RGB565_BLACK);
 gfx->setCursor(10, 10);
-gfx->setTextColor(RED);
+gfx->setTextColor(RGB565_RED);
 gfx->println("Hello World!");
 ```
 
@@ -87,7 +87,7 @@ Another U8g2 font advantage is the font support Unicode glyphs. Simply enable se
 
 ```C
 gfx->begin();
-gfx->fillScreen(BLACK);
+gfx->fillScreen(RGB565_BLACK);
 gfx->setUTF8Print(true);
 ```
 

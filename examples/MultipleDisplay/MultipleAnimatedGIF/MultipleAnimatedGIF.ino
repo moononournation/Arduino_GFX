@@ -83,28 +83,28 @@ void setup()
   {
     Serial.println("gfx1->begin() failed!");
   }
-  gfx1->fillScreen(RED);
+  gfx1->fillScreen(RGB565_RED);
   delay(200);
 
   if (!gfx2->begin())
   {
     Serial.println("gfx2->begin() failed!");
   }
-  gfx2->fillScreen(YELLOW);
+  gfx2->fillScreen(RGB565_YELLOW);
   delay(200);
 
   if (!gfx3->begin())
   {
     Serial.println("gfx3->begin() failed!");
   }
-  gfx3->fillScreen(GREEN);
+  gfx3->fillScreen(RGB565_GREEN);
   delay(200);
 
   if (!gfx4->begin())
   {
     Serial.println("gfx4->begin() failed!");
   }
-  gfx4->fillScreen(BLUE);
+  gfx4->fillScreen(RGB565_BLUE);
   delay(200);
 
 #if defined(TARGET_RP2040)

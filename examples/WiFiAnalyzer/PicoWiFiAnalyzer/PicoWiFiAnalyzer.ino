@@ -57,8 +57,8 @@ int16_t w, h, text_size, banner_height, graph_baseline, graph_height, channel_wi
 
 // Channel color mapping from channel 1 to 14
 uint16_t channel_color[] = {
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA};
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA};
 
 uint8_t scan_count = 0;
 
@@ -99,11 +99,11 @@ void setup()
 
   // init banner
   gfx->setTextSize(text_size);
-  gfx->fillScreen(BLACK);
-  gfx->setTextColor(MAGENTA);
+  gfx->fillScreen(RGB565_BLACK);
+  gfx->setTextColor(RGB565_MAGENTA);
   gfx->setCursor(0, 0);
   gfx->print("Pico W");
-  gfx->setTextColor(WHITE);
+  gfx->setTextColor(RGB565_WHITE);
   gfx->print(" WiFi Analyzer");
 }
 
@@ -138,12 +138,12 @@ void loop()
   int n = WiFi.scanNetworks();
 
   // clear old graph
-  gfx->fillRect(0, banner_height, w, h - banner_height, BLACK);
+  gfx->fillRect(0, banner_height, w, h - banner_height, RGB565_BLACK);
   gfx->setTextSize(1);
 
   if (n == 0)
   {
-    gfx->setTextColor(WHITE);
+    gfx->setTextColor(RGB565_WHITE);
     gfx->setCursor(0, banner_height);
     gfx->println("no networks found");
   }
@@ -280,7 +280,7 @@ void loop()
   }
 
   // print WiFi stat
-  gfx->setTextColor(WHITE);
+  gfx->setTextColor(RGB565_WHITE);
   gfx->setCursor(0, banner_height);
   gfx->print(n);
   gfx->print(" networks found, lesser noise channels: ");
@@ -315,7 +315,7 @@ void loop()
   }
 
   // draw graph base axle
-  gfx->drawFastHLine(0, graph_baseline, gfx->width(), WHITE);
+  gfx->drawFastHLine(0, graph_baseline, gfx->width(), RGB565_WHITE);
   for (channel = 1; channel <= 14; channel++)
   {
     idx = channel - 1;

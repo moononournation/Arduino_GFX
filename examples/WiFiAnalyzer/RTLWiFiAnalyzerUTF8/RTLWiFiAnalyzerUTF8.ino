@@ -57,17 +57,17 @@ uint16_t channel_legend[] = {
 
 // Channel color mapping
 uint16_t channel_color[] = {
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, WHITE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, MAGENTA,
-    RED, ORANGE};
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_WHITE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE};
 
 uint16_t channelIdx(int channel)
 {
@@ -187,11 +187,11 @@ void setup()
   channel50_width = w / 62;
 
   // direct draw banner to output display
-  gfx->fillScreen(BLACK);
-  gfx->setTextColor(GREEN);
+  gfx->fillScreen(RGB565_BLACK);
+  gfx->setTextColor(RGB565_GREEN);
   gfx->setCursor(0, 14);
   gfx->print("RTL");
-  gfx->setTextColor(WHITE);
+  gfx->setTextColor(RGB565_WHITE);
   gfx->print(" WiFi分析儀");
 }
 
@@ -210,11 +210,11 @@ void loop()
   int n = scanNetworks();
 
   // clear old graph
-  gfx->fillRect(0, banner_height, w, h - banner_height, BLACK);
+  gfx->fillRect(0, banner_height, w, h - banner_height, RGB565_BLACK);
 
   if (n == 0)
   {
-    gfx->setTextColor(WHITE);
+    gfx->setTextColor(RGB565_WHITE);
     gfx->setCursor(0, banner_height + 14);
     gfx->println("找不到WiFi");
   }
@@ -306,7 +306,7 @@ void loop()
   }
 
   // draw 2.4 GHz graph base axle
-  gfx->drawFastHLine(0, graph24_baseline, 320, WHITE);
+  gfx->drawFastHLine(0, graph24_baseline, 320, RGB565_WHITE);
   for (idx = 0; idx < 14; idx++)
   {
     channel = channel_legend[idx];
@@ -319,14 +319,14 @@ void loop()
     }
     if (ap_count_list[idx] > 0)
     {
-      gfx->setTextColor(LIGHTGREY);
+      gfx->setTextColor(RGB565_LIGHTGREY);
       gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 4 : 8), graph24_baseline + 16 + 14);
       gfx->print(ap_count_list[idx]);
     }
   }
 
   // draw 5 GHz graph base axle
-  gfx->drawFastHLine(0, graph50_baseline, gfx->width(), WHITE);
+  gfx->drawFastHLine(0, graph50_baseline, gfx->width(), RGB565_WHITE);
   for (idx = 14; idx < 71; idx++)
   {
     channel = channel_legend[idx];
@@ -339,7 +339,7 @@ void loop()
     }
     if (ap_count_list[idx] > 0)
     {
-      gfx->setTextColor(DARKGREY);
+      gfx->setTextColor(RGB565_DARKGREY);
       gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 4 : 8), graph50_baseline + 16 + 14);
       gfx->print(ap_count_list[idx]);
     }

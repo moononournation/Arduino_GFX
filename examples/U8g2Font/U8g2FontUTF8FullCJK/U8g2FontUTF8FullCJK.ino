@@ -64,7 +64,7 @@ void setup(void)
   {
     Serial.println("gfx->begin() failed!");
   }
-  gfx->fillScreen(BLACK);
+  gfx->fillScreen(RGB565_BLACK);
   gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
 
 #ifdef GFX_BL
@@ -79,23 +79,23 @@ void setup(void)
   // gfx->setFont(u8g2_font_unifont_t_cjk);
   gfx->setCursor(0, 14);
 
-  gfx->setTextColor(RED);
+  gfx->setTextColor(RGB565_RED);
   gfx->println("世界你好，今天的天氣真好啊！");
   gfx->println();
 
-  gfx->setTextColor(YELLOW);
+  gfx->setTextColor(RGB565_YELLOW);
   gfx->println("世界你好，今天的天气真好啊！");
   gfx->println();
 
-  gfx->setTextColor(GREEN);
+  gfx->setTextColor(RGB565_GREEN);
   gfx->println("こんにちは世界、今日はいいお天気ですね！");
   gfx->println();
 
-  gfx->setTextColor(BLUE);
+  gfx->setTextColor(RGB565_BLUE);
   gfx->println("안녕하세요 세계, 오늘 날씨가 너무 좋습니다!");
   gfx->println();
 
-  gfx->setTextColor(MAGENTA);
+  gfx->setTextColor(RGB565_MAGENTA);
   gfx->println("Hello world, the weather is so nice today!");
 }
 

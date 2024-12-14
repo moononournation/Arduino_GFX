@@ -122,7 +122,7 @@ void setup()
   {
     Serial.println("canvasGfx->begin() failed!");
   }
-  canvasGfx->fillScreen(BLACK);
+  canvasGfx->fillScreen(RGB565_BLACK);
   canvasGfx->flush();
   canvasGfx->setDirectUseColorIndex(true);
 
