@@ -2,7 +2,7 @@
 
 // ESP_LCD_Panel implementation for esp32s3.
 
-// This panel implementation requires a hardware setup with 
+// This panel implementation requires a hardware setup with
 //  * RGB LCD peripheral supported (esps3 for now)
 //  * Octal PSRAM onboard
 //  * RGB panel, 16 bit-width, with HSYNC, VSYNC and DE signal
@@ -12,7 +12,7 @@
 // See: (ESP32 board version 3.x)
 // * https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/api-reference/peripherals/lcd/rgb_lcd.html
 // * https://github.com/espressif/esp-idf/blob/master/examples/peripherals/lcd/rgb_panel/README.md
-// 
+//
 // The prior implementation (ESP32 board version 2.x) was largely undocumented.
 
 #include "Arduino_DataBus.h"
@@ -36,7 +36,6 @@ extern int Cache_WriteBack_Addr(uint32_t addr, uint32_t size);
 
 #include "hal/lcd_hal.h"
 #include "hal/lcd_ll.h"
-
 
 // extract from esp-idf esp_lcd_rgb_panel.c
 struct esp_rgb_panel_t
@@ -85,6 +84,10 @@ public:
       uint16_t de_idle_high = 0, uint16_t pclk_idle_high = 0);
 
   bool begin(int32_t speed = GFX_NOT_DEFINED);
+
+  bool isUseBigEndian() {
+    return _useBigEndian;
+  }
 
   uint16_t *getFrameBuffer(int16_t w, int16_t h);
 
