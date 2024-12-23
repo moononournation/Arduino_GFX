@@ -50,9 +50,9 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
       .clk_src = LCD_CLK_SRC_DEFAULT,
 #endif
       .timings = {
-          .pclk_hz = (_prefer_speed == GFX_NOT_DEFINED) ? _speed : _prefer_speed,
-          .h_res = w,
-          .v_res = h,
+          .pclk_hz = (uint32_t)((_prefer_speed == GFX_NOT_DEFINED) ? _speed : _prefer_speed),
+          .h_res = (uint32_t)w,
+          .v_res = (uint32_t)h,
           .hsync_pulse_width = _hsync_pulse_width,
           .hsync_back_porch = _hsync_back_porch,
           .hsync_front_porch = _hsync_front_porch,
@@ -60,8 +60,8 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
           .vsync_back_porch = _vsync_back_porch,
           .vsync_front_porch = _vsync_front_porch,
           .flags = {
-              .hsync_idle_low = (_hsync_polarity == 0) ? 1 : 0,
-              .vsync_idle_low = (_vsync_polarity == 0) ? 1 : 0,
+              .hsync_idle_low = (uint32_t)((_hsync_polarity == 0) ? 1 : 0),
+              .vsync_idle_low = (uint32_t)((_vsync_polarity == 0) ? 1 : 0),
               .de_idle_high = _de_idle_high,
               .pclk_active_neg = _pclk_active_neg,
               .pclk_idle_high = _pclk_idle_high,
@@ -72,6 +72,7 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
 #else
       .bits_per_pixel = 16,
       .num_fbs = 1,
+      .bounce_buffer_size_px = 0,
 #endif
       .sram_trans_align = 8,
       .psram_trans_align = 64,
@@ -80,8 +81,14 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
       .de_gpio_num = _de,
       .pclk_gpio_num = _pclk,
       .disp_gpio_num = GPIO_NUM_NC, // -1
+      .data_gpio_nums = {0},
       .flags = {
+          .disp_active_low = true,
+          .refresh_on_demand = false,
           .fb_in_psram = true, // allocate frame buffer from PSRAM
+          .double_fb = false,
+          .no_fb = false,
+          .bb_invalidate_cache = false,
       },
   };
 
