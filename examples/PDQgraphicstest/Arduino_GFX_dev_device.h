@@ -57,7 +57,7 @@
 #include <Wire.h>
 #include <Adafruit_AW9523.h>
 Adafruit_AW9523 aw;
-#define GFX_EXTRA_PRE_INIT()                      \
+#define DEV_DEVICE_INIT()                         \
     {                                             \
         Wire.begin(6 /* SDA */, 5 /* SCL */);     \
         aw.begin(0x59);                           \
@@ -291,7 +291,7 @@ Arduino_GFX *gfx = new Arduino_ILI9342(bus, GFX_NOT_DEFINED /* RST */, 0 /* rota
 
 #elif defined(ESP32_S3_EYE)
 #define GFX_DEV_DEVICE ESP32_S3_EYE
-#define GFX_EXTRA_PRE_INIT()                         \
+#define DEV_DEVICE_INIT()                            \
     {                                                \
         pinMode(3 /* camera indicator */, OUTPUT);   \
         digitalWrite(3 /* camera indicator */, LOW); \
@@ -452,12 +452,14 @@ Arduino_GFX *gfx = new Arduino_ST77916(bus, 47 /* RST */, 0 /* rotation */, true
 
 #elif defined(LILYGO_T_DECK)
 #define GFX_DEV_DEVICE LILYGO_T_DECK
-#define GFX_EXTRA_PRE_INIT()                             \
+#define DEV_DEVICE_INIT()                                \
     {                                                    \
-        pinMode(39 /* TDECK_SDCARD_CS */, OUTPUT);       \
-        digitalWrite(39 /* TDECK_SDCARD_CS */, HIGH);    \
         pinMode(9 /* TDECK_RADIO_CS */, OUTPUT);         \
         digitalWrite(9 /* TDECK_RADIO_CS */, HIGH);      \
+        pinMode(12 /* TDECK_LCD_CS */, OUTPUT);          \
+        digitalWrite(12 /* TDECK_LCD_CS */, HIGH);       \
+        pinMode(39 /* TDECK_SDCARD_CS */, OUTPUT);       \
+        digitalWrite(39 /* TDECK_SDCARD_CS */, HIGH);    \
         pinMode(10 /* TDECK_PERI_POWERON */, OUTPUT);    \
         digitalWrite(10 /* TDECK_PERI_POWERON */, HIGH); \
         delay(500);                                      \
@@ -474,7 +476,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 23 /* RST */, 0 /* rotation */, true 
 
 #elif defined(LILYGO_T_DISPLAY_S3)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3
-#define GFX_EXTRA_PRE_INIT()              \
+#define DEV_DEVICE_INIT()                 \
     {                                     \
         pinMode(15 /* PWD */, OUTPUT);    \
         digitalWrite(15 /* PWD */, HIGH); \
@@ -493,8 +495,8 @@ Arduino_GFX *gfx = new Arduino_RM67162(bus, 17 /* RST */, 0 /* rotation */);
 
 #elif defined(LILYGO_T_Display_S3_AMOLED_1_64)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3_AMOLED_1_64
-#define GFX_EXTRA_PRE_INIT()              \
-    {                                     \
+#define DEV_DEVICE_INIT()                    \
+    {                                        \
         pinMode(16 /* LCD_EN */, OUTPUT);    \
         digitalWrite(16 /* LCD_EN */, HIGH); \
     }
@@ -522,7 +524,7 @@ Arduino_GFX *gfx = new Arduino_ST7796(bus, 47 /* RST */, 0 /* rotation */, true 
 
 #elif defined(LILYGO_T_QT)
 #define GFX_DEV_DEVICE LILYGO_T_QT
-#define GFX_EXTRA_PRE_INIT()            \
+#define DEV_DEVICE_INIT()               \
     {                                   \
         pinMode(10 /* BL */, OUTPUT);   \
         digitalWrite(10 /* BL */, LOW); \
@@ -533,7 +535,7 @@ Arduino_GFX *gfx = new Arduino_GC9107(bus, 1 /* RST */, 0 /* rotation */, true /
 #elif defined(LILYGO_T_RGB)
 #define GFX_DEV_DEVICE LILYGO_T_RGB
 #include <Wire.h>
-#define GFX_EXTRA_PRE_INIT()                                        \
+#define DEV_DEVICE_INIT()                                           \
     {                                                               \
         Wire.begin(8 /* SDA */, 48 /* SCL */, 800000L /* speed */); \
     }
@@ -555,7 +557,7 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 
 #elif defined(LILYGO_T_TRACK)
 #define GFX_DEV_DEVICE LILYGO_T_TRACK
-#define GFX_EXTRA_PRE_INIT()               \
+#define DEV_DEVICE_INIT()                  \
     {                                      \
         pinMode(4 /* POWER */, OUTPUT);    \
         digitalWrite(4 /* POWER */, HIGH); \
@@ -573,7 +575,7 @@ Arduino_GFX *gfx = new Arduino_GC9A01(bus, 27 /* RST */, 0 /* rotation */, true 
 
 #elif defined(LILYGO_T4_S3)
 #define GFX_DEV_DEVICE LILYGO_T4_S3
-#define GFX_EXTRA_PRE_INIT()               \
+#define DEV_DEVICE_INIT()                  \
     {                                      \
         pinMode(9 /* POWER */, OUTPUT);    \
         digitalWrite(9 /* POWER */, HIGH); \

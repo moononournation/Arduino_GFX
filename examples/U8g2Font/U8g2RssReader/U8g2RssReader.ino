@@ -85,14 +85,14 @@ HttpClient http(client);
 
 void setup(void)
 {
+#ifdef DEV_DEVICE_INIT
+  DEV_DEVICE_INIT();
+#endif
+
   Serial.begin(115200);
   // while (!Serial);
   // Serial.setDebugOutput(true);
   Serial.println("Arduino_GFX U8g2 Font RSS Reader example");
-
-#ifdef GFX_EXTRA_PRE_INIT
-  GFX_EXTRA_PRE_INIT();
-#endif
 
   Serial.println("Init display");
   if (!gfx->begin())
