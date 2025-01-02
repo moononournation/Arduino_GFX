@@ -45,7 +45,7 @@ Arduino_GFX *gfx4 = new Arduino_ILI9341(bus4, GFX_NOT_DEFINED /* RST */, 0 /* ro
  * End of Arduino_GFX setting
  ******************************************************************************/
 
-#if defined(TARGET_RP2040)
+#if defined(TARGET_RP2040) || defined(PICO_RP2350)
 #include <LittleFS.h>
 #include <SD.h>
 #elif defined(ESP32)
@@ -107,7 +107,7 @@ void setup()
   gfx4->fillScreen(RGB565_BLUE);
   delay(200);
 
-#if defined(TARGET_RP2040)
+#if defined(TARGET_RP2040) || defined(PICO_RP2350)
   if (!LittleFS.begin())
   // if (!SD.begin(SS))
 #elif defined(ESP32)
@@ -130,7 +130,7 @@ void setup()
 
 void loop()
 {
-#if defined(TARGET_RP2040)
+#if defined(TARGET_RP2040) || defined(PICO_RP2350)
   File gifFile1 = LittleFS.open(GIF_FILENAME1, "r");
   File gifFile2 = LittleFS.open(GIF_FILENAME2, "r");
   File gifFile3 = LittleFS.open(GIF_FILENAME3, "r");

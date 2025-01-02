@@ -92,7 +92,7 @@ bool Arduino_SWSPI::begin(int32_t, int8_t)
     _misoPinMask = digitalPinToBitMask(_miso);
     _misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
   }
-#elif defined(TARGET_RP2040)
+#elif defined(TARGET_RP2040) || defined(PICO_RP2350)
   if (_dc != GFX_NOT_DEFINED)
   {
     _dcPinMask = digitalPinToBitMask(_dc);
