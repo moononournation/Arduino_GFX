@@ -2,15 +2,16 @@
 
 #include "Arduino_DataBus.h"
 
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
+#if 1 || defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+#if 1 || (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR >= 5)
 
-#ifndef LCD_MAX_PIXELS_AT_ONCE
-#define LCD_MAX_PIXELS_AT_ONCE 2046
-#endif
-#ifndef USE_DMA_THRESHOLD
-#define USE_DMA_THRESHOLD 6
-#endif
+#include "esp_lcd_panel_interface.h"
+#include "esp_lcd_panel_io.h"
+#include <esp_private/gdma.h>
+#include <hal/dma_types.h>
+
+// The Arduino_ESP32LCD8 bus can send bytes. Sending 16-bit commands is not supported.
+// Sending 16-bit pixel data is sending in msb,lsb order.
 
 class Arduino_ESP32LCD8 : public Arduino_DataBus
 {
@@ -28,11 +29,6 @@ public:
   void write(uint8_t) override;
   void write16(uint16_t) override;
 
-  void writeC8D8(uint8_t c, uint8_t d) override;
-  void writeC8D16(uint8_t c, uint16_t d) override;
-  void writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2) override;
-  void writeC8D16D16Split(uint8_t c, uint16_t d1, uint16_t d2) override;
-
   void writeRepeat(uint16_t p, uint32_t len) override;
   void writePixels(uint16_t *data, uint32_t len) override;
 
@@ -43,8 +39,9 @@ public:
 
 protected:
 private:
-  GFX_INLINE void CS_HIGH(void);
-  GFX_INLINE void CS_LOW(void);
+
+ // flush _cmd and _buffer 
+  void flushBuffer();
 
   int8_t _dc, _cs, _wr, _rd;
   int8_t _d0, _d1, _d2, _d3, _d4, _d5, _d6, _d7;
@@ -54,8 +51,21 @@ private:
   uint32_t _csPinMask;  ///< Bitmask for chip select
 
   esp_lcd_i80_bus_handle_t _i80_bus = nullptr;
+  esp_lcd_panel_io_handle_t _io_handle = nullptr;
+
   dma_descriptor_t *_dmadesc = nullptr;
   gdma_channel_handle_t _dma_chan;
+
+  // record command and parameters in _cmd and _buffer
+
+  /// command byte for next DMA transfer
+  int _cmd = -1;
+
+  /// buffer is in use for color data
+  bool _isColor = false;
+
+  /// data size in _buffer for next DMA transfer
+  int _bufferLen = 0;
 
   union
   {
