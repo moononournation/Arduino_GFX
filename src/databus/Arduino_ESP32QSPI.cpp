@@ -130,7 +130,7 @@ void Arduino_ESP32QSPI::endWrite()
 {
   if (_is_shared_interface)
   {
-    spi_device_acquire_bus(_handle, portMAX_DELAY);
+    spi_device_release_bus(_handle);
   }
 }
 
