@@ -30,7 +30,7 @@
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #define GIF_FILENAME "/ezgif.com-optimize.gif"
-#elif defined(TARGET_RP2040)
+#elif defined(TARGET_RP2040) || defined(PICO_RP2350)
 #define GIF_FILENAME "/ezgif.com-optimize.gif"
 #elif defined(ESP32)
 #define GIF_FILENAME "/ezgif.com-optimize.gif"
@@ -82,7 +82,7 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
 #include <Seeed_FS.h>
 #include <SD/Seeed_SD.h>
-#elif defined(TARGET_RP2040)
+#elif defined(TARGET_RP2040) || defined(PICO_RP2350)
 #include <LittleFS.h>
 #include <SD.h>
 #elif defined(ESP32)
@@ -127,7 +127,7 @@ void setup()
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
   if (!SD.begin(SDCARD_SS_PIN, SDCARD_SPI, 4000000UL))
-#elif defined(TARGET_RP2040)
+#elif defined(TARGET_RP2040) || defined(PICO_RP2350)
   if (!LittleFS.begin())
   // if (!SD.begin(SS))
 #elif defined(ESP32)
@@ -159,7 +159,7 @@ void loop()
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
   File gifFile = SD.open(GIF_FILENAME, "r");
-#elif defined(TARGET_RP2040)
+#elif defined(TARGET_RP2040) || defined(PICO_RP2350)
   File gifFile = LittleFS.open(GIF_FILENAME, "r");
   // File gifFile = SD.open(GIF_FILENAME, "r");
 #elif defined(ESP32)

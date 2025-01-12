@@ -73,7 +73,7 @@ bool Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_cs)))->POSR);
     _csPortClr = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_cs)))->PORR);
   }
-#elif defined(TARGET_RP2040)
+#elif defined(TARGET_RP2040) || defined(PICO_RP2350)
   _dcPinMask = digitalPinToBitMask(_dc);
   _dcPortSet = (PORTreg_t)&sio_hw->gpio_set;
   _dcPortClr = (PORTreg_t)&sio_hw->gpio_clr;

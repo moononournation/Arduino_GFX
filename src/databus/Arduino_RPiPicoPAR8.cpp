@@ -1,4 +1,4 @@
-#if defined(TARGET_RP2040)
+#if defined(TARGET_RP2040) || defined(PICO_RP2350)
 
 #include "Arduino_RPiPicoPAR8.h"
 
@@ -237,4 +237,4 @@ GFX_INLINE void Arduino_RPiPicoPAR8::CS_LOW(void)
   }
 }
 
-#endif // #if defined(TARGET_RP2040)
+#endif // #if defined(TARGET_RP2040) || defined(PICO_RP2350)

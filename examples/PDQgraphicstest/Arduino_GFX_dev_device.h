@@ -45,6 +45,7 @@
 // #define XIAO_SAMD21_ROUND_DISPLAY
 // #define XIAO_ESP32C3_ROUND_DISPLAY
 // #define XIAO_ESP32S3_ROUND_DISPLAY
+// #define WAVESHARE_RP2040_LCD_0_96
 // #define WZ8048C050 // or called "Elecrow Wizee-ESP32"
 // #define ZX2D10GE10R_V4848
 // #define ZX3D50CE02S // or called "WT32-SC01 PLUS"
@@ -643,6 +644,12 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     1 /* pclk_active_neg */, 16000000 /* prefer_speed */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
+
+#elif defined(WAVESHARE_RP2040_LCD_0_96)
+#define GFX_DEV_DEVICE WAVESHARE_RP2040_LCD_0_96
+#define GFX_BL 25
+Arduino_DataBus *bus = new Arduino_RPiPicoSPI(8 /* DC */, 9 /* CS */, 10 /* SCK */, 11 /* MOSI */, GFX_NOT_DEFINED /* MISO */, spi1 /* spi */);
+Arduino_GFX *gfx = new Arduino_ST7735(bus, 12 /* RST */, 0 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
 
 #elif defined(XIAO_SAMD21_ROUND_DISPLAY)
 #define GFX_DEV_DEVICE XIAO_SAMD21_ROUND_DISPLAY

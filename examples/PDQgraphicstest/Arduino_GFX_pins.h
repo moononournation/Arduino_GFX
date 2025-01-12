@@ -9,7 +9,7 @@
 #define TFT_DC 3
 #define TFT_RST 2
 #define GFX_BL 1
-#elif defined(TARGET_RP2040)
+#elif defined(TARGET_RP2040) || defined(PICO_RP2350)
 #define TFT_CS 17 // GFX_NOT_DEFINED for display without CS pin
 #define TFT_DC 27
 #define TFT_RST 26

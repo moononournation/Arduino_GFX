@@ -291,11 +291,11 @@ int32_t testText()
 
   gfx->setTextSize(2);
   gfx->setTextColor(gfx->color565(0xff, 0x00, 0x00));
-  gfx->print(F("RGB565_RED "));
+  gfx->print(F("RED "));
   gfx->setTextColor(gfx->color565(0x00, 0xff, 0x00));
-  gfx->print(F("RGB565_GREEN "));
+  gfx->print(F("GREEN "));
   gfx->setTextColor(gfx->color565(0x00, 0x00, 0xff));
-  gfx->println(F("RGB565_BLUE"));
+  gfx->println(F("BLUE"));
 
   gfx->setTextSize(tsa);
   gfx->setTextColor(RGB565_YELLOW);

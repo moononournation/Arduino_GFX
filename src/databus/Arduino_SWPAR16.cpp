@@ -227,7 +227,7 @@ bool Arduino_SWPAR16::begin(int32_t, int8_t)
   _d15PinMask = digitalPinToBitMask(_d15);
   _d15PortSet = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_d15)))->POSR);
   _d15PortClr = (PORTreg_t) & (((R_PORT0_Type *)IOPORT_PRV_PORT_ADDRESS(digitalPinToPort(_d15)))->PORR);
-#elif defined(TARGET_RP2040)
+#elif defined(TARGET_RP2040) || defined(PICO_RP2350)
   _dcPinMask = digitalPinToBitMask(_dc);
   _dcPortSet = (PORTreg_t)&sio_hw->gpio_set;
   _dcPortClr = (PORTreg_t)&sio_hw->gpio_clr;

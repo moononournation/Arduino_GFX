@@ -30,7 +30,7 @@ typedef uint32_t ARDUINOGFX_PORT_t;
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
 typedef uint16_t ARDUINOGFX_PORT_t;
-#elif defined(TARGET_RP2040)
+#elif defined(TARGET_RP2040) || defined(PICO_RP2350)
 #define USE_FAST_PINIO   ///< Use direct PORT register access
 #define HAS_PORT_SET_CLR ///< PORTs have set & clear registers
 typedef uint32_t ARDUINOGFX_PORT_t;
