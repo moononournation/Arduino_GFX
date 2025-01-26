@@ -482,9 +482,9 @@ void Arduino_DSI_Display::draw16bitBeRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-void Arduino_DSI_Display::flush(void)
+void Arduino_DSI_Display::flush(bool force_flush)
 {
-  if (!_auto_flush)
+  if (force_flush || (!_auto_flush))
   {
     esp_cache_msync(_framebuffer, _framebuffer_size, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
   }

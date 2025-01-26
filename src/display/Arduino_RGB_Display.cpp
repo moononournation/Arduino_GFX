@@ -505,9 +505,9 @@ void Arduino_RGB_Display::draw16bitBeRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-void Arduino_RGB_Display::flush(void)
+void Arduino_RGB_Display::flush(bool force_flush)
 {
-  if (!_auto_flush)
+  if (force_flush || (!_auto_flush))
   {
     Cache_WriteBack_Addr((uint32_t)_framebuffer, _framebuffer_size);
   }

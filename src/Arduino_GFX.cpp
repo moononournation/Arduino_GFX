@@ -2581,7 +2581,7 @@ void Arduino_GFX::setFont(const GFXfont *f)
   @brief  flush framebuffer to output (for Canvas or NeoPixel sub-class)
 */
 /**************************************************************************/
-void Arduino_GFX::flush()
+void Arduino_GFX::flush(bool force_flush)
 {
 }
 #endif // !defined(ATTINY_CORE)
