@@ -71,7 +71,7 @@ void setup()
   Serial.begin(115200);
   // Serial.setDebugOutput(true);
   // while(!Serial);
-  Serial.println("Arduino_GFX Motion JPEG SIMD Decoder Image Viewer example");
+  Serial.println("Arduino_GFX Motion JPEG ESP32P4 Decoder Image Viewer example");
 
   // Init Display
   if (!gfx->begin())
