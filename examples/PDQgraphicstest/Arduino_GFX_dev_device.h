@@ -24,6 +24,7 @@
 // #define ESP32S3_2_1_TP
 // #define GS_T3E // Golden Security GS-T3E
 // #define IBUBLY
+// #define JC1060P470
 // #define JC3248W535
 // #define JC3636W518
 // #define LILYGO_T_DECK
@@ -434,6 +435,18 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 #define GFX_BL 17 // default backlight pin, you may replace DF_GFX_BL to actual backlight pin
 Arduino_DataBus *bus = new Arduino_ESP32SPI(8 /* DC */, 9 /* CS */, 10 /* SCK */, 11 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 12 /* RST */, 1 /* rotation */, true /* IPS */, 240 /* width */, 280 /* height */, 0 /* col offset 1 */, 20 /* row offset 1 */, 0 /* col offset 2 */, 20 /* row offset 2 */);
+
+#elif defined(JC1060P470)
+#define GFX_DEV_DEVICE JC1060P470
+#define GFX_BL 23 // default backlight pin, you may replace DF_GFX_BL to actual backlight pin
+#define DSI_PANEL
+Arduino_ESP32DSIPanel *dsipanel = new Arduino_ESP32DSIPanel(
+  40 /* hsync_pulse_width */, 160 /* hsync_back_porch */, 160 /* hsync_front_porch */,
+  10 /* vsync_pulse_width */, 23 /*vsync_back_porch  */, 12 /* vsync_front_porch */,
+  48000000 /* prefer_speed */);
+Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
+  1024 /* width */, 600 /* height */, dsipanel, 0 /* rotation */, true /* auto_flush */,
+  27 /* RST */, jd9165_init_operations, sizeof(jd9165_init_operations) / sizeof(lcd_init_cmd_t));
 
 #elif defined(JC3248W535)
 #define GFX_DEV_DEVICE JC3248W535

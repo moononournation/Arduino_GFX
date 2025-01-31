@@ -68,9 +68,12 @@ void Arduino_Canvas_3bit::writePixelPreclipped(int16_t x, int16_t y, uint16_t co
   }
 }
 
-void Arduino_Canvas_3bit::flush()
+void Arduino_Canvas_3bit::flush(bool force_flush)
 {
-  _output->draw3bitRGBBitmap(_output_x, _output_y, _framebuffer, _width, _height);
+  if (_output)
+  {
+    _output->draw3bitRGBBitmap(_output_x, _output_y, _framebuffer, _width, _height);
+  }
 }
 
 uint8_t *Arduino_Canvas_3bit::getFramebuffer()

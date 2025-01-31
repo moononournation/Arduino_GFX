@@ -24,8 +24,8 @@ public:
   void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
   void draw16bitRGBBitmapWithTranColor(int16_t x, int16_t y, uint16_t *bitmap, uint16_t transparent_color, int16_t w, int16_t h) override;
   void draw16bitBeRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
-  void flush(void) override;
-  void flushQuad(void);
+  void flush(bool force_flush = false) override;
+  void flushQuad(bool force_flush = false);
 
   uint16_t *getFramebuffer();
 

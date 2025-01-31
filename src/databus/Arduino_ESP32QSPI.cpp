@@ -56,7 +56,11 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .data7_io_num = -1,
       .max_transfer_sz = (ESP32QSPI_MAX_PIXELS_AT_ONCE * 16) + 8,
       .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
+#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
+      // skip this
+#else
       .isr_cpu_id = ESP_INTR_CPU_AFFINITY_AUTO,
+#endif
       .intr_flags = 0};
   esp_err_t ret = spi_bus_initialize(ESP32QSPI_SPI_HOST, &buscfg, ESP32QSPI_DMA_CHANNEL);
   if (ret != ESP_OK)

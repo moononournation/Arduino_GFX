@@ -574,7 +574,7 @@ void Arduino_Canvas::draw16bitBeRGBBitmap(int16_t x, int16_t y,
   }
 }
 
-void Arduino_Canvas::flush()
+void Arduino_Canvas::flush(bool force_flush)
 {
   if (_output)
   {
@@ -582,7 +582,7 @@ void Arduino_Canvas::flush()
   }
 }
 
-void Arduino_Canvas::flushQuad(void)
+void Arduino_Canvas::flushQuad(bool force_flush)
 {
   int16_t y = _output_y;
   uint16_t *row1 = _framebuffer;

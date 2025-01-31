@@ -6,6 +6,7 @@
 #include "databus/Arduino_UNOPAR8.h"
 #include "databus/Arduino_AVRPAR16.h"
 #include "databus/Arduino_DUEPAR16.h"
+#include "databus/Arduino_ESP32DSIPanel.h"
 #include "databus/Arduino_ESP32LCD8.h"
 #include "databus/Arduino_ESP32LCD16.h"
 #include "databus/Arduino_ESP32PAR8.h"
@@ -50,6 +51,7 @@
 
 #include "display/Arduino_AXS15231B.h"
 #include "display/Arduino_CO5300.h"
+#include "display/Arduino_DSI_Display.h"
 #include "display/Arduino_GC9A01.h"
 #include "display/Arduino_GC9106.h"
 #include "display/Arduino_GC9107.h"
