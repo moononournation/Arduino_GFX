@@ -490,6 +490,62 @@ void Arduino_DSI_Display::flush(bool force_flush)
   }
 }
 
+void Arduino_DSI_Display::drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, uint8_t *cbData, uint8_t *crData, int16_t w, int16_t h)
+{
+  if (
+      ((x + w - 1) < 0) || // Outside left
+      ((y + h - 1) < 0) || // Outside top
+      (x > _max_x) ||      // Outside right
+      (y > _max_y)         // Outside bottom
+  )
+  {
+    return;
+  }
+  else
+  {
+    int cols = w >> 1;
+    int rows = h >> 1;
+
+    uint16_t *dest = _framebuffer;
+    dest += y * _fb_width;
+    uint16_t *cachePos = dest;
+    dest += x;
+    uint16_t *dest2 = dest + _fb_width;
+    uint8_t *yData2 = yData + w;
+
+    uint8_t pxCb, pxCr;
+    int16_t pxR, pxG, pxB, pxY;
+
+    for (int row = 0; row < rows; ++row)
+    {
+      for (int col = 0; col < w;)
+      {
+        pxCb = *cbData++;
+        pxCr = *crData++;
+        pxR = CR2R16[pxCr];
+        pxG = -CB2G16[pxCb] - CR2G16[pxCr];
+        pxB = CB2B16[pxCb];
+        pxY = Y2I16[*yData++];
+        dest[col] = CLIPR[pxY + pxR] | CLIPG[pxY + pxG] | CLIPB[pxY + pxB];
+        pxY = Y2I16[*yData2++];
+        dest2[col++] = CLIPR[pxY + pxR] | CLIPG[pxY + pxG] | CLIPB[pxY + pxB];
+        pxY = Y2I16[*yData++];
+        dest[col] = CLIPR[pxY + pxR] | CLIPG[pxY + pxG] | CLIPB[pxY + pxB];
+        pxY = Y2I16[*yData2++];
+        dest2[col++] = CLIPR[pxY + pxR] | CLIPG[pxY + pxG] | CLIPB[pxY + pxB];
+      }
+      yData += w;
+      yData2 += w;
+      dest = dest2 + _fb_width;
+      dest2 = dest + _fb_width;
+    }
+    if (_auto_flush)
+    {
+      esp_cache_msync(cachePos, _fb_width * h * 2, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+    }
+  }
+}
+
 uint16_t *Arduino_DSI_Display::getFramebuffer()
 {
   return _framebuffer;

@@ -2472,6 +2472,7 @@ public:
     void draw16bitBeRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
     void flush(bool force_flush = false) override;
 
+    void drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, uint8_t *cbData, uint8_t *crData, int16_t w, int16_t h);
     uint16_t *getFramebuffer();
 
 protected:
