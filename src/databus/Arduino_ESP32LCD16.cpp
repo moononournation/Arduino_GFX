@@ -483,6 +483,9 @@ void Arduino_ESP32LCD16::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8
     uint16_t *dest = _buffer16;
     uint16_t *dest2 = dest + w;
 
+    uint8_t pxCb, pxCr;
+    int16_t pxR, pxG, pxB, pxY;
+  
     uint16_t l = (w * 4) - 4;
     uint32_t out_dmadesc = ((l + 3) & (~3)) | l << 12 | 0xC0000000;
     bool poll_started = false;
@@ -490,21 +493,20 @@ void Arduino_ESP32LCD16::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8
     {
       for (int col = 0; col < cols; ++col)
       {
-        uint8_t cb = *cbData++;
-        uint8_t cr = *crData++;
-        int16_t r = CR2R16[cr];
-        int16_t g = -CB2G16[cb] - CR2G16[cr];
-        int16_t b = CB2B16[cb];
-        int16_t y;
+        pxCb = *cbData++;
+        pxCr = *crData++;
+        pxR = CR2R16[pxCr];
+        pxG = -CB2G16[pxCb] - CR2G16[pxCr];
+        pxB = CB2B16[pxCb];
 
-        y = Y2I16[*yData++];
-        *dest++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
-        y = Y2I16[*yData++];
-        *dest++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
-        y = Y2I16[*yData2++];
-        *dest2++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
-        y = Y2I16[*yData2++];
-        *dest2++ = CLIPR[y + r] | CLIPG[y + g] | CLIPB[y + b];
+        pxY = Y2I16[*yData++];
+        *dest++ = CLIPR[pxY + pxR] | CLIPG[pxY + pxG] | CLIPB[pxY + pxB];
+        pxY = Y2I16[*yData++];
+        *dest++ = CLIPR[pxY + pxR] | CLIPG[pxY + pxG] | CLIPB[pxY + pxB];
+        pxY = Y2I16[*yData2++];
+        *dest2++ = CLIPR[pxY + pxR] | CLIPG[pxY + pxG] | CLIPB[pxY + pxB];
+        pxY = Y2I16[*yData2++];
+        *dest2++ = CLIPR[pxY + pxR] | CLIPG[pxY + pxG] | CLIPB[pxY + pxB];
       }
       yData += w;
       yData2 += w;

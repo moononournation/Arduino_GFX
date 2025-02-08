@@ -181,31 +181,36 @@ void Arduino_DataBus::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uin
 
 void Arduino_DataBus::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t *crData, uint16_t w, uint16_t h)
 {
-  w >>= 1;
-  for (int i = 0; i < h;)
+  int cols = w >> 1;
+
+  uint8_t pxCb, pxCr;
+  int16_t pxR, pxG, pxB, pxY;
+
+  for (int row = 0; row < h;)
   {
-    for (int j = 0; j < w; ++j)
+    for (int col = 0; col < cols; ++col)
     {
-      uint8_t cb = *cbData++;
-      uint8_t cr = *crData++;
-      int16_t r = CR2R16[cr];
-      int16_t g = -CB2G16[cb] - CR2G16[cr];
-      int16_t b = CB2B16[cb];
-      int16_t y = Y2I16[*yData++];
-      _data16.value = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
+      pxCb = *cbData++;
+      pxCr = *crData++;
+      pxR = CR2R16[pxCr];
+      pxG = -CB2G16[pxCb] - CR2G16[pxCr];
+      pxB = CB2B16[pxCb];
+
+      pxY = Y2I16[*yData++];
+      _data16.value = CLIPRBE[pxY + pxCr] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
       write(_data16.lsb);
       write(_data16.msb);
-      y = Y2I16[*yData++];
-      _data16.value = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
+      pxY = Y2I16[*yData++];
+      _data16.value = CLIPRBE[pxY + pxCr] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
       write(_data16.lsb);
       write(_data16.msb);
     }
 
-    if (++i & 1)
+    if (++row & 1)
     {
       // rollback CbCr data
-      cbData -= w;
-      crData -= w;
+      cbData -= cols;
+      crData -= cols;
     }
   }
 }
