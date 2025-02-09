@@ -16,7 +16,7 @@
 // #define ESP32_LCDKIT_PAR8A
 // #define ESP32_LCDKIT_PAR8B
 // #define ESP32_LCDKIT_PAR16
-// #define ESP32_S3_3_13_DISPLAY
+// #define ESP32_S3_313LCD
 // #define ESP32_S3_BOX_3
 // #define ESP32_S3_EYE
 // #define ESP32_S3_RGB
@@ -266,8 +266,8 @@ Arduino_DataBus *bus = new Arduino_ESP32PAR16(
     25 /* D8 */, 26 /* D9 */, 12 /* D10 */, 13 /* D11 */, 14 /* D12 */, 15 /* D13 */, 2 /* D14 */, 4 /* D15 */);
 Arduino_GFX *gfx = new Arduino_ILI9341(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */);
 
-#elif defined(ESP32_S3_3_13_DISPLAY)
-#define GFX_DEV_DEVICE ESP32_S3_3_13_DISPLAY
+#elif defined(ESP32_S3_313LCD)
+#define GFX_DEV_DEVICE ESP32_S3_313LCD
 #define GFX_BL 4
 Arduino_DataBus *bus = new Arduino_SWSPI(
     GFX_NOT_DEFINED /* DC */, 0 /* CS */,
