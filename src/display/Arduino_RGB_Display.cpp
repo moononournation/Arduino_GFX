@@ -556,7 +556,7 @@ void Arduino_RGB_Display::drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, 
     }
     if (_auto_flush)
     {
-      Cache_WriteBack_Addr(cachePos, _fb_width * h * 2);
+      Cache_WriteBack_Addr((uint32_t)cachePos, _fb_width * h * 2);
     }
   }
 }
