@@ -81,14 +81,20 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
       .de_gpio_num = _de,
       .pclk_gpio_num = _pclk,
       .disp_gpio_num = GPIO_NUM_NC, // -1
+      #if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
       .data_gpio_nums = {0},
+      #endif
       .flags = {
           .disp_active_low = true,
+          #if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
           .refresh_on_demand = false,
+          #endif
           .fb_in_psram = true, // allocate frame buffer from PSRAM
+          #if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
           .double_fb = false,
           .no_fb = false,
           .bb_invalidate_cache = false,
+          #endif
       },
   };
 
