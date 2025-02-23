@@ -74,7 +74,9 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .address_bits = 24,
       .dummy_bits = 0,
       .mode = (uint8_t)_dataMode,
+      #if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
       .clock_source = SPI_CLK_SRC_DEFAULT,
+      #endif
       .duty_cycle_pos = 0,
       .cs_ena_pretrans = 0,
       .cs_ena_posttrans = 0,
