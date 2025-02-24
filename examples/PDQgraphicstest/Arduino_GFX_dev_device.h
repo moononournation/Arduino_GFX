@@ -28,6 +28,7 @@
 // #define JC3248W535
 // #define JC3636W518
 // #define LILYGO_T_DECK
+// #define LILYGO_T_DECK_PLUS
 // #define LILYGO_T_DISPLAY
 // #define LILYGO_T_DISPLAY_S3
 // #define LILYGO_T_Display_S3_AMOLED
@@ -480,7 +481,25 @@ Arduino_GFX *gfx = new Arduino_ST77916(bus, 47 /* RST */, 0 /* rotation */, true
     delay(500);                                      \
   }
 #define GFX_BL 42
-Arduino_DataBus *bus = new Arduino_ESP32SPI(11 /* DC */, 12 /* CS */, 40 /* SCK */, 41 /* MOSI */, 38 /* MISO */);
+Arduino_DataBus *bus = new Arduino_HWSPI(11 /* DC */, 12 /* CS */, 40 /* SCK */, 41 /* MOSI */, 38 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */, false /* IPS */);
+
+#elif defined(LILYGO_T_DECK_PLUS)
+#define GFX_DEV_DEVICE LILYGO_T_DECK_PLUS
+#define DEV_DEVICE_INIT()                            \
+  {                                                  \
+    pinMode(9 /* TDECK_RADIO_CS */, OUTPUT);         \
+    digitalWrite(9 /* TDECK_RADIO_CS */, HIGH);      \
+    pinMode(12 /* TDECK_LCD_CS */, OUTPUT);          \
+    digitalWrite(12 /* TDECK_LCD_CS */, HIGH);       \
+    pinMode(39 /* TDECK_SDCARD_CS */, OUTPUT);       \
+    digitalWrite(39 /* TDECK_SDCARD_CS */, HIGH);    \
+    pinMode(10 /* TDECK_PERI_POWERON */, OUTPUT);    \
+    digitalWrite(10 /* TDECK_PERI_POWERON */, HIGH); \
+    delay(500);                                      \
+  }
+#define GFX_BL 42
+Arduino_DataBus *bus = new Arduino_HWSPI(11 /* DC */, 12 /* CS */, 40 /* SCK */, 41 /* MOSI */, 38 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */, false /* IPS */);
 
 #elif defined(LILYGO_T_DISPLAY)
