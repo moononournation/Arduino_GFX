@@ -74,7 +74,9 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       .address_bits = 24,
       .dummy_bits = 0,
       .mode = (uint8_t)_dataMode,
+      #if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
       .clock_source = SPI_CLK_SRC_DEFAULT,
+      #endif
       .duty_cycle_pos = 0,
       .cs_ena_pretrans = 0,
       .cs_ena_posttrans = 0,
@@ -718,26 +720,28 @@ void Arduino_ESP32QSPI::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_
 
     uint16_t out_bits = w << 5;
 
+    uint8_t pxCb, pxCr;
+    int16_t pxR, pxG, pxB, pxY;
+
     CS_LOW();
     for (int row = 0; row < rows; ++row)
     {
       for (int col = 0; col < cols; ++col)
       {
-        uint8_t cb = *cbData++;
-        uint8_t cr = *crData++;
-        int16_t r = CR2R16[cr];
-        int16_t g = -CB2G16[cb] - CR2G16[cr];
-        int16_t b = CB2B16[cb];
-        int16_t y;
+        pxCb = *cbData++;
+        pxCr = *crData++;
+        pxR = CR2R16[pxCr];
+        pxG = -CB2G16[pxCb] - CR2G16[pxCr];
+        pxB = CB2B16[pxCb];
 
-        y = Y2I16[*yData++];
-        *dest++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
-        y = Y2I16[*yData++];
-        *dest++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
-        y = Y2I16[*yData2++];
-        *dest2++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
-        y = Y2I16[*yData2++];
-        *dest2++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
+        pxY = Y2I16[*yData++];
+        *dest++ = CLIPRBE[pxY + pxR] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
+        pxY = Y2I16[*yData++];
+        *dest++ = CLIPRBE[pxY + pxR] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
+        pxY = Y2I16[*yData2++];
+        *dest2++ = CLIPRBE[pxY + pxR] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
+        pxY = Y2I16[*yData2++];
+        *dest2++ = CLIPRBE[pxY + pxR] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
       }
       yData += w;
       yData2 += w;

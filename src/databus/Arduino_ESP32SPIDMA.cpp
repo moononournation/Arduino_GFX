@@ -824,27 +824,29 @@ void Arduino_ESP32SPIDMA::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint
     uint16_t *dest = _buffer16;
     uint16_t *dest2 = dest + w;
 
+    uint8_t pxCb, pxCr;
+    int16_t pxR, pxG, pxB, pxY;
+
     uint16_t out_bits = w << 5;
     bool poll_started = false;
     for (int row = 0; row < rows; ++row)
     {
       for (int col = 0; col < cols; ++col)
       {
-        uint8_t cb = *cbData++;
-        uint8_t cr = *crData++;
-        int16_t r = CR2R16[cr];
-        int16_t g = -CB2G16[cb] - CR2G16[cr];
-        int16_t b = CB2B16[cb];
-        int16_t y;
+        pxCb = *cbData++;
+        pxCr = *crData++;
+        pxR = CR2R16[pxCr];
+        pxG = -CB2G16[pxCb] - CR2G16[pxCr];
+        pxB = CB2B16[pxCb];
 
-        y = Y2I16[*yData++];
-        *dest++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
-        y = Y2I16[*yData++];
-        *dest++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
-        y = Y2I16[*yData2++];
-        *dest2++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
-        y = Y2I16[*yData2++];
-        *dest2++ = CLIPRBE[y + r] | CLIPGBE[y + g] | CLIPBBE[y + b];
+        pxY = Y2I16[*yData++];
+        *dest++ = CLIPRBE[pxY + pxR] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
+        pxY = Y2I16[*yData++];
+        *dest++ = CLIPRBE[pxY + pxR] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
+        pxY = Y2I16[*yData2++];
+        *dest2++ = CLIPRBE[pxY + pxR] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
+        pxY = Y2I16[*yData2++];
+        *dest2++ = CLIPRBE[pxY + pxR] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
       }
       yData += w;
       yData2 += w;

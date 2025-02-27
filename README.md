@@ -332,19 +332,20 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 * ESP32S3-2.1-TP
 * [ESPboy](https://www.espboy.com) [[demo video](https://youtu.be/Cx82XWrc8-0)]
 * [Guition JC1060P470](https://www.aliexpress.com/item/1005008328088576.html) [[demo video](https://youtu.be/CF1EDSQDHQ8)] [[LVGL demo](https://youtu.be/CF1EDSQDHQ8)]
-* [LILYGO T-Deck](https://www.lilygo.cc/products/t-deck) [[demo video](https://youtube.com/shorts/fXKTVqjUoPM)]
-* [LILYGO T-Display](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board)
-* [LILYGO T-Display-S3](https://www.lilygo.cc/products/t-display-s3) [[demo video](https://youtu.be/kpRC64QNQAo)]
-* [LILYGO T-Display-S3 AMOLED](https://www.lilygo.cc/products/t-display-s3-amoled) [[demo video](https://youtu.be/NvOGJAMlh1M)]
-* [LILYGO T-Display-S3 AMOLED](https://www.lilygo.cc/products/t-display-s3-amoled-1-64) [[demo video](https://youtu.be/5O3fQ1xNsrg)][[LVGL demo video](https://youtu.be/6UEaxWfxm9g)]
-* [T-Display S3 Long](https://www.lilygo.cc/products/t-display-s3-long)[[LVGL demo video](https://youtu.be/OuxLFwxvcVc)]
-* [LILYGO T-Display-s3-Pro](https://www.lilygo.cc/products/t-display-s3-pro) [[demo video](https://youtube.com/shorts/PE-GKTzbdP8)]
-* [LILYGO T-QT](https://www.lilygo.cc/products/t-qt-v1-1) [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM)]
-* [LILYGO T-RGB](https://www.lilygo.cc/products/t-rgb) [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
-* [LILYGO T-Track](https://www.lilygo.cc/products/t-track) [[demo video](https://youtu.be/6wmUhp-5eMg)][[LVGL demo video](https://youtu.be/wQjMu5JZSkg)]
-* [LILYGO T-Watch](http://www.lilygo.cn/prod_view.aspx?TypeId=50053&Id=1123)
-* [LILYGO T-Watch 2021](https://www.lilygo.cc/products/t-watch-2021)
-* [LILYGO T4 S3](https://www.lilygo.cc/products/t4-s3)[[LVGL demo video](https://youtu.be/h4vXEYrDERM)]
+* [LILYGO T-Deck](https://www.lilygo.cc/products/t-deck?bg_ref=Ts2JN05e23) [[demo video](https://youtube.com/shorts/fXKTVqjUoPM)]
+* [LILYGO T-Deck Plus](https://www.lilygo.cc/products/t-deck-plus-1?bg_ref=Ts2JN05e23)
+* [LILYGO T-Display](https://www.lilygo.cc/products/lilygo®-ttgo-t-display-1-14-inch-lcd-esp32-control-board?bg_ref=Ts2JN05e23)
+* [LILYGO T-Display-S3](https://www.lilygo.cc/products/t-display-s3?bg_ref=Ts2JN05e23) [[demo video](https://youtu.be/kpRC64QNQAo)]
+* [LILYGO T-Display-S3 AMOLED](https://www.lilygo.cc/products/t-display-s3-amoled?bg_ref=Ts2JN05e23) [[demo video](https://youtu.be/NvOGJAMlh1M)]
+* [LILYGO T-Display-S3 AMOLED 1.64](https://www.lilygo.cc/products/t-display-s3-amoled-1-64?bg_ref=Ts2JN05e23) [[demo video](https://youtu.be/5O3fQ1xNsrg)][[LVGL demo video](https://youtu.be/6UEaxWfxm9g)]
+* [LILYGO T-Display S3 Long](https://www.lilygo.cc/products/t-display-s3-long?bg_ref=Ts2JN05e23)[[LVGL demo video](https://youtu.be/OuxLFwxvcVc)]
+* [LILYGO T-Display S3 Pro](https://www.lilygo.cc/products/t-display-s3-pro?bg_ref=Ts2JN05e23) [[demo video](https://youtube.com/shorts/PE-GKTzbdP8)]
+* [LILYGO T-QT](https://www.lilygo.cc/products/t-qt-pro?bg_ref=Ts2JN05e23) [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM)]
+* [LILYGO T-RGB](https://www.lilygo.cc/products/t-rgb?bg_ref=Ts2JN05e23) [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
+* [LILYGO T-Track](https://www.lilygo.cc/products/t-track?bg_ref=Ts2JN05e23) [[demo video](https://youtu.be/6wmUhp-5eMg)][[LVGL demo video](https://youtu.be/wQjMu5JZSkg)]
+* LILYGO T-Watch
+* [LILYGO T-Watch 2021](https://www.lilygo.cc/products/t-watch-2021?bg_ref=Ts2JN05e23)
+* [LILYGO T4 S3](https://www.lilygo.cc/products/t4-s3?bg_ref=Ts2JN05e23)[[LVGL demo video](https://youtu.be/h4vXEYrDERM)]
 * [M5Stack Core Family](https://shop.m5stack.com/collections/m5-controllers/CORE)
 * [M5Stack AtomS3](https://shop.m5stack.com/products/atoms3-dev-kit-w-0-85-inch-screen)[[demo video](https://youtu.be/8u4TwZHmnN0)]
 * [Makerfabs ESP32 3.5" TFT Touch with Camera](https://www.makerfabs.com/esp32-3.5-inch-tft-touch-capacitive-with-camera.html)
