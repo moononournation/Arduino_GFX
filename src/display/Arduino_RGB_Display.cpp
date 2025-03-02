@@ -518,7 +518,6 @@ void Arduino_RGB_Display::drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, 
   }
   else
   {
-    int cols = w >> 1;
     int rows = h >> 1;
 
     uint16_t *dest = _framebuffer;
