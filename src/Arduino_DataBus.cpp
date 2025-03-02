@@ -197,11 +197,11 @@ void Arduino_DataBus::writeYCbCrPixels(uint8_t *yData, uint8_t *cbData, uint8_t 
       pxB = CB2B16[pxCb];
 
       pxY = Y2I16[*yData++];
-      _data16.value = CLIPRBE[pxY + pxCr] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
+      _data16.value = CLIPRBE[pxY + pxR] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
       write(_data16.lsb);
       write(_data16.msb);
       pxY = Y2I16[*yData++];
-      _data16.value = CLIPRBE[pxY + pxCr] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
+      _data16.value = CLIPRBE[pxY + pxR] | CLIPGBE[pxY + pxG] | CLIPBBE[pxY + pxB];
       write(_data16.lsb);
       write(_data16.msb);
     }
