@@ -48,6 +48,7 @@
 // #define XIAO_ESP32C3_ROUND_DISPLAY
 // #define XIAO_ESP32S3_ROUND_DISPLAY
 // #define WAVESHARE_ESP32_S3_LCD_2_8
+// #define WAVESHARE_ESP32_C6_LCD_1_47
 // #define WAVESHARE_RP2040_LCD_0_96
 // #define WZ8048C050 // or called "Elecrow Wizee-ESP32"
 // #define ZX2D10GE10R_V4848
@@ -683,6 +684,12 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 #define GFX_BL 5
 Arduino_DataBus *bus = new Arduino_HWSPI(41 /* DC */, 42 /* CS */, 40 /* SCK */, 45 /* MOSI */, 46 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 39 /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(WAVESHARE_ESP32_C6_LCD_1_47)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_C6_LCD_1_47
+#define GFX_BL 22
+Arduino_DataBus *bus = new Arduino_HWSPI(15 /* DC */, 14 /* CS */, 7 /* SCK */, 6 /* MOSI */, 5 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, 21 /* RST */, 0 /* rotation */, true /* IPS */, 172 /* width */, 320 /* height */, 34 /* col offset 1 */, 0 /* row offset 1 */, 34 /* col offset 2 */, 0 /* row offset 2 */);
 
 #elif defined(WAVESHARE_RP2040_LCD_0_96)
 #define GFX_DEV_DEVICE WAVESHARE_RP2040_LCD_0_96
