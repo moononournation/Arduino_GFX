@@ -702,6 +702,12 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 21 /* RST */, 0 /* rotation */, true 
 Arduino_DataBus *bus = new Arduino_RPiPicoSPI(8 /* DC */, 9 /* CS */, 10 /* SCK */, 11 /* MOSI */, GFX_NOT_DEFINED /* MISO */, spi1 /* spi */);
 Arduino_GFX *gfx = new Arduino_ST7735(bus, 12 /* RST */, 0 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 26 /* col offset 1 */, 1 /* row offset 1 */, 26 /* col offset 2 */, 1 /* row offset 2 */);
 
+#elif defined(WAVESHARE_RP2040_LCD_1_28)
+#define GFX_DEV_DEVICE WAVESHARE_RP2040_LCD_1_28
+#define GFX_BL 25
+Arduino_DataBus *bus = new Arduino_RPiPicoSPI(8 /* DC */, 9 /* CS */, 10 /* SCK */, 11 /* MOSI */, GFX_NOT_DEFINED /* MISO */, spi1 /* spi */);
+Arduino_GFX *gfx = new Arduino_GC9A01(bus, 12 /* RST */, 0 /* rotation */, true /* IPS */);
+
 #elif defined(XIAO_SAMD21_ROUND_DISPLAY)
 #define GFX_DEV_DEVICE XIAO_SAMD21_ROUND_DISPLAY
 Arduino_DataBus *bus = new Arduino_HWSPI(3 /* DC */, 1 /* CS */);
