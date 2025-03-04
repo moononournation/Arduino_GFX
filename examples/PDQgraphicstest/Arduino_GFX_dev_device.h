@@ -50,6 +50,7 @@
 // #define WAVESHARE_ESP32_S3_LCD_2_8
 // #define WAVESHARE_ESP32_C6_LCD_1_47
 // #define WAVESHARE_RP2040_LCD_0_96
+// #define WAVESHARE_RP2040_LCD_1_28 // Waveshare RP2040-LCD-1.28 or RP2350-LCD-1.28
 // #define WZ8048C050 // or called "Elecrow Wizee-ESP32"
 // #define ZX2D10GE10R_V4848
 // #define ZX3D50CE02S // or called "WT32-SC01 PLUS"
