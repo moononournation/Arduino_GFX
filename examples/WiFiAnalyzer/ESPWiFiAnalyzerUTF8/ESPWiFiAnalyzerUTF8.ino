@@ -120,6 +120,10 @@ void setup()
   gfx->print("ESP");
   gfx->setTextColor(RGB565_WHITE);
   gfx->print(" WiFi分析儀");
+
+#ifdef CANVAS
+  gfx->flush();
+#endif
 }
 
 bool matchBssidPrefix(uint8_t *a, uint8_t *b)
@@ -350,6 +354,10 @@ void loop()
       gfx->print('}');
     }
   }
+
+#ifdef CANVAS
+  gfx->flush();
+#endif
 
   // Wait a bit before scanning again
   delay(SCAN_INTERVAL);
