@@ -48,6 +48,7 @@
 // #define XIAO_ESP32C3_ROUND_DISPLAY
 // #define XIAO_ESP32S3_ROUND_DISPLAY
 // #define WAVESHARE_ESP32_S3_LCD_2_8
+// #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
 // #define WAVESHARE_ESP32_C6_LCD_1_47
 // #define WAVESHARE_RP2040_LCD_0_96
 // #define WAVESHARE_RP2040_LCD_1_28 // Waveshare RP2040-LCD-1.28 or RP2350-LCD-1.28
@@ -685,6 +686,14 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 #define GFX_BL 5
 Arduino_DataBus *bus = new Arduino_HWSPI(41 /* DC */, 42 /* CS */, 40 /* SCK */, 45 /* MOSI */, 46 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 39 /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
+Arduino_DataBus *bus = new Arduino_ESP32QSPI(
+    9 /* CS */, 10 /* SCK */, 11 /* D0 */, 12 /* D1 */, 13 /* D2 */, 14 /* D3 */);
+Arduino_GFX *g = new Arduino_RM690B0(bus, 21 /* RST */, 0 /* rotation */, 450 /* width */, 600 /* height */, 16 /* col offset 1 */, 0 /* row offset 1 */, 16 /* col offset 2 */, 0 /* row offset 2 */);
+#define CANVAS
+Arduino_Canvas *gfx = new Arduino_Canvas(450 /* width */, 600 /* height */, g);
 
 #elif defined(WAVESHARE_ESP32_C6_LCD_1_47)
 #define GFX_DEV_DEVICE WAVESHARE_ESP32_C6_LCD_1_47
