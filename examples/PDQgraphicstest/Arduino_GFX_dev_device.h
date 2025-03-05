@@ -689,6 +689,11 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 39 /* RST */, 0 /* rotation */, true 
 
 #elif defined(WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41)
 #define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
+#define DEV_DEVICE_INIT()                     \
+    {                                         \
+        pinMode(16 /* BAT_PWR */, OUTPUT);    \
+        digitalWrite(16 /* BAT_PWR */, HIGH); \
+    }
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
     9 /* CS */, 10 /* SCK */, 11 /* D0 */, 12 /* D1 */, 13 /* D2 */, 14 /* D3 */);
 Arduino_GFX *g = new Arduino_RM690B0(bus, 21 /* RST */, 0 /* rotation */, 450 /* width */, 600 /* height */, 16 /* col offset 1 */, 0 /* row offset 1 */, 16 /* col offset 2 */, 0 /* row offset 2 */);
