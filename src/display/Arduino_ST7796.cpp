@@ -3,6 +3,7 @@
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
 #include "Arduino_ST7796.h"
+#include "SPI.h"
 
 Arduino_ST7796::Arduino_ST7796(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
@@ -14,6 +15,14 @@ Arduino_ST7796::Arduino_ST7796(
 
 bool Arduino_ST7796::begin(int32_t speed)
 {
+#if defined(ESP32) || defined(ARDUINO_ARCH_NRF52840)
+  _override_datamode = SPI_MODE3;
+#elif defined(ESP8266)
+  _override_datamode = SPI_MODE2;
+#elif defined(__AVR__)
+  _override_datamode = SPI_MODE0;
+#endif
+
   return Arduino_TFT::begin(speed);
 }
 
