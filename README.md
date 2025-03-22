@@ -401,6 +401,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 * NT35310 320x480 [[demo video](https://youtu.be/bvIz5CoYPNk)]
 * NT35510 480x800 (8-bit/16-bit Parallel) [[demo video](https://youtu.be/C_1ASzUN3bg)]
 * NT39125 240x376 (8-bit/16-bit Parallel) [[demo video](https://youtu.be/JGMrM18JAFA)]
+* NV3007 142x428 [[demo video](https://youtube.com/shorts/ePcf0LmMgOo)]
 * NV3041A 480x272 [[demo video](https://youtu.be/pd1DTW9QHkg)]
 * OTM8009A 480x800 (8-bit/16-bit Parallel)
 * R61529 320x480 (8-bit/16-bit Parallel) [[demo video](https://youtu.be/s93gxjbIAT8)]
