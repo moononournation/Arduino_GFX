@@ -47,6 +47,8 @@
 // #define XIAO_SAMD21_ROUND_DISPLAY
 // #define XIAO_ESP32C3_ROUND_DISPLAY
 // #define XIAO_ESP32S3_ROUND_DISPLAY
+// #define WAVESHARE_ESP32_S3_LCD_1_3
+// #define WAVESHARE_ESP32_S3_LCD_1_3_PRISM
 // #define WAVESHARE_ESP32_S3_LCD_2_8
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
 // #define WAVESHARE_ESP32_C6_LCD_1_47
@@ -712,6 +714,18 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     0 /* de_idle_high */, 0 /* pclk_idle_high */, 0 /* bounce_buffer_size_px */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
+
+#elif defined(WAVESHARE_ESP32_S3_LCD_1_3)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_LCD_1_3
+#define GFX_BL 20
+Arduino_DataBus *bus = new Arduino_ESP32SPI(38 /* DC */, 39 /* CS */, 40 /* SCK */, 41 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, 42 /* RST */, 2 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
+
+#elif defined(WAVESHARE_ESP32_S3_LCD_1_3_PRISM)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_LCD_1_3_PRISM
+#define GFX_BL 20
+Arduino_DataBus *bus = new Arduino_ESP32SPI(38 /* DC */, 39 /* CS */, 40 /* SCK */, 41 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, 42 /* RST */, 6 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
 
 #elif defined(WAVESHARE_ESP32_S3_LCD_2_8)
 #define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_LCD_2_8
