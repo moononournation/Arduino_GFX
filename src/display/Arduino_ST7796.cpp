@@ -46,6 +46,18 @@ void Arduino_ST7796::setRotation(uint8_t r)
   case 3:
     r = ST7796_MADCTL_MY | ST7796_MADCTL_MV | ST7796_MADCTL_BGR;
     break;
+  case 4:
+    r = ST7796_MADCTL_MX | ST7796_MADCTL_BGR;
+    break;
+  case 5:
+    r = ST7796_MADCTL_MX | ST7796_MADCTL_MY | ST7796_MADCTL_MV | ST7796_MADCTL_BGR;
+    break;
+  case 6:
+    r = ST7796_MADCTL_MY | ST7796_MADCTL_BGR;
+    break;
+  case 7:
+    r = ST7796_MADCTL_MV | ST7796_MADCTL_BGR;
+    break;
   default: // case 0:
     r = ST7796_MADCTL_BGR;
     break;

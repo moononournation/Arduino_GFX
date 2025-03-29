@@ -156,6 +156,8 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 // Arduino_GFX *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */, 52 /* col offset 1 */, 40 /* row offset 1 */, 53 /* col offset 2 */, 40 /* row offset 2 */);
 
 // ST7796 LCD
+// 1.55" IPS LCD 320x360
+// Arduino_GFX *gfx = new Arduino_ST7796(bus, TFT_RST, 3 /* rotation */, true /* IPS */, 320 /* width */, 360 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 120 /* row offset 2 */);
 // 4" LCD 320x480
 // Arduino_GFX *gfx = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */);
 // 4" IPS LCD 320x480
