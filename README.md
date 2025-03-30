@@ -499,4 +499,4 @@ As you may already aware there are lack of sponsorship in this project. Convert 
 
 For the same reason, Arduino_GFX only focus on the Arduino IDE support. Any other IDE, e.g. PlatformIO, if you found an issue at that IDE but normal at Arduino IDE, please direct report to that IDE for better support.
 
-**Please use Discussions space for new hardware support or new feature request. I will direct close any non-issue issues. And I will consider report the users who insist raising duplicate issue continously.**
+**Please use Discussions space for new hardware support or new feature request. I will direct close any non-issue issues. And I will consider report the users who insist raising duplicate issue continuously.**
