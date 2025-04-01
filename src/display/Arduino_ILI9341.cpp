@@ -54,7 +54,7 @@ void Arduino_ILI9341::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
     _currentX = x;
     _currentW = w;
     x += _xStart;
-    _bus->writeC8D16D16(ILI9341_CASET, x, x + w - 1);
+    _bus->writeC8D16D16Split(ILI9341_CASET, x, x + w - 1);
   }
 
   if ((y != _currentY) || (h != _currentH))
@@ -62,7 +62,7 @@ void Arduino_ILI9341::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t
     _currentY = y;
     _currentH = h;
     y += _yStart;
-    _bus->writeC8D16D16(ILI9341_PASET, y, y + h - 1);
+    _bus->writeC8D16D16Split(ILI9341_PASET, y, y + h - 1);
   }
 
   _bus->writeCommand(ILI9341_RAMWR); // write to RAM
