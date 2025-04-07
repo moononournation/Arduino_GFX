@@ -6,9 +6,9 @@
 #define SPD2010_TFTWIDTH 412  ///< SPD2010 max TFT width
 #define SPD2010_TFTHEIGHT 412 ///< SPD2010 max TFT height
 
-#define SPD2010_RST_DELAY 100    ///< delay ms wait for reset finish
-#define SPD2010_SLPIN_DELAY 100  ///< delay ms wait for sleep in finish
-#define SPD2010_SLPOUT_DELAY 100 ///< delay ms wait for sleep out finish
+#define SPD2010_RST_DELAY 120    ///< delay ms wait for reset finish
+#define SPD2010_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
+#define SPD2010_SLPOUT_DELAY 120 ///< delay ms wait for sleep out finish
 
 #define SPD2010_SWRESET 0x01 ///< Software reset register
 
@@ -17,6 +17,9 @@
 
 #define SPD2010_INVOFF 0x20 ///< Display Inversion OFF
 #define SPD2010_INVON 0x21  ///< Display Inversion ON
+
+#define SPD2010_DISPOFF 0x28 ///< Display OFF
+#define SPD2010_DISPON 0x29  ///< Display ON
 
 #define SPD2010_CASET 0x2A ///< Column Address Set
 #define SPD2010_PASET 0x2B ///< Page Address Set
@@ -35,7 +38,13 @@
 
 static const uint8_t spd2010_init_operations[] = {
     BEGIN_WRITE,
+    WRITE_C8_BYTES, 0xFF, 3, 0x20, 0x10, 0x00,
+    WRITE_COMMAND_8, SPD2010_SWRESET,
+    END_WRITE,
 
+    DELAY, SPD2010_RST_DELAY,
+
+    BEGIN_WRITE,
     WRITE_C8_BYTES, 0xFF, 3, 0x20, 0x10, 0x10,
     WRITE_C8_D8, 0x0C, 0x11,
     WRITE_C8_D8, 0x10, 0x02,
@@ -432,17 +441,16 @@ static const uint8_t spd2010_init_operations[] = {
     WRITE_C8_D8, 0x09, 0x00,
     WRITE_C8_BYTES, 0xFF, 3, 0x20, 0x10, 0x00,
     WRITE_C8_D8, 0x35, 0x00,
-    // {0x3A, 0x05,
     WRITE_C8_D8, SPD2010_PIXFMT, 0x55,
     WRITE_C8_BYTES, 0xFF, 3, 0x20, 0x10, 0x12,
     WRITE_C8_D8, 0x21, 0x70,
     WRITE_C8_BYTES, 0xFF, 3, 0x20, 0x10, 0x2D,
     WRITE_C8_D8, 0x02, 0x00,
     WRITE_C8_BYTES, 0xFF, 3, 0x20, 0x10, 0x00,
-
-    WRITE_COMMAND_8, 0x11,
+    WRITE_COMMAND_8, SPD2010_SLPOUT,
+    WRITE_COMMAND_8, SPD2010_DISPON,
     END_WRITE,
-    DELAY, 120};
+    DELAY, SPD2010_SLPOUT_DELAY};
 
 class Arduino_SPD2010 : public Arduino_TFT
 {

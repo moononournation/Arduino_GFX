@@ -77,12 +77,6 @@ void Arduino_SPD2010::tftInit()
     digitalWrite(_rst, HIGH);
     delay(SPD2010_RST_DELAY);
   }
-  else
-  {
-    // Software Rest
-    _bus->sendCommand(SPD2010_SWRESET);
-    delay(SPD2010_RST_DELAY);
-  }
 
   _bus->batchOperation(spd2010_init_operations, sizeof(spd2010_init_operations));
 

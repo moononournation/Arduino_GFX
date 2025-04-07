@@ -49,6 +49,7 @@
 // #define XIAO_ESP32S3_ROUND_DISPLAY
 // #define WAVESHARE_ESP32_S3_LCD_1_3
 // #define WAVESHARE_ESP32_S3_LCD_1_3_PRISM
+// #define WAVESHARE_ESP32_S3_LCD_1_46
 // #define WAVESHARE_ESP32_S3_LCD_2_8
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
 // #define WAVESHARE_ESP32_C6_LCD_1_47
@@ -726,6 +727,15 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 42 /* RST */, 2 /* rotation */, true 
 #define GFX_BL 20
 Arduino_DataBus *bus = new Arduino_ESP32SPI(38 /* DC */, 39 /* CS */, 40 /* SCK */, 41 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 42 /* RST */, 6 /* rotation */, true /* IPS */, 240 /* width */, 240 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 80 /* row offset 2 */);
+
+#elif defined(WAVESHARE_ESP32_S3_LCD_1_46)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_LCD_1_46
+#define GFX_BL 5
+Arduino_DataBus *bus = new Arduino_ESP32QSPI(
+    21 /* CS */, 40 /* SCK */, 46 /* D0 */, 45 /* D1 */, 42 /* D2 */, 41 /* D3 */);
+Arduino_GFX *g = new Arduino_SPD2010(bus, GFX_NOT_DEFINED /* RST */);
+#define CANVAS
+Arduino_Canvas *gfx = new Arduino_Canvas(412 /* width */, 412 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
 
 #elif defined(WAVESHARE_ESP32_S3_LCD_2_8)
 #define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_LCD_2_8
