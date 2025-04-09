@@ -25,6 +25,11 @@
 // GC9A01 IPS LCD 240x240
 // Arduino_GFX *gfx = new Arduino_GC9A01(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 
+// GC9A01 IPS LCD 360x360
+// Arduino_GFX *g = new Arduino_GC9C01(bus, TFT_RST, 0 /* rotation */);
+// #define CANVAS
+// Arduino_Canvas *gfx = new Arduino_Canvas(360 /* width */, 360 /* height */, g);
+
 // GC9106 IPS LCD 80x160
 // Arduino_GFX *gfx = new Arduino_GC9106(bus, TFT_RST, 0 /* rotation */, true /* IPS */);
 

@@ -378,6 +378,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 ### Currently Supported Display [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Display-Class)]
 
 * GC9A01 240x240 round display [[demo video](https://youtu.be/kJrAFm20-zg)]
+* GC9C01 360x360 round display [[demo video](https://youtube.com/shorts/Sk9sVT9PawA)]
 * GC9106 80x160 [[demo video](https://youtu.be/RToGeeb1jxQ)]
 * GC9107 128x128 [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM)]
 * GC9503V 480x480 (RGB) [[demo video](https://youtube.com/shorts/hk7ZMBRCmjI)]
