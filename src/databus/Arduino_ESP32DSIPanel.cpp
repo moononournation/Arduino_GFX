@@ -6,10 +6,11 @@
 Arduino_ESP32DSIPanel::Arduino_ESP32DSIPanel(
     uint32_t hsync_pulse_width, uint32_t hsync_back_porch, uint32_t hsync_front_porch,
     uint32_t vsync_pulse_width, uint32_t vsync_back_porch, uint32_t vsync_front_porch,
-    uint32_t prefer_speed)
+    uint32_t prefer_speed,uint32_t lane_bit_rate /*新增成员变量*/)
     : _hsync_pulse_width(hsync_pulse_width), _hsync_back_porch(hsync_back_porch), _hsync_front_porch(hsync_front_porch),
       _vsync_pulse_width(vsync_pulse_width), _vsync_back_porch(vsync_back_porch), _vsync_front_porch(vsync_front_porch),
-      _prefer_speed(prefer_speed)
+      _prefer_speed(prefer_speed),
+	  _lane_bit_rate(lane_bit_rate)/*新增成员变量*/
 {
 }
 
@@ -39,7 +40,7 @@ bool Arduino_ESP32DSIPanel::begin(int16_t w, int16_t h, int32_t speed, const lcd
       .bus_id = 0,
       .num_data_lanes = 2,
       .phy_clk_src = MIPI_DSI_PHY_CLK_SRC_DEFAULT,
-      .lane_bit_rate_mbps = 750,
+      .lane_bit_rate_mbps = _lane_bit_rate, /*新增成员变量*/
   };
   esp_lcd_dsi_bus_handle_t mipi_dsi_bus = NULL;
 
