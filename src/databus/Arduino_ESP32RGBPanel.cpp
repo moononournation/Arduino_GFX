@@ -11,7 +11,7 @@ Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
     uint16_t hsync_polarity, uint16_t hsync_front_porch, uint16_t hsync_pulse_width, uint16_t hsync_back_porch,
     uint16_t vsync_polarity, uint16_t vsync_front_porch, uint16_t vsync_pulse_width, uint16_t vsync_back_porch,
     uint16_t pclk_active_neg, int32_t prefer_speed, bool useBigEndian,
-    uint16_t de_idle_high, uint16_t pclk_idle_high)
+    uint16_t de_idle_high, uint16_t pclk_idle_high, size_t bounce_buffer_size_px)
     : _de(de), _vsync(vsync), _hsync(hsync), _pclk(pclk),
       _r0(r0), _r1(r1), _r2(r2), _r3(r3), _r4(r4),
       _g0(g0), _g1(g1), _g2(g2), _g3(g3), _g4(g4), _g5(g5),
@@ -19,7 +19,7 @@ Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
       _hsync_polarity(hsync_polarity), _hsync_front_porch(hsync_front_porch), _hsync_pulse_width(hsync_pulse_width), _hsync_back_porch(hsync_back_porch),
       _vsync_polarity(vsync_polarity), _vsync_front_porch(vsync_front_porch), _vsync_pulse_width(vsync_pulse_width), _vsync_back_porch(vsync_back_porch),
       _pclk_active_neg(pclk_active_neg), _prefer_speed(prefer_speed), _useBigEndian(useBigEndian),
-      _de_idle_high(de_idle_high), _pclk_idle_high(pclk_idle_high)
+      _de_idle_high(de_idle_high), _pclk_idle_high(pclk_idle_high), _bounce_buffer_size_px(bounce_buffer_size_px)
 {
 }
 
@@ -72,7 +72,7 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
 #else
       .bits_per_pixel = 16,
       .num_fbs = 1,
-      .bounce_buffer_size_px = (size_t)(w * 40),
+      .bounce_buffer_size_px = _bounce_buffer_size_px,
 #endif
       .sram_trans_align = 8,
       .psram_trans_align = 64,

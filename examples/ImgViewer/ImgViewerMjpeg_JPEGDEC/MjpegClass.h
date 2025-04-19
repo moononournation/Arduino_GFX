@@ -4,11 +4,11 @@
  * Dependent libraries:
  * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
  ******************************************************************************/
-#ifndef _MJPEGCLASS_H_
-#define _MJPEGCLASS_H_
+#pragma once
 
-#define READ_BUFFER_SIZE 1024
-#define MAXOUTPUTSIZE (MAX_BUFFERED_PIXELS / 16 / 16)
+#include <JPEGDEC.h>
+
+#define READ_BATCH_SIZE 1024
 
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
@@ -18,8 +18,6 @@
 #else
 #include <SD.h>
 #endif
-
-#include <JPEGDEC.h>
 
 class MjpegClass
 {
@@ -36,104 +34,102 @@ public:
     _y = y;
     _widthLimit = widthLimit;
     _heightLimit = heightLimit;
-    _inputindex = 0;
-
-    if (!_read_buf)
-    {
-      _read_buf = (uint8_t *)malloc(READ_BUFFER_SIZE);
-    }
-
-    if (!_read_buf)
-    {
-      return false;
-    }
+    _read = 0;
 
     return true;
   }
 
   bool readMjpegBuf()
   {
-    if (_inputindex == 0)
+    if (_read == 0)
     {
-      _buf_read = _input->readBytes(_read_buf, READ_BUFFER_SIZE);
-      _inputindex += _buf_read;
+      // _mjpeg_buf empty
+    _read = _input->readBytes(_mjpeg_buf, READ_BATCH_SIZE);
     }
-    _mjpeg_buf_offset = 0;
-    int i = 0;
-    bool found_FFD8 = false;
-    while ((_buf_read > 0) && (!found_FFD8))
+    else
     {
-      i = 0;
-      while ((i < _buf_read) && (!found_FFD8))
+      // pad previous remain data to the start of _mjpeg_buf
+      memcpy(_mjpeg_buf, _p, _read);
+    }
+
+    bool found_FFD8 = false;
+    _p = _mjpeg_buf;
+    while ((_read > 0) && (!found_FFD8))
+    {
+      while ((_read > 1) && (!found_FFD8))
       {
-        if ((_read_buf[i] == 0xFF) && (_read_buf[i + 1] == 0xD8)) // JPEG header
+        --_read;
+        if ((*_p++ == 0xFF) && (*_p == 0xD8)) // JPEG header
         {
           // Serial.printf("Found FFD8 at: %d.\n", i);
           found_FFD8 = true;
         }
-        ++i;
       }
-      if (found_FFD8)
+      if (!found_FFD8)
       {
-        --i;
-      }
-      else
-      {
-        _buf_read = _input->readBytes(_read_buf, READ_BUFFER_SIZE);
+        if (*_p == 0xFF)
+        {
+          _mjpeg_buf[0] = 0xFF;
+          _read = _input->readBytes(_mjpeg_buf + 1, READ_BATCH_SIZE) + 1;
+        }
+        else
+        {
+          _read = _input->readBytes(_mjpeg_buf, READ_BATCH_SIZE);
+        }
+        _p = _mjpeg_buf;
       }
     }
-    uint8_t *_p = _read_buf + i;
-    _buf_read -= i;
-    bool found_FFD9 = false;
-    if (_buf_read > 0)
+
+    if (!found_FFD8)
     {
-      i = 3;
-      while ((_buf_read > 0) && (!found_FFD9))
+      return false;
+    }
+
+    // rewind 1 byte
+    --_p;
+    ++_read;
+
+    // pad JPEG header to the start of _mjpeg_buf
+    if (_p > _mjpeg_buf)
+    {
+      Serial.println("(_p > _mjpeg_buf)");
+      memcpy(_mjpeg_buf, _p, _read);
+    }
+
+    // skip JPEG header
+    _p += 2;
+    _read -= 2;
+
+    if (_read == 0)
+    {
+      _read = _input->readBytes(_p, READ_BATCH_SIZE);
+    }
+
+    bool found_FFD9 = false;
+    while ((_read > 0) && (!found_FFD9))
+    {
+      while ((_read > 1) && (!found_FFD9))
       {
-        if ((_mjpeg_buf_offset > 0) && (_mjpeg_buf[_mjpeg_buf_offset - 1] == 0xFF) && (_p[0] == 0xD9)) // JPEG trailer
+        --_read;
+        if ((*_p++ == 0xFF) && (*_p == 0xD9)) // JPEG trailer
         {
           // Serial.printf("Found FFD9 at: %d.\n", i);
           found_FFD9 = true;
         }
-        else
-        {
-          while ((i < _buf_read) && (!found_FFD9))
-          {
-            if ((_p[i] == 0xFF) && (_p[i + 1] == 0xD9)) // JPEG trailer
-            {
-              found_FFD9 = true;
-              ++i;
-            }
-            ++i;
-          }
-        }
+      }
 
-        // Serial.printf("i: %d\n", i);
-        memcpy(_mjpeg_buf + _mjpeg_buf_offset, _p, i);
-        _mjpeg_buf_offset += i;
-        size_t o = _buf_read - i;
-        if (o > 0)
-        {
-          // Serial.printf("o: %d\n", o);
-          memcpy(_read_buf, _p + i, o);
-          _buf_read = _input->readBytes(_read_buf + o, READ_BUFFER_SIZE - o);
-          _p = _read_buf;
-          _inputindex += _buf_read;
-          _buf_read += o;
-          // Serial.printf("_buf_read: %d\n", _buf_read);
-        }
-        else
-        {
-          _buf_read = _input->readBytes(_read_buf, READ_BUFFER_SIZE);
-          _p = _read_buf;
-          _inputindex += _buf_read;
-        }
-        i = 0;
-      }
-      if (found_FFD9)
+      if (!found_FFD9)
       {
-        return true;
+        _read += _input->readBytes(_p + _read, READ_BATCH_SIZE);
+        // Serial.printf("_read: %d\n", _read - 1);
       }
+    }
+
+    if (found_FFD9)
+    {
+      ++_p;
+      --_read;
+      return true;
     }
 
     return false;
@@ -141,8 +137,7 @@ public:
 
   bool drawJpg()
   {
-    _remain = _mjpeg_buf_offset;
-    _jpeg.openRAM(_mjpeg_buf, _remain, _pfnDraw);
+    _jpeg.openRAM(_mjpeg_buf, _p - _mjpeg_buf, _pfnDraw);
     if (_scale == -1)
     {
       // scale to fit height
@@ -199,16 +194,10 @@ private:
   int _y;
   int _widthLimit;
   int _heightLimit;
-
-  uint8_t *_read_buf;
-  int32_t _mjpeg_buf_offset = 0;
-
-  JPEGDEC _jpeg;
   int _scale = -1;
 
-  int32_t _inputindex = 0;
-  int32_t _buf_read;
-  int32_t _remain = 0;
-};
+  JPEGDEC _jpeg;
 
-#endif // _MJPEGCLASS_H_
+  uint8_t *_p;
+  int32_t _read;
+};

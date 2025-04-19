@@ -3,6 +3,7 @@
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  */
 #include "Arduino_ST7796.h"
+#include "SPI.h"
 
 Arduino_ST7796::Arduino_ST7796(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
@@ -14,6 +15,14 @@ Arduino_ST7796::Arduino_ST7796(
 
 bool Arduino_ST7796::begin(int32_t speed)
 {
+#if defined(ESP32) || defined(ARDUINO_ARCH_NRF52840)
+  _override_datamode = SPI_MODE3;
+#elif defined(ESP8266)
+  _override_datamode = SPI_MODE2;
+#elif defined(__AVR__)
+  _override_datamode = SPI_MODE0;
+#endif
+
   return Arduino_TFT::begin(speed);
 }
 
@@ -36,6 +45,18 @@ void Arduino_ST7796::setRotation(uint8_t r)
     break;
   case 3:
     r = ST7796_MADCTL_MY | ST7796_MADCTL_MV | ST7796_MADCTL_BGR;
+    break;
+  case 4:
+    r = ST7796_MADCTL_MX | ST7796_MADCTL_BGR;
+    break;
+  case 5:
+    r = ST7796_MADCTL_MX | ST7796_MADCTL_MY | ST7796_MADCTL_MV | ST7796_MADCTL_BGR;
+    break;
+  case 6:
+    r = ST7796_MADCTL_MY | ST7796_MADCTL_BGR;
+    break;
+  case 7:
+    r = ST7796_MADCTL_MV | ST7796_MADCTL_BGR;
     break;
   default: // case 0:
     r = ST7796_MADCTL_BGR;
