@@ -5,9 +5,6 @@
 #include <esp_private/gdma.h>
 #include <hal/dma_types.h>
 
-// #include <esp_lcd_panel_io_interface.h>
-// #include <esp_pm.h>
-
 #ifndef LCD_MAX_PIXELS_AT_ONCE
 #define LCD_MAX_PIXELS_AT_ONCE (2048)
 #endif
@@ -806,11 +803,11 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
   };
   esp_lcd_new_i80_bus(&bus_config, &_i80_bus);
 
-  Serial.printf("max_transfer_bytes=%zu\n", bus_config.max_transfer_bytes);
+  // Serial.printf("max_transfer_bytes=%zu\n", bus_config.max_transfer_bytes);
 
   esp_lcd_panel_io_i80_config_t io_config = {
       .cs_gpio_num = _cs,
-      .pclk_hz = 10 * 1000 * 1000, // ??? _speed,
+      .pclk_hz = _speed,
       .trans_queue_depth = 10,
       // on_color_trans_done = nullptr,
       // user_ctx = nullptr,
@@ -823,25 +820,19 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
           .dc_data_level = 1,
       },
       .flags = {
-          .swap_color_bytes = 1,
+          .swap_color_bytes = 0,
           .pclk_idle_low = 0,
       },
   };
   esp_lcd_new_panel_io_i80(_i80_bus, &io_config, &_io_handle);
 
   // allocate some DMA buffer
-  // _buffer = (uint8_t *)heap_caps_aligned_alloc(16, LCD_MAX_PIXELS_AT_ONCE * 2 + 16, MALLOC_CAP_DMA);
   _cmd = -1;
   _isColor = false;
   _bufferLen = 0;
   _buffer = (uint8_t *)esp_lcd_i80_alloc_draw_buffer(_io_handle, LCD_MAX_PIXELS_AT_ONCE * 2 + 16, MALLOC_CAP_DMA);
 
-  if (!_buffer)
-  {
-    return false;
-  }
-
-  return (true);
+  return (_buffer != nullptr);
 }
 
 /**
@@ -868,7 +859,7 @@ void Arduino_ESP32LCD8::endWrite()
 void Arduino_ESP32LCD8::writeCommand(uint8_t c)
 {
   flushBuffer();
-  Serial.printf("writeCommand(%02x)\n", c);
+  // Serial.printf("writeCommand(%02x)\n", c);
   _cmd = c;
   _isColor = false;
 }
@@ -879,14 +870,14 @@ void Arduino_ESP32LCD8::writeCommand(uint8_t c)
  */
 void Arduino_ESP32LCD8::writeCommand16(uint16_t c)
 {
-  Serial.printf("ESP32LCD8::writeCommand16 not implemented.\n");
+  // Serial.printf("ESP32LCD8::writeCommand16 not implemented.\n");
 }
 
 /** write a set of data as command + params */
 void Arduino_ESP32LCD8::writeCommandBytes(uint8_t *data, uint32_t len)
 {
   flushBuffer();
-  Serial.printf("**writeCommandBytes()\n");
+  // Serial.printf("**writeCommandBytes()\n");
 
   if (len)
   {
@@ -939,7 +930,7 @@ void Arduino_ESP32LCD8::write16(uint16_t d)
  */
 void Arduino_ESP32LCD8::writeRepeat(uint16_t p, uint32_t len)
 {
-  Serial.printf("  writeRepeat(#%04x, %d)\n", p, len);
+  // Serial.printf("  writeRepeat(#%04x, %d)\n", p, len);
   _isColor = true;
 
   while (len--)
@@ -973,7 +964,7 @@ void Arduino_ESP32LCD8::writeRepeat(uint16_t p, uint32_t len)
  */
 void Arduino_ESP32LCD8::writePixels(uint16_t *data, uint32_t len)
 {
-  Serial.printf("  writePixels( [...], %ld)\n", len);
+  // Serial.printf("  writePixels( [...], %ld)\n", len);
   _isColor = true;
 
   // transfer in chunks
@@ -990,7 +981,7 @@ void Arduino_ESP32LCD8::writePixels(uint16_t *data, uint32_t len)
  */
 void Arduino_ESP32LCD8::writeBytes(uint8_t *data, uint32_t len)
 {
-  Serial.printf("  writeBytes( [...], %ld)\n", len);
+  // Serial.printf("  writeBytes( [...], %ld)\n", len);
   // transfer in chunks
   while (len--)
   {
@@ -1007,7 +998,7 @@ void Arduino_ESP32LCD8::writeBytes(uint8_t *data, uint32_t len)
  */
 void Arduino_ESP32LCD8::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_t len)
 {
-  Serial.printf("**writeIndexedPixels(...)\n");
+  // Serial.printf("**writeIndexedPixels(...)\n");
 }
 
 /**
@@ -1019,7 +1010,7 @@ void Arduino_ESP32LCD8::writeIndexedPixels(uint8_t *data, uint16_t *idx, uint32_
  */
 void Arduino_ESP32LCD8::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, uint32_t len)
 {
-  Serial.printf("**writeIndexedPixelsDouble(...)\n");
+  // Serial.printf("**writeIndexedPixelsDouble(...)\n");
 }
 
 // ===== sending the buffer =====
@@ -1033,18 +1024,17 @@ void Arduino_ESP32LCD8::flushBuffer()
   if (_cmd == 0x2c)
   {
     if (!_isColor)
-      Serial.printf("  isColor mismatch\n");
       _isColor = true;
   }
 
   if ((_cmd >= 0) || (_bufferLen > 0))
   {
-    Serial.printf("  flush(%02x: (%d)", _cmd, _bufferLen);
+    // Serial.printf("  flush(%02x: (%d)", _cmd, _bufferLen);
 
-    for (int n = 0; (n < _bufferLen) && (n < 32); n++)
-    {
-      Serial.printf(" %02x", _buffer[n]);
-    }
+    // for (int n = 0; (n < _bufferLen) && (n < 32); n++)
+    // {
+    //   Serial.printf(" %02x", _buffer[n]);
+    // }
 
     // wait for color completion (when color sending is on the way)
     // send cmd and buffer and wait for completion
@@ -1066,7 +1056,7 @@ void Arduino_ESP32LCD8::flushBuffer()
     // }
     _cmd = -1; // next time, we start a data send out without command.
     _bufferLen = 0;
-    Serial.println(")");
+    // Serial.println(")");
   }
 }
 
