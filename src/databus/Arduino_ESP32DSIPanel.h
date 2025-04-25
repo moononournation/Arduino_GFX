@@ -22,6 +22,7 @@
 
 #define EXAMPLE_MIPI_DSI_PHY_PWR_LDO_CHAN 3 // LDO_VO3 连接至 VDD_MIPI_DPHY
 #define EXAMPLE_MIPI_DSI_PHY_PWR_LDO_VOLTAGE_MV 2500
+#define DEFAULT_MIPI_DSI_LANE_BIT_RATE_MBPS 750 // 新增宏定义
 
 typedef struct
 {
@@ -37,7 +38,7 @@ public:
   Arduino_ESP32DSIPanel(
       uint32_t hsync_pulse_width, uint32_t hsync_back_porch, uint32_t hsync_front_porch,
       uint32_t vsync_pulse_width, uint32_t vsync_back_porch, uint32_t vsync_front_porch,
-      uint32_t prefer_speed = GFX_NOT_DEFINED);
+      uint32_t prefer_speed = GFX_NOT_DEFINED,uint32_t lane_bit_rate = DEFAULT_MIPI_DSI_LANE_BIT_RATE_MBPS /*新增成员变量*/);
 
   bool begin(int16_t w, int16_t h, int32_t speed = GFX_NOT_DEFINED, const lcd_init_cmd_t *init_operations = NULL, size_t init_operations_len = GFX_NOT_DEFINED);
 
@@ -52,6 +53,7 @@ private:
   uint32_t _vsync_back_porch;
   uint32_t _vsync_front_porch;
   uint32_t _prefer_speed;
+  uint32_t _lane_bit_rate; // 新增成员变量
 
   esp_lcd_panel_handle_t _panel_handle = NULL;
 };
