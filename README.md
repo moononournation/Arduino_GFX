@@ -385,6 +385,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 * GC9503V 480x480 (RGB) [[demo video](https://youtube.com/shorts/hk7ZMBRCmjI)]
 * HX8347C 240x320 [[demo video](https://youtu.be/25ymuV51YQM)]
 * HX8347D 240x320 [[demo video](https://youtu.be/sv6LGkLRZjI)]
+* HX8394 720x1280 [[demo video](https://www.bilibili.com/video/BV1eNLRzaEFL)]
 * HX8352C 240x400 [[demo video](https://youtu.be/m2xWYbS3t7s)]
 * HX8357A 320x480 [[demo video](https://youtu.be/wJkLO_xCTXA)] (currently only portrait works, i.e. rotation 0 and 2)
 * HX8357B 320x480 (9-bit SPI) [[demo video](https://youtu.be/pB6_LOCiUqg)]
