@@ -50,7 +50,7 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
 {
   if (speed == GFX_NOT_DEFINED)
   {
-    _speed = 40000000UL;
+    _speed = 20000000UL; // safe frequency
   }
   else
   {
@@ -769,7 +769,7 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
 {
   if (speed == GFX_NOT_DEFINED)
   {
-    _speed = 40000000UL;
+    _speed = 20000000UL; // safe frequency
   }
   else
   {
