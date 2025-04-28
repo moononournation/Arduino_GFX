@@ -11,7 +11,7 @@
 // #include <examples/lv_examples.h>
 // #include <demos/lv_demos.h>
 
-// #define DIRECT_MODE // Uncomment to enable full frame buffer
+// #define DIRECT_RENDER_MODE // Uncomment to enable full frame buffer
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
@@ -81,12 +81,12 @@ uint32_t millis_cb(void)
 /* LVGL calls it when a rendered image needs to copied to the display*/
 void my_disp_flush(lv_display_t *disp, const lv_area_t *area, uint8_t *px_map)
 {
-#ifndef DIRECT_MODE
+#ifndef DIRECT_RENDER_MODE
   uint32_t w = lv_area_get_width(area);
   uint32_t h = lv_area_get_height(area);
 
   gfx->draw16bitRGBBitmap(area->x1, area->y1, (uint16_t *)px_map, w, h);
-#endif // #ifndef DIRECT_MODE
+#endif // #ifndef DIRECT_RENDER_MODE
 
   /*Call it to tell LVGL you are ready*/
   lv_disp_flush_ready(disp);
@@ -157,23 +157,23 @@ void setup()
   screenWidth = gfx->width();
   screenHeight = gfx->height();
 
-#ifdef DIRECT_MODE
+#ifdef DIRECT_RENDER_MODE
   bufSize = screenWidth * screenHeight;
 #else
   bufSize = screenWidth * 40;
 #endif
 
 #ifdef ESP32
-#if defined(DIRECT_MODE) && (defined(CANVAS) || defined(RGB_PANEL) || defined(DSI_PANEL))
+#if defined(DIRECT_RENDER_MODE) && (defined(CANVAS) || defined(RGB_PANEL) || defined(DSI_PANEL))
   disp_draw_buf = (lv_color_t *)gfx->getFramebuffer();
-#else  // !(defined(DIRECT_MODE) && (defined(CANVAS) || defined(RGB_PANEL) || defined(DSI_PANEL)))
+#else  // !(defined(DIRECT_RENDER_MODE) && (defined(CANVAS) || defined(RGB_PANEL) || defined(DSI_PANEL)))
   disp_draw_buf = (lv_color_t *)heap_caps_malloc(bufSize * 2, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
   if (!disp_draw_buf)
   {
     // remove MALLOC_CAP_INTERNAL flag try again
     disp_draw_buf = (lv_color_t *)heap_caps_malloc(bufSize * 2, MALLOC_CAP_8BIT);
   }
-#endif // !(defined(DIRECT_MODE) && (defined(CANVAS) || defined(RGB_PANEL) || defined(DSI_PANEL)))
+#endif // !(defined(DIRECT_RENDER_MODE) && (defined(CANVAS) || defined(RGB_PANEL) || defined(DSI_PANEL)))
 #else // !ESP32
   Serial.println("LVGL disp_draw_buf heap_caps_malloc failed! malloc again...");
   disp_draw_buf = (lv_color_t *)malloc(bufSize * 2);
@@ -186,7 +186,7 @@ void setup()
   {
     disp = lv_display_create(screenWidth, screenHeight);
     lv_display_set_flush_cb(disp, my_disp_flush);
-#ifdef DIRECT_MODE
+#ifdef DIRECT_RENDER_MODE
     lv_display_set_buffers(disp, disp_draw_buf, NULL, bufSize * 2, LV_DISPLAY_RENDER_MODE_DIRECT);
 #else
     lv_display_set_buffers(disp, disp_draw_buf, NULL, bufSize * 2, LV_DISPLAY_RENDER_MODE_PARTIAL);
@@ -228,17 +228,17 @@ void loop()
 {
   lv_task_handler(); /* let the GUI do its work */
 
-#ifdef DIRECT_MODE
+#ifdef DIRECT_RENDER_MODE
 #if defined(CANVAS) || defined(RGB_PANEL) || defined(DSI_PANEL)
   gfx->flush();
 #else // !(defined(CANVAS) || defined(RGB_PANEL) || defined(DSI_PANEL))
   gfx->draw16bitRGBBitmap(0, 0, (uint16_t *)disp_draw_buf, screenWidth, screenHeight);
 #endif // !(defined(CANVAS) || defined(RGB_PANEL) || defined(DSI_PANEL))
-#else  // !DIRECT_MODE
+#else  // !DIRECT_RENDER_MODE
 #ifdef CANVAS
   gfx->flush();
 #endif
-#endif // !DIRECT_MODE
+#endif // !DIRECT_RENDER_MODE
 
   delay(5);
 }
