@@ -1,14 +1,5 @@
 #include "Arduino_ESP32LCD8.h"
 
-#include "esp_lcd_panel_interface.h"
-#include "esp_lcd_panel_io.h"
-#include <esp_private/gdma.h>
-#include <hal/dma_types.h>
-
-#ifndef LCD_MAX_PIXELS_AT_ONCE
-#define LCD_MAX_PIXELS_AT_ONCE (2048)
-#endif
-
 #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
 #if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
 
