@@ -568,7 +568,7 @@ int32_t testCircles(uint8_t radius)
 
 int32_t testFillArcs()
 {
-  int16_t i, r = 360 / cn;
+  int16_t i, r = (360 > cn) ? (360 / cn) : 1;
   uint32_t start = micros_start();
 
   for (i = 6; i < cn; i += 6)
@@ -581,7 +581,7 @@ int32_t testFillArcs()
 
 int32_t testArcs()
 {
-  int16_t i, r = 360 / cn;
+  int16_t i, r = (360 > cn) ? (360 / cn) : 1;
   uint32_t start = micros_start();
 
   for (i = 6; i < cn; i += 6)
