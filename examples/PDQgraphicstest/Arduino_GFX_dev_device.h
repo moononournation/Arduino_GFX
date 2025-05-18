@@ -27,6 +27,7 @@
 // #define JC1060P470
 // #define JC3248W535
 // #define JC3636W518
+// #define JC8012P4A1
 // #define LILYGO_T_DECK
 // #define LILYGO_T_DECK_PLUS
 // #define LILYGO_T_DISPLAY
@@ -498,6 +499,18 @@ Arduino_Canvas *gfx = new Arduino_Canvas(320 /* width */, 480 /* height */, g, 0
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
     10 /* CS */, 9 /* SCK */, 11 /* D0 */, 12 /* D1 */, 13 /* D2 */, 14 /* D3 */);
 Arduino_GFX *gfx = new Arduino_ST77916(bus, 47 /* RST */, 0 /* rotation */, true /* IPS */, 360 /* width */, 360 /* height */);
+
+#elif defined(JC8012P4A1)
+#define GFX_DEV_DEVICE JC8012P4A1
+#define GFX_BL 23 // default backlight pin, you may replace DF_GFX_BL to actual backlight pin
+#define DSI_PANEL
+Arduino_ESP32DSIPanel *dsipanel = new Arduino_ESP32DSIPanel(
+    20 /* hsync_pulse_width */, 20 /* hsync_back_porch */, 40 /* hsync_front_porch */,
+    4 /* vsync_pulse_width */, 8 /*vsync_back_porch  */, 20 /* vsync_front_porch */,
+    60000000 /* prefer_speed */);
+Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
+    800 /* width */, 1280 /* height */, dsipanel, 0 /* rotation */, true /* auto_flush */,
+    27 /* RST */, jd9365_init_operations, sizeof(jd9365_init_operations) / sizeof(lcd_init_cmd_t));
 
 #elif defined(LILYGO_T_DECK)
 #define GFX_DEV_DEVICE LILYGO_T_DECK
