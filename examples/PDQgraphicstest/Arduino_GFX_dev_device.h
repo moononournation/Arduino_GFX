@@ -44,19 +44,20 @@
 // #define MAKERFABS_TFT_TOUCH_3_5
 // #define MAKERFABS_ESP32_S3_TFT_4_0
 // #define MAKERFABS_ESP32_S3_TFT_4_3_v1_3
-// #define WT32_SC01
 // #define XIAO_SAMD21_ROUND_DISPLAY
 // #define XIAO_ESP32C3_ROUND_DISPLAY
 // #define XIAO_ESP32S3_ROUND_DISPLAY
+// #define WAVESHARE_ESP32_C6_LCD_1_47
+// #define WAVESHARE_ESP32_C6_LCD_1_9
 // #define WAVESHARE_ESP32_S3_LCD_1_3
 // #define WAVESHARE_ESP32_S3_LCD_1_3_PRISM
 // #define WAVESHARE_ESP32_S3_LCD_1_46
 // #define WAVESHARE_ESP32_S3_LCD_2_8
+// #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_64
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
-// #define WAVESHARE_ESP32_C6_LCD_1_47
-// #define WAVESHARE_ESP32_C6_LCD_1_9
 // #define WAVESHARE_RP2040_LCD_0_96
 // #define WAVESHARE_RP2040_LCD_1_28 // Waveshare RP2040-LCD-1.28 or RP2350-LCD-1.28
+// #define WT32_SC01
 // #define WZ8048C050 // or called "Elecrow Wizee-ESP32"
 // #define ZX2D10GE10R_V4848
 // #define ZX3D50CE02S // or called "WT32-SC01 PLUS"
@@ -708,27 +709,26 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 
-#elif defined(WT32_SC01)
-#define GFX_DEV_DEVICE WT32_SC01
-#define GFX_BL 23
-Arduino_DataBus *bus = new Arduino_ESP32SPI(21 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
-Arduino_GFX *gfx = new Arduino_ST7796(bus, 22 /* RST */, 3 /* rotation */);
+#elif defined(WAVESHARE_ESP32_C6_LCD_1_47)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_C6_LCD_1_47
+#define DEV_DEVICE_INIT()                  \
+    {                                      \
+        pinMode(4 /* SD_CS */, OUTPUT);    \
+        digitalWrite(4 /* SD_CS */, HIGH); \
+    }
+#define GFX_BL 22
+Arduino_DataBus *bus = new Arduino_HWSPI(15 /* DC */, 14 /* CS */, 7 /* SCK */, 6 /* MOSI */, 5 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, 21 /* RST */, 0 /* rotation */, true /* IPS */, 172 /* width */, 320 /* height */, 34 /* col offset 1 */, 0 /* row offset 1 */, 34 /* col offset 2 */, 0 /* row offset 2 */);
 
-#elif defined(WZ8048C050)
-#define GFX_DEV_DEVICE WZ8048C050
-#define GFX_BL 2
-#define RGB_PANEL
-Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
-    40 /* DE */, 41 /* VSYNC */, 39 /* HSYNC */, 0 /* PCLK */,
-    45 /* R0 */, 48 /* R1 */, 47 /* R2 */, 21 /* R3 */, 14 /* R4 */,
-    5 /* G0 */, 6 /* G1 */, 7 /* G2 */, 15 /* G3 */, 16 /* G4 */, 4 /* G5 */,
-    8 /* B0 */, 3 /* B1 */, 46 /* B2 */, 9 /* B3 */, 1 /* B4 */,
-    0 /* hsync_polarity */, 8 /* hsync_front_porch */, 4 /* hsync_pulse_width */, 43 /* hsync_back_porch */,
-    0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 12 /* vsync_back_porch */,
-    1 /* pclk_active_neg */, 16000000 /* prefer_speed */, false /* useBigEndian */,
-    0 /* de_idle_high */, 0 /* pclk_idle_high */, 0 /* bounce_buffer_size_px */);
-Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
-    800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
+#elif defined(WAVESHARE_ESP32_C6_LCD_1_9)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_C6_LCD_1_9
+#define DEV_DEVICE_INIT()                   \
+    {                                       \
+        pinMode(15 /* LCD_BL */, OUTPUT);   \
+        digitalWrite(15 /* LCD_BL */, LOW); \
+    }
+Arduino_DataBus *bus = new Arduino_HWSPI(6 /* DC */, 7 /* CS */, 5 /* SCK */, 4 /* MOSI */, 19 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, 14 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */, 35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
 
 #elif defined(WAVESHARE_ESP32_S3_LCD_1_3)
 #define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_LCD_1_3
@@ -757,6 +757,15 @@ Arduino_Canvas *gfx = new Arduino_Canvas(412 /* width */, 412 /* height */, g, 0
 Arduino_DataBus *bus = new Arduino_HWSPI(41 /* DC */, 42 /* CS */, 40 /* SCK */, 45 /* MOSI */, 46 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 39 /* RST */, 0 /* rotation */, true /* IPS */);
 
+#elif defined(WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_64)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_64
+Arduino_DataBus *bus = new Arduino_ESP32QSPI(
+    9 /* CS */, 10 /* SCK */, 11 /* D0 */, 12 /* D1 */, 13 /* D2 */, 14 /* D3 */);
+Arduino_GFX *g = new Arduino_CO5300(bus, 21 /* RST */, 0 /* rotation */, false /* IPS */, 280, 456,
+                                    20 /* col offset 1 */, 0 /* row offset 1 */, 180 /* col_offset2 */, 24 /* row_offset2 */);
+#define CANVAS
+Arduino_Canvas *gfx = new Arduino_Canvas(280 /* width */, 456 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
+
 #elif defined(WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41)
 #define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
 #define DEV_DEVICE_INIT()                     \
@@ -770,27 +779,6 @@ Arduino_GFX *g = new Arduino_RM690B0(bus, 21 /* RST */, 0 /* rotation */, 450 /*
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(450 /* width */, 600 /* height */, g);
 
-#elif defined(WAVESHARE_ESP32_C6_LCD_1_47)
-#define GFX_DEV_DEVICE WAVESHARE_ESP32_C6_LCD_1_47
-#define DEV_DEVICE_INIT()                  \
-    {                                      \
-        pinMode(4 /* SD_CS */, OUTPUT);    \
-        digitalWrite(4 /* SD_CS */, HIGH); \
-    }
-#define GFX_BL 22
-Arduino_DataBus *bus = new Arduino_HWSPI(15 /* DC */, 14 /* CS */, 7 /* SCK */, 6 /* MOSI */, 5 /* MISO */);
-Arduino_GFX *gfx = new Arduino_ST7789(bus, 21 /* RST */, 0 /* rotation */, true /* IPS */, 172 /* width */, 320 /* height */, 34 /* col offset 1 */, 0 /* row offset 1 */, 34 /* col offset 2 */, 0 /* row offset 2 */);
-
-#elif defined(WAVESHARE_ESP32_C6_LCD_1_9)
-#define GFX_DEV_DEVICE WAVESHARE_ESP32_C6_LCD_1_9
-#define DEV_DEVICE_INIT()                   \
-    {                                       \
-        pinMode(15 /* LCD_BL */, OUTPUT);   \
-        digitalWrite(15 /* LCD_BL */, LOW); \
-    }
-Arduino_DataBus *bus = new Arduino_HWSPI(6 /* DC */, 7 /* CS */, 5 /* SCK */, 4 /* MOSI */, 19 /* MISO */);
-Arduino_GFX *gfx = new Arduino_ST7789(bus, 14 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */, 35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
-
 #elif defined(WAVESHARE_RP2040_LCD_0_96)
 #define GFX_DEV_DEVICE WAVESHARE_RP2040_LCD_0_96
 #define GFX_BL 25
@@ -802,6 +790,28 @@ Arduino_GFX *gfx = new Arduino_ST7735(bus, 12 /* RST */, 0 /* rotation */, true 
 #define GFX_BL 25
 Arduino_DataBus *bus = new Arduino_RPiPicoSPI(8 /* DC */, 9 /* CS */, 10 /* SCK */, 11 /* MOSI */, GFX_NOT_DEFINED /* MISO */, spi1 /* spi */);
 Arduino_GFX *gfx = new Arduino_GC9A01(bus, 12 /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(WT32_SC01)
+#define GFX_DEV_DEVICE WT32_SC01
+#define GFX_BL 23
+Arduino_DataBus *bus = new Arduino_ESP32SPI(21 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7796(bus, 22 /* RST */, 3 /* rotation */);
+
+#elif defined(WZ8048C050)
+#define GFX_DEV_DEVICE WZ8048C050
+#define GFX_BL 2
+#define RGB_PANEL
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    40 /* DE */, 41 /* VSYNC */, 39 /* HSYNC */, 0 /* PCLK */,
+    45 /* R0 */, 48 /* R1 */, 47 /* R2 */, 21 /* R3 */, 14 /* R4 */,
+    5 /* G0 */, 6 /* G1 */, 7 /* G2 */, 15 /* G3 */, 16 /* G4 */, 4 /* G5 */,
+    8 /* B0 */, 3 /* B1 */, 46 /* B2 */, 9 /* B3 */, 1 /* B4 */,
+    0 /* hsync_polarity */, 8 /* hsync_front_porch */, 4 /* hsync_pulse_width */, 43 /* hsync_back_porch */,
+    0 /* vsync_polarity */, 8 /* vsync_front_porch */, 4 /* vsync_pulse_width */, 12 /* vsync_back_porch */,
+    1 /* pclk_active_neg */, 16000000 /* prefer_speed */, false /* useBigEndian */,
+    0 /* de_idle_high */, 0 /* pclk_idle_high */, 0 /* bounce_buffer_size_px */);
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+    800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
 
 #elif defined(XIAO_SAMD21_ROUND_DISPLAY)
 #define GFX_DEV_DEVICE XIAO_SAMD21_ROUND_DISPLAY
