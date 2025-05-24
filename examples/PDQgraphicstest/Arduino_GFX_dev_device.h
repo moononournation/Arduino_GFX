@@ -54,6 +54,7 @@
 // #define WAVESHARE_ESP32_S3_LCD_2_8
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
 // #define WAVESHARE_ESP32_C6_LCD_1_47
+// #define WAVESHARE_ESP32_C6_LCD_1_9
 // #define WAVESHARE_RP2040_LCD_0_96
 // #define WAVESHARE_RP2040_LCD_1_28 // Waveshare RP2040-LCD-1.28 or RP2350-LCD-1.28
 // #define WZ8048C050 // or called "Elecrow Wizee-ESP32"
@@ -779,6 +780,16 @@ Arduino_Canvas *gfx = new Arduino_Canvas(450 /* width */, 600 /* height */, g);
 #define GFX_BL 22
 Arduino_DataBus *bus = new Arduino_HWSPI(15 /* DC */, 14 /* CS */, 7 /* SCK */, 6 /* MOSI */, 5 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 21 /* RST */, 0 /* rotation */, true /* IPS */, 172 /* width */, 320 /* height */, 34 /* col offset 1 */, 0 /* row offset 1 */, 34 /* col offset 2 */, 0 /* row offset 2 */);
+
+#elif defined(WAVESHARE_ESP32_C6_LCD_1_9)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_C6_LCD_1_9
+#define DEV_DEVICE_INIT()                   \
+    {                                       \
+        pinMode(15 /* LCD_BL */, OUTPUT);   \
+        digitalWrite(15 /* LCD_BL */, LOW); \
+    }
+Arduino_DataBus *bus = new Arduino_HWSPI(6 /* DC */, 7 /* CS */, 5 /* SCK */, 4 /* MOSI */, 19 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, 14 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */, 35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
 
 #elif defined(WAVESHARE_RP2040_LCD_0_96)
 #define GFX_DEV_DEVICE WAVESHARE_RP2040_LCD_0_96
