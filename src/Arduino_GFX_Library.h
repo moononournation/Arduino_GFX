@@ -87,6 +87,7 @@
 #include "display/Arduino_RGB_Display.h"
 #include "display/Arduino_SEPS525.h"
 #include "display/Arduino_SH1106.h"
+#include "display/Arduino_SH8601.h"
 #include "display/Arduino_SPD2010.h"
 #include "display/Arduino_SSD1283A.h"
 #include "display/Arduino_SSD1306.h"
