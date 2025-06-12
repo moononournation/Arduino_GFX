@@ -1,15 +1,11 @@
 #pragma once
 
-/*
- * start rewrite from:
- * https://github.com/Xinyuan-LilyGO/T-Display-AMOLED-1.64.git
- */
-
 #include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
+#include "../Arduino_OLED.h"
 
-#define CO5300_MAXWIDTH 480  ///< CO5300 max TFT width
-#define CO5300_MAXHEIGHT 480 ///< CO5300 max TFT width
+#define CO5300_TFTWIDTH 480  ///< CO5300 max TFT width
+#define CO5300_TFTHEIGHT 480 ///< CO5300 max TFT width
 
 #define CO5300_RST_DELAY 200    ///< delay ms wait for reset finish
 #define CO5300_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
@@ -152,26 +148,24 @@ static const uint8_t co5300_init_operations[] = {
 
     DELAY, 10};
 
-class Arduino_CO5300 : public Arduino_TFT
+class Arduino_CO5300 : public Arduino_OLED
 {
 public:
   Arduino_CO5300(
       Arduino_DataBus *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0,
-      bool ips = false, int16_t w = CO5300_MAXWIDTH, int16_t h = CO5300_MAXHEIGHT,
+      int16_t w = CO5300_TFTWIDTH, int16_t h = CO5300_TFTHEIGHT,
       uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
   bool begin(int32_t speed = GFX_NOT_DEFINED) override;
 
-  void setRotation(uint8_t r) override;
-
   void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) override;
-
+  void setRotation(uint8_t r) override;
   void invertDisplay(bool) override;
   void displayOn() override;
   void displayOff() override;
 
-  void setBrightness(uint8_t brightness);
-  void setContrast(uint8_t Contrast);
+  void setBrightness(uint8_t brightness) override;
+  void setContrast(uint8_t contrast) override;
 
 protected:
   void tftInit() override;

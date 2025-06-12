@@ -1,7 +1,8 @@
 #pragma once
 
-#include "./Arduino_GFX.h"
+#include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
+#include "../Arduino_OLED.h"
 
 #define JD9613_TFTWIDTH 126
 #define JD9613_TFTHEIGHT 294
@@ -441,10 +442,13 @@ static const uint8_t jd9613_init_operations[] = {
     END_WRITE,
     DELAY, JD9613_SLPOUT_DELAY};
 
-class Arduino_JD9613 : public Arduino_TFT
+class Arduino_JD9613 : public Arduino_OLED
 {
 public:
-  Arduino_JD9613(Arduino_DataBus *bus, int8_t rst = GFX_NOT_DEFINED);
+  Arduino_JD9613(
+      Arduino_DataBus *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0,
+      int16_t w = JD9613_TFTWIDTH, int16_t h = JD9613_TFTHEIGHT,
+      uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
   bool begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) override;
@@ -452,6 +456,9 @@ public:
   void invertDisplay(bool) override;
   void displayOn() override;
   void displayOff() override;
+
+  void setBrightness(uint8_t brightness) override;
+  void setContrast(uint8_t contrast) override;
 
 protected:
   void tftInit() override;

@@ -1,20 +1,35 @@
-/*
- * start rewrite from:
- * https://github.com/Xinyuan-LilyGO/T-Display-AMOLED-1.64.git
- */
 #include "Arduino_CO5300.h"
 
 Arduino_CO5300::Arduino_CO5300(
-    Arduino_DataBus *bus, int8_t rst, uint8_t r,
-    bool ips, int16_t w, int16_t h,
+    Arduino_DataBus *bus, int8_t rst, uint8_t r, int16_t w, int16_t h,
     uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2)
-    : Arduino_TFT(bus, rst, r, ips, w, h, col_offset1, row_offset1, col_offset2, row_offset2)
+    : Arduino_OLED(
+          bus, rst, r, w, h,
+          col_offset1, row_offset1, col_offset2, row_offset2)
 {
 }
 
 bool Arduino_CO5300::begin(int32_t speed)
 {
   return Arduino_TFT::begin(speed);
+}
+
+void Arduino_CO5300::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
+{
+  if ((x != _currentX) || (w != _currentW) || (y != _currentY) || (h != _currentH))
+  {
+    _currentX = x;
+    _currentY = y;
+    _currentW = w;
+    _currentH = h;
+
+    x += _xStart;
+    _bus->writeC8D16D16(CO5300_W_CASET, x, x + w - 1);
+    y += _yStart;
+    _bus->writeC8D16D16(CO5300_W_PASET, y, y + h - 1);
+  }
+
+  _bus->writeCommand(CO5300_W_RAMWR); // write to RAM
 }
 
 /**************************************************************************/
@@ -45,24 +60,6 @@ void Arduino_CO5300::setRotation(uint8_t r)
   _bus->beginWrite();
   _bus->writeC8D8(CO5300_W_MADCTL, r);
   _bus->endWrite();
-}
-
-void Arduino_CO5300::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
-{
-  if ((x != _currentX) || (w != _currentW) || (y != _currentY) || (h != _currentH))
-  {
-    _currentX = x;
-    _currentY = y;
-    _currentW = w;
-    _currentH = h;
-
-    x += _xStart;
-    _bus->writeC8D16D16(CO5300_W_CASET, x, x + w - 1);
-    y += _yStart;
-    _bus->writeC8D16D16(CO5300_W_PASET, y, y + h - 1);
-  }
-
-  _bus->writeCommand(CO5300_W_RAMWR); // write to RAM
 }
 
 void Arduino_CO5300::invertDisplay(bool i)
@@ -149,30 +146,4 @@ void Arduino_CO5300::tftInit()
   _bus->batchOperation(co5300_init_operations, sizeof(co5300_init_operations));
 
   invertDisplay(false);
-
-  // _bus->beginWrite();
-
-  // _bus->writeCommand(CO5300_C_SLPOUT);
-  // delay(CO5300_SLPOUT_DELAY);
-
-  // _bus->writeCommand(CO5300_W_SETTSL);
-  // _bus->write(0x01);
-  // _bus->write(0xD1);
-
-  // _bus->writeC8D8(CO5300_WC_TEARON, 0x00);
-  // _bus->writeC8D8(CO5300_W_PIXFMT, 0x55);
-  // _bus->writeC8D8(CO5300_W_WCTRLD1, 0x20);
-  // _bus->writeCommand(CO5300_C_DISPON);                // Display on
-  // _bus->writeC8D8(CO5300_W_WDBRIGHTNESSVALNOR, 0x00); // Brightest brightness
-
-  // _bus->endWrite();
-
-  // delay(1000);
-  // displayOff();
-  // delay(1000);
-  // displayOn();
-  // delay(1000);
-  // displayOff();
-  // delay(1000);
-  // displayOn();
 }
