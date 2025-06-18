@@ -340,7 +340,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 * [LILYGO T-Display-S3 AMOLED 1.64](https://www.lilygo.cc/products/t-display-s3-amoled-1-64?bg_ref=Ts2JN05e23) [[demo video](https://youtu.be/5O3fQ1xNsrg)][[LVGL demo video](https://youtu.be/6UEaxWfxm9g)]
 * [LILYGO T-Display S3 Long](https://www.lilygo.cc/products/t-display-s3-long?bg_ref=Ts2JN05e23)[[LVGL demo video](https://youtu.be/OuxLFwxvcVc)]
 * [LILYGO T-Display S3 Pro](https://www.lilygo.cc/products/t-display-s3-pro?bg_ref=Ts2JN05e23) [[demo video](https://youtube.com/shorts/PE-GKTzbdP8)]
-* [LILYGO T-QT](https://www.lilygo.cc/products/t-qt-pro?bg_ref=Ts2JN05e23) [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM)]
+* [LILYGO T-QT Pro](https://www.lilygo.cc/products/t-qt-pro?bg_ref=Ts2JN05e23) [[demo video](https://youtube.com/shorts/V1MCQ1tQ8PM)]
 * [LILYGO T-RGB](https://www.lilygo.cc/products/t-rgb?bg_ref=Ts2JN05e23) [[LVGL demo video](https://youtu.be/BKEl_pWp_qQ)]
 * [LILYGO T-Track](https://www.lilygo.cc/products/t-track?bg_ref=Ts2JN05e23) [[demo video](https://youtu.be/6wmUhp-5eMg)][[LVGL demo video](https://youtu.be/wQjMu5JZSkg)]
 * LILYGO T-Watch

@@ -36,7 +36,7 @@
 // #define LILYGO_T_Display_S3_AMOLED_1_64
 // #define LILYGO_T_Display_S3_LONG
 // #define LILYGO_T_DISPLAY_S3_PRO
-// #define LILYGO_T_QT
+// #define LILYGO_T_QT_PRO
 // #define LILYGO_T_RGB
 // #define LILYGO_T_TRACK
 // #define LILYGO_T_WATCH_2021
@@ -625,8 +625,8 @@ Arduino_GFX *gfx = new Arduino_ST7796(
     bus, 47 /* RST */, 0 /* rotation */, true /* IPS */, 222 /* width */, 480 /* height */,
     49 /* col offset 1 */, 0 /* row offset 1 */, 49 /* col offset 2 */, 0 /* row offset 2 */);
 
-#elif defined(LILYGO_T_QT)
-#define GFX_DEV_DEVICE LILYGO_T_QT
+#elif defined(LILYGO_T_QT_PRO)
+#define GFX_DEV_DEVICE LILYGO_T_QT_PRO
 #define DEV_DEVICE_INIT()               \
     {                                   \
         pinMode(10 /* BL */, OUTPUT);   \
