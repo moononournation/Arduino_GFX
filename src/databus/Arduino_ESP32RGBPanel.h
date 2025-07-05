@@ -17,16 +17,46 @@
 
 #include "Arduino_DataBus.h"
 
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+//#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4)  //Modify
 
 #include "esp_lcd_panel_rgb.h"
 #include "esp_lcd_panel_ops.h"
 
-#include "esp32s3/rom/cache.h"
-// This function is located in ROM (also see esp_rom/${target}/ld/${target}.rom.ld)
-extern int Cache_WriteBack_Addr(uint32_t addr, uint32_t size);
 
-#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
+//#include "esp32s3/rom/cache.h"
+// This function is located in ROM (also see esp_rom/${target}/ld/${target}.rom.ld)
+//extern int Cache_WriteBack_Addr(uint32_t addr, uint32_t size);
+
+//Modify
+// 根据目标芯片选择不同的头文件 （Select different header files according to the target chip）
+#if defined(CONFIG_IDF_TARGET_ESP32S3)
+    #include "esp32s3/rom/cache.h"
+#elif defined(CONFIG_IDF_TARGET_ESP32P4)
+    #include "esp32p4/rom/cache.h"
+#else
+    #error "Unsupported target chip! Please use ESP32-S3 or ESP32-P4."
+#endif
+
+// 根据芯片类型选择正确的函数签名 （Select different header files according to the target chip）
+#if defined(CONFIG_IDF_TARGET_ESP32P4)
+    // ESP32-P4需要使用带gid和map参数的版本
+    extern "C" int Cache_WriteBack_Addr_Gid(uint32_t gid, uint32_t map, uint32_t addr, uint32_t size);
+    
+    // 创建兼容旧版API的包装函数
+    static inline int Cache_WriteBack_Addr(uint32_t addr, uint32_t size) {
+        // 使用默认gid=0，并同时操作L1 DCache和L2 Cache
+        return Cache_WriteBack_Addr_Gid(0, CACHE_MAP_L1_DCACHE | CACHE_MAP_L2_CACHE, addr, size);
+    }
+#else
+    // ESP32-S3及其他芯片使用原始API
+    extern "C" int Cache_WriteBack_Addr(uint32_t addr, uint32_t size);
+#endif
+
+
+//#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
+#if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR >5)
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_panel_interface.h"
