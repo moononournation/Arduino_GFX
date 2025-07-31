@@ -79,6 +79,7 @@
 #include "display/Arduino_NT39125.h"
 #include "display/Arduino_NV3007.h"
 #include "display/Arduino_NV3023.h"
+#include "display/Arduino_NV3007_alternate.h"
 #include "display/Arduino_NV3041A.h"
 #include "display/Arduino_OTM8009A.h"
 #include "display/Arduino_R61529.h"
