@@ -54,6 +54,7 @@
 #include "display/Arduino_DSI_Display.h"
 #include "display/Arduino_GC9A01.h"
 #include "display/Arduino_GC9C01.h"
+#include "display/Arduino_GC9D01.h"
 #include "display/Arduino_GC9106.h"
 #include "display/Arduino_GC9107.h"
 #include "display/Arduino_HX8347C.h"
