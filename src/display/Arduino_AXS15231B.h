@@ -570,7 +570,7 @@ static const uint8_t axs15231b_type3_init_operations[] = {
 };
 
 
-    class Arduino_AXS15231B : public Arduino_TFT
+class Arduino_AXS15231B : public Arduino_TFT
 {
 public:
   Arduino_AXS15231B(
