@@ -57,7 +57,8 @@
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_8
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
 // #define WAVESHARE_RP2040_LCD_0_96
-// #define WAVESHARE_RP2040_LCD_1_28 // Waveshare RP2040-LCD-1.28 or RP2350-LCD-1.28
+// #define WAVESHARE_RP2040_LCD_1_28 // compatible RP2350-LCD-1.28
+// #define WAVESHARE_RP2350_LCD_1_47
 // #define WT32_SC01
 // #define WZ8048C050 // or called "Elecrow Wizee-ESP32"
 // #define ZX2D10GE10R_V4848
@@ -842,6 +843,14 @@ Arduino_GFX *gfx = new Arduino_ST7735(
 #define GFX_BL 25
 Arduino_DataBus *bus = new Arduino_RPiPicoSPI(8 /* DC */, 9 /* CS */, 10 /* SCK */, 11 /* MOSI */, GFX_NOT_DEFINED /* MISO */, spi1 /* spi */);
 Arduino_GFX *gfx = new Arduino_GC9A01(bus, 12 /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(WAVESHARE_RP2350_LCD_1_47)
+#define GFX_DEV_DEVICE WAVESHARE_RP2350_LCD_1_47
+#define GFX_BL 21
+Arduino_DataBus *bus = new Arduino_RPiPicoSPI(16 /* DC */, 17 /* CS */, 18 /* SCK */, 19 /* MOSI */, GFX_NOT_DEFINED /* MISO */, spi0 /* spi */);
+Arduino_GFX *gfx = new Arduino_ST7789(
+    bus, 20 /* RST */, 0 /* rotation */, true /* IPS */, 172 /* width */, 320 /* height */,
+    34 /* col offset 1 */, 0 /* row offset 1 */, 34 /* col offset 2 */, 0 /* row offset 2 */);
 
 #elif defined(WT32_SC01)
 #define GFX_DEV_DEVICE WT32_SC01

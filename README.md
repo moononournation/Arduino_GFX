@@ -353,19 +353,20 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 - [Makerfabs ESP32-S3 TFT 4.3" v1.3](https://www.makerfabs.com/esp32-s3-parallel-tft-with-touch-4-3-inch.html) [[demo video](https://youtu.be/oQ57L2gTHoo)]
 - [Odroid Go](https://www.hardkernel.com/shop/odroid-go/)
 - [seeed studio Wio Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
-- [Waveshare ESP32-C6-LCD-1.47](https://www.waveshare.com/esp32-c6-lcd-1.47.htm?&aff_id=107987)
-- [Waveshare ESP32-C6-LCD-1.9](https://www.waveshare.com/esp32-c6-lcd-1.9.htm?&aff_id=107987)[[demo video](https://youtube.com/shorts/OryF57VqufY?feature=share)]
-- [Waveshare ESP32-S3 1.46inch Round Display Development Board](https://www.waveshare.com/esp32-s3-touch-lcd-1.46b.htm?&aff_id=107987) [[demo video](https://youtube.com/shorts/tqyqxdRA550)]
-- [Waveshare ESP32-S3-Touch-LCD-1.3](https://www.waveshare.com/esp32-s3-lcd-1.3.htm?&aff_id=107987) [[demo video](https://youtube.com/shorts/_n3qTa_nVGE)]
-- [Waveshare ESP32-S3-Touch-LCD-1.3 with case and prism cube](https://www.waveshare.com/esp32-s3-lcd-1.3.htm?sku=30559&aff_id=107987) [[demo video](https://youtube.com/shorts/tqyqxdRA550)]
-- [Waveshare ESP32-S3-Touch-LCD-2.8](https://www.waveshare.com/esp32-s3-touch-lcd-2.8.htm?&aff_id=107987) [[demo video](https://youtube.com/shorts/1RU_EanUgSU)
-- [Waveshare ESP32-S3-Touch-AMOLED-1.64](https://www.waveshare.com/esp32-s3-touch-amoled-1.64.htm?&aff_id=107987)[[demo video](https://youtube.com/shorts/aTTQ9PKgESU?feature=share)]
-- [Waveshare ESP32-S3-Touch-AMOLED-1.8](https://www.waveshare.com/esp32-s3-touch-amoled-1.8.htm?&aff_id=107987)[[demo video](https://youtube.com/shorts/sHjCoPSsC2Q?feature=share)]
+- [Waveshare ESP32-C6-LCD-1.47](https://www.waveshare.com/esp32-c6-lcd-1.47.htm?&aff_id=moononournation)
+- [Waveshare ESP32-C6-LCD-1.9](https://www.waveshare.com/esp32-c6-lcd-1.9.htm?&aff_id=moononournation)[[demo video](https://youtube.com/shorts/OryF57VqufY?feature=share)]
+- [Waveshare ESP32-S3 1.46inch Round Display Development Board](https://www.waveshare.com/esp32-s3-touch-lcd-1.46b.htm?&aff_id=moononournation) [[demo video](https://youtube.com/shorts/tqyqxdRA550)]
+- [Waveshare ESP32-S3-Touch-LCD-1.3](https://www.waveshare.com/esp32-s3-lcd-1.3.htm?&aff_id=moononournation) [[demo video](https://youtube.com/shorts/_n3qTa_nVGE)]
+- [Waveshare ESP32-S3-Touch-LCD-1.3 with case and prism cube](https://www.waveshare.com/esp32-s3-lcd-1.3.htm?sku=30559&aff_id=moononournation) [[demo video](https://youtube.com/shorts/tqyqxdRA550)]
+- [Waveshare ESP32-S3-Touch-LCD-2.8](https://www.waveshare.com/esp32-s3-touch-lcd-2.8.htm?&aff_id=moononournation) [[demo video](https://youtube.com/shorts/1RU_EanUgSU)
+- [Waveshare ESP32-S3-Touch-AMOLED-1.64](https://www.waveshare.com/esp32-s3-touch-amoled-1.64.htm?&aff_id=moononournation)[[demo video](https://youtube.com/shorts/aTTQ9PKgESU?feature=share)]
+- [Waveshare ESP32-S3-Touch-AMOLED-1.8](https://www.waveshare.com/esp32-s3-touch-amoled-1.8.htm?&aff_id=moononournation)[[demo video](https://youtube.com/shorts/sHjCoPSsC2Q?feature=share)]
 
-- [Waveshare ESP32-S3-Touch-AMOLED-2.41](https://www.waveshare.com/esp32-s3-touch-amoled-2.41.htm?&aff_id=107987)
-- [Waveshare RP2040-LCD-0.96](https://www.waveshare.com/rp2040-lcd-0.96.htm?&aff_id=107987)
-- [Waveshare RP2040-LCD-1.28](https://www.waveshare.com/rp2040-lcd-1.28.htm?&aff_id=107987)
-- [Waveshare RP2350-LCD-0.96](https://www.waveshare.com/rp2350-lcd-0.96.htm?&aff_id=107987)
+- [Waveshare ESP32-S3-Touch-AMOLED-2.41](https://www.waveshare.com/esp32-s3-touch-amoled-2.41.htm?&aff_id=moononournation)
+- [Waveshare RP2040-LCD-0.96](https://www.waveshare.com/rp2040-lcd-0.96.htm?&aff_id=moononournation)
+- [Waveshare RP2040-LCD-1.28](https://www.waveshare.com/rp2040-lcd-1.28.htm?&aff_id=moononournation)
+- [Waveshare RP2350-LCD-0.96](https://www.waveshare.com/rp2350-lcd-0.96.htm?&aff_id=moononournation)
+- [Waveshare RP2350-LCD-1.47](https://www.waveshare.com/rp2350-lcd-1.47-a.htm?&aff_id=moononournation)
 - [wireless-tag WT-32-SC01](http://www.wireless-tag.com/portfolio/wt32-sc01/)
 - [Elecrow ESP Terminal with 3.5" parallel RGB display DLC35010R](https://www.elecrow.com/esp-terminal-with-esp32-3-5-inch-parallel-480x320-tft-capacitive-touch-display-rgb-by-chip-ili9488.html) [[demo video](https://youtu.be/QRDVuwayNFw)]
 - [Elecrow Wizee-ESP32 WZ8048C050](https://www.elecrow.com/esp32-display-5-inch-hmi-display-rgb-tft-lcd-touch-screen-support-lvgl.html)
@@ -498,6 +499,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 - <https://github.com/modi12jin/Arduino-ESP32-WEA2012.git>
 - <https://github.com/nopnop2002/esp-idf-parallel-tft.git>
 - <https://github.com/olikraus/u8g2.git>
+- <https://www.waveshare.com/wiki/RP2350-Touch-AMOLED-1.8>
 
 </details>
 
