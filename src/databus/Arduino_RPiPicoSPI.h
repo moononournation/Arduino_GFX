@@ -1,12 +1,12 @@
+#pragma once
+
+#include "Arduino_DataBus.h"
+
 #if defined(TARGET_RP2040) || defined(PICO_RP2350)
 
-#ifndef _ARDUINO_RPIPICOSPI_H_
-#define _ARDUINO_RPIPICOSPI_H_
 
 #include <api/HardwareSPI.h>
 #include <hardware/spi.h>
-
-#include "Arduino_DataBus.h"
 
 #ifndef RPIPICOSPI_MAX_PIXELS_AT_ONCE
 #define RPIPICOSPI_MAX_PIXELS_AT_ONCE 32
@@ -34,7 +34,6 @@ public:
   void writeBytes(uint8_t *data, uint32_t len) override;
 
 protected:
-
 private:
   GFX_INLINE void WRITE(uint8_t d);
   GFX_INLINE void WRITE16(uint16_t d);
@@ -67,5 +66,4 @@ private:
   };
 };
 
-#endif // _ARDUINO_RPIPICOSPI_H_
 #endif // #if defined(TARGET_RP2040) || defined(PICO_RP2350)
