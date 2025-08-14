@@ -98,6 +98,8 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 
 // 1.65"/1.68" NV3007 LCD 142x428
 // Arduino_GFX *gfx = new Arduino_NV3007(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 142 /* width */, 428 /* height */, 12 /* col offset 1 */, 0 /* row offset 1 */, 14 /* col offset 2 */, 0 /* row offset 2 */);
+// Alternate driver, with a different initialization sequence
+// Arduino_GFX *gfx = new Arduino_NV3007_alternate(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 142 /* width */, 428 /* height */, 12 /* col offset 1 */, 0 /* row offset 1 */, 14 /* col offset 2 */, 0 /* row offset 2 */);
 
 // 2.79" NV3007 LCD 142x428
 // Arduino_GFX *gfx = new Arduino_NV3007(bus, TFT_RST, 0 /* rotation */, false /* IPS */, 142 /* width */, 428 /* height */, 12 /* col offset 1 */, 0 /* row offset 1 */, 14 /* col offset 2 */, 0 /* row offset 2 */, NV3007_279_init_operations, sizeof(NV3007_279_init_operations));
