@@ -578,7 +578,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(
         digitalWrite(15 /* PWD */, HIGH); \
     }
 #define GFX_BL 38
-Arduino_DataBus *bus = new Arduino_ESP32PAR8Q(
+Arduino_DataBus *bus = new Arduino_ESP32LCD8(
     7 /* DC */, 6 /* CS */, 8 /* WR */, 9 /* RD */,
     39 /* D0 */, 40 /* D1 */, 41 /* D2 */, 42 /* D3 */, 45 /* D4 */, 46 /* D5 */, 47 /* D6 */, 48 /* D7 */);
 Arduino_GFX *gfx = new Arduino_ST7789(
@@ -620,6 +620,11 @@ Arduino_Canvas *gfx = new Arduino_Canvas(
 
 #elif defined(LILYGO_T_DISPLAY_S3_PRO)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3_PRO
+#define DEV_DEVICE_INIT()                                \
+    {                                                    \
+        pinMode(14 /* SDCARD_CS */, OUTPUT);       \
+        digitalWrite(14 /* SDCARD_CS */, HIGH);    \
+    }
 #define GFX_BL 48
 Arduino_DataBus *bus = new Arduino_ESP32SPI(9 /* DC */, 39 /* CS */, 18 /* SCK */, 17 /* MOSI */, 8 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7796(
