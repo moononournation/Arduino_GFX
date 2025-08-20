@@ -831,7 +831,7 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
  */
 void Arduino_ESP32LCD8::beginWrite()
 {
-  _cmd == -1;
+  _cmd = -1;
   _bufferLen = 0;
 }
 
