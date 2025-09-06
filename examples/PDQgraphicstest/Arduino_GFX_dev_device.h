@@ -620,10 +620,10 @@ Arduino_Canvas *gfx = new Arduino_Canvas(
 
 #elif defined(LILYGO_T_DISPLAY_S3_PRO)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3_PRO
-#define DEV_DEVICE_INIT()                                \
-    {                                                    \
-        pinMode(14 /* SDCARD_CS */, OUTPUT);       \
-        digitalWrite(14 /* SDCARD_CS */, HIGH);    \
+#define DEV_DEVICE_INIT()                       \
+    {                                           \
+        pinMode(14 /* SDCARD_CS */, OUTPUT);    \
+        digitalWrite(14 /* SDCARD_CS */, HIGH); \
     }
 #define GFX_BL 48
 Arduino_DataBus *bus = new Arduino_ESP32SPI(9 /* DC */, 39 /* CS */, 18 /* SCK */, 17 /* MOSI */, 8 /* MISO */);
