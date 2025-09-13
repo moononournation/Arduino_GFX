@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./Arduino_GFX.h"
+#include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
 
 #define NV3007_TFTWIDTH 168
