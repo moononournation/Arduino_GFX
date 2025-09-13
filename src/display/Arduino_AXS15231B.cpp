@@ -1,6 +1,5 @@
 /*
  * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
  * https://github.com/ananevilya/Arduino-AXS15231B-Library.git
  */
 #include "Arduino_AXS15231B.h"
@@ -8,8 +7,10 @@
 Arduino_AXS15231B::Arduino_AXS15231B(
     Arduino_DataBus *bus, int8_t rst, uint8_t r,
     bool ips, int16_t w, int16_t h,
-    uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2)
-    : Arduino_TFT(bus, rst, r, ips, w, h, col_offset1, row_offset1, col_offset2, row_offset2)
+    uint8_t col_offset1, uint8_t row_offset1, uint8_t col_offset2, uint8_t row_offset2,
+    const uint8_t *init_operations, size_t init_operations_len)
+    : Arduino_TFT(bus, rst, r, ips, w, h, col_offset1, row_offset1, col_offset2, row_offset2),
+      _init_operations(init_operations), _init_operations_len(init_operations_len)
 {
 }
 
@@ -20,6 +21,27 @@ bool Arduino_AXS15231B::begin(int32_t speed)
     speed = 32000000UL; // AXS15231B Maximum supported speed
   }
   return Arduino_TFT::begin(speed);
+}
+
+void Arduino_AXS15231B::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
+{
+  if ((x != _currentX) || (w != _currentW))
+  {
+    _currentX = x;
+    _currentW = w;
+    x += _xStart;
+    _bus->writeC8D16D16(AXS15231B_CASET, x, x + w - 1);
+  }
+
+  if ((y != _currentY) || (h != _currentH))
+  {
+    _currentY = y;
+    _currentH = h;
+    y += _yStart;
+    _bus->writeC8D16D16(AXS15231B_RASET, y, y + h - 1);
+  }
+
+  _bus->writeCommand(AXS15231B_RAMWR); // write to RAM
 }
 
 /**************************************************************************/
@@ -51,27 +73,6 @@ void Arduino_AXS15231B::setRotation(uint8_t r)
   _bus->endWrite();
 }
 
-void Arduino_AXS15231B::writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h)
-{
-  if ((x != _currentX) || (w != _currentW))
-  {
-    _currentX = x;
-    _currentW = w;
-    x += _xStart;
-    _bus->writeC8D16D16(AXS15231B_CASET, x, x + w - 1);
-  }
-
-  if ((y != _currentY) || (h != _currentH))
-  {
-    _currentY = y;
-    _currentH = h;
-    y += _yStart;
-    _bus->writeC8D16D16(AXS15231B_RASET, y, y + h - 1);
-  }
-
-  _bus->writeCommand(AXS15231B_RAMWR); // write to RAM
-}
-
 void Arduino_AXS15231B::invertDisplay(bool i)
 {
   _bus->sendCommand((_ips ^ i) ? AXS15231B_INVON : AXS15231B_INVOFF);
@@ -89,8 +90,6 @@ void Arduino_AXS15231B::displayOff(void)
   delay(AXS15231B_SLPIN_DELAY);
 }
 
-// Companion code to the above tables.  Reads and issues
-// a series of LCD commands stored in PROGMEM byte array.
 void Arduino_AXS15231B::tftInit()
 {
   if (_rst != GFX_NOT_DEFINED)
@@ -103,14 +102,14 @@ void Arduino_AXS15231B::tftInit()
     digitalWrite(_rst, HIGH);
     delay(AXS15231B_RST_DELAY);
   }
-  // else
-  // {
-  // Software Rest
-  _bus->sendCommand(AXS15231B_SWRESET);
-  delay(AXS15231B_RST_DELAY);
-  // }
+  else
+  {
+    // Software Rest
+    _bus->sendCommand(AXS15231B_SWRESET);
+    delay(AXS15231B_RST_DELAY);
+  }
 
-  _bus->batchOperation(axs15231b_init_operations, sizeof(axs15231b_init_operations));
+  _bus->batchOperation(_init_operations, _init_operations_len);
 
   invertDisplay(false);
 }
