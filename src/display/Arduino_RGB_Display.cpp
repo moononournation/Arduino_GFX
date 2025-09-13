@@ -1,7 +1,7 @@
 #include "../Arduino_DataBus.h"
 
-//#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4)  //Modify
+// #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4) // Modify
 
 #include "../Arduino_GFX.h"
 #include "Arduino_RGB_Display.h"
@@ -27,11 +27,14 @@ Arduino_RGB_Display::Arduino_RGB_Display(
 
 bool Arduino_RGB_Display::begin(int32_t speed)
 {
-  if (_bus)
+  if (speed != GFX_SKIP_DATABUS_BEGIN)
   {
-    if (!_bus->begin())
+    if (_bus)
     {
-      return false;
+      if (!_bus->begin())
+      {
+        return false;
+      }
     }
   }
 

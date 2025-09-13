@@ -20,18 +20,21 @@ Arduino_TFT::Arduino_TFT(
 
 bool Arduino_TFT::begin(int32_t speed)
 {
-  if (_override_datamode != GFX_NOT_DEFINED)
+  if (speed != GFX_SKIP_DATABUS_BEGIN)
   {
-    if (!_bus->begin(speed, _override_datamode))
+    if (_override_datamode != GFX_NOT_DEFINED)
     {
-      return false;
+      if (!_bus->begin(speed, _override_datamode))
+      {
+        return false;
+      }
     }
-  }
-  else
-  {
-    if (!_bus->begin(speed))
+    else
     {
-      return false;
+      if (!_bus->begin(speed))
+      {
+        return false;
+      }
     }
   }
 

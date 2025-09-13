@@ -13,14 +13,17 @@ bool Arduino_SSD1306::begin(int32_t speed)
 {
   // println("SSD1306::begin()");
 
-  if (!_bus)
+  if (speed != GFX_SKIP_DATABUS_BEGIN)
   {
-    // println("SSD1306::bus not given");
-  }
-  else if (!_bus->begin(speed))
-  {
-    // println("SSD1306::bus not started");
-    return false;
+    if (!_bus)
+    {
+      // println("SSD1306::bus not given");
+    }
+    else if (!_bus->begin(speed))
+    {
+      // println("SSD1306::bus not started");
+      return false;
+    }
   }
 
   // println("SSD1306::Initialize Display");

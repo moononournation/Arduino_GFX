@@ -9,6 +9,7 @@
 
 #include "YCbCr2RGB.h"
 
+#define GFX_SKIP_DATABUS_BEGIN -3
 #define GFX_SKIP_OUTPUT_BEGIN -2
 #define GFX_NOT_DEFINED -1
 #define GFX_STR_HELPER(x) #x
