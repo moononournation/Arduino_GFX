@@ -31,7 +31,7 @@
 #define NV3007_MADCTL_ML 0x10
 #define NV3007_MADCTL_RGB 0x00
 
-static const uint8_t NV3007_init_operations[] = {
+static const uint8_t nv3007_init_operations[] = {
     BEGIN_WRITE,
 
     WRITE_C8_D8, 0xFF, 0xA5,
@@ -177,7 +177,7 @@ static const uint8_t NV3007_init_operations[] = {
 
     DELAY, 150};
 
-static const uint8_t NV3007_279_init_operations[] = {
+static const uint8_t nv3007_279_init_operations[] = {
     BEGIN_WRITE,
 
     WRITE_C8_D8, 0xff, 0xa5,
@@ -316,7 +316,7 @@ public:
       Arduino_DataBus *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0,
       bool ips = false, int16_t w = NV3007_TFTWIDTH, int16_t h = NV3007_TFTHEIGHT,
       uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0,
-      const uint8_t *init_operations = NV3007_init_operations, size_t init_operations_len = sizeof(NV3007_init_operations));
+      const uint8_t *init_operations = nv3007_init_operations, size_t init_operations_len = sizeof(nv3007_init_operations));
 
   bool begin(int32_t speed = GFX_NOT_DEFINED) override;
   void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) override;
@@ -331,5 +331,4 @@ protected:
 private:
   const uint8_t *_init_operations;
   size_t _init_operations_len;
-
 };
