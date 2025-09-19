@@ -32,54 +32,57 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
     _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
 
-  spi_bus_config_t buscfg = {
-      .mosi_io_num = _mosi,
-      .miso_io_num = _miso,
-      .sclk_io_num = _sck,
-      .quadwp_io_num = _quadwp,
-      .quadhd_io_num = _quadhd,
-      .data4_io_num = -1,
-      .data5_io_num = -1,
-      .data6_io_num = -1,
-      .data7_io_num = -1,
-      .max_transfer_sz = (ESP32QSPI_MAX_PIXELS_AT_ONCE * 16) + 8,
-      .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
+  if (speed != GFX_SKIP_DATABUS_UNDERLAYING_BEGIN)
+  {
+    spi_bus_config_t buscfg = {
+        .mosi_io_num = _mosi,
+        .miso_io_num = _miso,
+        .sclk_io_num = _sck,
+        .quadwp_io_num = _quadwp,
+        .quadhd_io_num = _quadhd,
+        .data4_io_num = -1,
+        .data5_io_num = -1,
+        .data6_io_num = -1,
+        .data7_io_num = -1,
+        .max_transfer_sz = (ESP32QSPI_MAX_PIXELS_AT_ONCE * 16) + 8,
+        .flags = SPICOMMON_BUSFLAG_MASTER | SPICOMMON_BUSFLAG_GPIO_PINS,
 #if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
-      // skip this
+    // skip this
 #else
-      .isr_cpu_id = ESP_INTR_CPU_AFFINITY_AUTO,
+        .isr_cpu_id = ESP_INTR_CPU_AFFINITY_AUTO,
 #endif
-      .intr_flags = 0};
-  esp_err_t ret = spi_bus_initialize(ESP32QSPI_SPI_HOST, &buscfg, ESP32QSPI_DMA_CHANNEL);
-  if (ret != ESP_OK)
-  {
-    ESP_ERROR_CHECK(ret);
-    return false;
-  }
+        .intr_flags = 0};
+    esp_err_t ret = spi_bus_initialize(ESP32QSPI_SPI_HOST, &buscfg, ESP32QSPI_DMA_CHANNEL);
+    if (ret != ESP_OK)
+    {
+      ESP_ERROR_CHECK(ret);
+      return false;
+    }
 
-  spi_device_interface_config_t devcfg = {
-      .command_bits = 8,
-      .address_bits = 24,
-      .dummy_bits = 0,
-      .mode = (uint8_t)_dataMode,
-      #if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
-      .clock_source = SPI_CLK_SRC_DEFAULT,
-      #endif
-      .duty_cycle_pos = 0,
-      .cs_ena_pretrans = 0,
-      .cs_ena_posttrans = 0,
-      .clock_speed_hz = _speed,
-      .input_delay_ns = 0,
-      .spics_io_num = -1, // avoid use system CS control
-      .flags = SPI_DEVICE_HALFDUPLEX,
-      .queue_size = 1,
-      .pre_cb = nullptr,
-      .post_cb = nullptr};
-  ret = spi_bus_add_device(ESP32QSPI_SPI_HOST, &devcfg, &_handle);
-  if (ret != ESP_OK)
-  {
-    ESP_ERROR_CHECK(ret);
-    return false;
+    spi_device_interface_config_t devcfg = {
+        .command_bits = 8,
+        .address_bits = 24,
+        .dummy_bits = 0,
+        .mode = (uint8_t)_dataMode,
+#if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
+        .clock_source = SPI_CLK_SRC_DEFAULT,
+#endif
+        .duty_cycle_pos = 0,
+        .cs_ena_pretrans = 0,
+        .cs_ena_posttrans = 0,
+        .clock_speed_hz = _speed,
+        .input_delay_ns = 0,
+        .spics_io_num = -1, // avoid use system CS control
+        .flags = SPI_DEVICE_HALFDUPLEX,
+        .queue_size = 1,
+        .pre_cb = nullptr,
+        .post_cb = nullptr};
+    ret = spi_bus_add_device(ESP32QSPI_SPI_HOST, &devcfg, &_handle);
+    if (ret != ESP_OK)
+    {
+      ESP_ERROR_CHECK(ret);
+      return false;
+    }
   }
 
   if (!_is_shared_interface)
