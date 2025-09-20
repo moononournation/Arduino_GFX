@@ -12,6 +12,8 @@ This library start rewrite from Adafruit_GFX, LovyanGFX, TFT_eSPI, Ucglib, and m
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/moononournation)
 ![Twitter Follow](https://img.shields.io/twitter/follow/moononournation)
 
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://www.buymeacoffee.com/moononournx)
+
 ## Ease of use
 
 ### Simple Declaration
