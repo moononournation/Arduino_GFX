@@ -52,7 +52,7 @@ Arduino_DataBus *bus = new Arduino_HWSPI(TFT_DC, TFT_CS);
 
 // ESP32 QSPI
 // Arduino_DataBus *bus = new Arduino_ESP32QSPI(
-//     10 /* CS */, 5 /* SCK */, 14 /* D0 */, 8 /* D1 */, 0 /* D2 */, 1 /* D3 */);
+//     6 /* CS */, 0 /* SCK */, 1 /* D0 */, 2 /* D1 */, 3 /* D2 */, 4 /* D3 */);
 
 // ESP32S2 parallel 8-bit
 // Display D0-D7 connect to GPIO 0-7
