@@ -11,7 +11,7 @@ Arduino_ESP32QSPI::Arduino_ESP32QSPI(
 bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
 {
   // set SPI parameters
-  _speed = (speed == GFX_NOT_DEFINED) ? ESP32QSPI_FREQUENCY : speed;
+  _speed = (speed <= GFX_NOT_DEFINED) ? ESP32QSPI_FREQUENCY : speed;
   _dataMode = (dataMode == GFX_NOT_DEFINED) ? ESP32QSPI_SPI_MODE : dataMode;
 
   pinMode(_cs, OUTPUT);
@@ -58,31 +58,31 @@ bool Arduino_ESP32QSPI::begin(int32_t speed, int8_t dataMode)
       ESP_ERROR_CHECK(ret);
       return false;
     }
+  }
 
-    spi_device_interface_config_t devcfg = {
-        .command_bits = 8,
-        .address_bits = 24,
-        .dummy_bits = 0,
-        .mode = (uint8_t)_dataMode,
+  spi_device_interface_config_t devcfg = {
+      .command_bits = 8,
+      .address_bits = 24,
+      .dummy_bits = 0,
+      .mode = (uint8_t)_dataMode,
 #if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
-        .clock_source = SPI_CLK_SRC_DEFAULT,
+      .clock_source = SPI_CLK_SRC_DEFAULT,
 #endif
-        .duty_cycle_pos = 0,
-        .cs_ena_pretrans = 0,
-        .cs_ena_posttrans = 0,
-        .clock_speed_hz = _speed,
-        .input_delay_ns = 0,
-        .spics_io_num = -1, // avoid use system CS control
-        .flags = SPI_DEVICE_HALFDUPLEX,
-        .queue_size = 1,
-        .pre_cb = nullptr,
-        .post_cb = nullptr};
-    ret = spi_bus_add_device(ESP32QSPI_SPI_HOST, &devcfg, &_handle);
-    if (ret != ESP_OK)
-    {
-      ESP_ERROR_CHECK(ret);
-      return false;
-    }
+      .duty_cycle_pos = 0,
+      .cs_ena_pretrans = 0,
+      .cs_ena_posttrans = 0,
+      .clock_speed_hz = _speed,
+      .input_delay_ns = 0,
+      .spics_io_num = -1, // avoid use system CS control
+      .flags = SPI_DEVICE_HALFDUPLEX,
+      .queue_size = 1,
+      .pre_cb = nullptr,
+      .post_cb = nullptr};
+  esp_err_t ret = spi_bus_add_device(ESP32QSPI_SPI_HOST, &devcfg, &_handle);
+  if (ret != ESP_OK)
+  {
+    ESP_ERROR_CHECK(ret);
+    return false;
   }
 
   if (!_is_shared_interface)
