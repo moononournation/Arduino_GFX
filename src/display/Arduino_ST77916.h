@@ -256,7 +256,7 @@ static const uint8_t st77916_150_init_operations[] = {
     WRITE_COMMAND_8, 0x11,
     END_WRITE,
 
-    DELAY, 120,
+    DELAY, ST77916_SLPOUT_DELAY,
 
     BEGIN_WRITE,
     WRITE_COMMAND_8, 0x29,
