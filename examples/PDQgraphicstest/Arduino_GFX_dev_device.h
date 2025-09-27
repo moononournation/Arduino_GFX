@@ -56,6 +56,7 @@
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_64
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_8
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
+// #define WAVESHARE_ESP32_S3_TOUCH_LCD_3_49
 // #define WAVESHARE_RP2040_LCD_0_96
 // #define WAVESHARE_RP2040_LCD_1_28 // compatible RP2350-LCD-1.28
 // #define WAVESHARE_RP2350_LCD_1_47
@@ -838,6 +839,23 @@ Arduino_GFX *g = new Arduino_RM690B0(
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(
     450 /* width */, 600 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
+
+#elif defined(WAVESHARE_ESP32_S3_TOUCH_LCD_3_49)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_TOUCH_LCD_3_49
+#define DEV_DEVICE_INIT()              \
+    {                                  \
+        pinMode(8 /* BL */, OUTPUT);   \
+        digitalWrite(8 /* BL */, LOW); \
+    }
+Arduino_DataBus *bus = new Arduino_ESP32QSPI(
+    9 /* CS */, 10 /* SCK */, 11 /* D0 */, 12 /* D1 */, 13 /* D2 */, 14 /* D3 */);
+Arduino_GFX *g = new Arduino_AXS15231B(
+    bus, 21 /* RST */, 0 /* rotation */, false /* IPS */, 172 /* width */, 640 /* height */,
+    0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */,
+    axs15231b_180640_init_operations, sizeof(axs15231b_180640_init_operations));
+#define CANVAS
+Arduino_Canvas *gfx = new Arduino_Canvas(
+    172 /* width */, 640 /* height */, g, 0 /* output_x */, 0 /* output_y */, 1 /* rotation */);
 
 #elif defined(WAVESHARE_RP2040_LCD_0_96)
 #define GFX_DEV_DEVICE WAVESHARE_RP2040_LCD_0_96
