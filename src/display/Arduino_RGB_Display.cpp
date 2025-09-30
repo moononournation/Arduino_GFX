@@ -94,7 +94,6 @@ void Arduino_RGB_Display::writePixelPreclipped(int16_t x, int16_t y, uint16_t co
     y2 = HEIGHT - 1 - x;
     x = y;
     break;
-  default: // case 0:
   }
 
   x += COL_OFFSET1;
