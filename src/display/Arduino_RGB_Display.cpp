@@ -79,46 +79,33 @@ bool Arduino_RGB_Display::begin(int32_t speed)
 
 void Arduino_RGB_Display::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
-  x += COL_OFFSET1;
-  y += ROW_OFFSET1;
-  uint16_t *fb = _framebuffer;
+  int32_t y2;
   switch (_rotation)
   {
   case 1:
-    fb += (int32_t)x * _fb_width;
-    fb += _fb_max_x - y;
-    *fb = color;
-    if (_auto_flush)
-    {
-      Cache_WriteBack_Addr((uint32_t)fb, 2);
-    }
+    y2 = x;
+    x = WIDTH - 1 - y;
     break;
   case 2:
-    fb += (int32_t)(_fb_max_y - y) * _fb_width;
-    fb += _fb_max_x - x;
-    *fb = color;
-    if (_auto_flush)
-    {
-      Cache_WriteBack_Addr((uint32_t)fb, 2);
-    }
+    x = WIDTH - 1 - x;
+    y2 = HEIGHT - 1 - y;
     break;
   case 3:
-    fb += (int32_t)(_fb_max_y - x) * _fb_width;
-    fb += y;
-    *fb = color;
-    if (_auto_flush)
-    {
-      Cache_WriteBack_Addr((uint32_t)fb, 2);
-    }
+    y2 = HEIGHT - 1 - x;
+    x = y;
     break;
   default: // case 0:
-    fb += (int32_t)y * _fb_width;
-    fb += x;
-    *fb = color;
-    if (_auto_flush)
-    {
-      Cache_WriteBack_Addr((uint32_t)fb, 2);
-    }
+  }
+
+  x += COL_OFFSET1;
+  y2 += ROW_OFFSET1;
+
+  uint16_t *fb = _framebuffer + (y2 * _fb_width) + x;
+
+  *fb = color;
+  if (_auto_flush)
+  {
+    Cache_WriteBack_Addr((uint32_t)fb, 2);
   }
 }
 
