@@ -587,12 +587,18 @@ void Arduino_ESP32PAR16::write16(uint16_t d)
 void Arduino_ESP32PAR16::writeRepeat(uint16_t p, uint32_t len)
 {
   _data16.value = p;
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   uint32_t d1 = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
   uint32_t d2 = _xset_mask2_hi[_data16.msb] | _xset_mask2_lo[_data16.lsb];
   *_data1PortClr = _data1ClrMask;
   *_data2PortClr = _data2ClrMask;
   *_data1PortSet = d1;
   *_data2PortSet = d2;
+#else
+  uint32_t d1 = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
+  *_data1PortClr = _data1ClrMask;
+  *_data1PortSet = d1;
+#endif
   while (len--)
   {
     *_wrPortClr = _wrPinMask;
@@ -687,10 +693,15 @@ void Arduino_ESP32PAR16::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, 
   while (len--)
   {
     _data16.value = idx[*data++];
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
     *_data1PortClr = _data1ClrMask;
     *_data2PortClr = _data2ClrMask;
     *_data1PortSet = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
     *_data2PortSet = _xset_mask2_hi[_data16.msb] | _xset_mask2_lo[_data16.lsb];
+#else
+    *_data1PortClr = _data1ClrMask;
+    *_data1PortSet = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
+#endif
     *_wrPortClr = _wrPinMask;
     *_wrPortSet = _wrPinMask;
     *_wrPortClr = _wrPinMask;
@@ -700,10 +711,15 @@ void Arduino_ESP32PAR16::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, 
 
 GFX_INLINE void Arduino_ESP32PAR16::WRITE(uint8_t d)
 {
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   *_data1PortClr = _data1ClrMask;
   *_data2PortClr = _data2ClrMask;
   *_data1PortSet = _xset_mask1_lo[d];
   *_data2PortSet = _xset_mask2_lo[d];
+#else
+  *_data1PortClr = _data1ClrMask;
+  *_data1PortSet = _xset_mask1_lo[d];
+#endif
   *_wrPortClr = _wrPinMask;
   *_wrPortSet = _wrPinMask;
 }
@@ -711,12 +727,18 @@ GFX_INLINE void Arduino_ESP32PAR16::WRITE(uint8_t d)
 GFX_INLINE void Arduino_ESP32PAR16::WRITE16(uint16_t d)
 {
   _data16.value = d;
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   uint32_t d1 = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
   uint32_t d2 = _xset_mask2_hi[_data16.msb] | _xset_mask2_lo[_data16.lsb];
   *_data1PortClr = _data1ClrMask;
   *_data2PortClr = _data2ClrMask;
   *_data1PortSet = d1;
   *_data2PortSet = d2;
+#else
+  uint32_t d1 = _xset_mask1_hi[_data16.msb] | _xset_mask1_lo[_data16.lsb];
+  *_data1PortClr = _data1ClrMask;
+  *_data1PortSet = d1;
+#endif
   *_wrPortClr = _wrPinMask;
   *_wrPortSet = _wrPinMask;
 }
