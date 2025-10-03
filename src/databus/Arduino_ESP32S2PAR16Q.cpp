@@ -11,6 +11,7 @@ bool Arduino_ESP32S2PAR16Q::begin(int32_t speed, int8_t dataMode)
 {
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   if (_dc >= 32)
   {
     _dcPinMask = digitalPinToBitMask(_dc);
@@ -23,12 +24,18 @@ bool Arduino_ESP32S2PAR16Q::begin(int32_t speed, int8_t dataMode)
     _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
     _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
+#else
+  _dcPinMask = digitalPinToBitMask(_dc);
+  _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+#endif
 
   if (_cs != GFX_NOT_DEFINED)
   {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH); // disable chip select
   }
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   if (_cs >= 32)
   {
     _csPinMask = digitalPinToBitMask(_cs);
@@ -41,9 +48,18 @@ bool Arduino_ESP32S2PAR16Q::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
     _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
+#else
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    _csPinMask = digitalPinToBitMask(_cs);
+    _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  }
+#endif
 
   pinMode(_wr, OUTPUT);
   digitalWrite(_wr, HIGH); // Set write strobe high (inactive)
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   if (_wr >= 32)
   {
     _wrPinMask = digitalPinToBitMask(_wr);
@@ -56,6 +72,11 @@ bool Arduino_ESP32S2PAR16Q::begin(int32_t speed, int8_t dataMode)
     _wrPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
     _wrPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
+#else
+  _wrPinMask = digitalPinToBitMask(_wr);
+  _wrPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _wrPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+#endif
 
   if (_rd != GFX_NOT_DEFINED)
   {

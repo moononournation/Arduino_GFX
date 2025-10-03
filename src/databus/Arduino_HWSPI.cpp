@@ -83,17 +83,7 @@ bool Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
     _csPortSet = (PORTreg_t)&sio_hw->gpio_set;
     _csPortClr = (PORTreg_t)&sio_hw->gpio_clr;
   }
-#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)
-  _dcPinMask = digitalPinToBitMask(_dc);
-  _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  if (_cs != GFX_NOT_DEFINED)
-  {
-    _csPinMask = digitalPinToBitMask(_cs);
-    _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-    _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  }
-#elif defined(ESP32)
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   _dcPinMask = digitalPinToBitMask(_dc);
   if (_dc >= 32)
   {
@@ -112,6 +102,16 @@ bool Arduino_HWSPI::begin(int32_t speed, int8_t dataMode)
     _csPortClr = (PORTreg_t)GPIO_OUT1_W1TC_REG;
   }
   else if (_cs != GFX_NOT_DEFINED)
+  {
+    _csPinMask = digitalPinToBitMask(_cs);
+    _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  }
+#elif defined(ESP32)
+  _dcPinMask = digitalPinToBitMask(_dc);
+  _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  if (_cs != GFX_NOT_DEFINED)
   {
     _csPinMask = digitalPinToBitMask(_cs);
     _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;

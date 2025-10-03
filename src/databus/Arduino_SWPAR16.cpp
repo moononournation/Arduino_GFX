@@ -289,69 +289,7 @@ bool Arduino_SWPAR16::begin(int32_t, int8_t)
   _d15PinMask = digitalPinToBitMask(_d15);
   _d15PortSet = (PORTreg_t)&sio_hw->gpio_set;
   _d15PortClr = (PORTreg_t)&sio_hw->gpio_clr;
-#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)
-  _dcPinMask = digitalPinToBitMask(_dc);
-  _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  if (_cs != GFX_NOT_DEFINED)
-  {
-    _csPinMask = digitalPinToBitMask(_cs);
-    _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-    _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  }
-  _wrPinMask = digitalPinToBitMask(_wr);
-  _wrPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _wrPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-
-  _d0PinMask = digitalPinToBitMask(_d0);
-  _d0PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d0PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d1PinMask = digitalPinToBitMask(_d1);
-  _d1PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d1PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d2PinMask = digitalPinToBitMask(_d2);
-  _d2PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d2PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d3PinMask = digitalPinToBitMask(_d3);
-  _d3PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d3PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d4PinMask = digitalPinToBitMask(_d4);
-  _d4PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d4PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d5PinMask = digitalPinToBitMask(_d5);
-  _d5PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d5PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d6PinMask = digitalPinToBitMask(_d6);
-  _d6PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d6PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d7PinMask = digitalPinToBitMask(_d7);
-  _d7PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d7PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d8PinMask = digitalPinToBitMask(_d8);
-  _d8PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d8PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d9PinMask = digitalPinToBitMask(_d9);
-  _d9PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d9PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d10PinMask = digitalPinToBitMask(_d10);
-  _d10PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d10PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d11PinMask = digitalPinToBitMask(_d11);
-  _d11PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d11PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d12PinMask = digitalPinToBitMask(_d12);
-  _d12PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d12PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d13PinMask = digitalPinToBitMask(_d13);
-  _d13PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d13PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d14PinMask = digitalPinToBitMask(_d14);
-  _d14PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d14PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _d15PinMask = digitalPinToBitMask(_d15);
-  _d15PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _d15PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-#elif defined(ESP32)
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   _dcPinMask = digitalPinToBitMask(_dc);
   if (_dc >= 32)
   {
@@ -563,6 +501,68 @@ bool Arduino_SWPAR16::begin(int32_t, int8_t)
     _d15PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
     _d15PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
+#elif defined(ESP32)
+  _dcPinMask = digitalPinToBitMask(_dc);
+  _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    _csPinMask = digitalPinToBitMask(_cs);
+    _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  }
+  _wrPinMask = digitalPinToBitMask(_wr);
+  _wrPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _wrPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+
+  _d0PinMask = digitalPinToBitMask(_d0);
+  _d0PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d0PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d1PinMask = digitalPinToBitMask(_d1);
+  _d1PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d1PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d2PinMask = digitalPinToBitMask(_d2);
+  _d2PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d2PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d3PinMask = digitalPinToBitMask(_d3);
+  _d3PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d3PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d4PinMask = digitalPinToBitMask(_d4);
+  _d4PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d4PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d5PinMask = digitalPinToBitMask(_d5);
+  _d5PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d5PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d6PinMask = digitalPinToBitMask(_d6);
+  _d6PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d6PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d7PinMask = digitalPinToBitMask(_d7);
+  _d7PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d7PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d8PinMask = digitalPinToBitMask(_d8);
+  _d8PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d8PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d9PinMask = digitalPinToBitMask(_d9);
+  _d9PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d9PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d10PinMask = digitalPinToBitMask(_d10);
+  _d10PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d10PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d11PinMask = digitalPinToBitMask(_d11);
+  _d11PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d11PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d12PinMask = digitalPinToBitMask(_d12);
+  _d12PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d12PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d13PinMask = digitalPinToBitMask(_d13);
+  _d13PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d13PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d14PinMask = digitalPinToBitMask(_d14);
+  _d14PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d14PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _d15PinMask = digitalPinToBitMask(_d15);
+  _d15PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _d15PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
 #elif defined(CORE_TEENSY)
 #if !defined(KINETISK)
   _dcPinMask = digitalPinToBitMask(_dc);

@@ -1,6 +1,6 @@
 #include "Arduino_ESP32PAR8.h"
 
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
 
 Arduino_ESP32PAR8::Arduino_ESP32PAR8(
     int8_t dc, int8_t cs, int8_t wr, int8_t rd,
@@ -14,6 +14,7 @@ bool Arduino_ESP32PAR8::begin(int32_t, int8_t)
 {
   pinMode(_dc, OUTPUT);
   digitalWrite(_dc, HIGH); // Data mode
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   if (_dc >= 32)
   {
     _dcPinMask = digitalPinToBitMask(_dc);
@@ -26,12 +27,18 @@ bool Arduino_ESP32PAR8::begin(int32_t, int8_t)
     _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
     _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
+#else
+  _dcPinMask = digitalPinToBitMask(_dc);
+  _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+#endif
 
   if (_cs != GFX_NOT_DEFINED)
   {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH); // disable chip select
   }
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   if (_cs >= 32)
   {
     _csPinMask = digitalPinToBitMask(_cs);
@@ -44,9 +51,18 @@ bool Arduino_ESP32PAR8::begin(int32_t, int8_t)
     _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
     _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
+#else
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    _csPinMask = digitalPinToBitMask(_cs);
+    _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  }
+#endif
 
   pinMode(_wr, OUTPUT);
   digitalWrite(_wr, HIGH); // Set write strobe high (inactive)
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   if (_wr >= 32)
   {
     _wrPinMask = digitalPinToBitMask(_wr);
@@ -59,6 +75,11 @@ bool Arduino_ESP32PAR8::begin(int32_t, int8_t)
     _wrPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
     _wrPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
   }
+#else
+  _wrPinMask = digitalPinToBitMask(_wr);
+  _wrPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _wrPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+#endif
 
   if (_rd != GFX_NOT_DEFINED)
   {
@@ -77,9 +98,12 @@ bool Arduino_ESP32PAR8::begin(int32_t, int8_t)
 
   _data1PortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
   _data1PortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   _data2PortSet = (PORTreg_t)GPIO_OUT1_W1TS_REG;
   _data2PortClr = (PORTreg_t)GPIO_OUT1_W1TC_REG;
+#endif
 
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   // INIT 8-bit mask
   _data1ClrMask = 0;
   _data2ClrMask = 0;
@@ -243,6 +267,56 @@ bool Arduino_ESP32PAR8::begin(int32_t, int8_t)
   }
   *_data1PortClr = _data1ClrMask;
   *_data2PortClr = _data2ClrMask;
+#else
+  // INIT 8-bit mask
+  _data1ClrMask = 0;
+  _data1ClrMask |= digitalPinToBitMask(_d0);
+  _data1ClrMask |= digitalPinToBitMask(_d1);
+  _data1ClrMask |= digitalPinToBitMask(_d2);
+  _data1ClrMask |= digitalPinToBitMask(_d3);
+  _data1ClrMask |= digitalPinToBitMask(_d4);
+  _data1ClrMask |= digitalPinToBitMask(_d5);
+  _data1ClrMask |= digitalPinToBitMask(_d6);
+  _data1ClrMask |= digitalPinToBitMask(_d7);
+
+  for (int32_t c = 0; c < 256; c++)
+  {
+    _xset_mask1[c] = 0;
+    if (c & 0x01)
+    {
+      _xset_mask1[c] |= digitalPinToBitMask(_d0);
+    }
+    if (c & 0x02)
+    {
+      _xset_mask1[c] |= digitalPinToBitMask(_d1);
+    }
+    if (c & 0x04)
+    {
+      _xset_mask1[c] |= digitalPinToBitMask(_d2);
+    }
+    if (c & 0x08)
+    {
+      _xset_mask1[c] |= digitalPinToBitMask(_d3);
+    }
+    if (c & 0x10)
+    {
+      _xset_mask1[c] |= digitalPinToBitMask(_d4);
+    }
+    if (c & 0x20)
+    {
+      _xset_mask1[c] |= digitalPinToBitMask(_d5);
+    }
+    if (c & 0x40)
+    {
+      _xset_mask1[c] |= digitalPinToBitMask(_d6);
+    }
+    if (c & 0x80)
+    {
+      _xset_mask1[c] |= digitalPinToBitMask(_d7);
+    }
+  }
+  *_data1PortClr = _data1ClrMask;
+#endif
 
   return true;
 }
@@ -307,12 +381,18 @@ void Arduino_ESP32PAR8::writeRepeat(uint16_t p, uint32_t len)
   _data16.value = p;
   if (_data16.msb == _data16.lsb)
   {
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
     uint32_t setMask1 = _xset_mask1[_data16.msb];
     uint32_t setMask2 = _xset_mask2[_data16.msb];
     *_data1PortClr = _data1ClrMask;
     *_data2PortClr = _data2ClrMask;
     *_data1PortSet = setMask1;
     *_data2PortSet = setMask2;
+#else
+    uint32_t setMask1 = _xset_mask1[_data16.msb];
+    *_data1PortClr = _data1ClrMask;
+    *_data1PortSet = setMask1;
+#endif
     while (len--)
     {
       *_wrPortClr = _wrPinMask;
@@ -323,6 +403,7 @@ void Arduino_ESP32PAR8::writeRepeat(uint16_t p, uint32_t len)
   }
   else
   {
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
     uint32_t hiMask1 = _xset_mask1[_data16.msb];
     uint32_t hiMask2 = _xset_mask2[_data16.msb];
     uint32_t loMask1 = _xset_mask1[_data16.lsb];
@@ -343,6 +424,22 @@ void Arduino_ESP32PAR8::writeRepeat(uint16_t p, uint32_t len)
       *_wrPortClr = _wrPinMask;
       *_wrPortSet = _wrPinMask;
     }
+#else
+    uint32_t hiMask1 = _xset_mask1[_data16.msb];
+    uint32_t loMask1 = _xset_mask1[_data16.lsb];
+    while (len--)
+    {
+      *_data1PortClr = _data1ClrMask;
+      *_data1PortSet = hiMask1;
+      *_wrPortClr = _wrPinMask;
+      *_wrPortSet = _wrPinMask;
+
+      *_data1PortClr = _data1ClrMask;
+      *_data1PortSet = loMask1;
+      *_wrPortClr = _wrPinMask;
+      *_wrPortSet = _wrPinMask;
+    }
+#endif
   }
 }
 
@@ -446,12 +543,18 @@ void Arduino_ESP32PAR8::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, u
 
 GFX_INLINE void Arduino_ESP32PAR8::WRITE(uint8_t d)
 {
+#if (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   uint32_t setMask1 = _xset_mask1[d];
   uint32_t setMask2 = _xset_mask2[d];
   *_data1PortClr = _data1ClrMask;
   *_data2PortClr = _data2ClrMask;
   *_data1PortSet = setMask1;
   *_data2PortSet = setMask2;
+#else
+  uint32_t setMask1 = _xset_mask1[d];
+  *_data1PortClr = _data1ClrMask;
+  *_data1PortSet = setMask1;
+#endif
   *_wrPortClr = _wrPinMask;
   *_wrPortSet = _wrPinMask;
 }
@@ -484,4 +587,4 @@ GFX_INLINE void Arduino_ESP32PAR8::CS_LOW(void)
   }
 }
 
-#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)

@@ -2,7 +2,7 @@
 
 #include "Arduino_DataBus.h"
 
-#if defined(ESP32)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
 #include <driver/spi_master.h>
 
 #ifndef ESP32QSPI_MAX_PIXELS_AT_ONCE
@@ -25,7 +25,7 @@ class Arduino_ESP32QSPI : public Arduino_DataBus
 {
 public:
   Arduino_ESP32QSPI(
-    int8_t cs, int8_t sck, int8_t mosi, int8_t miso, int8_t quadwp, int8_t quadhd, bool is_shared_interface = false); // Constructor
+      int8_t cs, int8_t sck, int8_t mosi, int8_t miso, int8_t quadwp, int8_t quadhd, bool is_shared_interface = false); // Constructor
 
   bool begin(int32_t speed = GFX_NOT_DEFINED, int8_t dataMode = GFX_NOT_DEFINED) override;
   void beginWrite() override;
@@ -74,9 +74,9 @@ private:
 
   union
   {
-    uint8_t* _buffer;
-    uint16_t* _buffer16;
-    uint32_t* _buffer32;
+    uint8_t *_buffer;
+    uint16_t *_buffer16;
+    uint32_t *_buffer32;
   };
   union
   {
@@ -86,4 +86,4 @@ private:
   };
 };
 
-#endif // #if defined(ESP32)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)

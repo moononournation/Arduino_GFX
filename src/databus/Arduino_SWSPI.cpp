@@ -116,28 +116,7 @@ bool Arduino_SWSPI::begin(int32_t, int8_t)
     _misoPinMask = digitalPinToBitMask(_miso);
     _misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
   }
-#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)
-  _dcPinMask = digitalPinToBitMask(_dc);
-  _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  if (_cs != GFX_NOT_DEFINED)
-  {
-    _csPinMask = digitalPinToBitMask(_cs);
-    _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-    _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  }
-  _sckPinMask = digitalPinToBitMask(_sck);
-  _sckPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _sckPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  _mosiPinMask = digitalPinToBitMask(_mosi);
-  _mosiPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
-  _mosiPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
-  if (_miso != GFX_NOT_DEFINED)
-  {
-    _misoPinMask = digitalPinToBitMask(_miso);
-    _misoPort = (PORTreg_t)GPIO_IN_REG;
-  }
-#elif defined(ESP32)
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
   _dcPinMask = digitalPinToBitMask(_dc);
   if (_dc >= 32)
   {
@@ -187,6 +166,27 @@ bool Arduino_SWSPI::begin(int32_t, int8_t)
   {
     _misoPinMask = digitalPinToBitMask(_miso);
     _misoPort = (PORTreg_t)portInputRegister(digitalPinToPort(_miso));
+  }
+#elif defined(ESP32)
+  _dcPinMask = digitalPinToBitMask(_dc);
+  _dcPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _dcPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  if (_cs != GFX_NOT_DEFINED)
+  {
+    _csPinMask = digitalPinToBitMask(_cs);
+    _csPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+    _csPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  }
+  _sckPinMask = digitalPinToBitMask(_sck);
+  _sckPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _sckPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  _mosiPinMask = digitalPinToBitMask(_mosi);
+  _mosiPortSet = (PORTreg_t)GPIO_OUT_W1TS_REG;
+  _mosiPortClr = (PORTreg_t)GPIO_OUT_W1TC_REG;
+  if (_miso != GFX_NOT_DEFINED)
+  {
+    _misoPinMask = digitalPinToBitMask(_miso);
+    _misoPort = (PORTreg_t)GPIO_IN_REG;
   }
 #elif defined(CORE_TEENSY)
   if (_dc != GFX_NOT_DEFINED)
