@@ -855,7 +855,7 @@ Arduino_GFX *g = new Arduino_AXS15231B(
     axs15231b_180640_init_operations, sizeof(axs15231b_180640_init_operations));
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(
-    172 /* width */, 640 /* height */, g, 0 /* output_x */, 0 /* output_y */, 1 /* rotation */);
+    172 /* width */, 640 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
 
 #elif defined(WAVESHARE_RP2040_LCD_0_96)
 #define GFX_DEV_DEVICE WAVESHARE_RP2040_LCD_0_96
