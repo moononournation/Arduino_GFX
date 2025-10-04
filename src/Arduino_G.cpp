@@ -139,7 +139,7 @@ bool gfx_draw_bitmap_to_framebuffer_rotate_1(
     {
       p = framebuffer;
       p += (x * framebuffer_h);     // shift framebuffer to y offset
-      p += (framebuffer_h - y - j); // shift framebuffer to x offset
+      p += (framebuffer_h - y - j - 1); // shift framebuffer to x offset
 
       i = bitmap_w;
       while (i--)
