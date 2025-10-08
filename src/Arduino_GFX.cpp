@@ -2308,7 +2308,7 @@ size_t Arduino_GFX::write(uint8_t c)
         uint8_t gw = pgm_read_byte(&glyph->width),
                 xa = pgm_read_byte(&glyph->xAdvance);
         int8_t xo = pgm_read_sbyte(&glyph->xOffset);
-        if (wrap && ((cursor_x + ((xo + gw) * textsize_x) - 1) > _max_text_x))
+        if (wrap && ((cursor_x + (((int16_t)xo + gw) * textsize_x) - 1) > _max_text_x))
         {
           cursor_x = _min_text_x; // Reset x to zero, advance y by one line
           cursor_y += (int16_t)textsize_y * pgm_read_byte(&gfxFont->yAdvance);
