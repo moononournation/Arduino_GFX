@@ -998,7 +998,7 @@ void Arduino_TFT::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color
   {
     Arduino_GFX::drawChar(x, y, c, color, bg);
   }
-  else // not u8g2Font
+  else // glcdfont
 #endif // defined(U8G2_FONT_SUPPORT)
   {
     block_w = 6 * textsize_x;
