@@ -24,6 +24,11 @@
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
+ *
+ * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
+ * Or you can define the display dev kit not in the board list
+ * Defalult pin list for non display dev kit:
+ * ESP32-P4 various dev board  : CS: 26, DC: 27, RST: 25, BL: 24, SCK: 36, MOSI: 32, MISO: nil
  ******************************************************************************/
 #include <Arduino_GFX_Library.h>
 
