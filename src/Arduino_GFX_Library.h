@@ -224,10 +224,10 @@
 #define DF_GFX_SCK 10
 #define DF_GFX_MOSI 8
 #define DF_GFX_MISO GFX_NOT_DEFINED
-#define DF_GFX_CS 6
-#define DF_GFX_DC 1
-#define DF_GFX_RST 26
-#define DF_GFX_BL 25
+#define DF_GFX_CS 23
+#define DF_GFX_DC 24
+#define DF_GFX_RST 25
+#define DF_GFX_BL 26
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C6)
 #define DF_GFX_SCK 21
 #define DF_GFX_MOSI 19
