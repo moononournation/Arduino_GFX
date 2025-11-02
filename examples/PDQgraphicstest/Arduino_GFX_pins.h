@@ -26,7 +26,7 @@
 #define GFX_BL 3
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C5)
 #define TFT_CS 6 // GFX_NOT_DEFINED for display without CS pin
-#define TFT_DC 7
+#define TFT_DC 1
 #define TFT_RST 26
 #define GFX_BL 25
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C6)

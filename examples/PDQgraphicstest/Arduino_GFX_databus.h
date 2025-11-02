@@ -9,10 +9,20 @@ Arduino_DataBus *bus = new Arduino_NRFXSPI(TFT_DC, TFT_CS, 13 /* SCK */, 11 /* M
 Arduino_DataBus *bus = new Arduino_RPiPicoSPI(TFT_DC /* DC */, TFT_CS /* CS */, 18 /* SCK */, 19 /* MOSI */, 16 /* MISO */, spi0 /* spi */);
 #elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 18 /* SCK */, 23 /* MOSI */, GFX_NOT_DEFINED /* MISO */, VSPI /* spi_num */);
-#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3)
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 36 /* SCK */, 35 /* MOSI */, GFX_NOT_DEFINED /* MISO */, HSPI /* spi_num */);
-#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C3)
+#elif defined(ESP32) && ((CONFIG_IDF_TARGET_ESP32C2) || (CONFIG_IDF_TARGET_ESP32C3))
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 4 /* SCK */, 6 /* MOSI */, GFX_NOT_DEFINED /* MISO */, FSPI /* spi_num */);
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C5)
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 10 /* SCK */, 8 /* MOSI */, GFX_NOT_DEFINED /* MISO */, FSPI /* spi_num */);
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32C6)
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 21 /* SCK */, 19 /* MOSI */, GFX_NOT_DEFINED /* MISO */, FSPI /* spi_num */);
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32H2)
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 10 /* SCK */, 25 /* MOSI */, GFX_NOT_DEFINED /* MISO */, FSPI /* spi_num */);
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32P4)
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 36 /* SCK */, 32 /* MOSI */, GFX_NOT_DEFINED /* MISO */, FSPI /* spi_num */);
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S2)
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 36 /* SCK */, 35 /* MOSI */, GFX_NOT_DEFINED /* MISO */, FSPI /* spi_num */);
+#elif defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, 36 /* SCK */, 35 /* MOSI */, GFX_NOT_DEFINED /* MISO */, FSPI /* spi_num */);
 #elif defined(ESP8266)
 Arduino_DataBus *bus = new Arduino_ESP8266SPI(TFT_DC, TFT_CS);
 #else
