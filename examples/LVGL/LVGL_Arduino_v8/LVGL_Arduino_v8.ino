@@ -173,7 +173,7 @@ void setup()
     disp_draw_buf = (lv_color_t *)heap_caps_malloc(bufSize * 2, MALLOC_CAP_8BIT);
   }
 #endif // !(defined(DIRECT_RENDER_MODE) && (defined(CANVAS) || defined(RGB_PANEL) || defined(DSI_PANEL)))
-#else // !ESP32
+#else  // !ESP32
   Serial.println("LVGL disp_draw_buf heap_caps_malloc failed! malloc again...");
   disp_draw_buf = (lv_color_t *)malloc(bufSize * 2);
 #endif // !ESP32

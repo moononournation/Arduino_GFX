@@ -1,14 +1,14 @@
 /*
  * Wio WiFi Analyzer
  * Require Wio Terminal.
- * 
+ *
  * Libraries:
  * https://github.com/Seeed-Studio/Seeed_Arduino_FS/releases/tag/v2.0.2
  * https://github.com/Seeed-Studio/Seeed_Arduino_SFUD/releases/tag/v2.0.1
  * https://github.com/Seeed-Studio/Seeed_Arduino_mbedtls/archive/d1ca0175e24768120781bf4a43a1fb2c39fce85f.zip
  * https://github.com/Seeed-Studio/Seeed_Arduino_rpcUnified/releases/tag/v2.1.1
  * https://github.com/Seeed-Studio/Seeed_Arduino_rpcWiFi/releases/tag/v1.0.2
- * 
+ *
  * Firmware:
  * https://github.com/Seeed-Studio/seeed-ambd-firmware/releases/tag/v2.1.1
  */
@@ -36,12 +36,12 @@ uint16_t channel_legend[] = {
     32, 0, 0, 0, 40, 0, 0,    // 32, 34, 36, 38, 40, 42, 44,
     0, 48, 0, 0, 0, 56, 0,    // 46, 48, 50, 52, 54, 56, 58,
     0, 0, 64, 0, 0, 0,        // 60, 62, 64, 68,N/A, 96,
-    100, 0, 0, 0, 108, 0, 0,  //100,102,104,106,108,110,112,
-    0, 116, 0, 0, 0, 124, 0,  //114,116,118,120,122,124,126,
-    0, 0, 132, 0, 0, 0, 140,  //128,N/A,132,134,136,138,140,
-    0, 0, 0, 149, 0, 0, 0,    //142,144,N/A,149,151,153,155,
-    157, 0, 0, 0, 165, 0, 0,  //157,159,161,163,165,167,169,
-    0, 173};                  //171,173
+    100, 0, 0, 0, 108, 0, 0,  // 100,102,104,106,108,110,112,
+    0, 116, 0, 0, 0, 124, 0,  // 114,116,118,120,122,124,126,
+    0, 0, 132, 0, 0, 0, 140,  // 128,N/A,132,134,136,138,140,
+    0, 0, 0, 149, 0, 0, 0,    // 142,144,N/A,149,151,153,155,
+    157, 0, 0, 0, 165, 0, 0,  // 157,159,161,163,165,167,169,
+    0, 173};                  // 171,173
 
 // Channel color mapping
 uint16_t channel_color[] = {
@@ -106,8 +106,8 @@ void setup()
 #endif
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
   // Init Display
@@ -298,7 +298,7 @@ void loop()
   delay(SCAN_INTERVAL);
 
 #if defined(SCAN_COUNT_SLEEP)
-  //POWER SAVING
+  // POWER SAVING
   if (++scan_count >= SCAN_COUNT_SLEEP)
   {
 #if defined(LCD_PWR_PIN)

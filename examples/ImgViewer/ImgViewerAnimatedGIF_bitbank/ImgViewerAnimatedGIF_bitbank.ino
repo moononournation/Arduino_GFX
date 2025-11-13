@@ -229,7 +229,7 @@ void GIFDraw(GIFDRAW *pDraw)
           *d++ = usPalette[c];
           iCount++;
         }
-      }           // while looking for opaque pixels
+      } // while looking for opaque pixels
       if (iCount) // any opaque pixels?
       {
         gfx->draw16bitBeRGBBitmap(pDraw->iX + x, y, usTemp, iCount, 1);

@@ -23,7 +23,8 @@
 BBQ10Keyboard keyboard;
 #endif
 
-void keyboard_init() {
+void keyboard_init()
+{
 #if defined(KEYBOARD_CARDKB)
   Wire1.begin(KEYBOARD_CARDKB_SDA, KEYBOARD_CARDKB_SCL);
 #elif defined(KEYBOARD_BBQKB)
@@ -33,17 +34,22 @@ void keyboard_init() {
 #endif
 }
 
-char keyboard_get_key() {
+char keyboard_get_key()
+{
 #if defined(KEYBOARD_CARDKB)
   uint8_t bytesReceived = Wire1.requestFrom(KEYBOARD_CARDKB_I2C_ADDR, 1);
-  if ((bool)bytesReceived) {  //If received more than zero bytes
+  if ((bool)bytesReceived)
+  { // If received more than zero bytes
     return Wire1.read();
-  } else {
+  }
+  else
+  {
     return 0;
   }
 #elif defined(KEYBOARD_BBQKB)
   const int keyCount = keyboard.keyCount();
-  if (keyCount > 0) {
+  if (keyCount > 0)
+  {
     const BBQ10Keyboard::KeyEvent key = keyboard.keyEvent();
     String state = "pressed";
     if (key.state == BBQ10Keyboard::StateLongPress)
@@ -53,12 +59,17 @@ char keyboard_get_key() {
 
     Serial.printf("key: '%c' (dec %d, hex %02x) %s\r\n", key.key, key.key, key.key, state.c_str());
 
-    if ((key.key != 0) && (key.state != BBQ10Keyboard::StateRelease)) {
+    if ((key.key != 0) && (key.state != BBQ10Keyboard::StateRelease))
+    {
       return key.key;
-    } else {
+    }
+    else
+    {
       return 0;
     }
-  } else {
+  }
+  else
+  {
     return 0;
   }
 #endif

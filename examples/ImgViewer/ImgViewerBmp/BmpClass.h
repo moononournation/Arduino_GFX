@@ -1,6 +1,6 @@
 /*******************************************************************************
  * BMP Class
- * 
+ *
  * Rewrite from: https://github.com/Jaycar-Electronics/Arduino-Picture-Frame.git
  ******************************************************************************/
 #ifndef _BMPCLASS_H_
@@ -33,10 +33,10 @@ public:
 
         getbmpparms(f);
 
-        //validate bitmap
+        // validate bitmap
         if ((bmtype == 19778) && (bmwidth > 0) && (bmheight > 0) && (bmbpp > 0))
         {
-            //centre image
+            // centre image
             u = (widthLimit - bmwidth) / 2;
             v = (heightLimit - bmheight) / 2;
             u = (u < 0) ? x : x + u;
@@ -55,7 +55,7 @@ public:
                 {
                     Serial.println(F("bmplt malloc failed."));
                 }
-                bmloadplt(f); //load palette if palettized
+                bmloadplt(f); // load palette if palettized
                 drawbmpal(f, u, v, xend);
                 free(bmplt);
             }
@@ -78,15 +78,15 @@ private:
         byte r, g, b;
         if (bmpltsize == 0)
         {
-            bmpltsize = 1 << bmbpp; //load default palette size
+            bmpltsize = 1 << bmbpp; // load default palette size
         }
-        f->seek(54); //palette position in type 0x28 bitmaps
+        f->seek(54); // palette position in type 0x28 bitmaps
         for (int16_t i = 0; i < bmpltsize; i++)
         {
             b = f->read();
             g = f->read();
             r = f->read();
-            f->read(); //dummy byte
+            f->read(); // dummy byte
             bmplt[i] = ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3);
         }
     }
@@ -97,17 +97,17 @@ private:
         int16_t i, ystart, bmppb, p, d;
         int16_t x, y;
         uint16_t c;
-        bmbpl = ((bmbpp * bmwidth + 31) / 32) * 4; //bytes per line
-        bmppb = 8 / bmbpp;                         //pixels/byte
-        bmbitmask = ((1 << bmbpp) - 1);            //mask for each pixel
+        bmbpl = ((bmbpp * bmwidth + 31) / 32) * 4; // bytes per line
+        bmppb = 8 / bmbpp;                         // pixels/byte
+        bmbitmask = ((1 << bmbpp) - 1);            // mask for each pixel
         ystart = 0;
         if (bmheight > _heightLimit)
         {
-            ystart = bmheight - _heightLimit; //don't draw if it's outside screen
+            ystart = bmheight - _heightLimit; // don't draw if it's outside screen
         }
         for (y = ystart; y < bmheight; y++)
-        {                                   //invert in calculation (y=0 is bottom)
-            f->seek(bmdataptr + y * bmbpl); //seek to start of line
+        {                                   // invert in calculation (y=0 is bottom)
+            f->seek(bmdataptr + y * bmbpl); // seek to start of line
             x = 0;
             p = 0;
             while (x < xend)
@@ -134,16 +134,16 @@ private:
         int16_t i, ystart;
         uint32_t x, y;
         byte lo, hi;
-        bmbpl = ((bmbpp * bmwidth + 31) / 32) * 4; //bytes per line, due to 32bit chunks
+        bmbpl = ((bmbpp * bmwidth + 31) / 32) * 4; // bytes per line, due to 32bit chunks
         ystart = 0;
         if (bmheight > _heightLimit)
         {
-            ystart = bmheight - _heightLimit; //don't draw if it's outside screen
+            ystart = bmheight - _heightLimit; // don't draw if it's outside screen
         }
         Serial.println(xend);
         for (y = ystart; y < bmheight; y++)
-        {                                   //invert in calculation (y=0 is bottom)
-            f->seek(bmdataptr + (y * bmbpl)); //seek at start of line
+        {                                     // invert in calculation (y=0 is bottom)
+            f->seek(bmdataptr + (y * bmbpl)); // seek at start of line
             for (x = 0; x < xend; x++)
             {
                 lo = f->read();
@@ -167,15 +167,15 @@ private:
         int16_t i, ystart;
         uint32_t x, y;
         byte r, g, b;
-        bmbpl = ((bmbpp * bmwidth + 31) / 32) * 4; //bytes per line, due to 32bit chunks
+        bmbpl = ((bmbpp * bmwidth + 31) / 32) * 4; // bytes per line, due to 32bit chunks
         ystart = 0;
         if (bmheight > _heightLimit)
         {
-            ystart = bmheight - _heightLimit; //don't draw if it's outside screen
+            ystart = bmheight - _heightLimit; // don't draw if it's outside screen
         }
         for (y = ystart; y < bmheight; y++)
-        {                                   //invert in calculation (y=0 is bottom)
-            f->seek(bmdataptr + y * bmbpl); //seek at start of line
+        {                                   // invert in calculation (y=0 is bottom)
+            f->seek(bmdataptr + y * bmbpl); // seek at start of line
             for (x = 0; x < xend; x++)
             {
                 b = f->read();
@@ -183,7 +183,7 @@ private:
                 r = f->read();
                 if (bmbpp == 32)
                 {
-                    f->read(); //dummy byte for 32bit
+                    f->read(); // dummy byte for 32bit
                 }
                 bmpRow[x] = (_useBigEndian) ? ((r & 0xf8) | (g >> 5) | ((g & 0x1c) << 11) | ((b & 0xf8) << 5)) : (((r & 0xf8) << 8) | ((g & 0xfc) << 3) | (b >> 3));
             }
@@ -192,39 +192,39 @@ private:
     }
 
     void getbmpparms(File *f)
-    {               //load into globals as ints-some parameters are 32 bit, but we can't handle this size anyway
-        byte h[48]; //header is 54 bytes typically, but we don't need it all
+    {               // load into globals as ints-some parameters are 32 bit, but we can't handle this size anyway
+        byte h[48]; // header is 54 bytes typically, but we don't need it all
         int16_t i;
-        f->seek(0); //set start of file
+        f->seek(0); // set start of file
         for (i = 0; i < 48; i++)
         {
-            h[i] = f->read(); //read header
+            h[i] = f->read(); // read header
         }
-        bmtype = h[0] + (h[1] << 8);      //offset 0 'BM'
-        bmdataptr = h[10] + (h[11] << 8); //offset 0xA pointer to image data
-        bmhdrsize = h[14] + (h[15] << 8); //dib header size (0x28 is usual)
-        //files may vary here, if !=28, unsupported type, put default values
+        bmtype = h[0] + (h[1] << 8);      // offset 0 'BM'
+        bmdataptr = h[10] + (h[11] << 8); // offset 0xA pointer to image data
+        bmhdrsize = h[14] + (h[15] << 8); // dib header size (0x28 is usual)
+        // files may vary here, if !=28, unsupported type, put default values
         bmwidth = 0;
         bmheight = 0;
         bmbpp = 0;
         bmpltsize = 0;
         if ((bmhdrsize == 0x28) || (bmhdrsize == 0x38))
         {
-            bmwidth = h[18] + (h[19] << 8);   //width
-            bmheight = h[22] + (h[23] << 8);  //height
-            bmbpp = h[28] + (h[29] << 8);     //bits per pixel
-            bmpltsize = h[46] + (h[47] << 8); //palette size
+            bmwidth = h[18] + (h[19] << 8);   // width
+            bmheight = h[22] + (h[23] << 8);  // height
+            bmbpp = h[28] + (h[29] << 8);     // bits per pixel
+            bmpltsize = h[46] + (h[47] << 8); // palette size
         }
         // Serial.printf("bmtype: %d, bmhdrsize: %d, bmwidth: %d, bmheight: %d, bmbpp: %d\n", bmtype, bmhdrsize, bmwidth, bmheight, bmbpp);
     }
 
     byte isbmp(char n[])
-    { //check if bmp extension
+    { // check if bmp extension
         int16_t k;
         k = strlen(n);
         if (k < 5)
         {
-            return 0; //name not long enough
+            return 0; // name not long enough
         }
         if (n[k - 1] != 'P')
         {
@@ -242,17 +242,17 @@ private:
         {
             return 0;
         }
-        return 1; //passes all tests
+        return 1; // passes all tests
     }
 
     BMP_DRAW_CALLBACK *_bmpDrawCallback;
     bool _useBigEndian;
     int16_t _heightLimit;
 
-    uint16_t bmtype, bmdataptr;                              //from header
-    uint32_t bmhdrsize, bmwidth, bmheight, bmbpp, bmpltsize; //from DIB Header
-    uint16_t bmbpl;                                          //bytes per line- derived
-    uint16_t *bmplt;                                        //palette- stored encoded for LCD
+    uint16_t bmtype, bmdataptr;                              // from header
+    uint32_t bmhdrsize, bmwidth, bmheight, bmbpp, bmpltsize; // from DIB Header
+    uint16_t bmbpl;                                          // bytes per line- derived
+    uint16_t *bmplt;                                         // palette- stored encoded for LCD
     uint16_t *bmpRow;
 };
 

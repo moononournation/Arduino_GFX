@@ -3,8 +3,9 @@
  *
  * Rewrite from: https://github.com/BasementCat/arduino-tft-gif
  ******************************************************************************/
-#ifndef _GIFCLASS_H_
-#define _GIFCLASS_H_
+#pragma once
+
+// #define GIF_HANDLE_TRANSPARENT
 
 /* Wio Terminal */
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
@@ -75,7 +76,7 @@ typedef struct gd_GIF
     uint16_t fx, fy, fw, fh;
     uint8_t bgindex;
     gd_Table *table;
-    bool read_first_frame;
+    bool processed_first_frame;
 } gd_GIF;
 
 class GifClass
@@ -140,7 +141,7 @@ public:
         gif->bgindex = bgidx;
         gif->anim_start = file_pos; // fd->position();
         gif->table = new_table();
-        gif->read_first_frame = false;
+        gif->processed_first_frame = false;
         return gif;
     }
 
@@ -572,7 +573,9 @@ private:
                 {
                     y = interlaced_line_index((int16_t)gif->fh, y);
                 }
-                if ((!gif->read_first_frame) || (tindex != entry.suffix))
+#ifdef GIF_HANDLE_TRANSPARENT
+                if ((!gif->processed_first_frame) || (tindex != entry.suffix))
+#endif
                 {
                     frame[(gif->fy + y) * gif->width + gif->fx + x] = entry.suffix;
                 }
@@ -590,7 +593,7 @@ private:
         gif_buf_read(gif->fd, &sub_len, 1); /* Must be zero! */
         // gif_buf_seek(gif->fd, end, SeekSet);
 
-        gif->read_first_frame = true;
+        gif->processed_first_frame = true;
 
         return 0;
     }
@@ -629,29 +632,6 @@ private:
         return read_image_data(gif, interlace, frame);
     }
 
-    void render_frame_rect(gd_GIF *gif, uint16_t *buffer, uint8_t *frame)
-    {
-        int16_t i, j, k;
-        uint8_t index;
-        i = gif->fy * gif->width + gif->fx;
-        for (j = 0; j < gif->fh; j++)
-        {
-            for (k = 0; k < gif->fw; k++)
-            {
-                index = frame[(gif->fy + j) * gif->width + gif->fx + k];
-                // color = &gif->palette->colors[index*2];
-                if ((!gif->gce.transparency) || (index != gif->gce.tindex))
-                {
-                    buffer[(i + k)] = gif->palette->colors[index];
-                }
-                // memcpy(&buffer[(i+k)*2], color, 2);
-            }
-            i += gif->width;
-        }
-    }
-
     int16_t gif_buf_last_idx, gif_buf_idx, file_pos;
     uint8_t gif_buf[GIF_BUF_SIZE];
 };
-
-#endif /* _GIFCLASS_H_ */

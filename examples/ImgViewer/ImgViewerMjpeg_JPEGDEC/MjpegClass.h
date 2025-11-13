@@ -44,7 +44,7 @@ public:
     if (_read == 0)
     {
       // _mjpeg_buf empty
-    _read = _input->readBytes(_mjpeg_buf, READ_BATCH_SIZE);
+      _read = _input->readBytes(_mjpeg_buf, READ_BATCH_SIZE);
     }
     else
     {

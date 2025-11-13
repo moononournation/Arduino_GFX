@@ -1,13 +1,13 @@
 /*******************************************************************************
  * Rtl WiFi Analyzer
  * For RTL872x only.
- * 
+ *
  * Add realtek ameba core support to Arduino IDE:
  * https://github.com/ambiot/ambd_arduino
- * 
+ *
  * Old patch realtek ameba core variant.cpp to RTL8720DN pinout:
  * https://github.com/mikey60/BW16-RTL8720DN-Module-Arduino
- * 
+ *
  * Defalult pin list for non display dev kit:
  * RTL8720 BW16 old patch core : CS: 18, DC: 17, RST:  2, BL: 23
  * RTL8720_BW16 Official core  : CS:  9, DC:  8, RST:  6, BL:  3
@@ -48,12 +48,12 @@ uint16_t channel_legend[] = {
     32, 0, 0, 0, 40, 0, 0,    // 32, 34, 36, 38, 40, 42, 44,
     0, 48, 0, 0, 0, 56, 0,    // 46, 48, 50, 52, 54, 56, 58,
     0, 0, 64, 0, 0, 0,        // 60, 62, 64, 68,N/A, 96,
-    100, 0, 0, 0, 108, 0, 0,  //100,102,104,106,108,110,112,
-    0, 116, 0, 0, 0, 124, 0,  //114,116,118,120,122,124,126,
-    0, 0, 132, 0, 0, 0, 140,  //128,N/A,132,134,136,138,140,
-    0, 0, 0, 149, 0, 0, 0,    //142,144,N/A,149,151,153,155,
-    157, 0, 0, 0, 165, 0, 0,  //157,159,161,163,165,167,169,
-    0, 173};                  //171,173
+    100, 0, 0, 0, 108, 0, 0,  // 100,102,104,106,108,110,112,
+    0, 116, 0, 0, 0, 124, 0,  // 114,116,118,120,122,124,126,
+    0, 0, 132, 0, 0, 0, 140,  // 128,N/A,132,134,136,138,140,
+    0, 0, 0, 149, 0, 0, 0,    // 142,144,N/A,149,151,153,155,
+    157, 0, 0, 0, 165, 0, 0,  // 157,159,161,163,165,167,169,
+    0, 173};                  // 171,173
 
 // Channel color mapping
 uint16_t channel_color[] = {
@@ -118,8 +118,8 @@ rtw_result_t wifidrv_scan_result_handler(rtw_scan_handler_result_t *malloced_sca
       _networkEncr[_networkCount] = record->security;
       _networkChannel[_networkCount] = record->channel;
       sprintf(_networkMac[_networkCount], "%02X:%02X:%02X:%02X:%02X:%02X",
-        record->BSSID.octet[0], record->BSSID.octet[1], record->BSSID.octet[2],
-        record->BSSID.octet[3], record->BSSID.octet[4], record->BSSID.octet[5]);
+              record->BSSID.octet[0], record->BSSID.octet[1], record->BSSID.octet[2],
+              record->BSSID.octet[3], record->BSSID.octet[4], record->BSSID.octet[5]);
 
       _networkCount++;
     }
@@ -165,8 +165,8 @@ void setup()
 #endif
 
 #ifdef GFX_BL
-    pinMode(GFX_BL, OUTPUT);
-    digitalWrite(GFX_BL, HIGH);
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
 #endif
 
   // Init Display
