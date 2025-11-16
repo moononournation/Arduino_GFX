@@ -71,7 +71,7 @@ void setup(void)
   digitalWrite(GFX_BL, HIGH);
 #endif
 
-  gfx->setTextColor(RGB565_GREEN);
+  gfx->setTextColor(RGB565_LIME);
   for (int x = 0; x < 16; x++)
   {
     gfx->setCursor(10 + x * 8, 2);

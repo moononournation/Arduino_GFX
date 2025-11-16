@@ -91,7 +91,7 @@ void setup(void)
   gfx->println("世界你好，今天的天气真好啊！");
   gfx->println();
 
-  gfx->setTextColor(RGB565_GREEN);
+  gfx->setTextColor(RGB565_LIME);
   gfx->println("こんにちは世界、今日はいいお天気ですね！");
   gfx->println();
 

@@ -201,7 +201,7 @@ void loop()
           gfx->setCursor(0, 16);
 
           // gfx->setTextSize(2);
-          gfx->setTextColor(RGB565_GREEN);
+          gfx->setTextColor(RGB565_LIME);
           gfx->println(title);
           gfx->println();
 

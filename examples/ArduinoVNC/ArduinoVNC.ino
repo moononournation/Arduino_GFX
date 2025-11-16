@@ -108,7 +108,7 @@ void TFTnoVNC(void)
 {
   gfx->fillScreen(RGB565_BLACK);
   gfx->setCursor(0, ((gfx->height() / 2) - (4 * 8)));
-  gfx->setTextColor(RGB565_GREEN);
+  gfx->setTextColor(RGB565_LIME);
   gfx->setTextSize(4);
   gfx->println("connect VNC");
   gfx->setTextSize(2);

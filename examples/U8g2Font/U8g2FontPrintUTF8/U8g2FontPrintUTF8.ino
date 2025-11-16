@@ -89,7 +89,7 @@ void setup(void)
   gfx->println("Witaj świecie!");
 
   gfx->setFont(u8g2_font_unifont_t_vietnamese1);
-  gfx->setTextColor(RGB565_GREEN);
+  gfx->setTextColor(RGB565_LIME);
   gfx->setCursor(1, 56);
   gfx->getTextBounds("Chào thế giới!", 1, 56, &x1, &y1, &w, &h);
   gfx->drawRect(x1 - 1, y1 - 1, w + 2, h + 2, RGB565_RED);

@@ -1481,14 +1481,14 @@ void Arduino_GFX::draw3bitRGBBitmap(int16_t x, int16_t y,
       if (offset & 1)
       {
         d = (((c & 0b100) ? RGB565_RED : 0) |
-             ((c & 0b010) ? RGB565_GREEN : 0) |
+             ((c & 0b010) ? RGB565_LIME : 0) |
              ((c & 0b001) ? RGB565_BLUE : 0));
       }
       else
       {
         c = bitmap[idx++];
         d = (((c & 0b100000) ? RGB565_RED : 0) |
-             ((c & 0b010000) ? RGB565_GREEN : 0) |
+             ((c & 0b010000) ? RGB565_LIME : 0) |
              ((c & 0b001000) ? RGB565_BLUE : 0));
       }
       writePixel(x + i, y, d);
