@@ -375,7 +375,7 @@ int32_t testText()
   gfx->println(F("Size 8"));
 
   gfx->setTextSize(9);
-  gfx->setTextColor(RGB565_PALERED);
+  gfx->setTextColor(RGB565_LIGHTPINK);
   gfx->println(F("Size 9"));
 
   return micros() - start;
