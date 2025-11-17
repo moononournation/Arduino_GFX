@@ -23,6 +23,7 @@
 #include "font/u8g2_font_chill7_h_cjk.h"
 #include "font/u8g2_font_cubic11_h_cjk.h"
 #include "font/u8g2_font_quan7_h_cjk.h"
+#include "font/u8g2_font_unifont_h_cjk.h"
 #include "font/u8g2_font_unifont_h_utf8.h"
 #include "font/u8g2_font_unifont_t_chinese.h"
 #include "font/u8g2_font_unifont_t_chinese4.h"
