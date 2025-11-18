@@ -546,7 +546,7 @@ Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
     }
 #define GFX_BL 42
 Arduino_DataBus *bus = new Arduino_HWSPI(11 /* DC */, 12 /* CS */, 40 /* SCK */, 41 /* MOSI */, 38 /* MISO */);
-Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */, false /* IPS */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 1 /* rotation */, true /* IPS */);
 
 #elif defined(LILYGO_T_DECK_PLUS)
 #define GFX_DEV_DEVICE LILYGO_T_DECK_PLUS
