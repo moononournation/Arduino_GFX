@@ -23,11 +23,10 @@
 #include "font/u8g2_font_chill7_h_cjk.h"
 #include "font/u8g2_font_cubic11_h_cjk.h"
 #include "font/u8g2_font_quan7_h_cjk.h"
+#include "font/u8g2_font_unifont_h_chinese.h"
+#include "font/u8g2_font_unifont_h_chinese4.h"
 #include "font/u8g2_font_unifont_h_cjk.h"
 #include "font/u8g2_font_unifont_h_utf8.h"
-#include "font/u8g2_font_unifont_t_chinese.h"
-#include "font/u8g2_font_unifont_t_chinese4.h"
-#include "font/u8g2_font_unifont_t_cjk.h"
 #endif
 
 #define RGB565(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))

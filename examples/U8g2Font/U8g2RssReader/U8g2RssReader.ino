@@ -133,7 +133,7 @@ void setup(void)
 
   /* U8g2 font list: https://github.com/olikraus/u8g2/wiki/fntlistall */
   /* U8g2 Unifont list: https://github.com/olikraus/u8g2/wiki/fntgrpunifont */
-  gfx->setFont(u8g2_font_unifont_t_chinese4);
+  gfx->setFont(u8g2_font_unifont_h_chinese4);
   gfx->setTextColor(RGB565_WHITE);
 }
 
