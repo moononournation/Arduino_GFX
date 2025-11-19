@@ -1,10 +1,9 @@
-/*
+/*******************************************************************************
  * Pico W WiFi Analyzer
- * Require Raspberry Pi Pico W board support.
- */
+ * Requires Raspberry Pi Pico W board
+ ******************************************************************************/
 
 #define SCAN_INTERVAL 3000
-// #define SCAN_COUNT_SLEEP 3
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
@@ -34,19 +33,25 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, DF_GFX_RST, 3 /* rotation */, false 
  * End of Arduino_GFX setting
  ******************************************************************************/
 
-#include "WiFi.h"
+#include <WiFi.h>
 #define log_i(format, ...) Serial.printf(format, ##__VA_ARGS__)
 
-int16_t w, h, text_size, banner_height, graph_baseline, graph_height, channel_width, signal_width;
+int16_t w, h, banner_text_size, banner_height, graph_baseline, graph_height, channel_width, signal_width;
 
 // RSSI RANGE
-#define RSSI_CEILING -40
+#define RSSI_CEILING -30
+#define RSSI_SHOW_SSID -70
 #define RSSI_FLOOR -100
 
-// Channel color mapping from channel 1 to 14
+// Channel legend mapping
+uint8_t channel_legend[] = {
+    1, 2, 3, 4, 5, 6, 7,      // 0-6:     1,  2,  3,  4,  5,  6,  7,
+    8, 9, 10, 11, 12, 13, 0}; // 7-13:    8,  9, 10, 11, 12, 13, 14
+
+// Channel color mapping
 uint16_t channel_color[] = {
-    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
-    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_GREEN, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA};
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_LIME, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_LIME, RGB565_CYAN, RGB565_BLUE, RGB565_MAGENTA};
 
 uint8_t scan_count = 0;
 
@@ -76,23 +81,32 @@ void setup()
   {
     Serial.println("gfx->begin() failed!");
   }
+  gfx->fillScreen(RGB565_BLACK);
+
   w = gfx->width();
   h = gfx->height();
-  text_size = (h < 200) ? 1 : 2;
-  banner_height = text_size * 3 * 4;
-  graph_baseline = h - 20;                            // minus 2 text lines
-  graph_height = graph_baseline - banner_height - 30; // minus 3 text lines
-  channel_width = w / 17;
+  banner_text_size = (h < 200) ? 1 : 2;
+  banner_height = (banner_text_size * 8) + 2;
+  graph_height = h - banner_height - 30; // minus 3 text lines
+  graph_baseline = banner_height + 10 + graph_height;
+  channel_width = w / 16;
   signal_width = channel_width * 2;
 
   // init banner
-  gfx->setTextSize(text_size);
-  gfx->fillScreen(RGB565_BLACK);
-  gfx->setTextColor(RGB565_MAGENTA);
+  gfx->fillRect(0, 0, w, banner_text_size * 16, RGB565_PURPLE);
+  gfx->setTextSize(banner_text_size);
   gfx->setCursor(0, 0);
-  gfx->print("Pico W");
-  gfx->setTextColor(RGB565_WHITE);
-  gfx->print(" WiFi Analyzer");
+  gfx->setTextColor(RGB565_WHITE, RGB565_CRIMSON);
+  gfx->print(" Pico W ");
+  gfx->setTextColor(RGB565_WHITE, RGB565_MEDIUMBLUE);
+  gfx->print(" WiFi ");
+  gfx->setTextColor(RGB565_WHITE, RGB565_PURPLE);
+  gfx->print(" Analyzer");
+  gfx->setTextSize(1);
+
+#ifdef CANVAS
+  gfx->flush();
+#endif
 }
 
 bool matchBssidPrefix(uint8_t *a, uint8_t *b)
@@ -109,10 +123,10 @@ bool matchBssidPrefix(uint8_t *a, uint8_t *b)
 
 void loop()
 {
-  uint8_t ap_count_list[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  int32_t noise_list[] = {RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR};
-  int32_t peak_list[] = {RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR, RSSI_FLOOR};
-  int16_t peak_id_list[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+  uint8_t ap_count_list[sizeof(channel_legend)];
+  int32_t noise_list[sizeof(channel_legend)];
+  int32_t peak_list[sizeof(channel_legend)];
+  int16_t peak_id_list[sizeof(channel_legend)];
   int32_t channel;
   int16_t idx;
   int32_t rssi;
@@ -122,18 +136,26 @@ void loop()
   uint16_t color;
   int16_t height, offset, text_width;
 
+  // init array value
+  for (int i = 0; i < sizeof(channel_legend); ++i)
+  {
+    ap_count_list[i] = 0;
+    noise_list[i] = RSSI_FLOOR;
+    peak_list[i] = RSSI_FLOOR;
+    peak_id_list[i] = -1;
+  }
+
   // WiFi.scanNetworks will return the number of networks found
   int n = WiFi.scanNetworks();
 
   // clear old graph
   gfx->fillRect(0, banner_height, w, h - banner_height, RGB565_BLACK);
-  gfx->setTextSize(1);
 
   if (n == 0)
   {
     gfx->setTextColor(RGB565_WHITE);
     gfx->setCursor(0, banner_height);
-    gfx->println("no networks found");
+    gfx->println("No networks found");
   }
   else
   {
@@ -143,12 +165,16 @@ void loop()
       idx = channel - 1;
       rssi = WiFi.RSSI(i);
       WiFi.BSSID(i, bssidA);
+      ssid = WiFi.SSID(i);
 
-      // channel peak stat
-      if (peak_list[idx] < rssi)
+      // channel peak stat, find peak ssid
+      if (ssid.length() > 0)
       {
-        peak_list[idx] = rssi;
-        peak_id_list[idx] = i;
+        if (peak_list[idx] < rssi)
+        {
+          peak_list[idx] = rssi;
+          peak_id_list[idx] = i;
+        }
       }
 
       // check signal come from same AP
@@ -213,7 +239,7 @@ void loop()
       rssi = WiFi.RSSI(i);
       color = channel_color[idx];
       height = constrain(map(rssi, RSSI_FLOOR, RSSI_CEILING, 1, graph_height), 1, graph_height);
-      offset = (channel + 1) * channel_width;
+      offset = (idx + 2) * channel_width;
 
       // trim rssi with RSSI_FLOOR
       if (rssi < RSSI_FLOOR)
@@ -228,10 +254,10 @@ void loop()
       gfx->writeEllipseHelper(offset, graph_baseline + 1, signal_width, height, 0b0011, color);
       gfx->endWrite();
 
-      if (i == peak_id_list[idx])
+      if ((rssi >= RSSI_SHOW_SSID) && (i == peak_id_list[idx]))
       {
         // Print SSID, signal strengh and if not encrypted
-        String ssid = WiFi.SSID(i);
+        ssid = WiFi.SSID(i);
         if (ssid.length() == 0)
         {
           WiFi.BSSID(i, bssidA);
@@ -254,7 +280,7 @@ void loop()
           }
         }
         gfx->setTextColor(color);
-        gfx->setCursor(offset, graph_baseline - 10 - height);
+        gfx->setCursor(offset, ((height + 8) > graph_height) ? (graph_baseline - graph_height) : (graph_baseline - 10 - height));
         gfx->print(ssid);
         gfx->print('(');
         gfx->print(rssi);
@@ -303,22 +329,28 @@ void loop()
   }
 
   // draw graph base axle
-  gfx->drawFastHLine(0, graph_baseline, gfx->width(), RGB565_WHITE);
-  for (channel = 1; channel <= 14; channel++)
+  gfx->drawFastHLine(0, graph_baseline, w, RGB565_WHITE);
+  for (idx = 0; idx < 14; idx++)
   {
-    idx = channel - 1;
-    offset = (channel + 1) * channel_width;
-    gfx->setTextColor(channel_color[idx]);
-    gfx->setCursor(offset - ((channel < 10) ? 3 : 6), graph_baseline + 2);
-    gfx->print(channel);
+    channel = channel_legend[idx];
+    offset = (idx + 2) * channel_width;
+    if (channel > 0)
+    {
+      gfx->setTextColor(channel_color[idx]);
+      gfx->setCursor(offset - ((channel < 10) ? 3 : 6), graph_baseline + 2);
+      gfx->print(channel);
+    }
     if (ap_count_list[idx] > 0)
     {
-      gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 9 : 12), graph_baseline + 8 + 2);
-      gfx->print('{');
+      gfx->setTextColor(RGB565_LIGHTGREY);
+      gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 3 : 6), graph_baseline + 8 + 2);
       gfx->print(ap_count_list[idx]);
-      gfx->print('}');
     }
   }
+
+#ifdef CANVAS
+  gfx->flush();
+#endif
 
   // Wait a bit before scanning again
   delay(SCAN_INTERVAL);
