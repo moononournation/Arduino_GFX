@@ -85,7 +85,7 @@ void setup()
 
   w = gfx->width();
   h = gfx->height();
-  banner_text_size = (h < 200) ? 1 : 2;
+  banner_text_size = (w < 300) ? 1 : 2;
   banner_height = (banner_text_size * 8) + 2;
   graph_height = h - banner_height - 30; // minus 3 text lines
   graph_baseline = banner_height + 10 + graph_height;
@@ -93,7 +93,7 @@ void setup()
   signal_width = channel_width * 2;
 
   // init banner
-  gfx->fillRect(0, 0, w, banner_text_size * 16, RGB565_PURPLE);
+  gfx->fillRect(0, 0, w, banner_text_size * 8, RGB565_PURPLE);
   gfx->setTextSize(banner_text_size);
   gfx->setCursor(0, 0);
   gfx->setTextColor(RGB565_WHITE, RGB565_CRIMSON);
@@ -328,7 +328,7 @@ void loop()
     }
   }
 
-  // draw graph base axle
+  // draw 2.4 GHz graph base axle
   gfx->drawFastHLine(0, graph_baseline, w, RGB565_WHITE);
   for (idx = 0; idx < 14; idx++)
   {

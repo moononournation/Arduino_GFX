@@ -193,9 +193,9 @@ void setup()
 
   w = gfx->width();
   h = gfx->height();
-  banner_text_size = (h < 320) ? 1 : 2;
+  banner_text_size = (w < 400) ? 1 : 2;
   banner_height = banner_text_size * 16;
-  graph_height = ((h - banner_height) / 2) - 14;
+  graph_height = ((h - banner_height) / 2) - 14; // minus 2 text lines
   graph24_baseline = banner_height + graph_height;
   graph50_baseline = graph24_baseline + 14 + graph_height;
   channel24_width = w / 16;
@@ -204,7 +204,7 @@ void setup()
   // init banner
   gfx->fillRect(0, 0, w, banner_text_size * 16, RGB565_PURPLE);
   gfx->setTextSize(banner_text_size);
-  gfx->setCursor(0, banner_text_size * 14); // minus 2 text lines
+  gfx->setCursor(0, banner_text_size * 14);
   gfx->setTextColor(RGB565_WHITE, RGB565_LIME);
   gfx->print(" RTL ");
   gfx->setTextColor(RGB565_WHITE, RGB565_LIMEGREEN);

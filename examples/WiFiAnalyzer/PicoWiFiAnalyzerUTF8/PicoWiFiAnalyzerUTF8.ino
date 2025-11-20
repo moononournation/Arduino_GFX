@@ -88,7 +88,7 @@ void setup()
 
   w = gfx->width();
   h = gfx->height();
-  banner_text_size = (h < 200) ? 1 : 2;
+  banner_text_size = (w < 368) ? 1 : 2;
   banner_height = banner_text_size * 16;
   graph_height = h - banner_height - (3 * 16); // minus 3 text lines
   graph_baseline = banner_height + 16 + graph_height;
@@ -332,7 +332,7 @@ void loop()
     }
   }
 
-  // draw graph base axle
+  // draw 2.4 GHz graph base axle
   gfx->drawFastHLine(0, graph_baseline, w, RGB565_WHITE);
   for (idx = 0; idx < 14; idx++)
   {

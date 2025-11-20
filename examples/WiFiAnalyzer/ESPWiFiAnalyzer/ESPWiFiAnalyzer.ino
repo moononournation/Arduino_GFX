@@ -113,7 +113,7 @@ void setup()
 
   w = gfx->width();
   h = gfx->height();
-  banner_text_size = (h < 200) ? 1 : 2;
+  banner_text_size = (w < 300) ? 1 : 2;
   banner_height = (banner_text_size * 8) + 2;
   graph_height = h - banner_height - 30; // minus 3 text lines
   graph_baseline = banner_height + 10 + graph_height;
@@ -121,11 +121,17 @@ void setup()
   signal_width = channel_width * 2;
 
   // init banner
-  gfx->fillRect(0, 0, w, banner_text_size * 16, RGB565_PURPLE);
+  gfx->fillRect(0, 0, w, banner_text_size * 8, RGB565_PURPLE);
   gfx->setTextSize(banner_text_size);
   gfx->setCursor(0, 0);
   gfx->setTextColor(RGB565_WHITE, RGB565_RED);
-  gfx->print(" ESP ");
+  gfx->print(" ESP");
+  gfx->setTextColor(RGB565_WHITE, RGB565_DARKORANGE);
+#if defined(ESP32)
+  gfx->print("32 ");
+#elif defined(ESP8266)
+  gfx->print("8266 ");
+#endif
   gfx->setTextColor(RGB565_WHITE, RGB565_MEDIUMBLUE);
   gfx->print(" WiFi ");
   gfx->setTextColor(RGB565_WHITE, RGB565_PURPLE);

@@ -123,16 +123,16 @@ void setup()
 
   w = gfx->width();
   h = gfx->height();
-  banner_text_size = (h < 240) ? 1 : 2;
+  banner_text_size = (w < 384) ? 1 : 2;
   banner_height = (banner_text_size * 8) + 2;
-  graph_height = ((h - banner_height) / 2) - 20; // minus 3 text lines
-  graph24_baseline = banner_height + 10 + graph_height;
-  graph50_baseline = graph24_baseline + 30 + graph_height;
+  graph_height = ((h - banner_height) / 2) - 20; // minus 2 text lines
+  graph24_baseline = banner_height + graph_height;
+  graph50_baseline = graph24_baseline + 20 + graph_height;
   channel24_width = w / 16;
   channel50_width = w / 56;
 
   // init banner
-  gfx->fillRect(0, 0, w, banner_text_size * 16, RGB565_PURPLE);
+  gfx->fillRect(0, 0, w, banner_text_size * 8, RGB565_PURPLE);
   gfx->setTextSize(banner_text_size);
   gfx->setCursor(0, 0);
   gfx->setTextColor(RGB565_WHITE, RGB565_LIME);
@@ -344,10 +344,10 @@ void loop()
   gfx->setTextSize(2);
   gfx->setTextColor(RGB565_WHITE, RGB565_MEDIUMBLUE);
   gfx->setCursor(0, graph24_baseline + 1);
-  gfx->print("2.4G");
+  gfx->print("2.4");
   gfx->setTextColor(RGB565_WHITE, RGB565_LIMEGREEN);
   gfx->setCursor(0, graph50_baseline + 1);
-  gfx->print("5G");
+  gfx->print("5");
   gfx->setTextSize(1);
 
 #ifdef CANVAS
