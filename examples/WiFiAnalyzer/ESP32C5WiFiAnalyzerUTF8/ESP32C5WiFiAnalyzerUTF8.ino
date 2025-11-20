@@ -137,7 +137,7 @@ void setup()
   h = gfx->height();
   banner_text_size = (h < 320) ? 1 : 2;
   banner_height = banner_text_size * 16;
-  graph_height = ((h - banner_height) / 2) - 14; // minus 2 text lines
+  graph_height = ((h - banner_height) / 2) - 16; // minus 2 text lines
   graph24_baseline = banner_height + graph_height;
   graph50_baseline = graph24_baseline + 14 + graph_height;
   channel24_width = w / 16;
