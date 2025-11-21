@@ -115,10 +115,19 @@ void loop()
 
     // draw time
     gfx->setCursor(0, 0);
+    if (hh < 10) {
+      gfx->print('0');
+    }
     gfx->print(hh);
     gfx->print(':');
+    if (mm < 10) {
+      gfx->print('0');
+    }
     gfx->print(mm);
     gfx->print(':');
+    if (ss < 10) {
+      gfx->print('0');
+    }
     gfx->print(ss);
   }
 
