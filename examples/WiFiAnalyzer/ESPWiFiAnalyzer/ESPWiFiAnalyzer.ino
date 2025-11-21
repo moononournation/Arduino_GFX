@@ -336,7 +336,7 @@ void loop()
   for (channel = 2; channel <= 11; channel++) // channels 12-14 may not available
   {
     idx = channel - 1;
-    log_i("min_noise: %d, noise_list[%d]: %d", min_noise, idx, noise_list[idx]);
+    // log_i("min_noise: %d, noise_list[%d]: %d", min_noise, idx, noise_list[idx]);
     if (noise_list[idx] < min_noise)
     {
       min_noise = noise_list[idx];

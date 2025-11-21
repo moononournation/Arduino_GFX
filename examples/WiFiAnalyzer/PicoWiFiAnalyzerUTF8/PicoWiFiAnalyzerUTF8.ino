@@ -84,23 +84,27 @@ void setup()
   }
   gfx->fillScreen(RGB565_BLACK);
   gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
-  gfx->setFont(u8g2_font_unifont_h_cjk);
+  gfx->setFont(u8g2_font_cubic11_h_cjk);
 
   w = gfx->width();
   h = gfx->height();
-  banner_text_size = (w < 368) ? 1 : 2;
-  banner_height = banner_text_size * 16;
-  graph_height = h - banner_height - (3 * 16); // minus 3 text lines
-  graph_baseline = banner_height + 16 + graph_height;
+  banner_text_size = (w < 256) ? 1 : 2;
+  banner_height = banner_text_size * 15;
+  graph_height = h - banner_height - (3 * 15); // minus 3 text lines
+  graph_baseline = banner_height + 15 + graph_height;
   channel_width = w / 16;
   signal_width = channel_width * 2;
 
   // init banner
-  gfx->fillRect(0, 0, w, banner_text_size * 16, RGB565_PURPLE);
+  gfx->fillRect(0, 0, w, banner_text_size * 15, RGB565_PURPLE);
   gfx->setTextSize(banner_text_size);
-  gfx->setCursor(0, banner_text_size * 14);
+  gfx->setCursor(0, (banner_text_size * 12) - 1);
   gfx->setTextColor(RGB565_WHITE, RGB565_CRIMSON);
-  gfx->print(" Pico W ");
+  gfx->print(" Pi");
+  gfx->setTextColor(RGB565_WHITE, RGB565_DARKORANGE);
+  gfx->print("co");
+  gfx->setTextColor(RGB565_WHITE, RGB565_LIMEGREEN);
+  gfx->print(" W ");
   gfx->setTextColor(RGB565_WHITE, RGB565_MEDIUMBLUE);
   gfx->print(" WiFi ");
   gfx->setTextColor(RGB565_WHITE, RGB565_PURPLE);
@@ -157,7 +161,7 @@ void loop()
   if (n == 0)
   {
     gfx->setTextColor(RGB565_WHITE);
-    gfx->setCursor(0, banner_height + 14);
+    gfx->setCursor(0, banner_height + 12);
     gfx->println("找不到WiFi");
   }
   else
@@ -269,7 +273,7 @@ void loop()
           sprintf(mac, "%02X:%02X:%02X:%02X:%02X:%02X", bssidA[0], bssidA[1], bssidA[2], bssidA[3], bssidA[4], bssidA[5]);
           ssid = String(mac);
         }
-        text_width = (ssid.length() + 6) * 8;
+        text_width = (ssid.length() + 6) * 6;
         if (text_width > w)
         {
           offset = 0;
@@ -283,7 +287,7 @@ void loop()
           }
         }
         gfx->setTextColor(color);
-        gfx->setCursor(offset, ((height + 16) > graph_height) ? (graph_baseline - graph_height + 14) : (graph_baseline - height - 2));
+        gfx->setCursor(offset, ((height + 15) > graph_height) ? (graph_baseline - graph_height + 12) : (graph_baseline - height - 3));
         gfx->print(ssid);
         gfx->print('(');
         gfx->print(rssi);
@@ -298,7 +302,7 @@ void loop()
 
   // print WiFi stat
   gfx->setTextColor(RGB565_WHITE);
-  gfx->setCursor(0, banner_height + 14);
+  gfx->setCursor(0, banner_height + 12);
   gfx->print("找到");
   gfx->print(n);
   gfx->print("個WiFi，訊噪比較好：");
@@ -307,7 +311,7 @@ void loop()
   for (channel = 2; channel <= 11; channel++) // channels 12-14 may not available
   {
     idx = channel - 1;
-    log_i("min_noise: %d, noise_list[%d]: %d", min_noise, idx, noise_list[idx]);
+    // log_i("min_noise: %d, noise_list[%d]: %d", min_noise, idx, noise_list[idx]);
     if (noise_list[idx] < min_noise)
     {
       min_noise = noise_list[idx];
@@ -341,13 +345,13 @@ void loop()
     if (channel > 0)
     {
       gfx->setTextColor(channel_color[idx]);
-      gfx->setCursor(offset - ((channel < 10) ? 4 : 8), graph_baseline + 14);
+      gfx->setCursor(offset - ((channel < 10) ? 3 : 6), graph_baseline + 12);
       gfx->print(channel);
     }
     if (ap_count_list[idx] > 0)
     {
       gfx->setTextColor(RGB565_LIGHTGREY);
-      gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 4 : 8), graph_baseline + 16 + 14);
+      gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 3 : 6), graph_baseline + 15 + 12);
       gfx->print(ap_count_list[idx]);
     }
   }

@@ -97,7 +97,11 @@ void setup()
   gfx->setTextSize(banner_text_size);
   gfx->setCursor(0, 0);
   gfx->setTextColor(RGB565_WHITE, RGB565_CRIMSON);
-  gfx->print(" Pico W ");
+  gfx->print(" Pi");
+  gfx->setTextColor(RGB565_WHITE, RGB565_DARKORANGE);
+  gfx->print("co");
+  gfx->setTextColor(RGB565_WHITE, RGB565_LIMEGREEN);
+  gfx->print(" W ");
   gfx->setTextColor(RGB565_WHITE, RGB565_MEDIUMBLUE);
   gfx->print(" WiFi ");
   gfx->setTextColor(RGB565_WHITE, RGB565_PURPLE);
@@ -303,7 +307,7 @@ void loop()
   for (channel = 2; channel <= 11; channel++) // channels 12-14 may not available
   {
     idx = channel - 1;
-    log_i("min_noise: %d, noise_list[%d]: %d", min_noise, idx, noise_list[idx]);
+    // log_i("min_noise: %d, noise_list[%d]: %d", min_noise, idx, noise_list[idx]);
     if (noise_list[idx] < min_noise)
     {
       min_noise = noise_list[idx];
