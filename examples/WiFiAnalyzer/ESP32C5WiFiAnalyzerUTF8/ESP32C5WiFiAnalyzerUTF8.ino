@@ -6,7 +6,7 @@
 
 // POWER SAVING SETTING
 #define SCAN_INTERVAL 3000
-// #define SCAN_COUNT_SLEEP 3
+// #define SCAN_COUNT_SLEEP 5
 // #define LCD_PWR_PIN 1
 
 /*******************************************************************************
@@ -53,14 +53,14 @@ uint8_t channel_legend[] = {
     8, 9, 10, 11, 12, 13, 0, // 7-13:    8,  9, 10, 11, 12, 13, 14,
     0, 0, 36, 0, 0, 0, 44,   // 14-20:  32, 34, 36, 38, 40, 42, 44,
     0, 0, 0, 52, 0, 0, 0,    // 21-27:  46, 48, 50, 52, 54, 56, 58,
-    60, 0, 0, 0, 68, 0, 0,   // 28-34:  60, 62, 64,N/A, 68,N/A, 96,
-    0, 100, 0, 0, 0, 108, 0, // 35-41: N/A,100,102,104,106,108,110,
-    0, 0, 116, 0, 0, 0, 124, // 42-48: 112,114,116,118,120,122,124,
-    0, 0, 0, 132, 0, 0, 0,   // 49-55: 126,128,N/A,132,134,136,138,
-    140, 0, 0, 0,            // 56-59: 140,142,144,N/A,
-    149, 0, 0, 0, 157, 0, 0, // 60-66: 149,151,153,155,157,159,161,
-    0, 165, 0, 0, 0, 173, 0, // 67-73: 163,165,167,169,171,173,175,
-    0, 0};                   // 74-75: 177,N/A
+    60, 0, 0, 0, 68, 0, 0,   // 28-34:  60, 62, 64,N/A, 68,N/A,N/A,
+    0, 0, 0, 0, 0, 0, 0,     // 35-41: N/A,N/A,N/A,N/A,N/A,N/A, 96,
+    0, 100, 0, 0, 0, 108, 0, // 42-48: N/A,100,102,104,106,108,110,
+    0, 0, 116, 0, 0, 0, 124, // 49-55: 112,114,116,118,120,122,124,
+    0, 0, 0, 132, 0, 0, 0,   // 56-62: 126,128,N/A,132,134,136,138,
+    140, 0, 0, 0, 149, 0, 0, // 63-69: 140,142,144,N/A,149,151,153,
+    0, 157, 0, 0, 0, 165, 0, // 70-76: 155,157,159,161,163,165,167,
+    0, 0, 173, 0, 0, 0};     // 77-82: 169,171,173,175,177,N/A
 
 // Channel color mapping
 uint16_t channel_color[] = {
@@ -68,14 +68,14 @@ uint16_t channel_color[] = {
     RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_LIME, RGB565_CYAN, RGB565_DODGERBLUE, RGB565_MAGENTA,
     RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_LIME, RGB565_CYAN, RGB565_DODGERBLUE, RGB565_MAGENTA,
     RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_LIME, RGB565_CYAN, RGB565_DODGERBLUE, RGB565_MAGENTA,
-    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_WHITE, RGB565_CYAN, RGB565_WHITE, RGB565_MAGENTA,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_WHITE, RGB565_CYAN, RGB565_WHITE, RGB565_WHITE,
+    RGB565_WHITE, RGB565_WHITE, RGB565_WHITE, RGB565_WHITE, RGB565_WHITE, RGB565_WHITE, RGB565_MAGENTA,
     RGB565_WHITE, RGB565_ORANGE, RGB565_YELLOW, RGB565_LIME, RGB565_CYAN, RGB565_DODGERBLUE, RGB565_MAGENTA,
     RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_LIME, RGB565_CYAN, RGB565_DODGERBLUE, RGB565_MAGENTA,
     RGB565_RED, RGB565_ORANGE, RGB565_WHITE, RGB565_LIME, RGB565_CYAN, RGB565_DODGERBLUE, RGB565_MAGENTA,
-    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_WHITE,
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_WHITE, RGB565_CYAN, RGB565_DODGERBLUE, RGB565_MAGENTA,
     RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_LIME, RGB565_CYAN, RGB565_DODGERBLUE, RGB565_MAGENTA,
-    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_LIME, RGB565_CYAN, RGB565_DODGERBLUE, RGB565_MAGENTA,
-    RGB565_RED, RGB565_WHITE};
+    RGB565_RED, RGB565_ORANGE, RGB565_YELLOW, RGB565_LIME, RGB565_CYAN, RGB565_WHITE};
 
 uint8_t scan_count = 0;
 
@@ -91,13 +91,13 @@ uint16_t channelIdx(int channel)
   }
   if (channel <= 144) // channel 96 - 144
   {
-    return 34 + ((channel - 96) / 2);
+    return 41 + ((channel - 96) / 2);
   }
   if (channel <= 177) // channel 149 - 177
   {
-    return 60 + ((channel - 149) / 2);
+    return 67 + ((channel - 149) / 2);
   }
-  return 75;
+  return 82;
 }
 
 void setup()
@@ -140,8 +140,8 @@ void setup()
   graph_height = ((h - banner_height) / 2) - 16; // minus 2 text lines
   graph24_baseline = banner_height + graph_height;
   graph50_baseline = graph24_baseline + 14 + graph_height;
-  channel24_width = w / 16;
-  channel50_width = w / 56;
+  channel24_width = w / (14 + 2);
+  channel50_width = w / (sizeof(channel_legend) - 14 + 4);
 
   // init banner
   gfx->fillRect(0, 0, w, banner_text_size * 16, RGB565_PURPLE);
@@ -178,6 +178,7 @@ bool matchBssidPrefix(uint8_t *a, uint8_t *b)
 
 void loop()
 {
+  uint16_t ap24_count = 0, ap50_count = 0;
   uint8_t ap_count_list[sizeof(channel_legend)];
   int32_t peak_list[sizeof(channel_legend)];
   int16_t peak_id_list[sizeof(channel_legend)];
@@ -197,12 +198,11 @@ void loop()
     peak_id_list[i] = -1;
   }
 
-  WiFi.setBandMode(WIFI_BAND_MODE_AUTO);
-  // WiFi.setBandMode(WIFI_BAND_MODE_2G_ONLY);
+  WiFi.setBandMode((scan_count < 1) ? WIFI_BAND_MODE_2G_ONLY : WIFI_BAND_MODE_AUTO);
   // WiFi.setBandMode(WIFI_BAND_MODE_5G_ONLY);
 
   // WiFi.scanNetworks will return the number of networks found
-  int n = WiFi.scanNetworks(false /* async */, true /* show_hidden */);
+  int n = WiFi.scanNetworks(false /* async */, true /* show_hidden */, false /* passive */, (scan_count < 2) ? 30 : 300 /* max_ms_per_chan */);
 
   // clear old graph
   gfx->fillRect(0, banner_height, w, h - banner_height, RGB565_BLACK);
@@ -247,8 +247,17 @@ void loop()
       if (!duplicate_SSID)
       {
         ap_count_list[idx]++;
+        if (channel <= 14)
+        {
+          ap24_count++;
+        }
+        else
+        {
+          ap50_count++;
+        }
       }
     }
+    Serial.printf("ap24_count: %d, ap50_count: %d\n", ap24_count, ap50_count);
 
     // plot found WiFi info
     for (int i = 0; i < n; i++)
@@ -267,8 +276,8 @@ void loop()
       else
       {
         graph_baseline = graph50_baseline;
-        signal_width = channel50_width * 2;
-        offset = (idx - 14 + 3) * channel50_width;
+        signal_width = channel50_width * 4;
+        offset = (idx - 14 + 4) * channel50_width;
       }
 
       // trim rssi with RSSI_FLOOR
@@ -330,13 +339,13 @@ void loop()
     if (channel > 0)
     {
       gfx->setTextColor(channel_color[idx]);
-      gfx->setCursor(offset - ((channel < 10) ? 3 : 5), graph24_baseline + 8);
+      gfx->setCursor(offset - ((channel < 10) ? 2 : 4), graph24_baseline + 8);
       gfx->print(channel);
     }
     if (ap_count_list[idx] > 0)
     {
       gfx->setTextColor(RGB565_LIGHTGREY);
-      gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 3 : 5), graph24_baseline + 8 + 7);
+      gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 2 : 4), graph24_baseline + 8 + 7);
       gfx->print(ap_count_list[idx]);
     }
   }
@@ -346,20 +355,26 @@ void loop()
   for (idx = 14; idx < sizeof(channel_legend); idx++)
   {
     channel = channel_legend[idx];
-    offset = (idx - 14 + 3) * channel50_width;
+    offset = (idx - 14 + 4) * channel50_width;
     if (channel > 0)
     {
       gfx->setTextColor(channel_color[idx]);
-      gfx->setCursor(offset - ((channel < 100) ? 5 : 8), graph50_baseline + 8);
+      gfx->setCursor(offset - ((channel < 100) ? 4 : 5), graph50_baseline + 8);
       gfx->print(channel);
     }
     if (ap_count_list[idx] > 0)
     {
       gfx->setTextColor(RGB565_LIGHTGREY);
-      gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 3 : 5), graph50_baseline + 8 + 7);
+      gfx->setCursor(offset - ((ap_count_list[idx] < 10) ? 2 : 4), graph50_baseline + 8 + 7);
       gfx->print(ap_count_list[idx]);
     }
   }
+  gfx->setTextColor(RGB565_MEDIUMBLUE, RGB565_BLACK);
+  gfx->setCursor(w - 15, graph24_baseline + 8 + 7);
+  gfx->printf("%03d", ap24_count);
+  gfx->setTextColor(RGB565_LIMEGREEN, RGB565_BLACK);
+  gfx->setCursor(w - 15, graph50_baseline + 8 + 7);
+  gfx->printf("%03d", ap50_count);
 
   gfx->setFont(u8g2_font_unifont_h_cjk);
   gfx->setTextColor(RGB565_WHITE, RGB565_MEDIUMBLUE);
@@ -374,11 +389,12 @@ void loop()
 #endif
 
   // Wait a bit before scanning again
-  delay(SCAN_INTERVAL);
+  delay((scan_count < 2) ? 0 : SCAN_INTERVAL);
+  ++scan_count;
 
 #if defined(SCAN_COUNT_SLEEP)
   // POWER SAVING
-  if (++scan_count >= SCAN_COUNT_SLEEP)
+  if (scan_count >= SCAN_COUNT_SLEEP)
   {
 #if defined(LCD_PWR_PIN)
     pinMode(LCD_PWR_PIN, INPUT); // disable pin
