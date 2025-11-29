@@ -12,7 +12,9 @@
 /* OPTION 1: Uncomment a dev device in Arduino_GFX_dev_device.h */
 #include "Arduino_GFX_dev_device.h"
 
+/* Check if not Uncommented any GFX_DEV_DEVICE in OPTION 1, include OPTION 2 header files */
 #ifndef GFX_DEV_DEVICE
+
 /* OPTION 2: Manual define hardware */
 
 /* Step 1: Define pins in Arduino_GFX_databus.h */
