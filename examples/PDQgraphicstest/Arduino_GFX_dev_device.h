@@ -12,6 +12,7 @@
 // #define ESP32_4848S040_86BOX_GUITION
 // #define ESP32_8048S043
 // #define ESP32_8048S070
+// #define JC4880P433
 // #define ESP32_LCDKIT_SPI
 // #define ESP32_LCDKIT_PAR8A
 // #define ESP32_LCDKIT_PAR8B
@@ -235,6 +236,25 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     480 /* width */, 480 /* height */, rgbpanel, 1 /* rotation */, true /* auto_flush */,
     bus, GFX_NOT_DEFINED /* RST */, st7701_type9_init_operations, sizeof(st7701_type9_init_operations));
+#elif defined(JC4880P433)
+#define GFX_DEV_DEVICE JC4880P433
+#define GFX_BL 23
+#define RGB_PANEL
+
+Arduino_ESP32DSIPanel *bus = new Arduino_ESP32DSIPanel(
+     12  /* hsync_pulse_width */, 42  /* hsync_back_porch */, 42  /* hsync_front_porch */,
+    2   /* vsync_pulse_width */, 8   /* vsync_back_porch */, 166 /* vsync_front_porch */,
+    34000000 /* prefer_speed - 34 MHz conforme configuração do projeto */);
+
+    Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
+    480 /* width */, 
+    800 /* height */, 
+    bus, 
+    0,      // rotation
+    true,   // IPS
+    5,  // RST pin (DISP_RST)
+    st7701_dsi_init_operations, 
+    sizeof(st7701_dsi_init_operations) / sizeof(lcd_init_cmd_t));
 
 #elif defined(ESP32_8048S043)
 #define GFX_DEV_DEVICE ESP32_8048S043
