@@ -7,7 +7,10 @@
 // POWER SAVING SETTING
 #define SCAN_INTERVAL 3000
 // #define SCAN_COUNT_SLEEP 5
-// #define LCD_PWR_PIN 1
+// #define LCD_PWR_PIN 0
+// #define LCD_PWR_PIN1 1
+// #define LCD_PWR_PIN2 2
+// #define LCD_PWR_PIN3 3
 
 /*******************************************************************************
  * Start of Arduino_GFX setting
@@ -102,6 +105,19 @@ uint16_t channelIdx(int channel)
 
 void setup()
 {
+#if defined(LCD_PWR_PIN)
+  pinMode(LCD_PWR_PIN, OUTPUT);    // sets the pin as output
+  digitalWrite(LCD_PWR_PIN, HIGH); // power on
+#endif
+#if defined(LCD_PWR_PIN)
+  pinMode(LCD_PWR_PIN1, OUTPUT);    // sets the pin as output
+  pinMode(LCD_PWR_PIN2, OUTPUT);    // sets the pin as output
+  pinMode(LCD_PWR_PIN3, OUTPUT);    // sets the pin as output
+  digitalWrite(LCD_PWR_PIN1, HIGH); // power on
+  digitalWrite(LCD_PWR_PIN2, HIGH); // power on
+  digitalWrite(LCD_PWR_PIN3, HIGH); // power on
+#endif
+
 #ifdef DEV_DEVICE_INIT
   DEV_DEVICE_INIT();
 #endif
@@ -114,22 +130,18 @@ void setup()
   // Enable Station Interface
   WiFi.STA.begin();
 
-#if defined(LCD_PWR_PIN)
-  pinMode(LCD_PWR_PIN, OUTPUT);    // sets the pin as output
-  digitalWrite(LCD_PWR_PIN, HIGH); // power on
-#endif
-
-#ifdef GFX_BL
-  pinMode(GFX_BL, OUTPUT);
-  digitalWrite(GFX_BL, HIGH);
-#endif
-
   // Init Display
   if (!gfx->begin())
   {
     Serial.println("gfx->begin() failed!");
   }
   gfx->fillScreen(RGB565_BLACK);
+
+#ifdef GFX_BL
+  pinMode(GFX_BL, OUTPUT);
+  digitalWrite(GFX_BL, HIGH);
+#endif
+
   gfx->setUTF8Print(true); // enable UTF8 support for the Arduino print() function
   gfx->setFont(u8g2_font_unifont_h_cjk);
 
@@ -399,12 +411,16 @@ void loop()
 #if defined(LCD_PWR_PIN)
     pinMode(LCD_PWR_PIN, INPUT); // disable pin
 #endif
+#if defined(LCD_PWR_PIN1)
+    pinMode(LCD_PWR_PIN1, INPUT); // disable pin
+    pinMode(LCD_PWR_PIN2, INPUT); // disable pin
+    pinMode(LCD_PWR_PIN3, INPUT); // disable pin
+#endif
 
 #if defined(GFX_BL)
     pinMode(GFX_BL, INPUT); // disable pin
 #endif
 
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
     esp_deep_sleep_start();
   }
 #endif // defined(SCAN_COUNT_SLEEP)
