@@ -5,7 +5,7 @@
 #include "../Arduino_OLED.h"
 
 #define CO5300_TFTWIDTH 480  ///< CO5300 max TFT width
-#define CO5300_TFTHEIGHT 480 ///< CO5300 max TFT width
+#define CO5300_TFTHEIGHT 480 ///< CO5300 max TFT height
 
 #define CO5300_RST_DELAY 200    ///< delay ms wait for reset finish
 #define CO5300_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
