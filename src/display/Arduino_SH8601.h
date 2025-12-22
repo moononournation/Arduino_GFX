@@ -5,7 +5,7 @@
 #include "../Arduino_OLED.h"
 
 #define SH8601_TFTWIDTH 480  ///< SH8601 max TFT width
-#define SH8601_TFTHEIGHT 480 ///< SH8601 max TFT width
+#define SH8601_TFTHEIGHT 480 ///< SH8601 max TFT height
 
 #define SH8601_RST_DELAY 200    ///< delay ms wait for reset finish
 #define SH8601_SLPIN_DELAY 120  ///< delay ms wait for sleep in finish
