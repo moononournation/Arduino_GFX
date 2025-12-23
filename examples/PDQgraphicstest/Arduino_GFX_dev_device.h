@@ -624,7 +624,7 @@ Arduino_GFX *gfx = new Arduino_RM67162(bus, 17 /* RST */, 0 /* rotation */);
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
     10 /* CS */, 12 /* SCK */, 11 /* D0 */, 13 /* D1 */, 14 /* D2 */, 15 /* D3 */);
 Arduino_GFX *g = new Arduino_CO5300(
-    bus, 17 /* RST */, 0 /* rotation */, false /* IPS */, 280, 456,
+    bus, 17 /* RST */, 0 /* rotation */, 280, 456,
     20 /* col offset 1 */, 0 /* row offset 1 */, 180 /* col_offset2 */, 24 /* row_offset2 */);
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(
@@ -835,7 +835,7 @@ Arduino_GFX *gfx = new Arduino_ST7789(bus, 39 /* RST */, 0 /* rotation */, true 
 Arduino_DataBus *bus = new Arduino_ESP32QSPI(
     9 /* CS */, 10 /* SCK */, 11 /* D0 */, 12 /* D1 */, 13 /* D2 */, 14 /* D3 */);
 Arduino_GFX *g = new Arduino_CO5300(
-    bus, 21 /* RST */, 0 /* rotation */, false /* IPS */, 280 /* width */, 456 /* height */,
+    bus, 21 /* RST */, 0 /* rotation */, 280 /* width */, 456 /* height */,
     20 /* col offset 1 */, 0 /* row offset 1 */, 180 /* col_offset2 */, 24 /* row_offset2 */);
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(
