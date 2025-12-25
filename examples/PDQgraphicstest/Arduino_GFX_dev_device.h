@@ -12,6 +12,8 @@
 // #define ESP32_4848S040_86BOX_GUITION
 // #define ESP32_8048S043
 // #define ESP32_8048S070
+// #define ESP32_C3_OLED_12864
+// #define ESP32_C3_OLED_7240
 // #define ESP32_LCDKIT_SPI
 // #define ESP32_LCDKIT_PAR8A
 // #define ESP32_LCDKIT_PAR8B
@@ -267,6 +269,30 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     0 /* de_idle_high */, 0 /* pclk_idle_high */, 0 /* bounce_buffer_size_px */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
+
+#elif defined(ESP32_C3_OLED_12864)
+#define GFX_DEV_DEVICE ESP32_C3_OLED_12864
+#include <Wire.h>
+#define DEV_DEVICE_INIT()         \
+  {                               \
+    Wire.begin(5 /* SDA */, 6 /* SCL */); \
+  }
+Arduino_DataBus *bus = new Arduino_Wire(0x3C /* i2c_addr */, 0x00 /* commandPrefix */, 0x40 /* dataPrefix */, &Wire /* wire */);
+Arduino_G *g = new Arduino_SSD1306(bus, GFX_NOT_DEFINED /* RST */, 128 /* width */, 64 /* height */);
+#define CANVAS
+Arduino_GFX *gfx = new Arduino_Canvas_Mono(128 /* width */, 64 /* height */, g, 0 /* output_x */, 0 /* output_y */, true /* verticalByte */);
+
+#elif defined(ESP32_C3_OLED_7240)
+#define GFX_DEV_DEVICE ESP32_C3_OLED_7240
+#include <Wire.h>
+#define DEV_DEVICE_INIT()         \
+  {                               \
+    Wire.begin(5 /* SDA */, 6 /* SCL */); \
+  }
+Arduino_DataBus *bus = new Arduino_Wire(0x3C /* i2c_addr */, 0x00 /* commandPrefix */, 0x40 /* dataPrefix */, &Wire /* wire */);
+Arduino_G *g = new Arduino_SSD1306(bus, GFX_NOT_DEFINED /* RST */, 72 /* width */, 40 /* height */);
+#define CANVAS
+Arduino_GFX *gfx = new Arduino_Canvas_Mono(72 /* width */, 40 /* height */, g, 0 /* output_x */, 0 /* output_y */, true /* verticalByte */);
 
 #elif defined(ESP32_LCDKIT_SPI)
 #define GFX_DEV_DEVICE ESP32_LCDKIT_SPI
