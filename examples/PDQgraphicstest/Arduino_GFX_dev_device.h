@@ -532,7 +532,7 @@ Arduino_DataBus *bus = new Arduino_ESP32QSPI(
 Arduino_GFX *g = new Arduino_AXS15231B(
     bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, false /* IPS */, 320 /* width */, 480 /* height */,
     0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */,
-    axs15231b_320480_init_operations, sizeof(axs15231b_320480_init_operations));
+    axs15231b_320480_type1_init_operations, sizeof(axs15231b_320480_type1_init_operations));
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(
     320 /* width */, 480 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
