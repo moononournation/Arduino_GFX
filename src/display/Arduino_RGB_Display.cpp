@@ -79,7 +79,7 @@ bool Arduino_RGB_Display::begin(int32_t speed)
 
 void Arduino_RGB_Display::writePixelPreclipped(int16_t x, int16_t y, uint16_t color)
 {
-  int32_t y2;
+  int32_t y2 = y;
   switch (_rotation)
   {
   case 1:
