@@ -798,7 +798,7 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
 
   esp_lcd_panel_io_i80_config_t io_config = {
       .cs_gpio_num = _cs,
-      .pclk_hz = _speed,
+      .pclk_hz = (uint32_t)_speed,
       .trans_queue_depth = 10,
       // on_color_trans_done = nullptr,
       // user_ctx = nullptr,
