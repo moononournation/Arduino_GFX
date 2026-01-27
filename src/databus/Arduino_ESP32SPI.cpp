@@ -696,11 +696,6 @@ void Arduino_ESP32SPI::writeC8D16D16(uint8_t c, uint16_t d1, uint16_t d2)
  */
 void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
 {
-  if (_data_buf_bit_idx > 0)
-  {
-    flush_data_buf();
-  }
-
   if (_dc == GFX_NOT_DEFINED) // 9-bit SPI
   {
     _data16.value = p;
@@ -709,8 +704,61 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
     uint16_t idx;
     uint8_t shift;
     uint32_t l;
-    uint16_t bufLen = (len <= 28) ? len : 28;
+    uint16_t bufLen = (len <= 24) ? len : 24; // maximum to 24 so it is multiple of bytes
     int16_t xferLen;
+    bool loFirst = false;
+
+    // pre flush
+    for (; len > 0 && _data_buf_bit_idx % 8 != 0; len--) // to ensure length is multiple of bytes
+    {
+      idx = _data_buf_bit_idx >> 3;
+      shift = (_data_buf_bit_idx % 8);
+      if (shift)
+      {
+        _buffer[idx++] |= hi >> (shift + 1);
+        _buffer[idx] = hi << (7 - shift);
+      }
+      else
+      {
+        _buffer[idx++] = hi >> 1;
+        _buffer[idx] = hi << 7;
+      }
+      _data_buf_bit_idx += 9;
+
+      if (_data_buf_bit_idx % 8 == 0) {
+        loFirst = true;
+        len--; // the lower byte of the last pixel will be missing
+        break;
+      }
+
+      idx = _data_buf_bit_idx >> 3;
+      shift = (_data_buf_bit_idx % 8);
+      if (shift)
+      {
+        _buffer[idx++] |= lo >> (shift + 1);
+        _buffer[idx] = lo << (7 - shift);
+      }
+      else
+      {
+        _buffer[idx++] = lo >> 1;
+        _buffer[idx] = lo << 7;
+      }
+      _data_buf_bit_idx += 9;
+    }
+
+    if (_data_buf_bit_idx > 0)
+    {
+      flush_data_buf();
+    }
+
+    if (loFirst) // swap hi and lo
+    {
+      uint32_t tmp = lo;
+      lo = hi;
+      hi = tmp;
+    }
+
+    // post flush (clean buffer)
     for (uint32_t t = 0; t < bufLen; t++)
     {
       idx = _data_buf_bit_idx >> 3;
@@ -772,7 +820,52 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
           _spi->dev->data_buf[i] = _buffer32[i];
 #endif
         }
-      }
+       }
+
+        if (len - xferLen <= 0 && loFirst)  // on the last round of the loop,
+        {                                   // the last lower byte needs to be appended
+          uint16_t byte_idx = _data_buf_bit_idx / 8;
+          uint8_t shift = _data_buf_bit_idx % 8;
+
+          if (shift)
+          {
+            // For newer ESP32 models (C6, H2, P4, C5), data_buf is an array of spi_wn_reg_t unions with a .val member
+            // (uint32_t). We want to access it as a byte array, so we: (1) index into the uint32_t array using byte_idx/4,
+            // (2) cast .val to (uint8_t*) to get byte-level access, then (3) use byte_idx%4 to get the offset within
+            // that uint32_t. For older ESP32 models, data_buf is directly a uint32_t array, so we simply cast it to
+            // (uint8_t*) and use byte_idx directly.
+#if CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5
+            ((uint8_t *)(&_spi->dev->data_buf[byte_idx / 4].val))[byte_idx % 4] |= hi >> (shift + 1);
+            ((uint8_t *)(&_spi->dev->data_buf[byte_idx / 4].val))[byte_idx % 4 + 1] = hi << (7 - shift);
+#else
+            ((uint8_t *)_spi->dev->data_buf)[byte_idx] |= hi >> (shift + 1);
+            ((uint8_t *)_spi->dev->data_buf)[byte_idx + 1] = hi << (7 - shift);
+#endif
+          }
+          else
+          {
+#if CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5
+            ((uint8_t *)(&_spi->dev->data_buf[byte_idx / 4].val))[byte_idx % 4] = hi >> 1;
+            ((uint8_t *)(&_spi->dev->data_buf[byte_idx / 4].val))[byte_idx % 4 + 1] = hi << 7;
+#else
+            ((uint8_t *)_spi->dev->data_buf)[byte_idx] = hi >> 1;
+            ((uint8_t *)_spi->dev->data_buf)[byte_idx + 1] = hi << 7;
+#endif
+          }
+          _data_buf_bit_idx += 9;
+        }
+
+        for (; _data_buf_bit_idx % 8 != 0; _data_buf_bit_idx += 9)  // to ensure length is multiple of bytes
+        {
+#if CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5
+          uint16_t byte_idx = _data_buf_bit_idx / 8;
+          ((uint8_t *)(&_spi->dev->data_buf[byte_idx / 4].val))[byte_idx % 4 + 1] = 0;  // set next byte to 0 (no-op)
+#else
+          uint16_t byte_idx = _data_buf_bit_idx / 8;
+          ((uint8_t *)_spi->dev->data_buf)[byte_idx + 1] = 0;  // set next byte to 0 (no-op)
+#endif
+        }
+
       POLL(_data_buf_bit_idx - 1);
 
       len -= xferLen;
@@ -780,6 +873,11 @@ void Arduino_ESP32SPI::writeRepeat(uint16_t p, uint32_t len)
   }
   else // 8-bit SPI
   {
+    if (_data_buf_bit_idx > 0)
+    {
+      flush_data_buf();
+    }
+
     uint16_t bufLen = (len >= ESP32SPI_MAX_PIXELS_AT_ONCE) ? ESP32SPI_MAX_PIXELS_AT_ONCE : len;
     int16_t xferLen, l;
     uint32_t c32;
@@ -1027,6 +1125,14 @@ void Arduino_ESP32SPI::writeIndexedPixelsDouble(uint8_t *data, uint16_t *idx, ui
  */
 void Arduino_ESP32SPI::flush_data_buf()
 {
+  if (_dc == GFX_NOT_DEFINED) // 9-bit spi
+  {
+    for (; _data_buf_bit_idx % 8 != 0; _data_buf_bit_idx += 9) // to ensure length is multiple of bytes
+    {
+      _buffer[_data_buf_bit_idx / 8 + 1] = 0; // set next byte to 0 (presumably no-op)
+    }
+  }
+
   uint32_t len = (_data_buf_bit_idx + 31) / 32;
   for (uint32_t i = 0; i < len; i++)
   {
