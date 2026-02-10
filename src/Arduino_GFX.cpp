@@ -2105,7 +2105,7 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
             {
               if (bits & 0x80)
               {
-                writePixelPreclipped(curX, curY, color);
+                writePixel(curX, curY, color);
               }
             }
           }
