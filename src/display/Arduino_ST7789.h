@@ -1,10 +1,9 @@
-#pragma once
-
 /*
  * start rewrite from:
  * https://github.com/adafruit/Adafruit-GFX-Library.git
  * https://github.com/ananevilya/Arduino-ST7789-Library.git
  */
+#pragma once
 
 #include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
@@ -51,7 +50,7 @@
 #define ST7789_RDID3 0xDC
 #define ST7789_RDID4 0xDD
 
-static const uint8_t st7789_init_operations[] = {
+static const uint8_t st7789_type1_init_operations[] = {
     BEGIN_WRITE,
     WRITE_COMMAND_8, ST7789_SLPOUT, // 2: Out of sleep mode, no args, w/delay
     END_WRITE,
@@ -119,20 +118,49 @@ static const uint8_t st7789_init_operations[] = {
     WRITE_COMMAND_8, ST7789_DISPON, // 5: Main screen turn on, no args, w/delay
     END_WRITE};
 
+static const uint8_t st7789_type2_init_operations[] = {
+    BEGIN_WRITE,
+    WRITE_C8_D8, ST7789_COLMOD, 0x55, // 3: Set color mode, 16-bit color
+
+    WRITE_C8_BYTES, 0xB2, 5,
+    0x0C, 0x0C, 0x00, 0x33, 0x33,
+
+    WRITE_C8_D8, 0xB4, 0x01,
+    WRITE_C8_D16, 0xC0, 0x2C, 0x2D,
+    WRITE_C8_D8, 0xC5, 0x2E,
+
+    WRITE_COMMAND_8, ST7789_SLPOUT,
+    END_WRITE,
+
+    DELAY, ST7789_SLPOUT_DELAY,
+
+    BEGIN_WRITE,
+    WRITE_COMMAND_8, ST7789_DISPON,
+    END_WRITE};
+
+static const uint8_t st7789_type3_init_operations[] = {
+    BEGIN_WRITE,
+    WRITE_C8_D8, ST7789_COLMOD, 0x55, // 3: Set color mode, 16-bit color
+    WRITE_COMMAND_8, ST7789_SLPOUT,
+    END_WRITE,
+
+    DELAY, ST7789_SLPOUT_DELAY,
+
+    BEGIN_WRITE,
+    WRITE_COMMAND_8, ST7789_DISPON,
+    END_WRITE};
 class Arduino_ST7789 : public Arduino_TFT
 {
 public:
   Arduino_ST7789(
       Arduino_DataBus *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0,
       bool ips = false, int16_t w = ST7789_TFTWIDTH, int16_t h = ST7789_TFTHEIGHT,
-      uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
+      uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0,
+      const uint8_t *init_operations = st7789_type1_init_operations, size_t init_operations_len = sizeof(st7789_type1_init_operations));
 
   bool begin(int32_t speed = GFX_NOT_DEFINED) override;
-
-  void setRotation(uint8_t r) override;
-
   void writeAddrWindow(int16_t x, int16_t y, uint16_t w, uint16_t h) override;
-
+  void setRotation(uint8_t r) override;
   void invertDisplay(bool) override;
   void displayOn() override;
   void displayOff() override;
@@ -141,4 +169,6 @@ protected:
   void tftInit() override;
 
 private:
+  const uint8_t *_init_operations;
+  size_t _init_operations_len;
 };
