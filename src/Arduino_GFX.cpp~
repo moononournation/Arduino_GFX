@@ -1949,19 +1949,12 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
       y = _u8g2_target_y + ly;
 
       /* draw foreground and background (if required) */
-      if ((x <= _max_text_x) && (y <= _max_text_y) && (u >= _min_text_y))
+      if ((x <= _max_text_x) && (y <= _max_text_y))
       {
         curW = current;
         if ((x + curW - 1) > _max_text_x)
         {
           curW = _max_text_x - x + 1;
-        }
-        if (x < _min_text_x)
-        { 
-	  // Clip left margin, i.e. characters partially to the left of
-	  // edge of the text bound
-          curW = max(0,(curW - (_min_text_x - x)));
-          x = _min_text_x;
         }
         if (is_foreground)
         {
@@ -1980,19 +1973,12 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
       y = _u8g2_target_y + (ly * textsize_y);
 
       /* draw foreground and background (if required) */
-      if (((x + textsize_x - 1) <= _max_text_x) && ((y + textsize_y - 1) <= _max_text_y) && (y + textsize_y -1) >= _min_text_y) 
+      if (((x + textsize_x - 1) <= _max_text_x) && ((y + textsize_y - 1) <= _max_text_y))
       {
         curW = current * textsize_x;
         while ((x + curW - 1) > _max_text_x)
         {
           curW -= textsize_x;
-        }
-        if (x < _min_text_x)
-        { 
-	  // Clip left margin, i.e. characters partially to the left of
-	  // edge of the text bound
-          curW = max(0,(curW - (_min_text_x - x)));
-          x = _min_text_x;
         }
         if (is_foreground)
         {
@@ -2170,10 +2156,6 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 
       _u8g2_target_x = x + (_u8g2_char_x * textsize_x);
       // log_d("_u8g2_target_x: %d, _u8g2_target_y: %d", _u8g2_target_x, _u8g2_target_y);
-      if (_u8g2_target_x + _u8g2_char_width < _min_text_x) {
-	// Clip left, i.e. characters entirely to the left of the left text bound
-        return;
-      }
 
       /* reset local x/y position */
       _u8g2_dx = 0;
