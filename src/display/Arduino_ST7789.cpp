@@ -16,13 +16,18 @@ Arduino_ST7789::Arduino_ST7789(
 {
 }
 
-bool Arduino_ST7789::begin(int32_t speed)
+bool Arduino_ST7789::begin(int32_t speed, int32_t mode)
 {
+  if (mode != GFX_NOT_DEFINED)
+  {
+    _override_datamode = mode;
+  } else {
 #if defined(ESP32) || defined(ARDUINO_ARCH_NRF52840)
-  _override_datamode = SPI_MODE3;
+    _override_datamode = SPI_MODE3;
 #elif defined(ESP8266)
-  _override_datamode = SPI_MODE2;
+    _override_datamode = SPI_MODE2;
 #endif
+  }
 
   return Arduino_TFT::begin(speed);
 }
