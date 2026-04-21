@@ -1949,7 +1949,7 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
       y = _u8g2_target_y + ly;
 
       /* draw foreground and background (if required) */
-      if ((x <= _max_text_x) && (y <= _max_text_y) && (u >= _min_text_y))
+      if ((x <= _max_text_x) && (y <= _max_text_y) && (y >= _min_text_y))
       {
         curW = current;
         if ((x + curW - 1) > _max_text_x)
