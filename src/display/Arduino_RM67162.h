@@ -97,7 +97,7 @@ public:
   void invertDisplay(bool) override;
   void displayOn() override;
   void displayOff() override;
-  void setBrightness(uint8_t brightness) override;
+  void setBrightness(uint8_t brightness);
 
 protected:
   void tftInit() override;
