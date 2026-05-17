@@ -15,13 +15,25 @@ Arduino_ST7796::Arduino_ST7796(
 
 bool Arduino_ST7796::begin(int32_t speed)
 {
+  return begin(speed, GFX_NOT_DEFINED);
+}
+
+bool Arduino_ST7796::begin(int32_t speed, int32_t mode)
+{
+  if (mode != GFX_NOT_DEFINED)
+  {
+    _override_datamode = mode;
+  }
+  else
+  {
 #if defined(ESP32) || defined(ARDUINO_ARCH_NRF52840)
-  _override_datamode = SPI_MODE3;
+    _override_datamode = SPI_MODE3;
 #elif defined(ESP8266)
-  _override_datamode = SPI_MODE2;
+    _override_datamode = SPI_MODE2;
 #elif defined(__AVR__)
-  _override_datamode = SPI_MODE0;
+    _override_datamode = SPI_MODE0;
 #endif
+  }
 
   return Arduino_TFT::begin(speed);
 }
