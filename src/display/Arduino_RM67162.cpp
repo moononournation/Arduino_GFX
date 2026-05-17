@@ -1,8 +1,8 @@
 #include "Arduino_RM67162.h"
 #include "SPI.h"
 
-Arduino_RM67162::Arduino_RM67162(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips)
-    : Arduino_TFT(bus, rst, r, ips, RM67162_TFTWIDTH, RM67162_TFTHEIGHT, 0, 0, 0, 0)
+Arduino_RM67162::Arduino_RM67162(Arduino_DataBus *bus, int8_t rst, uint8_t r, bool ips, const uint8_t *init_operations, int16_t init_operations_len)
+    : Arduino_TFT(bus, rst, r, ips, RM67162_TFTWIDTH, RM67162_TFTHEIGHT, 0, 0, 0, 0), _init_operations(init_operations), _init_operations_len(init_operations_len)
 {
 }
 
@@ -78,6 +78,13 @@ void Arduino_RM67162::displayOff(void)
   delay(RM67162_SLPIN_DELAY);
 }
 
+void Arduino_RM67162::setBrightness(uint8_t brightness)
+{
+  _bus->beginWrite();
+  _bus->writeC8D8(RM67162_BRIGHTNESS, brightness);
+  _bus->endWrite();
+}
+
 // Companion code to the above tables.  Reads and issues
 // a series of LCD commands stored in PROGMEM byte array.
 void Arduino_RM67162::tftInit()
@@ -99,7 +106,7 @@ void Arduino_RM67162::tftInit()
     delay(RM67162_RST_DELAY);
   }
 
-  _bus->batchOperation(rm67162_init_operations, sizeof(rm67162_init_operations));
+  _bus->batchOperation(_init_operations, _init_operations_len);
 
   invertDisplay(false);
 }

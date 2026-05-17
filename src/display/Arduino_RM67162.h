@@ -52,10 +52,41 @@ static const uint8_t rm67162_init_operations[] = {
     WRITE_C8_D8, RM67162_BRIGHTNESS, 0xBF, // Write Display Brightness   MAX_VAL=0XFF
     END_WRITE};
 
+// SPI-specific init sequence for T-Display S3 AMOLED Plus (RM67162 in SPI mode)
+// Uses 0x75 pixel format (16-bit for SPI) and page register setup
+static const uint8_t rm67162_spi_init_operations[] = {
+    BEGIN_WRITE,
+    WRITE_C8_D8, 0xFE, 0x04,              // SET PAGE3
+    WRITE_C8_D8, 0x6A, 0x00,
+    WRITE_C8_D8, 0xFE, 0x05,              // SET PAGE4
+    WRITE_C8_D8, 0xFE, 0x07,              // SET PAGE6
+    WRITE_C8_D8, 0x07, 0x4F,
+    WRITE_C8_D8, 0xFE, 0x01,              // SET PAGE0
+    WRITE_C8_D8, 0x2A, 0x02,
+    WRITE_C8_D8, 0x2B, 0x73,
+    WRITE_C8_D8, 0xFE, 0x0A,              // SET PAGE9
+    WRITE_C8_D8, 0x29, 0x10,
+    WRITE_C8_D8, 0xFE, 0x00,              // Return to page 0
+    WRITE_C8_D8, RM67162_BRIGHTNESS, 0xBF,
+    WRITE_C8_D8, 0x53, 0x20,
+    WRITE_C8_D8, 0x35, 0x00,
+    WRITE_C8_D8, RM67162_PIXFMT, 0x75,   // Interface Pixel Format 16bit/pixel (SPI)
+    WRITE_C8_D8, 0xC4, 0x80,
+    WRITE_COMMAND_8, RM67162_SLPOUT,      // Sleep Out
+    END_WRITE,
+
+    DELAY, RM67162_SLPOUT_DELAY,
+
+    BEGIN_WRITE,
+    WRITE_COMMAND_8, RM67162_DISPON,      // Display on
+    END_WRITE,
+
+    DELAY, 20};
+
 class Arduino_RM67162 : public Arduino_TFT
 {
 public:
-  Arduino_RM67162(Arduino_DataBus *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0, bool ips = false);
+  Arduino_RM67162(Arduino_DataBus *bus, int8_t rst = GFX_NOT_DEFINED, uint8_t r = 0, bool ips = false, const uint8_t *init_operations = rm67162_init_operations, int16_t init_operations_len = sizeof(rm67162_init_operations));
 
   bool begin(int32_t speed = GFX_NOT_DEFINED) override;
 
@@ -66,9 +97,12 @@ public:
   void invertDisplay(bool) override;
   void displayOn() override;
   void displayOff() override;
+  void setBrightness(uint8_t brightness);
 
 protected:
   void tftInit() override;
 
 private:
+  const uint8_t *_init_operations;
+  int16_t _init_operations_len;
 };
