@@ -37,6 +37,7 @@
 // #define LILYGO_T_DISPLAY_S3
 // #define LILYGO_T_Display_S3_AMOLED
 // #define LILYGO_T_Display_S3_AMOLED_1_64
+// #define LILYGO_T_Display_S3_AMOLED_PLUS
 // #define LILYGO_T_Display_S3_LONG
 // #define LILYGO_T_DISPLAY_S3_PRO
 // #define LILYGO_T_QT_PRO
@@ -655,6 +656,19 @@ Arduino_GFX *g = new Arduino_CO5300(
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(
     280 /* width */, 456 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
+
+#elif defined(LILYGO_T_Display_S3_AMOLED_PLUS)
+#define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3_AMOLED_PLUS
+// GPIO 38 = PMICEnPins: must be HIGH to power the display
+#define DEV_DEVICE_INIT()                    \
+    {                                        \
+        pinMode(38 /* PMIC_EN */, OUTPUT);   \
+        digitalWrite(38 /* PMIC_EN */, HIGH); \
+        delay(100);                          \
+    }
+// T-Display S3 AMOLED Plus: RM67162 over SPI (DC=7, CS=6, SCK=47, MOSI=18, RST=17)
+Arduino_DataBus *bus = new Arduino_ESP32SPI(7 /* DC */, 6 /* CS */, 47 /* SCK */, 18 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_RM67162(bus, 17 /* RST */, 0 /* rotation */, false /* IPS */, rm67162_spi_init_operations, sizeof(rm67162_spi_init_operations));
 
 #elif defined(LILYGO_T_Display_S3_LONG)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3_LONG
