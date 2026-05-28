@@ -131,10 +131,10 @@ void Arduino_SSD1351::invertDisplay(bool i)
 
 void Arduino_SSD1351::displayOn(void)
 {
-  _bus->sendCommand(SSD1351_DISPLAYALLON);
+  _bus->sendCommand(SSD1351_DISPLAYON);
 }
 
 void Arduino_SSD1351::displayOff(void)
 {
-  _bus->sendCommand(SSD1351_DISPLAYALLOFF);
+  _bus->sendCommand(SSD1351_DISPLAYOFF);
 }
