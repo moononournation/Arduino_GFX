@@ -94,6 +94,7 @@
 #include "display/Arduino_SSD1306.h"
 #include "display/Arduino_SSD1331.h"
 #include "display/Arduino_SSD1351.h"
+#include "display/Arduino_SSD1357.h"
 #include "display/Arduino_ST7735.h"
 #include "display/Arduino_ST7789.h"
 #include "display/Arduino_ST77916.h"
