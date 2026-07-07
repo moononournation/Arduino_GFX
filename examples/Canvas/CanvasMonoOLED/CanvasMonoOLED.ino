@@ -62,7 +62,7 @@ void loop()
 {
   gfx->fillScreen(RGB565_BLACK);
   gfx->setCursor(random(gfx->width()), random(gfx->height()));
-  gfx->setTextSize(random(4) /* x scale */, random(4) /* y scale */, random(2) /* pixel_margin */);
+  gfx->setTextSize(random(4) + 1 /* x scale */, random(4) + 1 /* y scale */, random(2) /* pixel_margin */);
   gfx->println("Hello World!");
 #ifdef CANVAS
   gfx->flush();
