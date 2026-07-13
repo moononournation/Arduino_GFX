@@ -2219,12 +2219,12 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
       for (int8_t i = 0; i < 5; ++i, ++curX) // Char bitmap = 5 columns
       {
         uint8_t line = pgm_read_byte(&font[c * 5 + i]);
-        if (curX <= _max_text_x)
+        if ((curX >= _min_text_x) && (curX <= _max_text_x))
         {
           curY = y;
           for (int8_t j = 0; j < 8; ++j, ++curY, line >>= 1)
           {
-            if (curY <= _max_text_y)
+            if ((curY >= _min_text_y) && (curY <= _max_text_y))
             {
               if (line & 1)
               {
