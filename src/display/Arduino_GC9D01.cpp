@@ -44,13 +44,13 @@ void Arduino_GC9D01::setRotation(uint8_t r)
   switch (_rotation % 4)
   {
     case 1: // Landscape (Portrait + 90°)
-    r = GC9D01_MADCTL_MX | GC9D01_MADCTL_MV | GC9D01_MADCTL_BGR;
+    r = GC9D01_MADCTL_MX | GC9D01_MADCTL_MY | GC9D01_MADCTL_MV | GC9D01_MADCTL_ML | GC9D01_MADCTL_BGR;
     break;
   case 2: // Inverter Portrait
     r = GC9D01_MADCTL_MX | GC9D01_MADCTL_MY | GC9D01_MADCTL_BGR;
     break;
   case 3: // Inverted Landscape
-    r = GC9D01_MADCTL_MV | GC9D01_MADCTL_MY | GC9D01_MADCTL_BGR;
+    r = GC9D01_MADCTL_MV | GC9D01_MADCTL_ML | GC9D01_MADCTL_BGR;
     break;
   default: // case 0: (Portrait)
     r = GC9D01_MADCTL_BGR;
