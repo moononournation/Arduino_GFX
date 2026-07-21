@@ -52,6 +52,7 @@
 // #define XIAO_ESP32C3_ROUND_DISPLAY
 // #define XIAO_ESP32S3_ROUND_DISPLAY
 // #define WAVESHARE_ESP32_C5_LCD_1_47
+// #define WAVESHARE_ESP32_TOUCH_LCD_2_8
 // #define WAVESHARE_ESP32_C6_LCD_1_47
 // #define WAVESHARE_ESP32_C6_LCD_1_9
 // #define WAVESHARE_ESP32_S3_LCD_1_3
@@ -275,10 +276,10 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 #elif defined(ESP32_C3_OLED_12864)
 #define GFX_DEV_DEVICE ESP32_C3_OLED_12864
 #include <Wire.h>
-#define DEV_DEVICE_INIT()         \
-  {                               \
-    Wire.begin(5 /* SDA */, 6 /* SCL */); \
-  }
+#define DEV_DEVICE_INIT()                     \
+    {                                         \
+        Wire.begin(5 /* SDA */, 6 /* SCL */); \
+    }
 Arduino_DataBus *bus = new Arduino_Wire(0x3C /* i2c_addr */, 0x00 /* commandPrefix */, 0x40 /* dataPrefix */, &Wire /* wire */);
 Arduino_G *g = new Arduino_SSD1306(bus, GFX_NOT_DEFINED /* RST */, 128 /* width */, 64 /* height */);
 #define CANVAS
@@ -287,10 +288,10 @@ Arduino_GFX *gfx = new Arduino_Canvas_Mono(128 /* width */, 64 /* height */, g, 
 #elif defined(ESP32_C3_OLED_7240)
 #define GFX_DEV_DEVICE ESP32_C3_OLED_7240
 #include <Wire.h>
-#define DEV_DEVICE_INIT()         \
-  {                               \
-    Wire.begin(5 /* SDA */, 6 /* SCL */); \
-  }
+#define DEV_DEVICE_INIT()                     \
+    {                                         \
+        Wire.begin(5 /* SDA */, 6 /* SCL */); \
+    }
 Arduino_DataBus *bus = new Arduino_Wire(0x3C /* i2c_addr */, 0x00 /* commandPrefix */, 0x40 /* dataPrefix */, &Wire /* wire */);
 Arduino_G *g = new Arduino_SSD1306(bus, GFX_NOT_DEFINED /* RST */, 72 /* width */, 40 /* height */);
 #define CANVAS
@@ -551,18 +552,18 @@ Arduino_GFX *gfx = new Arduino_ST77916(bus, 47 /* RST */, 0 /* rotation */, true
 #define RGB_PANEL
 
 Arduino_ESP32DSIPanel *bus = new Arduino_ESP32DSIPanel(
-     12  /* hsync_pulse_width */, 42  /* hsync_back_porch */, 42  /* hsync_front_porch */,
-    2   /* vsync_pulse_width */, 8   /* vsync_back_porch */, 166 /* vsync_front_porch */,
+    12 /* hsync_pulse_width */, 42 /* hsync_back_porch */, 42 /* hsync_front_porch */,
+    2 /* vsync_pulse_width */, 8 /* vsync_back_porch */, 166 /* vsync_front_porch */,
     34000000 /* prefer_speed - 34 MHz conforme configuração do projeto */);
 
-    Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
-    480 /* width */, 
-    800 /* height */, 
-    bus, 
-    0,      // rotation
-    true,   // IPS
-    5,  // RST pin (DISP_RST)
-    st7701_dsi_init_operations, 
+Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
+    480 /* width */,
+    800 /* height */,
+    bus,
+    0,    // rotation
+    true, // IPS
+    5,    // RST pin (DISP_RST)
+    st7701_dsi_init_operations,
     sizeof(st7701_dsi_init_operations) / sizeof(lcd_init_cmd_t));
 
 #elif defined(JC8012P4A1)
@@ -661,11 +662,11 @@ Arduino_Canvas *gfx = new Arduino_Canvas(
 #elif defined(LILYGO_T_Display_S3_AMOLED_PLUS)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3_AMOLED_PLUS
 // GPIO 38 = PMICEnPins: must be HIGH to power the display
-#define DEV_DEVICE_INIT()                    \
-    {                                        \
-        pinMode(38 /* PMIC_EN */, OUTPUT);   \
+#define DEV_DEVICE_INIT()                     \
+    {                                         \
+        pinMode(38 /* PMIC_EN */, OUTPUT);    \
         digitalWrite(38 /* PMIC_EN */, HIGH); \
-        delay(100);                          \
+        delay(100);                           \
     }
 // T-Display S3 AMOLED Plus: RM67162 over SPI (DC=7, CS=6, SCK=47, MOSI=18, RST=17)
 Arduino_DataBus *bus = new Arduino_ESP32SPI(7 /* DC */, 6 /* CS */, 47 /* SCK */, 18 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
@@ -818,6 +819,24 @@ Arduino_DataBus *bus = new Arduino_HWSPI(24 /* DC */, 23 /* CS */, 7 /* SCK */, 
 Arduino_GFX *gfx = new Arduino_ST7789(
     bus, 26 /* RST */, 0 /* rotation */, true /* IPS */, 172 /* width */, 320 /* height */,
     34 /* col offset 1 */, 0 /* row offset 1 */, 34 /* col offset 2 */, 0 /* row offset 2 */);
+
+#elif defined(WAVESHARE_ESP32_TOUCH_LCD_2_8)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_TOUCH_LCD_2_8
+// Board_IO source: https://github.com/waveshareteam/ESP32-C5-Touch-LCD-2.8/tree/main/example/Arduino-v3.3.10/example/06_lvgl_demo
+#include "Board_IO.h"
+#define DEV_DEVICE_INIT()                                       \
+    {                                                           \
+        pinMode(23 /* SD_CS */, OUTPUT);                        \
+        digitalWrite(23 /* SD_CS */, HIGH);                     \
+        if (!Board_IO_Init(Wire))                               \
+        {                                                       \
+            Serial.println("CH32V003 IO expander init failed"); \
+        }                                                       \
+        Board_LCD_Reset();                                      \
+        Board_SetBacklight(100);                                \
+    }
+Arduino_DataBus *bus = new Arduino_HWSPI(9 /* DC */, 10 /* CS */, 6 /* SCK */, 7 /* MOSI */, 8 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(WAVESHARE_ESP32_C6_LCD_1_47)
 #define GFX_DEV_DEVICE WAVESHARE_ESP32_C6_LCD_1_47
