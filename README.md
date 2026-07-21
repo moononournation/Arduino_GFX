@@ -353,6 +353,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 - [Makerfabs ESP32-S3 TFT 4.3" v1.3](https://www.makerfabs.com/esp32-s3-parallel-tft-with-touch-4-3-inch.html) [[demo video](https://youtu.be/oQ57L2gTHoo)]
 - [Odroid Go](https://www.hardkernel.com/shop/odroid-go/)
 - [seeed studio Wio Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
+- [Waveshare ESP32-C5-LCD-1.47](https://www.waveshare.com/esp32-c5-lcd-1.47.htm?&aff_id=moononournation)
 - [Waveshare ESP32-C6-LCD-1.47](https://www.waveshare.com/esp32-c6-lcd-1.47.htm?&aff_id=moononournation)
 - [Waveshare ESP32-C6-LCD-1.9](https://www.waveshare.com/esp32-c6-lcd-1.9.htm?&aff_id=moononournation)[[demo video](https://youtube.com/shorts/OryF57VqufY?feature=share)]
 - [Waveshare ESP32-S3 1.46inch Round Display Development Board](https://www.waveshare.com/esp32-s3-touch-lcd-1.46b.htm?&aff_id=moononournation) [[demo video](https://youtube.com/shorts/tqyqxdRA550)]

@@ -51,6 +51,7 @@
 // #define XIAO_SAMD21_ROUND_DISPLAY
 // #define XIAO_ESP32C3_ROUND_DISPLAY
 // #define XIAO_ESP32S3_ROUND_DISPLAY
+// #define WAVESHARE_ESP32_C5_LCD_1_47
 // #define WAVESHARE_ESP32_C6_LCD_1_47
 // #define WAVESHARE_ESP32_C6_LCD_1_9
 // #define WAVESHARE_ESP32_S3_LCD_1_3
@@ -804,6 +805,19 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
     0 /* de_idle_high */, 0 /* pclk_idle_high */, 0 /* bounce_buffer_size_px */);
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
+
+#elif defined(WAVESHARE_ESP32_C5_LCD_1_47)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_C5_LCD_1_47
+#define DEV_DEVICE_INIT()                  \
+    {                                      \
+        pinMode(4 /* SD_CS */, OUTPUT);    \
+        digitalWrite(4 /* SD_CS */, HIGH); \
+    }
+#define GFX_BL 10
+Arduino_DataBus *bus = new Arduino_HWSPI(24 /* DC */, 23 /* CS */, 7 /* SCK */, 6 /* MOSI */, 5 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(
+    bus, 26 /* RST */, 0 /* rotation */, true /* IPS */, 172 /* width */, 320 /* height */,
+    34 /* col offset 1 */, 0 /* row offset 1 */, 34 /* col offset 2 */, 0 /* row offset 2 */);
 
 #elif defined(WAVESHARE_ESP32_C6_LCD_1_47)
 #define GFX_DEV_DEVICE WAVESHARE_ESP32_C6_LCD_1_47
