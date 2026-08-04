@@ -81,7 +81,7 @@ void loop()
   gfx->fillRect(18, 18, 116, 86, RGB565_BLACK);
   gfx->setCursor(30, 18);
   gfx->setTextColor(random(0xffff), random(0xffff));
-  gfx->setTextSize(random(6) /* x scale */, random(6) /* y scale */, random(2) /* pixel_margin */);
+  gfx->setTextSize(random(6) + 1 /* x scale */, random(6) + 1 /* y scale */, random(2) /* pixel_margin */);
   gfx->println("Arduino has over the years released over 100 hardware products: boards, shields, carriers, kits and other accessories. In this page, you will find an overview of all active Arduino hardware, including the Nano, MKR and Classic families.");
 
   delay(1000); // 1 second

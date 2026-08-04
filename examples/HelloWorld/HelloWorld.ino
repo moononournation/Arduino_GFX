@@ -76,7 +76,7 @@ void loop()
 {
   gfx->setCursor(random(gfx->width()), random(gfx->height()));
   gfx->setTextColor(random(0xffff), random(0xffff));
-  gfx->setTextSize(random(6) /* x scale */, random(6) /* y scale */, random(2) /* pixel_margin */);
+  gfx->setTextSize(random(6) + 1 /* x scale */, random(6) + 1 /* y scale */, random(2) /* pixel_margin */);
   gfx->println("Hello World!");
 
   delay(1000); // 1 second
