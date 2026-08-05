@@ -44,6 +44,10 @@ public:
 
   uint16_t *getFrameBuffer();
 
+  // Sends a DCS/MIPI command (optionally with parameters) to the panel after begin(), so it can control brightness if applicable
+  // Returns false when called before begin(), i.e. no io handle yet.
+  bool writeCommand(uint8_t cmd, const uint8_t *data = nullptr, size_t data_bytes = 0);
+
 protected:
 private:
   uint32_t _hsync_pulse_width;
@@ -56,6 +60,7 @@ private:
   uint32_t _lane_bit_rate; // 新增成员变量
 
   esp_lcd_panel_handle_t _panel_handle = NULL;
+  esp_lcd_panel_io_handle_t _io_handle = NULL;
 };
 
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32P4)

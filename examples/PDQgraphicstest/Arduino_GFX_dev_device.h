@@ -40,6 +40,8 @@
 // #define LILYGO_T_Display_S3_AMOLED_PLUS
 // #define LILYGO_T_Display_S3_LONG
 // #define LILYGO_T_DISPLAY_S3_PRO
+// #define LILYGO_T_DISPLAY_P4_TFT
+// #define LILYGO_T_DISPLAY_P4_AMOLED
 // #define LILYGO_T_QT_PRO
 // #define LILYGO_T_RGB
 // #define LILYGO_T_TRACK
@@ -697,6 +699,92 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(9 /* DC */, 39 /* CS */, 18 /* SCK *
 Arduino_GFX *gfx = new Arduino_ST7796(
     bus, 47 /* RST */, 0 /* rotation */, true /* IPS */, 222 /* width */, 480 /* height */,
     49 /* col offset 1 */, 0 /* row offset 1 */, 49 /* col offset 2 */, 0 /* row offset 2 */);
+
+#elif LILYGO_T_DISPLAY_P4_TFT
+#define GFX_DEV_DEVICE LILYGO_T_DISPLAY_P4_TFT
+#define GFX_BL 51
+#define DSI_PANEL
+Arduino_ESP32DSIPanel *dsipanel = new Arduino_ESP32DSIPanel(
+    28 /* hsync_pulse_width */, 26 /* hsync_back_porch */, 20 /* hsync_front_porch */,
+    2 /* vsync_pulse_width */, 22 /*vsync_back_porch  */, 200 /* vsync_front_porch */,
+    60000000 /* prefer_speed */);
+Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
+    540 /* width */, 1168 /* height */, dsipanel, 0 /* rotation */, true /* auto_flush */,
+    GFX_NOT_DEFINED /* RST */, hi8561_init_operations, sizeof(hi8561_init_operations) / sizeof(lcd_init_cmd_t));
+
+// Needs https://github.com/lewisxhe/SensorLib
+#include "IoExpanderXL9555.hpp"
+IoExpanderXL9555 io;
+enum : uint8_t {
+    XL_POWER_EN_3V3 = 0,     // kIo0  - active LOW
+    XL_SCREEN_RST = 2,       // kIo2
+};
+#define DEV_DEVICE_INIT()                                    \
+    {                                                        \
+        Wire.begin(7, 8);                                    \
+        const uint8_t chip_address = XL9555_UNKNOWN_ADDRESS; \
+        io.begin(Wire, chip_address, 7, 8);                  \
+        io.configPins(IoExpanderXL9555::PORT_ALL, INPUT);    \
+        io.pinMode(XL_POWER_EN_3V3, OUTPUT);                 \
+        io.pinMode(XL_SCREEN_RST, OUTPUT);                   \
+        io.digitalWrite(XL_POWER_EN_3V3, LOW);               \
+        delay(10);                                           \
+        io.digitalWrite(XL_POWER_EN_3V3, HIGH);              \
+        delay(500);                                          \
+        io.digitalWrite(XL_POWER_EN_3V3, LOW);               \
+        delay(10);                                           \
+        io.digitalWrite(XL_SCREEN_RST, HIGH);                \
+        delay(10);                                           \
+        io.digitalWrite(XL_SCREEN_RST, LOW);                 \
+        delay(10);                                           \
+        io.digitalWrite(XL_SCREEN_RST, HIGH);                \
+        delay(120);                                          \
+    }
+
+#elif LILYGO_T_DISPLAY_P4_AMOLED
+#define DSI_PANEL
+Arduino_ESP32DSIPanel *dsipanel = new Arduino_ESP32DSIPanel(
+    50 /* hsync_pulse_width */, 150 /* hsync_back_porch */, 50 /* hsync_front_porch */,
+    40 /* vsync_pulse_width */, 120 /*vsync_back_porch  */, 80 /* vsync_front_porch */,
+    60000000 /* prefer_speed */);
+Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
+    568 /* width */, 1232 /* height */, dsipanel, 0 /* rotation */, true /* auto_flush */,
+    GFX_NOT_DEFINED /* RST */, rm69a10_amoled_init_operations, sizeof(rm69a10_amoled_init_operations) / sizeof(lcd_init_cmd_t));
+
+// Example function to change brightness, values from 0 to 255
+void setBrightness(uint8_t bright) {
+    if(dsipanel == nullptr) return;
+    dsipanel->writeCommand(0x51, bright, 1);
+}
+
+// Needs `SensorLib` -> https://github.com/lewisxhe/SensorLib
+#include "IoExpanderXL9555.hpp"
+IoExpanderXL9555 io;
+enum : uint8_t {
+    XL_POWER_EN_3V3 = 0,     // kIo0  - active LOW
+    XL_SCREEN_RST = 2,       // kIo2
+};
+#define DEV_DEVICE_INIT()                                    \
+    {                                                        \
+        Wire.begin(7, 8);                                    \
+        const uint8_t chip_address = XL9555_UNKNOWN_ADDRESS; \
+        io.begin(Wire, chip_address, 7, 8);                  \
+        io.configPins(IoExpanderXL9555::PORT_ALL, INPUT);    \
+        io.pinMode(XL_POWER_EN_3V3, OUTPUT);                 \
+        io.pinMode(XL_SCREEN_RST, OUTPUT);                   \
+        io.digitalWrite(XL_POWER_EN_3V3, LOW);               \
+        delay(10);                                           \
+        io.digitalWrite(XL_POWER_EN_3V3, HIGH);              \
+        delay(500);                                          \
+        io.digitalWrite(XL_POWER_EN_3V3, LOW);               \
+        delay(10);                                           \
+        io.digitalWrite(XL_SCREEN_RST, HIGH);                \
+        delay(10);                                           \
+        io.digitalWrite(XL_SCREEN_RST, LOW);                 \
+        delay(10);                                           \
+        io.digitalWrite(XL_SCREEN_RST, HIGH);                \
+        delay(120);                                          \
+    }
 
 #elif defined(LILYGO_T_QT_PRO)
 #define GFX_DEV_DEVICE LILYGO_T_QT_PRO
