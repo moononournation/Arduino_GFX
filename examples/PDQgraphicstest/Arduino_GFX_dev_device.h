@@ -700,7 +700,7 @@ Arduino_GFX *gfx = new Arduino_ST7796(
     bus, 47 /* RST */, 0 /* rotation */, true /* IPS */, 222 /* width */, 480 /* height */,
     49 /* col offset 1 */, 0 /* row offset 1 */, 49 /* col offset 2 */, 0 /* row offset 2 */);
 
-#elif LILYGO_T_DISPLAY_P4_TFT
+#elif defined(LILYGO_T_DISPLAY_P4_TFT)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_P4_TFT
 #define GFX_BL 51
 #define DSI_PANEL
@@ -741,7 +741,8 @@ enum : uint8_t {
         delay(120);                                          \
     }
 
-#elif LILYGO_T_DISPLAY_P4_AMOLED
+#elif defined(LILYGO_T_DISPLAY_P4_AMOLED)
+#define GFX_DEV_DEVICE LILYGO_T_DISPLAY_P4_AMOLED
 #define DSI_PANEL
 Arduino_ESP32DSIPanel *dsipanel = new Arduino_ESP32DSIPanel(
     50 /* hsync_pulse_width */, 150 /* hsync_back_porch */, 50 /* hsync_front_porch */,
