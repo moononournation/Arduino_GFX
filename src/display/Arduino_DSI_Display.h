@@ -589,6 +589,10 @@ public:
   void draw16bitBeRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
   void flush(bool force_flush = false) override;
 
+
+  void startWrite(void) override;
+  void endWrite(void) override;
+
   void drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, uint8_t *cbData, uint8_t *crData, int16_t w, int16_t h);
   uint16_t *getFramebuffer();
 
@@ -605,6 +609,11 @@ protected:
   uint8_t COL_OFFSET2, ROW_OFFSET2;
   uint8_t _xStart, _yStart;
   uint16_t _fb_width, _fb_height, _fb_max_x, _fb_max_y;
+
+  void _dirty(const void *ptr, size_t bytes);
+  uint16_t _write_depth = 0;
+  int32_t _dirty_begin = -1;  // byte offsets into _framebuffer, -1 when empty
+  int32_t _dirty_end = -1;
 
 private:
 };

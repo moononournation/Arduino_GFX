@@ -755,7 +755,7 @@ Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
 // Example function to change brightness, values from 0 to 255
 void setBrightness(uint8_t bright) {
     if(dsipanel == nullptr) return;
-    dsipanel->writeCommand(0x51, bright, 1);
+    dsipanel->writeCommand(0x51, &bright, 1);
 }
 
 // Needs `SensorLib` -> https://github.com/lewisxhe/SensorLib
