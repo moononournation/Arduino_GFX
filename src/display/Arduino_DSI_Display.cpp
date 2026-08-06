@@ -63,7 +63,7 @@ void Arduino_DSI_Display::writePixelPreclipped(int16_t x, int16_t y, uint16_t co
     *fb = color;
     if (_auto_flush)
     {
-      esp_cache_msync(fb, 2, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+      _dirty(fb, 2);
     }
     break;
   case 2:
@@ -72,7 +72,7 @@ void Arduino_DSI_Display::writePixelPreclipped(int16_t x, int16_t y, uint16_t co
     *fb = color;
     if (_auto_flush)
     {
-      esp_cache_msync(fb, 2, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+      _dirty(fb, 2);
     }
     break;
   case 3:
@@ -81,7 +81,7 @@ void Arduino_DSI_Display::writePixelPreclipped(int16_t x, int16_t y, uint16_t co
     *fb = color;
     if (_auto_flush)
     {
-      esp_cache_msync(fb, 2, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+      _dirty(fb, 2);
     }
     break;
   default: // case 0:
@@ -90,7 +90,7 @@ void Arduino_DSI_Display::writePixelPreclipped(int16_t x, int16_t y, uint16_t co
     *fb = color;
     if (_auto_flush)
     {
-      esp_cache_msync(fb, 2, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+      _dirty(fb, 2);
     }
   }
 }
@@ -150,7 +150,7 @@ void Arduino_DSI_Display::writeFastVLineCore(int16_t x, int16_t y,
           while (h--)
           {
             *fb = color;
-            esp_cache_msync(fb, 2, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+            _dirty(fb, 2);
             fb += _fb_width;
           }
         }
@@ -225,7 +225,7 @@ void Arduino_DSI_Display::writeFastHLineCore(int16_t x, int16_t y,
         }
         if (_auto_flush)
         {
-          esp_cache_msync(cachePos, writeSize, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+          _dirty(cachePos, writeSize);
         }
       }
     }
@@ -278,7 +278,7 @@ void Arduino_DSI_Display::writeFillRectPreclipped(int16_t x, int16_t y,
   }
   if (_auto_flush)
   {
-    esp_cache_msync(cachePos, _fb_width * h * 2, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+    _dirty(cachePos, _fb_width * h * 2);
   }
 }
 
@@ -341,7 +341,7 @@ void Arduino_DSI_Display::drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitma
       }
       if (_auto_flush)
       {
-        esp_cache_msync(cachePos, _fb_width * h * 2, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+        _dirty(cachePos, _fb_width * h * 2);
       }
     }
   }
@@ -409,7 +409,7 @@ void Arduino_DSI_Display::draw16bitRGBBitmap(int16_t x, int16_t y,
         cachePos = _framebuffer + (y * _fb_width) + x;
         cache_size = (_fb_width * (h - 1) + w) * 2;
       }
-      esp_cache_msync(cachePos, cache_size, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+      _dirty(cachePos, cache_size);
     }
   }
 }
@@ -476,7 +476,7 @@ void Arduino_DSI_Display::draw16bitBeRGBBitmap(int16_t x, int16_t y,
       }
       if (_auto_flush)
       {
-        esp_cache_msync(cachePos, _fb_width * h * 2, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+        _dirty(cachePos, _fb_width * h * 2);
       }
     }
   }
@@ -541,7 +541,7 @@ void Arduino_DSI_Display::drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, 
     }
     if (_auto_flush)
     {
-      esp_cache_msync(cachePos, _fb_width * h * 2, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+      _dirty(cachePos, _fb_width * h * 2);
     }
   }
 }
@@ -549,6 +549,62 @@ void Arduino_DSI_Display::drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, 
 uint16_t *Arduino_DSI_Display::getFramebuffer()
 {
   return _framebuffer;
+}
+
+void Arduino_DSI_Display::_dirty(const void *ptr, size_t bytes)
+{
+  if (!_auto_flush)
+  {
+    return;  // caller drives flush() itself
+  }
+  if (_write_depth == 0)
+  {
+    // Not inside a transaction: preserve the immediate-write contract.
+    esp_cache_msync((void *)ptr, bytes, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+    return;
+  }
+  const int32_t lo = (int32_t)((const uint8_t *)ptr - (const uint8_t *)_framebuffer);
+  const int32_t hi = lo + (int32_t)bytes;
+  if (_dirty_begin < 0)
+  {
+    _dirty_begin = lo;
+    _dirty_end = hi;
+  }
+  else
+  {
+    if (lo < _dirty_begin)
+    {
+      _dirty_begin = lo;
+    }
+    if (hi > _dirty_end)
+    {
+      _dirty_end = hi;
+    }
+  }
+}
+
+void Arduino_DSI_Display::startWrite(void)
+{
+  if (_write_depth++ == 0)
+  {
+    _dirty_begin = -1;
+    _dirty_end = -1;
+  }
+}
+
+void Arduino_DSI_Display::endWrite(void)
+{
+  if (_write_depth == 0)
+  {
+    return;  // unbalanced call, nothing pending
+  }
+  if ((--_write_depth == 0) && (_dirty_begin >= 0) && (_dirty_end > _dirty_begin))
+  {
+    esp_cache_msync((uint8_t *)_framebuffer + _dirty_begin,
+                    (size_t)(_dirty_end - _dirty_begin), ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
+    _dirty_begin = -1;
+    _dirty_end = -1;
+  }
 }
 
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32P4)

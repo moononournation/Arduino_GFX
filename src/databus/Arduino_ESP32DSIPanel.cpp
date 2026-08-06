@@ -54,6 +54,7 @@ bool Arduino_ESP32DSIPanel::begin(int16_t w, int16_t h, int32_t speed, const lcd
   };
   esp_lcd_panel_io_handle_t io_handle = NULL;
   ESP_ERROR_CHECK(esp_lcd_new_panel_io_dbi(mipi_dsi_bus, &dbi_config, &io_handle));
+  _io_handle = io_handle;
 
   esp_lcd_dpi_panel_config_t dpi_config = {
       .virtual_channel = 0,
@@ -103,6 +104,12 @@ uint16_t *Arduino_ESP32DSIPanel::getFrameBuffer()
   ESP_ERROR_CHECK(esp_lcd_dpi_panel_get_frame_buffer(_panel_handle, 1, &frame_buffer));
 
   return ((uint16_t *)frame_buffer);
+}
+
+bool Arduino_ESP32DSIPanel::writeCommand(uint8_t cmd, const uint8_t *data, size_t data_bytes)
+{
+  if (_io_handle == NULL) return false;
+  return esp_lcd_panel_io_tx_param(_io_handle, cmd, data, data_bytes) == ESP_OK;
 }
 
 #endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32P4)
