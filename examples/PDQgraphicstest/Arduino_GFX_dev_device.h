@@ -64,6 +64,8 @@
 // #define WAVESHARE_ESP32_S3_LCD_1_46
 // #define WAVESHARE_ESP32_S3_LCD_1_47
 // #define WAVESHARE_ESP32_S3_LCD_2_8
+// #define WAVESHARE_ESP32_S3_LCD_DRIVER_BOARD_1024
+// #define WAVESHARE_ESP32_S3_LCD_DRIVER_BOARD_480
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_64
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_8
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
@@ -140,9 +142,9 @@ Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
 #elif defined(ELECROW_CROWPANEL_ADVANCED_7_P4)
 #define GFX_DEV_DEVICE ELECROW_CROWPANEL_ADVANCED_7_P4
 #define GFX_BL 31 // LCD_BK_EN: boost converter enable, PWM-dimmable
-#define DEV_DEVICE_INIT()                                                                 \
-    {                                                                                     \
-        pinMode(29 /* LCD_BK_POWER */, OUTPUT);                                           \
+#define DEV_DEVICE_INIT()                                                                            \
+    {                                                                                                \
+        pinMode(29 /* LCD_BK_POWER */, OUTPUT);                                                      \
         digitalWrite(29 /* LCD_BK_POWER */, LOW); /* enable boost VIN before GFX_BL does anything */ \
     }
 #define DSI_PANEL
@@ -309,7 +311,6 @@ Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
 
 Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
     800 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */);
-
 
 #elif defined(ESP32_C3_OLED_12864)
 #define GFX_DEV_DEVICE ESP32_C3_OLED_12864
@@ -751,9 +752,10 @@ Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
 // Needs https://github.com/lewisxhe/SensorLib
 #include "IoExpanderXL9555.hpp"
 IoExpanderXL9555 io;
-enum : uint8_t {
-    XL_POWER_EN_3V3 = 0,     // kIo0  - active LOW
-    XL_SCREEN_RST = 2,       // kIo2
+enum : uint8_t
+{
+    XL_POWER_EN_3V3 = 0, // kIo0  - active LOW
+    XL_SCREEN_RST = 2,   // kIo2
 };
 #define DEV_DEVICE_INIT()                                    \
     {                                                        \
@@ -789,17 +791,20 @@ Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
     GFX_NOT_DEFINED /* RST */, rm69a10_amoled_init_operations, sizeof(rm69a10_amoled_init_operations) / sizeof(lcd_init_cmd_t));
 
 // Example function to change brightness, values from 0 to 255
-void setBrightness(uint8_t bright) {
-    if(dsipanel == nullptr) return;
+void setBrightness(uint8_t bright)
+{
+    if (dsipanel == nullptr)
+        return;
     dsipanel->writeCommand(0x51, &bright, 1);
 }
 
 // Needs `SensorLib` -> https://github.com/lewisxhe/SensorLib
 #include "IoExpanderXL9555.hpp"
 IoExpanderXL9555 io;
-enum : uint8_t {
-    XL_POWER_EN_3V3 = 0,     // kIo0  - active LOW
-    XL_SCREEN_RST = 2,       // kIo2
+enum : uint8_t
+{
+    XL_POWER_EN_3V3 = 0, // kIo0  - active LOW
+    XL_SCREEN_RST = 2,   // kIo2
 };
 #define DEV_DEVICE_INIT()                                    \
     {                                                        \
@@ -1027,6 +1032,93 @@ Arduino_GFX *gfx = new Arduino_ST7789(
 #define GFX_BL 5
 Arduino_DataBus *bus = new Arduino_HWSPI(41 /* DC */, 42 /* CS */, 40 /* SCK */, 45 /* MOSI */, 46 /* MISO */);
 Arduino_GFX *gfx = new Arduino_ST7789(bus, 39 /* RST */, 0 /* rotation */, true /* IPS */);
+
+#elif defined(WAVESHARE_ESP32_S3_LCD_DRIVER_BOARD_1024)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_LCD_DRIVER_BOARD_1024
+// #define GFX_BL 6
+#define RGB_PANEL
+#include <Wire.h>
+#include <Adafruit_XCA9554.h>
+Adafruit_XCA9554 expander;
+#define DEV_DEVICE_INIT()                             \
+    {                                                 \
+        Wire.begin(15 /* SDA */, 7 /* SCL */);        \
+        expander.begin(0x20);                         \
+        expander.pinMode(0, OUTPUT);                  \
+        expander.pinMode(1, OUTPUT);                  \
+        expander.pinMode(2, OUTPUT);                  \
+        expander.digitalWrite(0, HIGH); /* TP_RST */  \
+        expander.digitalWrite(1, HIGH); /* BL_EN */   \
+        expander.digitalWrite(2, HIGH); /* LCD_RST */ \
+        delay(100);                                   \
+        expander.digitalWrite(0, LOW); /* TP_RST */   \
+        expander.digitalWrite(2, LOW); /* LCD_RST */  \
+        delay(120);                                   \
+        expander.digitalWrite(0, HIGH); /* TP_RST */  \
+        expander.digitalWrite(2, HIGH); /* LCD_RST */ \
+        delay(120);                                   \
+    }
+/* JD9168 1024x768 */
+Arduino_DataBus *bus = new Arduino_SWSPI(
+    99 /* DC, dummy pin to enforce 8-bit SPI */, 42 /* CS */,
+    2 /* SCK */, 1 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+#define RGB_PANEL
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    40 /* DE */, 39 /* VSYNC */, 38 /* HSYNC */, 41 /* PCLK */,
+    46 /* R0 */, 3 /* R1 */, 8 /* R2 */, 18 /* R3 */, 17 /* R4 */,
+    14 /* G0 */, 13 /* G1 */, 12 /* G2 */, 11 /* G3 */, 10 /* G4 */, 9 /* G5 */,
+    5 /* B0 */, 45 /* B1 */, 48 /* B2 */, 47 /* B3 */, 21 /* B4 */,
+    1 /* hsync_polarity */, 40 /* hsync_front_porch */, 10 /* hsync_pulse_width */, 40 /* hsync_back_porch */,
+    1 /* vsync_polarity */, 12 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 21 /* vsync_back_porch */,
+    0 /* pclk_active_neg */, 16000000 /* prefer_speed */, false /* useBigEndian */,
+    0 /* de_idle_high */, 0 /* pclk_idle_high */, 0 /* bounce_buffer_size_px */);
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+    1024 /* width */, 768 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
+    bus, GFX_NOT_DEFINED /* RST */, jd9168_1024_init_operations, sizeof(jd9168_1024_init_operations));
+
+#elif defined(WAVESHARE_ESP32_S3_LCD_DRIVER_BOARD_480)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_LCD_DRIVER_BOARD_480
+// #define GFX_BL 6
+#define RGB_PANEL
+#include <Wire.h>
+#include <Adafruit_XCA9554.h>
+Adafruit_XCA9554 expander;
+#define DEV_DEVICE_INIT()                             \
+    {                                                 \
+        Wire.begin(15 /* SDA */, 7 /* SCL */);        \
+        expander.begin(0x20);                         \
+        expander.pinMode(0, OUTPUT);                  \
+        expander.pinMode(1, OUTPUT);                  \
+        expander.pinMode(2, OUTPUT);                  \
+        expander.digitalWrite(0, HIGH); /* TP_RST */  \
+        expander.digitalWrite(1, HIGH); /* BL_EN */   \
+        expander.digitalWrite(2, HIGH); /* LCD_RST */ \
+        delay(100);                                   \
+        expander.digitalWrite(0, LOW); /* TP_RST */   \
+        expander.digitalWrite(2, LOW); /* LCD_RST */  \
+        delay(120);                                   \
+        expander.digitalWrite(0, HIGH); /* TP_RST */  \
+        expander.digitalWrite(2, HIGH); /* LCD_RST */ \
+        delay(120);                                   \
+    }
+
+/* GC9503V 480x480 */
+Arduino_DataBus *bus = new Arduino_SWSPI(
+    GFX_NOT_DEFINED /* DC */, 42 /* CS */,
+    2 /* SCK */, 1 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+#define RGB_PANEL
+Arduino_ESP32RGBPanel *rgbpanel = new Arduino_ESP32RGBPanel(
+    40 /* DE */, 39 /* VSYNC */, 38 /* HSYNC */, 41 /* PCLK */,
+    46 /* R0 */, 3 /* R1 */, 8 /* R2 */, 18 /* R3 */, 17 /* R4 */,
+    14 /* G0 */, 13 /* G1 */, 12 /* G2 */, 11 /* G3 */, 10 /* G4 */, 9 /* G5 */,
+    5 /* B0 */, 45 /* B1 */, 48 /* B2 */, 47 /* B3 */, 21 /* B4 */,
+    1 /* hsync_polarity */, 10 /* hsync_front_porch */, 8 /* hsync_pulse_width */, 50 /* hsync_back_porch */,
+    1 /* vsync_polarity */, 10 /* vsync_front_porch */, 8 /* vsync_pulse_width */, 20 /* vsync_back_porch */,
+    0 /* pclk_active_neg */, 12000000 /* prefer_speed */, false /* useBigEndian */,
+    0 /* de_idle_high */, 0 /* pclk_idle_high */, 0 /* bounce_buffer_size_px */);
+Arduino_RGB_Display *gfx = new Arduino_RGB_Display(
+    480 /* width */, 480 /* height */, rgbpanel, 0 /* rotation */, true /* auto_flush */,
+    bus, GFX_NOT_DEFINED /* RST */, gc9503v_type1_init_operations, sizeof(gc9503v_type1_init_operations));
 
 #elif defined(WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_64)
 #define GFX_DEV_DEVICE WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_64

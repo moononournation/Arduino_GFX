@@ -360,6 +360,8 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 - [Waveshare ESP32-S3 1.46inch Round Display Development Board](https://www.waveshare.com/esp32-s3-touch-lcd-1.46b.htm?&aff_id=moononournation) [[demo video](https://youtube.com/shorts/tqyqxdRA550)]
 - [Waveshare ESP32-S3-Touch-LCD-1.3](https://www.waveshare.com/esp32-s3-lcd-1.3.htm?&aff_id=moononournation) [[demo video](https://youtube.com/shorts/_n3qTa_nVGE)]
 - [Waveshare ESP32-S3-Touch-LCD-1.3 with case and prism cube](https://www.waveshare.com/esp32-s3-lcd-1.3.htm?sku=30559&aff_id=moononournation) [[demo video](https://youtube.com/shorts/tqyqxdRA550)]
+WAVESHARE_ESP32_S3_LCD_DRIVER_BOARD
+- [Waveshare ESP32-S3 RGB LCD Driver Board](https://www.waveshare.com/esp32-s3-lcd-driver-board.htm?&aff_id=moononournation)
 - [Waveshare ESP32-S3-Touch-LCD-2.8](https://www.waveshare.com/esp32-s3-touch-lcd-2.8.htm?&aff_id=moononournation) [[demo video](https://youtube.com/shorts/1RU_EanUgSU)
 - [Waveshare ESP32-S3-Touch-AMOLED-1.64](https://www.waveshare.com/esp32-s3-touch-amoled-1.64.htm?&aff_id=moononournation)[[demo video](https://youtube.com/shorts/aTTQ9PKgESU?feature=share)]
 - [Waveshare ESP32-S3-Touch-AMOLED-1.8](https://www.waveshare.com/esp32-s3-touch-amoled-1.8.htm?&aff_id=moononournation)[[demo video](https://youtube.com/shorts/sHjCoPSsC2Q?feature=share)]
