@@ -70,6 +70,7 @@
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_1_8
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
 // #define WAVESHARE_ESP32_S3_TOUCH_LCD_3_49
+// #define WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_10_1
 // #define WAVESHARE_RP2040_LCD_0_96
 // #define WAVESHARE_RP2040_LCD_1_28 // compatible RP2350-LCD-1.28
 // #define WAVESHARE_RP2350_LCD_1_47
@@ -615,7 +616,7 @@ Arduino_ESP32DSIPanel *dsipanel = new Arduino_ESP32DSIPanel(
     60000000 /* prefer_speed */);
 Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
     800 /* width */, 1280 /* height */, dsipanel, 0 /* rotation */, true /* auto_flush */,
-    27 /* RST */, jd9365_init_operations, sizeof(jd9365_init_operations) / sizeof(lcd_init_cmd_t));
+    27 /* RST */, jd9365_type1_init_operations, sizeof(jd9365_type1_init_operations) / sizeof(lcd_init_cmd_t));
 
 #elif defined(LILYGO_T_DECK)
 #define GFX_DEV_DEVICE LILYGO_T_DECK
@@ -1174,6 +1175,18 @@ Arduino_GFX *g = new Arduino_AXS15231B(
 #define CANVAS
 Arduino_Canvas *gfx = new Arduino_Canvas(
     172 /* width */, 640 /* height */, g, 0 /* output_x */, 0 /* output_y */, 0 /* rotation */);
+
+#elif defined(WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_10_1)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_10_1
+#define GFX_BL 26
+#define DSI_PANEL
+Arduino_ESP32DSIPanel *dsipanel = new Arduino_ESP32DSIPanel(
+    20 /* hsync_pulse_width */, 20 /* hsync_back_porch */, 40 /* hsync_front_porch */,
+    4 /* vsync_pulse_width */, 12 /*vsync_back_porch  */, 30 /* vsync_front_porch */,
+    60000000 /* prefer_speed */);
+Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
+    800 /* width */, 1280 /* height */, dsipanel, 0 /* rotation */, true /* auto_flush */,
+    27 /* RST */, jd9365_type2_init_operations, sizeof(jd9365_type2_init_operations) / sizeof(lcd_init_cmd_t));
 
 #elif defined(WAVESHARE_RP2040_LCD_0_96)
 #define GFX_DEV_DEVICE WAVESHARE_RP2040_LCD_0_96

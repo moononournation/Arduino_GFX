@@ -141,7 +141,7 @@ static const lcd_init_cmd_t jd9165_init_operations[] = {
     {0x29, (uint8_t[]){0x00}, 1, 50},
 };
 
-static const lcd_init_cmd_t jd9365_init_operations[] = {
+static const lcd_init_cmd_t jd9365_type1_init_operations[] = {
     //  {cmd, { data }, data_size, delay_ms}
     {0xE0, (uint8_t[]){0x00}, 1, 0},
     {0xE1, (uint8_t[]){0x93}, 1, 0},
@@ -382,6 +382,236 @@ static const lcd_init_cmd_t jd9365_init_operations[] = {
     {0x35, (uint8_t[]){0x00}, 1, 0},
 };
 
+static const lcd_init_cmd_t jd9365_type2_init_operations[] = {
+    // JD9365 driver preamble: select page 0, RGB565 and two DSI lanes.
+    {0xE0, (uint8_t[]){0x00}, 1, 0},
+    {0x36, (uint8_t[]){0x00}, 1, 0},
+    {0x3A, (uint8_t[]){0x55}, 1, 0},
+    {0x80, (uint8_t[]){0x01}, 1, 0},
+    {0xE0, (uint8_t[]){0x00}, 1, 0},
+    {0xE1, (uint8_t[]){0x93}, 1, 0},
+    {0xE2, (uint8_t[]){0x65}, 1, 0},
+    {0xE3, (uint8_t[]){0xF8}, 1, 0},
+    {0x80, (uint8_t[]){0x01}, 1, 0},
+
+    {0xE0, (uint8_t[]){0x01}, 1, 0},
+    {0x00, (uint8_t[]){0x00}, 1, 0},
+    {0x01, (uint8_t[]){0x38}, 1, 0},
+    {0x03, (uint8_t[]){0x10}, 1, 0},
+    {0x04, (uint8_t[]){0x38}, 1, 0},
+
+    {0x0C, (uint8_t[]){0x74}, 1, 0},
+
+    {0x17, (uint8_t[]){0x00}, 1, 0},
+    {0x18, (uint8_t[]){0xAF}, 1, 0},
+    {0x19, (uint8_t[]){0x00}, 1, 0},
+    {0x1A, (uint8_t[]){0x00}, 1, 0},
+    {0x1B, (uint8_t[]){0xAF}, 1, 0},
+    {0x1C, (uint8_t[]){0x00}, 1, 0},
+
+    {0x35, (uint8_t[]){0x26}, 1, 0},
+
+    {0x37, (uint8_t[]){0x09}, 1, 0},
+
+    {0x38, (uint8_t[]){0x04}, 1, 0},
+    {0x39, (uint8_t[]){0x00}, 1, 0},
+    {0x3A, (uint8_t[]){0x01}, 1, 0},
+    {0x3C, (uint8_t[]){0x78}, 1, 0},
+    {0x3D, (uint8_t[]){0xFF}, 1, 0},
+    {0x3E, (uint8_t[]){0xFF}, 1, 0},
+    {0x3F, (uint8_t[]){0x7F}, 1, 0},
+
+    {0x40, (uint8_t[]){0x06}, 1, 0},
+    {0x41, (uint8_t[]){0xA0}, 1, 0},
+    {0x42, (uint8_t[]){0x81}, 1, 0},
+    {0x43, (uint8_t[]){0x1E}, 1, 0},
+    {0x44, (uint8_t[]){0x0D}, 1, 0},
+    {0x45, (uint8_t[]){0x28}, 1, 0},
+    //{0x4A, (uint8_t[]){0x35}, 1, 0},//bist
+
+    {0x55, (uint8_t[]){0x02}, 1, 0},
+    {0x57, (uint8_t[]){0x69}, 1, 0},
+    {0x59, (uint8_t[]){0x0A}, 1, 0},
+    {0x5A, (uint8_t[]){0x2A}, 1, 0},
+    {0x5B, (uint8_t[]){0x17}, 1, 0},
+
+    {0x5D, (uint8_t[]){0x7F}, 1, 0},
+    {0x5E, (uint8_t[]){0x6A}, 1, 0},
+    {0x5F, (uint8_t[]){0x5B}, 1, 0},
+    {0x60, (uint8_t[]){0x4F}, 1, 0},
+    {0x61, (uint8_t[]){0x4A}, 1, 0},
+    {0x62, (uint8_t[]){0x3D}, 1, 0},
+    {0x63, (uint8_t[]){0x41}, 1, 0},
+    {0x64, (uint8_t[]){0x2A}, 1, 0},
+    {0x65, (uint8_t[]){0x44}, 1, 0},
+    {0x66, (uint8_t[]){0x43}, 1, 0},
+    {0x67, (uint8_t[]){0x44}, 1, 0},
+    {0x68, (uint8_t[]){0x62}, 1, 0},
+    {0x69, (uint8_t[]){0x52}, 1, 0},
+    {0x6A, (uint8_t[]){0x59}, 1, 0},
+    {0x6B, (uint8_t[]){0x4C}, 1, 0},
+    {0x6C, (uint8_t[]){0x48}, 1, 0},
+    {0x6D, (uint8_t[]){0x3A}, 1, 0},
+    {0x6E, (uint8_t[]){0x26}, 1, 0},
+    {0x6F, (uint8_t[]){0x00}, 1, 0},
+    {0x70, (uint8_t[]){0x7F}, 1, 0},
+    {0x71, (uint8_t[]){0x6A}, 1, 0},
+    {0x72, (uint8_t[]){0x5B}, 1, 0},
+    {0x73, (uint8_t[]){0x4F}, 1, 0},
+    {0x74, (uint8_t[]){0x4A}, 1, 0},
+    {0x75, (uint8_t[]){0x3D}, 1, 0},
+    {0x76, (uint8_t[]){0x41}, 1, 0},
+    {0x77, (uint8_t[]){0x2A}, 1, 0},
+    {0x78, (uint8_t[]){0x44}, 1, 0},
+    {0x79, (uint8_t[]){0x43}, 1, 0},
+    {0x7A, (uint8_t[]){0x44}, 1, 0},
+    {0x7B, (uint8_t[]){0x62}, 1, 0},
+    {0x7C, (uint8_t[]){0x52}, 1, 0},
+    {0x7D, (uint8_t[]){0x59}, 1, 0},
+    {0x7E, (uint8_t[]){0x4C}, 1, 0},
+    {0x7F, (uint8_t[]){0x48}, 1, 0},
+    {0x80, (uint8_t[]){0x3A}, 1, 0},
+    {0x81, (uint8_t[]){0x26}, 1, 0},
+    {0x82, (uint8_t[]){0x00}, 1, 0},
+
+    {0xE0, (uint8_t[]){0x02}, 1, 0},
+    {0x00, (uint8_t[]){0x42}, 1, 0},
+    {0x01, (uint8_t[]){0x42}, 1, 0},
+    {0x02, (uint8_t[]){0x40}, 1, 0},
+    {0x03, (uint8_t[]){0x40}, 1, 0},
+    {0x04, (uint8_t[]){0x5E}, 1, 0},
+    {0x05, (uint8_t[]){0x5E}, 1, 0},
+    {0x06, (uint8_t[]){0x5F}, 1, 0},
+    {0x07, (uint8_t[]){0x5F}, 1, 0},
+    {0x08, (uint8_t[]){0x5F}, 1, 0},
+    {0x09, (uint8_t[]){0x57}, 1, 0},
+    {0x0A, (uint8_t[]){0x57}, 1, 0},
+    {0x0B, (uint8_t[]){0x77}, 1, 0},
+    {0x0C, (uint8_t[]){0x77}, 1, 0},
+    {0x0D, (uint8_t[]){0x47}, 1, 0},
+    {0x0E, (uint8_t[]){0x47}, 1, 0},
+    {0x0F, (uint8_t[]){0x45}, 1, 0},
+    {0x10, (uint8_t[]){0x45}, 1, 0},
+    {0x11, (uint8_t[]){0x4B}, 1, 0},
+    {0x12, (uint8_t[]){0x4B}, 1, 0},
+    {0x13, (uint8_t[]){0x49}, 1, 0},
+    {0x14, (uint8_t[]){0x49}, 1, 0},
+    {0x15, (uint8_t[]){0x5F}, 1, 0},
+
+    {0x16, (uint8_t[]){0x41}, 1, 0},
+    {0x17, (uint8_t[]){0x41}, 1, 0},
+    {0x18, (uint8_t[]){0x40}, 1, 0},
+    {0x19, (uint8_t[]){0x40}, 1, 0},
+    {0x1A, (uint8_t[]){0x5E}, 1, 0},
+    {0x1B, (uint8_t[]){0x5E}, 1, 0},
+    {0x1C, (uint8_t[]){0x5F}, 1, 0},
+    {0x1D, (uint8_t[]){0x5F}, 1, 0},
+    {0x1E, (uint8_t[]){0x5F}, 1, 0},
+    {0x1F, (uint8_t[]){0x57}, 1, 0},
+    {0x20, (uint8_t[]){0x57}, 1, 0},
+    {0x21, (uint8_t[]){0x77}, 1, 0},
+    {0x22, (uint8_t[]){0x77}, 1, 0},
+    {0x23, (uint8_t[]){0x46}, 1, 0},
+    {0x24, (uint8_t[]){0x46}, 1, 0},
+    {0x25, (uint8_t[]){0x44}, 1, 0},
+    {0x26, (uint8_t[]){0x44}, 1, 0},
+    {0x27, (uint8_t[]){0x4A}, 1, 0},
+    {0x28, (uint8_t[]){0x4A}, 1, 0},
+    {0x29, (uint8_t[]){0x48}, 1, 0},
+    {0x2A, (uint8_t[]){0x48}, 1, 0},
+    {0x2B, (uint8_t[]){0x5F}, 1, 0},
+
+    {0x2C, (uint8_t[]){0x01}, 1, 0},
+    {0x2D, (uint8_t[]){0x01}, 1, 0},
+    {0x2E, (uint8_t[]){0x00}, 1, 0},
+    {0x2F, (uint8_t[]){0x00}, 1, 0},
+    {0x30, (uint8_t[]){0x1F}, 1, 0},
+    {0x31, (uint8_t[]){0x1F}, 1, 0},
+    {0x32, (uint8_t[]){0x1E}, 1, 0},
+    {0x33, (uint8_t[]){0x1E}, 1, 0},
+    {0x34, (uint8_t[]){0x1F}, 1, 0},
+    {0x35, (uint8_t[]){0x17}, 1, 0},
+    {0x36, (uint8_t[]){0x17}, 1, 0},
+    {0x37, (uint8_t[]){0x37}, 1, 0},
+    {0x38, (uint8_t[]){0x37}, 1, 0},
+    {0x39, (uint8_t[]){0x08}, 1, 0},
+    {0x3A, (uint8_t[]){0x08}, 1, 0},
+    {0x3B, (uint8_t[]){0x0A}, 1, 0},
+    {0x3C, (uint8_t[]){0x0A}, 1, 0},
+    {0x3D, (uint8_t[]){0x04}, 1, 0},
+    {0x3E, (uint8_t[]){0x04}, 1, 0},
+    {0x3F, (uint8_t[]){0x06}, 1, 0},
+    {0x40, (uint8_t[]){0x06}, 1, 0},
+    {0x41, (uint8_t[]){0x1F}, 1, 0},
+
+    {0x42, (uint8_t[]){0x02}, 1, 0},
+    {0x43, (uint8_t[]){0x02}, 1, 0},
+    {0x44, (uint8_t[]){0x00}, 1, 0},
+    {0x45, (uint8_t[]){0x00}, 1, 0},
+    {0x46, (uint8_t[]){0x1F}, 1, 0},
+    {0x47, (uint8_t[]){0x1F}, 1, 0},
+    {0x48, (uint8_t[]){0x1E}, 1, 0},
+    {0x49, (uint8_t[]){0x1E}, 1, 0},
+    {0x4A, (uint8_t[]){0x1F}, 1, 0},
+    {0x4B, (uint8_t[]){0x17}, 1, 0},
+    {0x4C, (uint8_t[]){0x17}, 1, 0},
+    {0x4D, (uint8_t[]){0x37}, 1, 0},
+    {0x4E, (uint8_t[]){0x37}, 1, 0},
+    {0x4F, (uint8_t[]){0x09}, 1, 0},
+    {0x50, (uint8_t[]){0x09}, 1, 0},
+    {0x51, (uint8_t[]){0x0B}, 1, 0},
+    {0x52, (uint8_t[]){0x0B}, 1, 0},
+    {0x53, (uint8_t[]){0x05}, 1, 0},
+    {0x54, (uint8_t[]){0x05}, 1, 0},
+    {0x55, (uint8_t[]){0x07}, 1, 0},
+    {0x56, (uint8_t[]){0x07}, 1, 0},
+    {0x57, (uint8_t[]){0x1F}, 1, 0},
+
+    {0x58, (uint8_t[]){0x40}, 1, 0},
+    {0x5B, (uint8_t[]){0x30}, 1, 0},
+    {0x5C, (uint8_t[]){0x00}, 1, 0},
+    {0x5D, (uint8_t[]){0x34}, 1, 0},
+    {0x5E, (uint8_t[]){0x05}, 1, 0},
+    {0x5F, (uint8_t[]){0x02}, 1, 0},
+    {0x63, (uint8_t[]){0x00}, 1, 0},
+    {0x64, (uint8_t[]){0x6A}, 1, 0},
+    {0x67, (uint8_t[]){0x73}, 1, 0},
+    {0x68, (uint8_t[]){0x07}, 1, 0},
+    {0x69, (uint8_t[]){0x08}, 1, 0},
+    {0x6A, (uint8_t[]){0x6A}, 1, 0},
+    {0x6B, (uint8_t[]){0x08}, 1, 0},
+
+    {0x6C, (uint8_t[]){0x00}, 1, 0},
+    {0x6D, (uint8_t[]){0x00}, 1, 0},
+    {0x6E, (uint8_t[]){0x00}, 1, 0},
+    {0x6F, (uint8_t[]){0x88}, 1, 0},
+
+    {0x75, (uint8_t[]){0xFF}, 1, 0},
+    {0x77, (uint8_t[]){0xDD}, 1, 0},
+    {0x78, (uint8_t[]){0x2C}, 1, 0},
+    {0x79, (uint8_t[]){0x15}, 1, 0},
+    {0x7A, (uint8_t[]){0x17}, 1, 0},
+    {0x7D, (uint8_t[]){0x14}, 1, 0},
+    {0x7E, (uint8_t[]){0x82}, 1, 0},
+
+    {0xE0, (uint8_t[]){0x04}, 1, 0},
+    {0x00, (uint8_t[]){0x0E}, 1, 0},
+    {0x02, (uint8_t[]){0xB3}, 1, 0},
+    {0x09, (uint8_t[]){0x61}, 1, 0},
+    {0x0E, (uint8_t[]){0x48}, 1, 0},
+    {0x37, (uint8_t[]){0x58}, 1, 0}, // 全志
+    {0x2B, (uint8_t[]){0x0F}, 1, 0}, // 全志
+
+    {0xE0, (uint8_t[]){0x00}, 1, 0},
+
+    {0xE6, (uint8_t[]){0x02}, 1, 0},
+    {0xE7, (uint8_t[]){0x0C}, 1, 0},
+
+    {0x11, (uint8_t[]){0x00}, 1, 120},
+
+    {0x29, (uint8_t[]){0x00}, 1, 20},
+};
+
 static const lcd_init_cmd_t st7701_dsi_init_operations[] = {
     // {cmd, { data }, data_size, delay_ms}
     {0xFF, (uint8_t[]){0x77, 0x01, 0x00, 0x00, 0x13}, 5, 0},
@@ -421,75 +651,75 @@ static const lcd_init_cmd_t st7701_dsi_init_operations[] = {
     {0xED, (uint8_t[]){0xB0, 0x2B, 0x98, 0xA4, 0x56, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF, 0xF7, 0x65, 0x4A, 0x89, 0xB2, 0x0B}, 16, 0},
     {0xEF, (uint8_t[]){0x08, 0x08, 0x08, 0x45, 0x3F, 0x54}, 6, 0},
     {0xFF, (uint8_t[]){0x77, 0x01, 0x00, 0x00, 0x00}, 5, 0},
-    {0x11, (uint8_t[]){0x00}, 1, 120},  // Sleep Out - delay de 120ms
-    {0x29, (uint8_t[]){0x00}, 1, 20},   // Display On - delay de 20ms
+    {0x11, (uint8_t[]){0x00}, 1, 120}, // Sleep Out - delay de 120ms
+    {0x29, (uint8_t[]){0x00}, 1, 20},  // Display On - delay de 20ms
 };
 
 static const lcd_init_cmd_t hi8561_init_operations[] = {
     //  {cmd, { data }, data_size, delay_ms}
     /**** CMD_Page 3 ****/
-    {0xDF, (uint8_t[]){0x90, 0x69, 0xF9},                                                                   3,  0  },
-    {0xDE, (uint8_t[]){0x00},                                                                               1,  0  },
-    {0xBB, (uint8_t[]){0x0F, 0x10, 0x43, 0x50, 0x32, 0x44, 0x44},                                           7,  0  },
-    {0xBF, (uint8_t[]){0x46, 0x32},                                                                         2,  0  },
-    {0xC0, (uint8_t[]){0x01, 0xAD, 0x01, 0xAD},                                                             4,  0  },
-    {0xBD, (uint8_t[]){0x00, 0xB4},                                                                         2,  0  },
+    {0xDF, (uint8_t[]){0x90, 0x69, 0xF9}, 3, 0},
+    {0xDE, (uint8_t[]){0x00}, 1, 0},
+    {0xBB, (uint8_t[]){0x0F, 0x10, 0x43, 0x50, 0x32, 0x44, 0x44}, 7, 0},
+    {0xBF, (uint8_t[]){0x46, 0x32}, 2, 0},
+    {0xC0, (uint8_t[]){0x01, 0xAD, 0x01, 0xAD}, 4, 0},
+    {0xBD, (uint8_t[]){0x00, 0xB4}, 2, 0},
     {0xC6,
      (uint8_t[]){0x00, 0x7D, 0x00, 0xC8, 0x00, 0x17, 0x1A, 0x82, 0x00, 0x00, 0x00, 0x01,
                  0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01},
-     23,                                                                                                        0  },
-    {0xC8, (uint8_t[]){0x23, 0x48, 0x87},                                                                   3,  0  },
+     23, 0},
+    {0xC8, (uint8_t[]){0x23, 0x48, 0x87}, 3, 0},
     // {0xCC, (uint8_t[]){0x33}, 1, 0},//4lane
-    {0xCC, (uint8_t[]){0x31},                                                                               1,  0  }, // 2lane
+    {0xCC, (uint8_t[]){0x31}, 1, 0}, // 2lane
     // {0xCC, (uint8_t[]){0x30}, 1, 0}, // 1lane
-    {0xBC, (uint8_t[]){0x2E, 0x80, 0x84},                                                                   3,  0  },
+    {0xBC, (uint8_t[]){0x2E, 0x80, 0x84}, 3, 0},
     {0xC3,
      (uint8_t[]){0x3B, 0x01, 0x02, 0x05, 0x0C, 0x0C, 0x75, 0x0A, 0x79, 0x0A, 0x79, 0x02, 0x6E,
                  0x02, 0x6E, 0x02, 0x6E, 0x0A, 0x0D, 0x0A, 0x0F, 0x0A, 0x0F, 0x0A, 0x0F},
-     25,                                                                                                        0  },
+     25, 0},
     {0xC4,
      (uint8_t[]){0x01, 0x02, 0x05, 0x0C, 0x0C, 0x75, 0x0A, 0x79, 0x0A, 0x79, 0x02, 0x6E,
                  0x02, 0x6E, 0x02, 0x6E, 0x0A, 0x0D, 0x0A, 0x0F, 0x0A, 0x0F, 0x0A, 0x0F},
-     24,                                                                                                        0  },
+     24, 0},
     {0xC5,
      (uint8_t[]){0x03, 0x05, 0x0C, 0x0C, 0x75, 0x0A, 0x79, 0x0A, 0x79, 0x02, 0x6E, 0x02,
                  0x6E, 0x02, 0x6E, 0x0A, 0x0D, 0x0A, 0x0F, 0x0A, 0x0F, 0x0A, 0x0F},
-     23,                                                                                                        0  },
+     23, 0},
     {0xD7,
      (uint8_t[]){
-         0x00, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63
-     },                                                                                                     17,
-     0                                                                                                             },
+         0x00, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63, 0x0A, 0x63},
+     17,
+     0},
     {0xCB,
      (uint8_t[]){0x7F, 0x78, 0x71, 0x64, 0x5A, 0x58, 0x4B, 0x51, 0x3A, 0x53, 0x51, 0x4F, 0x6A, 0x54, 0x57,
                  0x46, 0x3F, 0x2F, 0x1B, 0x0F, 0x08, 0x7F, 0x78, 0x71, 0x64, 0x5A, 0x58, 0x4B, 0x51, 0x3A,
                  0x53, 0x51, 0x4F, 0x6A, 0x54, 0x57, 0x46, 0x3F, 0x2F, 0x1B, 0x0F, 0x08, 0x00},
-     43,                                                                                                        0  },
+     43, 0},
     {0xCE,
      (uint8_t[]){0x00, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
                  0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C},
-     23,                                                                                                        0  },
+     23, 0},
     {0xCF,
      (uint8_t[]){0x00, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
                  0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-     45,                                                                                                        0  },
+     45, 0},
     {0xD0,
      (uint8_t[]){0x00, 0x1F, 0x1F, 0x11, 0x1E, 0x1F, 0x0F, 0x0F, 0x0D, 0x0D, 0x0B, 0x0B, 0x09, 0x09, 0x07,
                  0x07, 0x05, 0x05, 0x01, 0x1F, 0x1F, 0x1F, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-     29,                                                                                                        0  },
+     29, 0},
     {0xD1,
      (uint8_t[]){0x00, 0x1F, 0x1F, 0x10, 0x1E, 0x1F, 0x0E, 0x0E, 0x0C, 0x0C, 0x0A, 0x0A, 0x08, 0x08, 0x06,
                  0x06, 0x04, 0x04, 0x00, 0x1F, 0x1F, 0x1F, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-     29,                                                                                                        0  },
+     29, 0},
     {0xD2,
      (uint8_t[]){0x00, 0x5F, 0x1F, 0x10, 0x1F, 0x1E, 0x08, 0x08, 0x4A, 0x0A, 0x0C, 0x0C, 0x0E, 0x0E, 0x04,
                  0x04, 0x06, 0x06, 0x00, 0x1F, 0x1F, 0x1F, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-     29,                                                                                                        0  },
+     29, 0},
     {0xD3,
      (uint8_t[]){0x00, 0x1F, 0x1F, 0x11, 0x1F, 0x1E, 0x09, 0x09, 0x0B, 0x0B, 0x0D, 0x0D, 0x0F, 0x0F, 0x05,
                  0x05, 0x07, 0x07, 0x01, 0x1F, 0x1F, 0x1F, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-     29,                                                                                                        0  },
+     29, 0},
     {0xD4,
      (uint8_t[]){0x00, 0x20, 0x0B, 0x00, 0x0D, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                  0x00, 0x00, 0x03, 0x03, 0x03, 0x00, 0x81, 0x04, 0xAE, 0x04, 0xB0, 0x04, 0xB2, 0x04, 0xB4,
@@ -497,52 +727,51 @@ static const lcd_init_cmd_t hi8561_init_operations[] = {
                  0x44, 0x06, 0x46, 0x03, 0x03, 0x00, 0x00, 0x07, 0x00, 0x06, 0x04, 0xA7, 0x04, 0xA8, 0x00,
                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                  0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x01, 0x00, 0x00, 0x20, 0x00},
-     87,                                                                                                        0  },
+     87, 0},
     {0xD5,
      (uint8_t[]){0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xE0, 0x00, 0x00, 0x00,
                  0x07, 0x32, 0x5A, 0x00, 0x00, 0x3C, 0x00, 0x1E, 0x00, 0x1E, 0xB3, 0x00, 0x0F,
                  0x06, 0x0C, 0x00, 0x71, 0x20, 0x04, 0x10, 0x04, 0x06, 0x00, 0x00, 0x00, 0x00,
                  0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x1F, 0xFF, 0x00, 0x00, 0x00,
                  0x1F, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
-     61,                                                                                                        0  },
-    {0xCD, (uint8_t[]){0x00, 0x00},                                                                         2,  0  },
+     61, 0},
+    {0xCD, (uint8_t[]){0x00, 0x00}, 2, 0},
 
-    {0xDE, (uint8_t[]){0x01},                                                                               1,  0  },
-    {0xB9, (uint8_t[]){0x00, 0xFF, 0xFF, 0x04},                                                             4,  0  },
-    {0xC7, (uint8_t[]){0x1F, 0x14, 0x0E},                                                                   3,  0  },
+    {0xDE, (uint8_t[]){0x01}, 1, 0},
+    {0xB9, (uint8_t[]){0x00, 0xFF, 0xFF, 0x04}, 4, 0},
+    {0xC7, (uint8_t[]){0x1F, 0x14, 0x0E}, 3, 0},
 
-    {0xDE, (uint8_t[]){0x02},                                                                               1,  0  },
+    {0xDE, (uint8_t[]){0x02}, 1, 0},
     {0xE5,
      (uint8_t[]){0x00, 0x60, 0x60, 0x02, 0x18, 0x60, 0x18, 0x60, 0x09, 0x04, 0x00, 0xC5,
                  0x01, 0x2C, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x04},
-     24,                                                                                                        0  },
-    {0xE6, (uint8_t[]){0x10, 0x10, 0x82},                                                                   3,  0  },
-    {0xC4, (uint8_t[]){0x00, 0x11, 0x07, 0x00, 0x11, 0x01, 0x08},                                           7,  0  },
-    {0xC3, (uint8_t[]){0x20, 0xFF},                                                                         2,  0  },
-    {0xBD, (uint8_t[]){0x1B},                                                                               1,  0  },
-    {0xC6, (uint8_t[]){0x4A, 0x00},                                                                         2,  0  },
-    {0xCD, (uint8_t[]){0x14, 0x64, 0x11, 0x40},                                                             4,  0  },
-    {0xC1, (uint8_t[]){0x00, 0x40, 0x00, 0x02, 0x02, 0x02, 0x02, 0x7F, 0x00, 0x00},                         10, 0  },
-    {0xB3, (uint8_t[]){0x00, 0xA8},                                                                         2,  0  },
-    {0xBB, (uint8_t[]){0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0x40, 0x43, 0x04},                   11, 0  },
-    {0xC2, (uint8_t[]){0x02, 0x42, 0x50, 0x00, 0x02, 0xE4, 0x61, 0x73, 0xF9, 0x08},                         10, 0  },
+     24, 0},
+    {0xE6, (uint8_t[]){0x10, 0x10, 0x82}, 3, 0},
+    {0xC4, (uint8_t[]){0x00, 0x11, 0x07, 0x00, 0x11, 0x01, 0x08}, 7, 0},
+    {0xC3, (uint8_t[]){0x20, 0xFF}, 2, 0},
+    {0xBD, (uint8_t[]){0x1B}, 1, 0},
+    {0xC6, (uint8_t[]){0x4A, 0x00}, 2, 0},
+    {0xCD, (uint8_t[]){0x14, 0x64, 0x11, 0x40}, 4, 0},
+    {0xC1, (uint8_t[]){0x00, 0x40, 0x00, 0x02, 0x02, 0x02, 0x02, 0x7F, 0x00, 0x00}, 10, 0},
+    {0xB3, (uint8_t[]){0x00, 0xA8}, 2, 0},
+    {0xBB, (uint8_t[]){0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0x40, 0x43, 0x04}, 11, 0},
+    {0xC2, (uint8_t[]){0x02, 0x42, 0x50, 0x00, 0x02, 0xE4, 0x61, 0x73, 0xF9, 0x08}, 10, 0},
     {0xEC,
      (uint8_t[]){0x07, 0x07, 0x40, 0x00, 0x22, 0x02, 0x00, 0xFF, 0x08, 0x7C, 0x00, 0x00, 0x00, 0x00},
-     14,                                                                                                        0  },
+     14, 0},
 
-    {0xDE, (uint8_t[]){0x03},                                                                               1,  0  },
-    {0xD1, (uint8_t[]){0x00, 0x00, 0x21, 0xFF, 0x00},                                                       5,  0  },
+    {0xDE, (uint8_t[]){0x03}, 1, 0},
+    {0xD1, (uint8_t[]){0x00, 0x00, 0x21, 0xFF, 0x00}, 5, 0},
 
-    {0xDE, (uint8_t[]){0x00},                                                                               1,  0  },
-    {0x35, (uint8_t[]){0x00},                                                                               0,  30 },
+    {0xDE, (uint8_t[]){0x00}, 1, 0},
+    {0x35, (uint8_t[]){0x00}, 0, 30},
 
-    {0x11, (uint8_t[]){0x00},                                                                               0,  120},
+    {0x11, (uint8_t[]){0x00}, 0, 120},
 
-    {0x29, (uint8_t[]){0x00},                                                                               0,  50 },
+    {0x29, (uint8_t[]){0x00}, 0, 50},
 
     //============ Gamma END===========
 };
-
 
 static const lcd_init_cmd_t ek79007_init_operations[] = {
     //  {cmd, { data }, data_size, delay_ms}
@@ -565,71 +794,70 @@ static const lcd_init_cmd_t ek79007_init_operations[] = {
 static const lcd_init_cmd_t rm69a10_amoled_init_operations[] = {
     //  {cmd, { data }, data_size, delay_ms}
     /**** CMD_Page 3 ****/
-    {0xFE, (uint8_t[]){0xFD},                   1, 0  },
-    {0x80, (uint8_t[]){0xFC},                   1, 0  },
-    {0xFE, (uint8_t[]){0x00},                   1, 0  },
-    {0x2A, (uint8_t[]){0x00, 0x00, 0x02, 0x37}, 4, 0  },
-    {0x2B, (uint8_t[]){0x00, 0x00, 0x04, 0xCF}, 4, 0  },
-    {0x31, (uint8_t[]){0x00, 0x03, 0x02, 0x34}, 4, 0  },
-    {0x30, (uint8_t[]){0x00, 0x00, 0x04, 0xCF}, 4, 0  },
-    {0x12, (uint8_t[]){0x00},                   1, 0  },
-    {0x35, (uint8_t[]){0x00},                   1, 0  },
+    {0xFE, (uint8_t[]){0xFD}, 1, 0},
+    {0x80, (uint8_t[]){0xFC}, 1, 0},
+    {0xFE, (uint8_t[]){0x00}, 1, 0},
+    {0x2A, (uint8_t[]){0x00, 0x00, 0x02, 0x37}, 4, 0},
+    {0x2B, (uint8_t[]){0x00, 0x00, 0x04, 0xCF}, 4, 0},
+    {0x31, (uint8_t[]){0x00, 0x03, 0x02, 0x34}, 4, 0},
+    {0x30, (uint8_t[]){0x00, 0x00, 0x04, 0xCF}, 4, 0},
+    {0x12, (uint8_t[]){0x00}, 1, 0},
+    {0x35, (uint8_t[]){0x00}, 1, 0},
 #if CONFIG_SCREEN_PIXEL_FORMAT_RGB565
-    {0x3A, (uint8_t[]){0x75},                   1, 0  }, // interface pixel format 16bit/pixel
+    {0x3A, (uint8_t[]){0x75}, 1, 0}, // interface pixel format 16bit/pixel
 #elif CONFIG_SCREEN_PIXEL_FORMAT_RGB888
-    {0x3A, (uint8_t[]){0x77},                   1, 0  }, // interface pixel format 24bit/pixel
+    {0x3A, (uint8_t[]){0x77}, 1, 0}, // interface pixel format 24bit/pixel
 #endif
-    {0x51, (uint8_t[]){0xFE},                   1, 0  }, // Brightness to 100
-    {0x11, (uint8_t[]){0x00},                   0, 120},
-    {0x29, (uint8_t[]){0x00},                   0, 0  },
+    {0x51, (uint8_t[]){0xFE}, 1, 0}, // Brightness to 100
+    {0x11, (uint8_t[]){0x00}, 0, 120},
+    {0x29, (uint8_t[]){0x00}, 0, 0},
     //============ Gamma END===========
 };
 
 class Arduino_DSI_Display : public Arduino_GFX
 {
 public:
-  Arduino_DSI_Display(
-      int16_t w, int16_t h, Arduino_ESP32DSIPanel *dsipanel, uint8_t r = 0, bool auto_flush = true,
-      int8_t rst = GFX_NOT_DEFINED, const lcd_init_cmd_t *init_operations = NULL, size_t init_operations_len = GFX_NOT_DEFINED,
-      uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
+    Arduino_DSI_Display(
+        int16_t w, int16_t h, Arduino_ESP32DSIPanel *dsipanel, uint8_t r = 0, bool auto_flush = true,
+        int8_t rst = GFX_NOT_DEFINED, const lcd_init_cmd_t *init_operations = NULL, size_t init_operations_len = GFX_NOT_DEFINED,
+        uint8_t col_offset1 = 0, uint8_t row_offset1 = 0, uint8_t col_offset2 = 0, uint8_t row_offset2 = 0);
 
-  bool begin(int32_t speed = GFX_NOT_DEFINED) override;
-  void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
-  void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
-  void writeFastVLineCore(int16_t x, int16_t y, int16_t h, uint16_t color);
-  void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
-  void writeFastHLineCore(int16_t x, int16_t y, int16_t w, uint16_t color);
-  void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) override;
-  void drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h, int16_t x_skip = 0) override;
-  void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
-  void draw16bitBeRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
-  void flush(bool force_flush = false) override;
+    bool begin(int32_t speed = GFX_NOT_DEFINED) override;
+    void writePixelPreclipped(int16_t x, int16_t y, uint16_t color) override;
+    void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
+    void writeFastVLineCore(int16_t x, int16_t y, int16_t h, uint16_t color);
+    void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
+    void writeFastHLineCore(int16_t x, int16_t y, int16_t w, uint16_t color);
+    void writeFillRectPreclipped(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) override;
+    void drawIndexedBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint16_t *color_index, int16_t w, int16_t h, int16_t x_skip = 0) override;
+    void draw16bitRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
+    void draw16bitBeRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h) override;
+    void flush(bool force_flush = false) override;
 
+    void startWrite(void) override;
+    void endWrite(void) override;
 
-  void startWrite(void) override;
-  void endWrite(void) override;
-
-  void drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, uint8_t *cbData, uint8_t *crData, int16_t w, int16_t h);
-  uint16_t *getFramebuffer();
+    void drawYCbCrBitmap(int16_t x, int16_t y, uint8_t *yData, uint8_t *cbData, uint8_t *crData, int16_t w, int16_t h);
+    uint16_t *getFramebuffer();
 
 protected:
-  uint16_t *_framebuffer;
-  size_t _framebuffer_size;
-  Arduino_ESP32DSIPanel *_dsipanel;
-  bool _auto_flush;
-  int8_t _rst;
-  const lcd_init_cmd_t *_init_operations;
-  size_t _init_operations_len;
-  int16_t MAX_X, MAX_Y;
-  uint8_t COL_OFFSET1, ROW_OFFSET1;
-  uint8_t COL_OFFSET2, ROW_OFFSET2;
-  uint8_t _xStart, _yStart;
-  uint16_t _fb_width, _fb_height, _fb_max_x, _fb_max_y;
+    uint16_t *_framebuffer;
+    size_t _framebuffer_size;
+    Arduino_ESP32DSIPanel *_dsipanel;
+    bool _auto_flush;
+    int8_t _rst;
+    const lcd_init_cmd_t *_init_operations;
+    size_t _init_operations_len;
+    int16_t MAX_X, MAX_Y;
+    uint8_t COL_OFFSET1, ROW_OFFSET1;
+    uint8_t COL_OFFSET2, ROW_OFFSET2;
+    uint8_t _xStart, _yStart;
+    uint16_t _fb_width, _fb_height, _fb_max_x, _fb_max_y;
 
-  void _dirty(const void *ptr, size_t bytes);
-  uint16_t _write_depth = 0;
-  int32_t _dirty_begin = -1;  // byte offsets into _framebuffer, -1 when empty
-  int32_t _dirty_end = -1;
+    void _dirty(const void *ptr, size_t bytes);
+    uint16_t _write_depth = 0;
+    int32_t _dirty_begin = -1; // byte offsets into _framebuffer, -1 when empty
+    int32_t _dirty_end = -1;
 
 private:
 };
