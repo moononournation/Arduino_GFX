@@ -59,6 +59,7 @@
 #include "display/Arduino_GC9107.h"
 #include "display/Arduino_HX8347C.h"
 #include "display/Arduino_HX8347D.h"
+#include "display/Arduino_HX8347G.h"
 #include "display/Arduino_HX8352C.h"
 #include "display/Arduino_HX8357A.h"
 #include "display/Arduino_HX8357B.h"
