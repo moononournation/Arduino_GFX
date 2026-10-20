@@ -1,15 +1,11 @@
-# About the canvas mono class of the GFX library
+# About the canvas mono class in the GFX library
 
-There are some Display Chips on the market that can display a small amount of graphic data but
-don't offer much functionality on it's own on other than data transfer. Examples are the OLED
-Displays Chips SSD1306 or SH1106.
+Some display controllers on the market can render a small amount of graphical data, but they do not provide much functionality beyond data transfer. Examples include SSD1306 and SH1106 OLED display controller chips.
 
-These displays need an in memory copy of the graphics and updating the display is implemented by
-a bulk data transfer of the internal memory to the display.
+These displays require an in-memory copy of the graphics data, and updates are performed by transferring the internal memory to the display in a bulk operation.
 
-Therefore the Canvas Mono class must be initialized in a way the internal memory fits to the
-memory inside the graphic driver chip including the width and height of the display memory and
-the orientation of a byte to either horizontal or vertical.
+For this reason, the Canvas Mono class must be initialized so that its internal memory layout matches the memory inside the graphics controller chip, including the display width and height, the memory orientation, and whether each byte is arranged horizontally or vertically.
 
-Bei changing the orientation of the canvas the graphics elements like lines or characters are positioned on the display memory accordingly. When the rotating in 90 or 270 degrees der width and height of the logical display will be swapped but not the memory organization.
+When the canvas orientation changes, graphics primitives such as lines and characters are positioned within the display memory accordingly. When rotating by 90° or 270°, the effective width and height change, and the internal buffer and drawing logic must be adjusted to match the rotated coordinate system.
 
+RGB565, RGB888, grayscale, indexed, and packed-color bitmap draw calls use Floyd-Steinberg error diffusion directly into the monochrome framebuffer. The canvas uses two per-column error rows, without an intermediate image buffer.

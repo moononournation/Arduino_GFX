@@ -1099,44 +1099,6 @@ void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
 
 /**************************************************************************/
 /*!
-  @brief  Draw a PROGMEM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
-  @param  x       Top left corner x coordinate
-  @param  y       Top left corner y coordinate
-  @param  bitmap  byte array with monochrome bitmap
-  @param  w       Width of bitmap in pixels
-  @param  h       Height of bitmap in pixels
-  @param  color   16-bit 5-6-5 Color to draw pixels with
-  @param  bg      16-bit 5-6-5 Color to draw background with
-*/
-/**************************************************************************/
-void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
-                             const uint8_t bitmap[], int16_t w, int16_t h,
-                             uint16_t color, uint16_t bg)
-{
-  int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
-  uint8_t byte = 0;
-
-  startWrite();
-  for (int16_t j = 0; j < h; j++, y++)
-  {
-    for (int16_t i = 0; i < w; i++)
-    {
-      if (i & 7)
-      {
-        byte <<= 1;
-      }
-      else
-      {
-        byte = pgm_read_byte(&bitmap[j * byteWidth + i / 8]);
-      }
-      writePixel(x + i, y, (byte & 0x80) ? color : bg);
-    }
-  }
-  endWrite();
-}
-
-/**************************************************************************/
-/*!
   @brief  Draw a RAM-resident 1-bit image at the specified (x,y) position, using the specified foreground color (unset bits are transparent).
   @param  x       Top left corner x coordinate
   @param  y       Top left corner y coordinate
@@ -1169,6 +1131,44 @@ void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
       {
         writePixel(x + i, y, color);
       }
+    }
+  }
+  endWrite();
+}
+
+/**************************************************************************/
+/*!
+  @brief  Draw a PROGMEM-resident 1-bit image at the specified (x,y) position, using the specified foreground (for set bits) and background (unset bits) colors.
+  @param  x       Top left corner x coordinate
+  @param  y       Top left corner y coordinate
+  @param  bitmap  byte array with monochrome bitmap
+  @param  w       Width of bitmap in pixels
+  @param  h       Height of bitmap in pixels
+  @param  color   16-bit 5-6-5 Color to draw pixels with
+  @param  bg      16-bit 5-6-5 Color to draw background with
+*/
+/**************************************************************************/
+void Arduino_GFX::drawBitmap(int16_t x, int16_t y,
+                             const uint8_t bitmap[], int16_t w, int16_t h,
+                             uint16_t color, uint16_t bg)
+{
+  int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+  uint8_t byte = 0;
+
+  startWrite();
+  for (int16_t j = 0; j < h; j++, y++)
+  {
+    for (int16_t i = 0; i < w; i++)
+    {
+      if (i & 7)
+      {
+        byte <<= 1;
+      }
+      else
+      {
+        byte = pgm_read_byte(&bitmap[j * byteWidth + i / 8]);
+      }
+      writePixel(x + i, y, (byte & 0x80) ? color : bg);
     }
   }
   endWrite();
@@ -1321,9 +1321,9 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
   @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
-                                      const uint8_t bitmap[], const uint8_t mask[],
-                                      int16_t w, int16_t h)
+void Arduino_GFX::drawGrayscaleBitmapWithMask(int16_t x, int16_t y,
+                                              const uint8_t bitmap[], const uint8_t mask[],
+                                              int16_t w, int16_t h)
 {
   int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
   uint8_t byte = 0;
@@ -1364,8 +1364,8 @@ void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
   @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::drawGrayscaleBitmap(int16_t x, int16_t y,
-                                      uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
+void Arduino_GFX::drawGrayscaleBitmapWithMask(int16_t x, int16_t y,
+                                              uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
   int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
   uint8_t byte = 0;
@@ -1787,9 +1787,9 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
   @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
-                                     const uint8_t bitmap[], const uint8_t mask[],
-                                     int16_t w, int16_t h)
+void Arduino_GFX::draw24bitRGBBitmapWithMask(int16_t x, int16_t y,
+                                             const uint8_t bitmap[], const uint8_t mask[],
+                                             int16_t w, int16_t h)
 {
   int32_t offset = 0;
   int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
@@ -1830,8 +1830,8 @@ void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
   @param  h       Height of bitmap in pixels
 */
 /**************************************************************************/
-void Arduino_GFX::draw24bitRGBBitmap(int16_t x, int16_t y,
-                                     uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
+void Arduino_GFX::draw24bitRGBBitmapWithMask(int16_t x, int16_t y,
+                                             uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
 {
   int32_t offset = 0;
   int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
@@ -1957,10 +1957,10 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
           curW = _max_text_x - x + 1;
         }
         if (x < _min_text_x)
-        { 
-	  // Clip left margin, i.e. characters partially to the left of
-	  // edge of the text bound
-          curW = max(0,(curW - (_min_text_x - x)));
+        {
+          // Clip left margin, i.e. characters partially to the left of
+          // edge of the text bound
+          curW = max(0, (curW - (_min_text_x - x)));
           x = _min_text_x;
         }
         if (is_foreground)
@@ -1980,7 +1980,7 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
       y = _u8g2_target_y + (ly * textsize_y);
 
       /* draw foreground and background (if required) */
-      if (((x + textsize_x - 1) <= _max_text_x) && ((y + textsize_y - 1) <= _max_text_y) && (y + textsize_y -1) >= _min_text_y) 
+      if (((x + textsize_x - 1) <= _max_text_x) && ((y + textsize_y - 1) <= _max_text_y) && (y + textsize_y - 1) >= _min_text_y)
       {
         curW = current * textsize_x;
         while ((x + curW - 1) > _max_text_x)
@@ -1988,10 +1988,10 @@ void Arduino_GFX::u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint1
           curW -= textsize_x;
         }
         if (x < _min_text_x)
-        { 
-	  // Clip left margin, i.e. characters partially to the left of
-	  // edge of the text bound
-          curW = max(0,(curW - (_min_text_x - x)));
+        {
+          // Clip left margin, i.e. characters partially to the left of
+          // edge of the text bound
+          curW = max(0, (curW - (_min_text_x - x)));
           x = _min_text_x;
         }
         if (is_foreground)
@@ -2170,8 +2170,9 @@ void Arduino_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 
       _u8g2_target_x = x + (_u8g2_char_x * textsize_x);
       // log_d("_u8g2_target_x: %d, _u8g2_target_y: %d", _u8g2_target_x, _u8g2_target_y);
-      if (_u8g2_target_x + _u8g2_char_width < _min_text_x) {
-	// Clip left, i.e. characters entirely to the left of the left text bound
+      if (_u8g2_target_x + _u8g2_char_width < _min_text_x)
+      {
+        // Clip left, i.e. characters entirely to the left of the left text bound
         return;
       }
 
@@ -3054,7 +3055,7 @@ void Arduino_GFX::printCenterText(const char *str, int16_t x, int16_t y)
   int16_t x1, y1;
   uint16_t w, h;
   getTextBounds(str, 0, 0, &x1, &y1, &w, &h);
-  setCursor(x - (w / 2), y - (h /2));
+  setCursor(x - (w / 2), y - (h / 2));
   print(str);
 }
 
@@ -3071,7 +3072,7 @@ void Arduino_GFX::printCenterText(const String &str, int16_t x, int16_t y)
   int16_t x1, y1;
   uint16_t w, h;
   getTextBounds(str, 0, 0, &x1, &y1, &w, &h);
-  setCursor(x - (w / 2), y - (h /2));
+  setCursor(x - (w / 2), y - (h / 2));
   print(str);
 }
 
@@ -3084,12 +3085,12 @@ void Arduino_GFX::printCenterText(const String &str, int16_t x, int16_t y)
 */
 /**************************************************************************/
 void Arduino_GFX::printCenterText(const __FlashStringHelper *str,
-                                int16_t x, int16_t y)
+                                  int16_t x, int16_t y)
 {
   int16_t x1, y1;
   uint16_t w, h;
   getTextBounds(str, 0, 0, &x1, &y1, &w, &h);
-  setCursor(x - (w / 2), y - (h /2));
+  setCursor(x - (w / 2), y - (h / 2));
   print(str);
 }
 
