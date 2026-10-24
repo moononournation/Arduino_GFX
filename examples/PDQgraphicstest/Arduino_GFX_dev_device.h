@@ -36,6 +36,7 @@
 // #define LILYGO_T_DECK
 // #define LILYGO_T_DECK_PLUS
 // #define LILYGO_T_DISPLAY
+// #define LILYGO_T_DISPLAY_C5
 // #define LILYGO_T_DISPLAY_S3
 // #define LILYGO_T_Display_S3_AMOLED
 // #define LILYGO_T_Display_S3_AMOLED_1_64
@@ -661,6 +662,14 @@ Arduino_DataBus *bus = new Arduino_ESP32SPI(16 /* DC */, 5 /* CS */, 18 /* SCK *
 Arduino_GFX *gfx = new Arduino_ST7789(
     bus, 23 /* RST */, 0 /* rotation */, true /* IPS */, 135 /* width */, 240 /* height */,
     52 /* col offset 1 */, 40 /* row offset 1 */, 53 /* col offset 2 */, 40 /* row offset 2 */);
+
+#elif defined(LILYGO_T_DISPLAY_C5)
+#define GFX_DEV_DEVICE LILYGO_T_DISPLAY_C5
+#define GFX_BL 25
+Arduino_DataBus *bus = new Arduino_ESP32SPI(8 /* DC */, 26 /* CS */, 7 /* SCK */, 9 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(
+    bus, 23 /* RST */, 0 /* rotation */, true /* IPS */, 170 /* width */, 320 /* height */,
+    35 /* col offset 1 */, 0 /* row offset 1 */, 35 /* col offset 2 */, 0 /* row offset 2 */);
 
 #elif defined(LILYGO_T_DISPLAY_S3)
 #define GFX_DEV_DEVICE LILYGO_T_DISPLAY_S3
