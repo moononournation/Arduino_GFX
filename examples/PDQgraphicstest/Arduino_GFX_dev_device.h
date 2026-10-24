@@ -905,6 +905,7 @@ Arduino_GFX *gfx = new Arduino_ILI9488_18bit(bus, GFX_NOT_DEFINED /* RST */, 1 /
 
 #elif defined(MAKERFABS_ESP32_S3_TFT_4_0)
 #define GFX_DEV_DEVICE MAKERFABS_ESP32_S3_TFT_4_0
+#define GFX_BL 44
 Arduino_DataBus *bus = new Arduino_SWSPI(
     GFX_NOT_DEFINED /* DC */, 1 /* CS */,
     12 /* SCK */, 11 /* MOSI */, GFX_NOT_DEFINED /* MISO */);
