@@ -173,6 +173,15 @@ Arduino_GFX *gfx = new Arduino_ILI9341(bus, TFT_RST, 0 /* rotation */, false /* 
 //     0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */,
 //     st77916_180_init_operations, sizeof(st77916_180_init_operations));
 
+// 1.8" ST77916 - HD18004C18 (360x360)
+// Initialization sequence provided by the display supplier.
+// Source: https://github.com/Bodmer/TFT_eSPI/issues/3915
+// Alternative configuration for 1.8" panels that may not work
+// correctly with the default st77916_180_init_operations.
+// Arduino_GFX *gfx = new Arduino_ST77916(bus, 5 /* RST */, 0 /* rotation */, true /* IPS */, 360 /* width */, 360 /* height */,
+//     0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */,
+//     st77916_hd18004c18_init_operations, sizeof(st77916_hd18004c18_init_operations));
+
 // ST7796 LCD
 // 1.55" IPS LCD 320x360
 // Arduino_GFX *gfx = new Arduino_ST7796(bus, TFT_RST, 3 /* rotation */, true /* IPS */, 320 /* width */, 360 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 120 /* row offset 2 */);
