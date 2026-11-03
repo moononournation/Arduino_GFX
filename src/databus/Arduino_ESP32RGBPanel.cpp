@@ -3,7 +3,7 @@
 #include "Arduino_ESP32RGBPanel.h"
 
 //#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4)  //Modify
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32S31)  //Modify
 Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
     int8_t de, int8_t vsync, int8_t hsync, int8_t pclk,
     int8_t r0, int8_t r1, int8_t r2, int8_t r3, int8_t r4,
@@ -69,6 +69,13 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
           },
       },
       .data_width = 16, // RGB565 in parallel mode, thus 16 bits in width
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0)
+      // ESP-IDF 6 replaced bits_per_pixel and the *_trans_align fields
+      .in_color_format = LCD_COLOR_FMT_RGB565,
+      .num_fbs = 1,
+      .bounce_buffer_size_px = _bounce_buffer_size_px,
+      .dma_burst_size = 64,
+#else
 #if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 3)
 #else
       .bits_per_pixel = 16,
@@ -77,13 +84,14 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
 #endif
       .sram_trans_align = 8,
       .psram_trans_align = 64,
-      .hsync_gpio_num = _hsync,
-      .vsync_gpio_num = _vsync,
-      .de_gpio_num = _de,
-      .pclk_gpio_num = _pclk,
+#endif
+      .hsync_gpio_num = (gpio_num_t)_hsync,
+      .vsync_gpio_num = (gpio_num_t)_vsync,
+      .de_gpio_num = (gpio_num_t)_de,
+      .pclk_gpio_num = (gpio_num_t)_pclk,
       .disp_gpio_num = GPIO_NUM_NC, // -1
       #if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
-      .data_gpio_nums = {0},
+      .data_gpio_nums = {},
       #endif
       .flags = {
           .disp_active_low = true,
@@ -101,41 +109,41 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
 
   if (_useBigEndian)
   {
-    panel_config.data_gpio_nums[0] = _g3;
-    panel_config.data_gpio_nums[1] = _g4;
-    panel_config.data_gpio_nums[2] = _g5;
-    panel_config.data_gpio_nums[3] = _r0;
-    panel_config.data_gpio_nums[4] = _r1;
-    panel_config.data_gpio_nums[5] = _r2;
-    panel_config.data_gpio_nums[6] = _r3;
-    panel_config.data_gpio_nums[7] = _r4;
-    panel_config.data_gpio_nums[8] = _b0;
-    panel_config.data_gpio_nums[9] = _b1;
-    panel_config.data_gpio_nums[10] = _b2;
-    panel_config.data_gpio_nums[11] = _b3;
-    panel_config.data_gpio_nums[12] = _b4;
-    panel_config.data_gpio_nums[13] = _g0;
-    panel_config.data_gpio_nums[14] = _g1;
-    panel_config.data_gpio_nums[15] = _g2;
+    panel_config.data_gpio_nums[0] = (gpio_num_t)_g3;
+    panel_config.data_gpio_nums[1] = (gpio_num_t)_g4;
+    panel_config.data_gpio_nums[2] = (gpio_num_t)_g5;
+    panel_config.data_gpio_nums[3] = (gpio_num_t)_r0;
+    panel_config.data_gpio_nums[4] = (gpio_num_t)_r1;
+    panel_config.data_gpio_nums[5] = (gpio_num_t)_r2;
+    panel_config.data_gpio_nums[6] = (gpio_num_t)_r3;
+    panel_config.data_gpio_nums[7] = (gpio_num_t)_r4;
+    panel_config.data_gpio_nums[8] = (gpio_num_t)_b0;
+    panel_config.data_gpio_nums[9] = (gpio_num_t)_b1;
+    panel_config.data_gpio_nums[10] = (gpio_num_t)_b2;
+    panel_config.data_gpio_nums[11] = (gpio_num_t)_b3;
+    panel_config.data_gpio_nums[12] = (gpio_num_t)_b4;
+    panel_config.data_gpio_nums[13] = (gpio_num_t)_g0;
+    panel_config.data_gpio_nums[14] = (gpio_num_t)_g1;
+    panel_config.data_gpio_nums[15] = (gpio_num_t)_g2;
   }
   else
   {
-    panel_config.data_gpio_nums[0] = _b0;
-    panel_config.data_gpio_nums[1] = _b1;
-    panel_config.data_gpio_nums[2] = _b2;
-    panel_config.data_gpio_nums[3] = _b3;
-    panel_config.data_gpio_nums[4] = _b4;
-    panel_config.data_gpio_nums[5] = _g0;
-    panel_config.data_gpio_nums[6] = _g1;
-    panel_config.data_gpio_nums[7] = _g2;
-    panel_config.data_gpio_nums[8] = _g3;
-    panel_config.data_gpio_nums[9] = _g4;
-    panel_config.data_gpio_nums[10] = _g5;
-    panel_config.data_gpio_nums[11] = _r0;
-    panel_config.data_gpio_nums[12] = _r1;
-    panel_config.data_gpio_nums[13] = _r2;
-    panel_config.data_gpio_nums[14] = _r3;
-    panel_config.data_gpio_nums[15] = _r4;
+    panel_config.data_gpio_nums[0] = (gpio_num_t)_b0;
+    panel_config.data_gpio_nums[1] = (gpio_num_t)_b1;
+    panel_config.data_gpio_nums[2] = (gpio_num_t)_b2;
+    panel_config.data_gpio_nums[3] = (gpio_num_t)_b3;
+    panel_config.data_gpio_nums[4] = (gpio_num_t)_b4;
+    panel_config.data_gpio_nums[5] = (gpio_num_t)_g0;
+    panel_config.data_gpio_nums[6] = (gpio_num_t)_g1;
+    panel_config.data_gpio_nums[7] = (gpio_num_t)_g2;
+    panel_config.data_gpio_nums[8] = (gpio_num_t)_g3;
+    panel_config.data_gpio_nums[9] = (gpio_num_t)_g4;
+    panel_config.data_gpio_nums[10] = (gpio_num_t)_g5;
+    panel_config.data_gpio_nums[11] = (gpio_num_t)_r0;
+    panel_config.data_gpio_nums[12] = (gpio_num_t)_r1;
+    panel_config.data_gpio_nums[13] = (gpio_num_t)_r2;
+    panel_config.data_gpio_nums[14] = (gpio_num_t)_r3;
+    panel_config.data_gpio_nums[15] = (gpio_num_t)_r4;
   }
 
   ESP_ERROR_CHECK(esp_lcd_new_rgb_panel(&panel_config, &_panel_handle));
