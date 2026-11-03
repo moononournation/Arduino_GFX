@@ -3,7 +3,7 @@
 #include "Arduino_ESP32RGBPanel.h"
 
 //#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4)  //Modify
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32S31)  //Modify
 Arduino_ESP32RGBPanel::Arduino_ESP32RGBPanel(
     int8_t de, int8_t vsync, int8_t hsync, int8_t pclk,
     int8_t r0, int8_t r1, int8_t r2, int8_t r3, int8_t r4,
@@ -73,6 +73,12 @@ uint16_t *Arduino_ESP32RGBPanel::getFrameBuffer(int16_t w, int16_t h)
       .bits_per_pixel = 16,
       .num_fbs = 1,
       .bounce_buffer_size_px = _bounce_buffer_size_px,
+#elif (defined(ESP_ARDUINO_VERSION_MAJOR)) && (ESP_ARDUINO_VERSION_MAJOR >= 4)
+      // ESP-IDF 6 replaced bits_per_pixel and the *_trans_align fields
+      .in_color_format = LCD_COLOR_FMT_RGB565,
+      .num_fbs = 1,
+      .bounce_buffer_size_px = _bounce_buffer_size_px,
+      .dma_burst_size = 64,
 #endif
 #if (!defined(ESP_ARDUINO_VERSION_MAJOR)) || (ESP_ARDUINO_VERSION_MAJOR < 4)
       .sram_trans_align = 8,
