@@ -355,6 +355,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 - [Odroid Go](https://www.hardkernel.com/shop/odroid-go/)
 - [seeed studio Wio Terminal](https://wiki.seeedstudio.com/Wio-Terminal-Getting-Started/)
 - [Waveshare ESP32-C5-LCD-1.47](https://www.waveshare.com/esp32-c5-lcd-1.47.htm?&aff_id=moononournation)
+- [Waveshare ESP32-C5-LCD-2.73](https://www.waveshare.com/esp32-c5-lcd-2.73.htm?&aff_id=moononournation)
 - [Waveshare ESP32-C5-Touch-LCD-2.8](https://www.waveshare.com/esp32-c5-touch-lcd-2.8.htm?&aff_id=moononournation)
 - [Waveshare ESP32-C6-LCD-1.47](https://www.waveshare.com/esp32-c6-lcd-1.47.htm?&aff_id=moononournation)
 - [Waveshare ESP32-C6-LCD-1.9](https://www.waveshare.com/esp32-c6-lcd-1.9.htm?&aff_id=moononournation)[[demo video](https://youtube.com/shorts/OryF57VqufY?feature=share)]
