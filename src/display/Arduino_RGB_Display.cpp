@@ -1,7 +1,7 @@
 #include "../Arduino_DataBus.h"
 
 // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4) // Modify
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32S31) // Modify
 
 #include "../Arduino_GFX.h"
 #include "Arduino_RGB_Display.h"
