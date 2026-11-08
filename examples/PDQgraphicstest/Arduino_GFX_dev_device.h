@@ -57,7 +57,7 @@
 // #define XIAO_ESP32C3_ROUND_DISPLAY
 // #define XIAO_ESP32S3_ROUND_DISPLAY
 // #define WAVESHARE_ESP32_C5_LCD_1_47
-// #define WAVESHARE_ESP32_TOUCH_LCD_2_8
+// #define WAVESHARE_ESP32_C5_LCD_2_73
 // #define WAVESHARE_ESP32_C6_LCD_1_47
 // #define WAVESHARE_ESP32_C6_LCD_1_9
 // #define WAVESHARE_ESP32_S3_LCD_1_3
@@ -72,6 +72,7 @@
 // #define WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_41
 // #define WAVESHARE_ESP32_S3_TOUCH_LCD_3_49
 // #define WAVESHARE_ESP32_P4_WIFI6_TOUCH_LCD_10_1
+// #define WAVESHARE_ESP32_TOUCH_LCD_2_8
 // #define WAVESHARE_RP2040_LCD_0_96
 // #define WAVESHARE_RP2040_LCD_1_28 // compatible RP2350-LCD-1.28
 // #define WAVESHARE_RP2350_LCD_1_47
@@ -961,23 +962,55 @@ Arduino_GFX *gfx = new Arduino_ST7789(
     bus, 26 /* RST */, 0 /* rotation */, true /* IPS */, 172 /* width */, 320 /* height */,
     34 /* col offset 1 */, 0 /* row offset 1 */, 34 /* col offset 2 */, 0 /* row offset 2 */);
 
-#elif defined(WAVESHARE_ESP32_TOUCH_LCD_2_8)
-#define GFX_DEV_DEVICE WAVESHARE_ESP32_TOUCH_LCD_2_8
-// Board_IO source: https://github.com/waveshareteam/ESP32-C5-Touch-LCD-2.8/tree/main/example/Arduino-v3.3.10/example/06_lvgl_demo
-#include "Board_IO.h"
-#define DEV_DEVICE_INIT()                                       \
-    {                                                           \
-        pinMode(23 /* SD_CS */, OUTPUT);                        \
-        digitalWrite(23 /* SD_CS */, HIGH);                     \
-        if (!Board_IO_Init(Wire))                               \
-        {                                                       \
-            Serial.println("CH32V003 IO expander init failed"); \
-        }                                                       \
-        Board_LCD_Reset();                                      \
-        Board_SetBacklight(100);                                \
+#elif defined(WAVESHARE_ESP32_C5_LCD_2_73)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_C5_LCD_2_73
+static uint16_t io_ext_state = 0xFFFF;
+static bool io_ext_write(uint8_t reg, const uint8_t *data, size_t len)
+{
+    Wire.beginTransmission(0x24 /* IO_EXT_ADDR */);
+    Wire.write(reg);
+    Wire.write(data, len);
+    return Wire.endTransmission() == 0;
+}
+static bool io_ext_write_u16(uint8_t reg, uint16_t value)
+{
+    uint8_t data[2] = {static_cast<uint8_t>(value & 0xFF), static_cast<uint8_t>(value >> 8)};
+    return io_ext_write(reg, data, sizeof(data));
+}
+static bool io_ext_init()
+{
+    if (!io_ext_write_u16(0x02 /* IO_EXT_MODE_REG */, 0xFFF7))
+    {
+        return false;
     }
-Arduino_DataBus *bus = new Arduino_HWSPI(9 /* DC */, 10 /* CS */, 6 /* SCK */, 7 /* MOSI */, 8 /* MISO */);
-Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
+    io_ext_state = 0xFFFF;
+    return io_ext_write_u16(0x03 /* IO_EXT_OUT_REG */, io_ext_state);
+}
+static void io_ext_output(uint8_t pin, bool value)
+{
+    if (value)
+    {
+        io_ext_state |= (1U << pin);
+    }
+    else
+    {
+        io_ext_state &= ~(1U << pin);
+    }
+    io_ext_write_u16(0x03 /* IO_EXT_OUT_REG */, io_ext_state);
+}
+#define DEV_DEVICE_INIT()                             \
+    {                                                 \
+        Wire.begin(27, 26);                           \
+        io_ext_init();                                \
+        io_ext_output(0 /* IO_EXT_LCD_RST */, false); \
+        delay(20);                                    \
+        io_ext_output(0 /* IO_EXT_LCD_RST */, true);  \
+        delay(150);                                   \
+    }
+Arduino_DataBus *bus = new Arduino_HWSPI(4 /* DC */, 8 /* CS */, 6 /* SCK */, 7 /* MOSI */, 5 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ILI9488_18bit(
+    bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */, 320 /* width */, 320 /* height */,
+    0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 160 /* row offset 2 */);
 
 #elif defined(WAVESHARE_ESP32_C6_LCD_1_47)
 #define GFX_DEV_DEVICE WAVESHARE_ESP32_C6_LCD_1_47
@@ -1197,6 +1230,24 @@ Arduino_ESP32DSIPanel *dsipanel = new Arduino_ESP32DSIPanel(
 Arduino_DSI_Display *gfx = new Arduino_DSI_Display(
     800 /* width */, 1280 /* height */, dsipanel, 0 /* rotation */, true /* auto_flush */,
     27 /* RST */, jd9365_type2_init_operations, sizeof(jd9365_type2_init_operations) / sizeof(lcd_init_cmd_t));
+
+#elif defined(WAVESHARE_ESP32_TOUCH_LCD_2_8)
+#define GFX_DEV_DEVICE WAVESHARE_ESP32_TOUCH_LCD_2_8
+// Board_IO source: https://github.com/waveshareteam/ESP32-C5-Touch-LCD-2.8/tree/main/example/Arduino-v3.3.10/example/06_lvgl_demo
+#include "Board_IO.h"
+#define DEV_DEVICE_INIT()                                       \
+    {                                                           \
+        pinMode(23 /* SD_CS */, OUTPUT);                        \
+        digitalWrite(23 /* SD_CS */, HIGH);                     \
+        if (!Board_IO_Init(Wire))                               \
+        {                                                       \
+            Serial.println("CH32V003 IO expander init failed"); \
+        }                                                       \
+        Board_LCD_Reset();                                      \
+        Board_SetBacklight(100);                                \
+    }
+Arduino_DataBus *bus = new Arduino_HWSPI(9 /* DC */, 10 /* CS */, 6 /* SCK */, 7 /* MOSI */, 8 /* MISO */);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */, true /* IPS */);
 
 #elif defined(WAVESHARE_RP2040_LCD_0_96)
 #define GFX_DEV_DEVICE WAVESHARE_RP2040_LCD_0_96
