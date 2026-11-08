@@ -1,9 +1,4 @@
-/*
- * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
- */
-#ifndef _ARDUINO_ST7796_H_
-#define _ARDUINO_ST7796_H_
+#pragma once
 
 #include "../Arduino_GFX.h"
 #include "../Arduino_TFT.h"
@@ -123,5 +118,3 @@ protected:
 
 private:
 };
-
-#endif

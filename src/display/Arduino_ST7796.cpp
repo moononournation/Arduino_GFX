@@ -1,7 +1,3 @@
-/*
- * start rewrite from:
- * https://github.com/adafruit/Adafruit-GFX-Library.git
- */
 #include "Arduino_ST7796.h"
 #include "SPI.h"
 
