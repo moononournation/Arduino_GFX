@@ -79,11 +79,19 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
   }
 
   esp_lcd_i80_bus_config_t bus_config = {
-      .dc_gpio_num = _dc,
-      .wr_gpio_num = _wr,
+      .dc_gpio_num = (gpio_num_t)_dc,
+      .wr_gpio_num = (gpio_num_t)_wr,
       .clk_src = LCD_CLK_SRC_PLL160M,
       .data_gpio_nums = {
-          _d0, _d1, _d2, _d3, _d4, _d5, _d6, _d7},
+          (gpio_num_t)_d0,
+          (gpio_num_t)_d1,
+          (gpio_num_t)_d2,
+          (gpio_num_t)_d3,
+          (gpio_num_t)_d4,
+          (gpio_num_t)_d5,
+          (gpio_num_t)_d6,
+          (gpio_num_t)_d7,
+      },
       .bus_width = 8,
       .max_transfer_bytes = LCD_MAX_PIXELS_AT_ONCE * 2,
       .psram_trans_align = 0,
@@ -783,10 +791,19 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
   }
 
   esp_lcd_i80_bus_config_t bus_config = {
-      .dc_gpio_num = _dc,
-      .wr_gpio_num = _wr,
+      .dc_gpio_num = (gpio_num_t)_dc,
+      .wr_gpio_num = (gpio_num_t)_wr,
       .clk_src = LCD_CLK_SRC_PLL160M, // ??? LCD_CLK_SRC_DEFAULT,
-      .data_gpio_nums = {_d0, _d1, _d2, _d3, _d4, _d5, _d6, _d7},
+      .data_gpio_nums = {
+          (gpio_num_t)_d0,
+          (gpio_num_t)_d1,
+          (gpio_num_t)_d2,
+          (gpio_num_t)_d3,
+          (gpio_num_t)_d4,
+          (gpio_num_t)_d5,
+          (gpio_num_t)_d6,
+          (gpio_num_t)_d7,
+      },
       .bus_width = 8,
       .max_transfer_bytes = LCD_MAX_PIXELS_AT_ONCE * 2,
       .dma_burst_size = 64,
@@ -797,7 +814,7 @@ bool Arduino_ESP32LCD8::begin(int32_t speed, int8_t dataMode)
   // Serial.printf("max_transfer_bytes=%zu\n", bus_config.max_transfer_bytes);
 
   esp_lcd_panel_io_i80_config_t io_config = {
-      .cs_gpio_num = _cs,
+      .cs_gpio_num = (gpio_num_t)_cs,
       .pclk_hz = (uint32_t)_speed,
       .trans_queue_depth = 10,
       // on_color_trans_done = nullptr,

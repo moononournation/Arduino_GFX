@@ -2602,6 +2602,11 @@ void Arduino_GFX::setFont(const GFXfont *f)
 #endif // defined(U8G2_FONT_SUPPORT)
 }
 
+void Arduino_GFX::flush()
+{
+  flush(false);
+}
+
 /**************************************************************************/
 /*!
   @brief  flush framebuffer to output (for Canvas or NeoPixel sub-class)

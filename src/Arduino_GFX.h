@@ -340,7 +340,8 @@ public:
   int8_t u8g2_font_decode_get_signed_bits(uint8_t cnt);
   void u8g2_font_decode_len(uint8_t len, uint8_t is_foreground, uint16_t color, uint16_t bg);
 #endif // defined(U8G2_FONT_SUPPORT)
-  virtual void flush(bool force_flush = false);
+  void flush();
+  virtual void flush(bool force_flush);
 #endif // !defined(ATTINY_CORE)
 
   // adopt from LovyanGFX
