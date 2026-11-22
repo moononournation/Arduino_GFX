@@ -4,7 +4,7 @@
  */
 #include "Arduino_ESP32SPI.h"
 
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5 || CONFIG_IDF_TARGET_ESP32C61 || CONFIG_IDF_TARGET_ESP32S31)
 
 struct spi_struct_t
 {
@@ -254,69 +254,69 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
 #endif
 
 #if CONFIG_IDF_TARGET_ESP32S2
-  if (_spi_num == FSPI)
-  {
+#ifndef DPORT_PERIP_RST_EN_REG
+#define DPORT_PERIP_RST_EN_REG DPORT_PERIP_RST_EN0_REG
+#endif
+  if (_spi_num == FSPI) {
     DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI2_CLK_EN);
     DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI2_RST);
-  }
-  else if (_spi_num == HSPI)
-  {
+  } else if (_spi_num == HSPI) {
     DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI3_CLK_EN);
     DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI3_RST);
   }
-#elif defined(CONFIG_IDF_TARGET_ESP32S3) && defined(__PERIPH_CTRL_ALLOW_LEGACY_API)
-  if (_spi_num == FSPI)
-  {
+#elif CONFIG_IDF_TARGET_ESP32S3
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(6, 0, 0)
+  if (_spi_num == FSPI) {
+    PERIPH_RCC_ATOMIC() {
+      spi_ll_enable_bus_clock(SPI2_HOST, true);
+      spi_ll_reset_register(SPI2_HOST);
+      spi_ll_enable_clock(SPI2_HOST, true);
+    }
+  } else if (_spi_num == HSPI) {
+    PERIPH_RCC_ATOMIC() {
+      spi_ll_enable_bus_clock(SPI3_HOST, true);
+      spi_ll_reset_register(SPI3_HOST);
+      spi_ll_enable_clock(SPI3_HOST, true);
+    }
+  }
+#else
+  if (_spi_num == FSPI) {
     periph_ll_reset(PERIPH_SPI2_MODULE);
     periph_ll_enable_clk_clear_rst(PERIPH_SPI2_MODULE);
-  }
-  else if (_spi_num == HSPI)
-  {
+  } else if (_spi_num == HSPI) {
     periph_ll_reset(PERIPH_SPI3_MODULE);
     periph_ll_enable_clk_clear_rst(PERIPH_SPI3_MODULE);
   }
+#endif
 #elif CONFIG_IDF_TARGET_ESP32
-  if (_spi_num == HSPI)
-  {
+  if (_spi_num == HSPI) {
     DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI2_CLK_EN);
     DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI2_RST);
-  }
-  else if (_spi_num == VSPI)
-  {
+  } else if (_spi_num == VSPI) {
     DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI3_CLK_EN);
     DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI3_RST);
-  }
-  else
-  {
+  } else {
     DPORT_SET_PERI_REG_MASK(DPORT_PERIP_CLK_EN_REG, DPORT_SPI01_CLK_EN);
     DPORT_CLEAR_PERI_REG_MASK(DPORT_PERIP_RST_EN_REG, DPORT_SPI01_RST);
   }
 #elif CONFIG_IDF_TARGET_ESP32P4
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
-  if (_spi_num == FSPI)
-  {
-    PERIPH_RCC_ACQUIRE_ATOMIC(PERIPH_GPSPI2_MODULE, ref_count)
-    {
-      if (ref_count == 0)
-      {
-        PERIPH_RCC_ATOMIC()
-        {
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(6, 0, 0)
+  if (_spi_num == FSPI) {
+    PERIPH_RCC_ACQUIRE_ATOMIC(PERIPH_GPSPI2_MODULE, ref_count) {
+      if (ref_count == 0) {
+        PERIPH_RCC_ATOMIC() {
           spi_ll_enable_bus_clock(SPI2_HOST, true);
           spi_ll_reset_register(SPI2_HOST);
           spi_ll_enable_clock(SPI2_HOST, true);
         }
       }
     }
-  }
-  else if (_spi_num == HSPI)
-  {
-    PERIPH_RCC_ACQUIRE_ATOMIC(PERIPH_GPSPI3_MODULE, ref_count)
-    {
-      if (ref_count == 0)
-      {
-        PERIPH_RCC_ATOMIC()
-        {
+  } else if (_spi_num == HSPI) {
+    PERIPH_RCC_ACQUIRE_ATOMIC(PERIPH_GPSPI3_MODULE, ref_count) {
+      if (ref_count == 0) {
+        PERIPH_RCC_ATOMIC() {
           spi_ll_enable_bus_clock(SPI3_HOST, true);
           spi_ll_reset_register(SPI3_HOST);
           spi_ll_enable_clock(SPI3_HOST, true);
@@ -324,10 +324,31 @@ bool Arduino_ESP32SPI::begin(int32_t speed, int8_t dataMode)
       }
     }
   }
+#else
+  if (_spi_num == FSPI) {
+    PERIPH_RCC_ATOMIC() {
+      spi_ll_enable_bus_clock(SPI2_HOST, true);
+      spi_ll_reset_register(SPI2_HOST);
+      spi_ll_enable_clock(SPI2_HOST, true);
+    }
+  } else if (_spi_num == HSPI) {
+    PERIPH_RCC_ATOMIC() {
+      spi_ll_enable_bus_clock(SPI3_HOST, true);
+      spi_ll_reset_register(SPI3_HOST);
+      spi_ll_enable_clock(SPI3_HOST, true);
+    }
+  }
+#endif
 #pragma GCC diagnostic pop
-#elif defined(__PERIPH_CTRL_ALLOW_LEGACY_API)
+#elif defined(__PERIPH_CTRL_ALLOW_LEGACY_API) && ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(6, 0, 0)
   periph_ll_reset(PERIPH_SPI2_MODULE);
   periph_ll_enable_clk_clear_rst(PERIPH_SPI2_MODULE);
+#else
+  PERIPH_RCC_ATOMIC() {
+    spi_ll_enable_bus_clock(SPI2_HOST, true);
+    spi_ll_reset_register(SPI2_HOST);
+    spi_ll_enable_clock(SPI2_HOST, true);
+  }
 #endif
 
   SPI_MUTEX_LOCK();
@@ -1164,4 +1185,4 @@ GFX_INLINE void Arduino_ESP32SPI::POLL(uint32_t len)
     ;
 }
 
-#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5 || CONFIG_IDF_TARGET_ESP32C61 || CONFIG_IDF_TARGET_ESP32S31)

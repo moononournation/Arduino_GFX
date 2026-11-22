@@ -2,7 +2,7 @@
 
 #include "Arduino_DataBus.h"
 
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5 || CONFIG_IDF_TARGET_ESP32C61 || CONFIG_IDF_TARGET_ESP32S31)
 
 #include "esp32-hal.h"
 #include "freertos/FreeRTOS.h"
@@ -19,7 +19,11 @@
 #include "hal/clk_gate_ll.h"
 #endif
 #include "esp32-hal-periman.h"
+#include "esp_clk_tree.h"
 #include "esp_private/periph_ctrl.h"
+#if !CONFIG_IDF_TARGET_ESP32 && !CONFIG_IDF_TARGET_ESP32S2
+#include "hal/spi_ll.h"
+#endif
 
 #include "esp_system.h"
 #include "esp_intr_alloc.h"
@@ -52,9 +56,19 @@
 #include "esp32p4/rom/ets_sys.h"
 #include "esp32p4/rom/gpio.h"
 #include "hal/spi_ll.h"
+
+// ESP32P4 SPI clock source frequencies
+#define SPI_P4_SPLL_FREQ_HZ (CLK_LL_PLL_480M_FREQ_MHZ * MHZ)  // System PLL base frequency (480 MHz)
+#define SPI_P4_MAX_FREQ_HZ  80000000                          // SPI peripheral maximum frequency (80 MHz)
 #elif CONFIG_IDF_TARGET_ESP32C5
 #include "esp32c5/rom/ets_sys.h"
 #include "esp32c5/rom/gpio.h"
+#elif CONFIG_IDF_TARGET_ESP32C61
+#include "esp32c61/rom/ets_sys.h"
+#include "esp32c61/rom/gpio.h"
+#elif CONFIG_IDF_TARGET_ESP32S31
+#include "esp32s31/rom/ets_sys.h"
+#include "esp32s31/rom/gpio.h"
 #else
 #error Target CONFIG_IDF_TARGET is not supported
 #endif
@@ -130,4 +144,4 @@ private:
   uint16_t _data_buf_bit_idx = 0;
 };
 
-#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5)
+#endif // #if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32 || CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C2 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32C5 || CONFIG_IDF_TARGET_ESP32C61 || CONFIG_IDF_TARGET_ESP32S31)
