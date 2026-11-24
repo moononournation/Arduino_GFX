@@ -624,7 +624,7 @@ void Arduino_ESP32SPIDMA::writePixels(uint16_t *data, uint32_t len)
     while (len)
     {
       l = (len > ESP32SPIDMA_MAX_PIXELS_AT_ONCE) ? ESP32SPIDMA_MAX_PIXELS_AT_ONCE : len;
-      l2 = (l + 1) >> 1;
+      l2 = l >> 1;
       for (uint32_t i = 0; i < l2; ++i)
       {
         p1 = *data++;
