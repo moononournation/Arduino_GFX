@@ -64,7 +64,9 @@ bool Arduino_ESP32DSIPanel::begin(int16_t w, int16_t h, int32_t speed, const lcd
       .virtual_channel = 0,
       .dpi_clk_src = MIPI_DSI_DPI_CLK_SRC_DEFAULT,
       .dpi_clock_freq_mhz = speed / 1000000,
+#if (ESP_ARDUINO_VERSION_MAJOR <= 3)
       .pixel_format = LCD_COLOR_PIXEL_FORMAT_RGB565,
+#endif
       .num_fbs = 1,
       .video_timing = {
           .h_size = w,
@@ -76,9 +78,11 @@ bool Arduino_ESP32DSIPanel::begin(int16_t w, int16_t h, int32_t speed, const lcd
           .vsync_back_porch = _vsync_back_porch,
           .vsync_front_porch = _vsync_front_porch,
       },
+#if (ESP_ARDUINO_VERSION_MAJOR <= 3)
       .flags = {
           .use_dma2d = true,
       },
+#endif
   };
 
   const esp_lcd_panel_dev_config_t panel_config = {
