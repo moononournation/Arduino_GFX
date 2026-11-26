@@ -1216,7 +1216,7 @@ static void fall_anim(lv_obj_t *obj)
   lv_anim_set_time(&a, t);
   lv_anim_set_playback_time(&a, t);
   lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
-  a.act_time = a.time / 2; /*To start fro mteh middle*/
+  a.act_time = a.time / 2; /* To start from the middle */
   lv_anim_start(&a);
 }
 

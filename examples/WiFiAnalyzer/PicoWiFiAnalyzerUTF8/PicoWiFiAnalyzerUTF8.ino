@@ -10,7 +10,7 @@
  *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
- * Defalult pin list for non display dev kit:
+ * Default pin list for non display dev kit:
  * Raspberry Pi Pico dev board : CS: 17, DC: 27, RST: 26, BL: 28, SCK: 18, MOSI: 19, MISO: 16
  ******************************************************************************/
 #include <U8g2lib.h>

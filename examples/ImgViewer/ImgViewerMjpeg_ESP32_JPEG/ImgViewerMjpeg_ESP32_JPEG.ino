@@ -27,7 +27,7 @@
  *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
- * Defalult pin list for non display dev kit:
+ * Default pin list for non display dev kit:
  * ESP32 various dev board     : CS:  5, DC: 27, RST: 33, BL: 22, SCK: 18, MOSI: 23, MISO: nil
  * ESP32-C2/3 various dev board: CS:  7, DC:  2, RST:  1, BL:  3, SCK:  4, MOSI:  6, MISO: nil
  * ESP32-C5 various dev board  : CS: 23, DC: 24, RST: 25, BL: 26, SCK: 10, MOSI:  8, MISO: nil

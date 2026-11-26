@@ -1,8 +1,8 @@
 # Arduino_GFX
 
-Arduino_GFX is a Arduino graphics library supporting various displays with various data bus interfaces.
+Arduino_GFX is an Arduino graphics library supporting various displays with various data bus interfaces.
 
-This library start rewrite from Adafruit_GFX, LovyanGFX, TFT_eSPI, Ucglib, and more...
+This library started rewriting Adafruit_GFX, LovyanGFX, TFT_eSPI, Ucglib, and more...
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/moononournation/Arduino_GFX)
 ![GitHub Release Date](https://img.shields.io/github/release-date/moononournation/Arduino_GFX)
@@ -40,7 +40,7 @@ After open the example, you can see many tabs. The first is PDQgraphicstest, the
 
 ### Using supported Dev Device
 
-If you are using below listed support dev device, simply select the Arduino_GFX_dev_device.h and uncomment the define of your dev device. E.g. if you are using LilyGo T-Deck:
+If you are using one of the below-listed supported development devices, simply select the Arduino_GFX_dev_device.h and uncomment the define for your development device. E.g. if you are using LilyGo T-Deck:
 
 ```C
 ...
@@ -64,14 +64,14 @@ If you are not using supported dev device:
 
 <summary>U8g2 Font Support</summary>
 
-[U8g2](https://github.com/olikraus/u8g2.git) provided various font type and stored in compressed format. So U8g2 font gives more UI design possibilities and still can fit in the MCU limited storage space. Using U8g2 font in Arduino_GFX simply include U8g2lib.h before Arduino_GFX_Library.h:
+[U8g2](https://github.com/olikraus/u8g2.git) provides various font types and stores them in a compressed format. So U8g2 fonts give more UI design possibilities and can fit in the MCU's limited storage space. Using U8g2 fonts in Arduino_GFX simply includes U8g2lib.h before Arduino_GFX_Library.h:
 
 ```C
 #include <U8g2lib.h>
 #include <Arduino_GFX_Library.h>
 ```
 
-And then setfont file to use:
+And then set the font file to use:
 
 ```C
 gfx->setCursor(10, 20);
@@ -214,7 +214,7 @@ This library is not putting speed at the first priority, but still paid much eff
 
 ### Figures
 
-Below are some figures compare with other 3 Arduino common display libraries.
+Below are some figures comparing this library with three other common Arduino display libraries.
 
 - Arduino IDE: 1.8.15
 - arduino-esp32: 1.0.6
@@ -245,8 +245,8 @@ Below are some figures compare with other 3 Arduino common display libraries.
 
 ### Why Run Fast?
 
-- No read operation. Since not all display provide read back graphic memories API, Arduino_GFX skip all read operations. It can reduce the library size footprint and sometimes reduce the operation time.
-- Tailor-made data bus classes. Arduino_GFX decouple data bus operation from display driver, it is more easy to write individual data bus class for each platform.
+- No read operations. Since not all displays provide a read-back graphics memory API, Arduino_GFX skips all read operations. It can reduce the library size footprint and sometimes reduce operation time.
+- Tailor-made data bus classes. Arduino_GFX decouples data bus operations from the display driver, making it easier to write an individual data bus class for each platform.
 
 </details>
 
@@ -262,7 +262,7 @@ Most tiny displays in hobbyist electronics world support 8-bit SPI, but some req
 
 Larger displays most likely do not support standalone SPI since it is not fast enough to refresh the full screen details. Most of them support 8-bit/16-bit Parallel interface.
 
-Some larger display require RGB + 3-bit SPI combo interface, This interface requies at most 3(9-bit SPI) + 4(CS, CD, WR, RD) + 24(RBG888) = 31 pins. Most dev board do not have enough GPIO to support this. Arduino_GFX is stick to RGB565 color, so RGB666 and RGB888 require some connection hack. E.g. RGB666 connect R5 and R6 together, B5 and B6 together to become RGB565. Then the least GPIO requirement can become 3(9-bit SPI) + 2(CD, WR) + 16(RBG565) = 21 pins. **Remember always pull down CS pin and always pull up RD pin.**
+Some larger displays require an RGB + 3-bit SPI combo interface. This interface requires at most 3(9-bit SPI) + 4(CS, CD, WR, RD) + 24(RGB888) = 31 pins. Most development boards do not have enough GPIO to support this. Arduino_GFX sticks to RGB565 color, so RGB666 and RGB888 require a connection workaround. E.g. RGB666 connects R5 and R6 together, and B5 and B6 together to become RGB565. Then the minimum GPIO requirement can become 3(9-bit SPI) + 2(CD, WR) + 16(RGB565) = 21 pins. **Remember always pull down CS pin and always pull up RD pin.**
 
 ### Currently Supported data bus [[Wiki](https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class)]
 
@@ -275,7 +275,7 @@ Some larger display require RGB + 3-bit SPI combo interface, This interface requ
 
 #### Note
 
-ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and no longer support in v3.0.
+ESP32LCD8, ESP32LCD16 and ESP32RGBPanel are only supported by arduino-esp32 v2.x and are no longer supported in v3.0.
 
 </details>
 
@@ -440,10 +440,10 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 - ST7796 320x480 [[demo video](https://youtu.be/hUL-RuG4MAQ)]
 - WEA2012 356x400 [[demo video](https://youtube.com/shorts/neDyijFrfQY)] [[LVGL demo video](https://youtube.com/shorts/z9Z_u0xg_as)]
 
-### Tobe Support Display (Sponsors can make it happen)
+### To-Be-Supported Displays (Sponsors can make it happen)
 
-- Mono display supported by co-operate with Canvas
-- Multi-color e-ink display supported by co-operate with Canvas
+- Mono displays are supported through cooperation with Canvas
+- Multi-color e-ink displays are supported through cooperation with Canvas
 
 </details>
 
@@ -464,7 +464,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 
 <summary>LVGL Support</summary>
 
-### 3 LVGL demo in Library Examples
+### 3 LVGL demos in Library Examples
 
 - LvglBenchmark [[demo video](https://youtu.be/75Qx-UEgabY)]
 - LvglHelloWorld
@@ -486,7 +486,7 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 
 <details>
 
-<summary>Using source code come from</summary>
+<summary>Using source code that comes from</summary>
 
 - <https://github.com/adafruit/Adafruit-GFX-Library.git>
 - <https://github.com/adafruit/Adafruit_ILI9341.git>
@@ -511,11 +511,11 @@ ESP32LCD8, ESP32LCD16 and ESP32RGBPanel only supported by arduino-esp32 v2.x and
 
 ## Sponsorship vs Support
 
-As you may already aware there are lack of sponsorship in this project. Convert the funding in terms of man power, it is much lower than 1 man hour per month. So don't expect too much on the support. Expecially the features not realted to my planned maker projects ;>
+As you may already be aware, there is a lack of sponsorship in this project. Converted to manpower, the funding is much lower than 1 man-hour per month. So don't expect too much support, especially for features not related to my planned maker projects ;>
 
-For the same reason, Arduino_GFX only focus on the Arduino IDE support. Any other IDE, e.g. PlatformIO, if you found an issue at that IDE but normal at Arduino IDE, please direct report to that IDE for better support.
+For the same reason, Arduino_GFX only focuses on Arduino IDE support. For other IDEs, e.g. PlatformIO, if you find an issue that works normally on the Arduino IDE, please report it to that IDE for better support.
 
-**Please use Discussions space for new hardware support or new feature request. I will direct close any non-issue issues. And I will consider report the users who insist raising duplicate issue continuously.**
+**Please use the Discussions space for new hardware support or feature requests. I will directly close any non-issue posts. I will also consider reporting users who continuously raise duplicate issues.**
 
 If you like Arduino_GFX, you can:
 

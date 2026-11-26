@@ -30,7 +30,7 @@ const uint16_t HTTP_TIMEOUT = 30000; // in ms, wait a while for server processin
  *
  * Arduino_GFX try to find the settings depends on selected board in Arduino IDE
  * Or you can define the display dev kit not in the board list
- * Defalult pin list for non display dev kit:
+ * Default pin list for non display dev kit:
  * Arduino Nano, Micro and more: CS:  9, DC:  8, RST:  7, BL:  6, SCK: 13, MOSI: 11, MISO: 12
  * ESP32 various dev board     : CS:  5, DC: 27, RST: 33, BL: 22, SCK: 18, MOSI: 23, MISO: nil
  * ESP32-C2/3 various dev board: CS:  7, DC:  2, RST:  1, BL:  3, SCK:  4, MOSI:  6, MISO: nil
@@ -210,7 +210,7 @@ void loop()
         }
         else
         {
-// get lenght of document(is - 1 when Server sends no Content - Length header)
+// get length of document(is - 1 when Server sends no Content - Length header)
 #if defined(ESP32) || defined(ESP8266)
           int len = http.getSize();
 #elif defined(ARDUINO_RASPBERRY_PI_PICO_W) || defined(RTL8722DM)
