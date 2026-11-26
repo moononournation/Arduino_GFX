@@ -19,8 +19,9 @@
 
 //#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3)
 
-#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4)  //Modify
+#if defined(ESP32) && (CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32S31)  //Modify
 
+#include "esp_idf_version.h"
 #include "esp_lcd_panel_rgb.h"
 #include "esp_lcd_panel_ops.h"
 
@@ -35,6 +36,8 @@
     #include "esp32s3/rom/cache.h"
 #elif defined(CONFIG_IDF_TARGET_ESP32P4)
     #include "esp32p4/rom/cache.h"
+#elif defined(CONFIG_IDF_TARGET_ESP32S31)
+    #include "esp_cache.h"
 #else
     #error "Unsupported target chip! Please use ESP32-S3 or ESP32-P4."
 #endif
@@ -48,6 +51,13 @@
     static inline int Cache_WriteBack_Addr(uint32_t addr, uint32_t size) {
         // 使用默认gid=0，并同时操作L1 DCache和L2 Cache
         return Cache_WriteBack_Addr_Gid(0, CACHE_MAP_L1_DCACHE | CACHE_MAP_L2_CACHE, addr, size);
+    }
+#elif defined(CONFIG_IDF_TARGET_ESP32S31)
+    // ESP32-S31: the ROM Cache_WriteBack_Addr() takes a cache map too, so
+    // write back through the portable IDF cache API instead
+    static inline int Cache_WriteBack_Addr(uint32_t addr, uint32_t size) {
+        return (esp_cache_msync((void *)addr, size,
+                                ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED) == ESP_OK) ? 0 : -1;
     }
 #else
     // ESP32-S3及其他芯片使用原始API
