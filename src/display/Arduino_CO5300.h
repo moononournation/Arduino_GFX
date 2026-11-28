@@ -136,7 +136,7 @@ static const uint8_t co5300_init_operations[] = {
     WRITE_C8_D8, CO5300_W_WCTRLD1, 0x20,
     WRITE_C8_D8, CO5300_W_WDBRIGHTNESSVALHBM, 0xFF,
     WRITE_COMMAND_8, CO5300_C_DISPON, // Display ON
-    WRITE_C8_D8, CO5300_W_WDBRIGHTNESSVALNOR, 0xD0, // Brightness adjustment
+    WRITE_C8_D8, CO5300_W_WDBRIGHTNESSVALNOR, 0xBF, // Brightness adjustment
 
     // High contrast mode (Sunlight Readability Enhancement)
     WRITE_C8_D8, CO5300_W_WCE, 0x00, // Off
